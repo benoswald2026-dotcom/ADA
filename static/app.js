@@ -49,6 +49,41 @@ const store = {
 let SPORT = store.get("sport") === "cfb" ? "cfb" : "nfl";
 const withSport = path => path + (path.includes("?") ? "&" : "?") + "sport=" + SPORT;
 
+// One compact box for "this live source is offline" notes instead of a stack.
+function notesBox(notes) {
+  if (!notes || !notes.length) return "";
+  const plain = n => {
+    if (/prop prices/i.test(n)) return /not set/.test(n) ? "Prop prices: no ODDS_API_KEY yet, so projections only." : "Prop prices: couldn't reach The Odds API, so projections only.";
+    if (/sportsbook odds/i.test(n)) return /not set/.test(n) ? "Live sportsbook odds: no ODDS_API_KEY yet, so markets use the nflverse consensus line." : "Live sportsbook odds: couldn't reach The Odds API, so markets use the nflverse consensus line.";
+    if (/kalshi/i.test(n)) return "Kalshi: couldn't connect, so there are no Kalshi prices or edges.";
+    if (/weather/i.test(n)) return "Weather forecast: couldn't connect, so no wind adjustment to totals.";
+    return n;
+  };
+  return `<div class="notice warn notes-box"><h3>Some live data is offline</h3><ul>${notes.map(n => `<li title="${esc(n)}">${esc(plain(n))}</li>`).join("")}</ul></div>`;
+}
+
+// ---------------------------------------------------------------- team badges
+// Approximate team colors (decoration only). Very dark primaries use a brighter
+// secondary so the badge reads on the night background.
+const TEAM_COLORS = {
+  ARI: "#97233F", ATL: "#A71930", BAL: "#241773", BUF: "#00338D", CAR: "#0085CA", CHI: "#C83803",
+  CIN: "#FB4F14", CLE: "#FF3C00", DAL: "#003594", DEN: "#FB4F14", DET: "#0076B6", GB: "#203731",
+  HOU: "#A71930", IND: "#002C5F", JAX: "#006778", KC: "#E31837", LV: "#A5ACAF", LAC: "#0080C6",
+  LA: "#003594", MIA: "#008E97", MIN: "#4F2683", NE: "#C60C30", NO: "#D3BC8D", NYG: "#0B2265",
+  NYJ: "#125740", PHI: "#004C54", PIT: "#FFB612", SF: "#AA0000", SEA: "#69BE28", TB: "#D50A0A",
+  TEN: "#4B92DB", WAS: "#5A1414",
+};
+function textOn(hex) {
+  const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? "#111" : "#fff";
+}
+function teamBadge(code, name, small = false) {
+  const label = code || (name || "?").split(/\s+/).map(w => w[0]).join("").slice(0, 3).toUpperCase();
+  const c = TEAM_COLORS[code];
+  const style = c ? ` style="--b:${c};--bt:${textOn(c)}"` : "";
+  return `<span class="badge${small ? " sm" : ""}"${style} aria-hidden="true">${esc(label)}</span>`;
+}
+
 const FLAG_SVG = `<svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1.5 1v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M2 1.5h8l-2 3 2 3H2z" fill="currentColor"/></svg>`;
 const chip = flag => flag ? `<span class="chip chip-flag">${FLAG_SVG}Flag</span>` : `<span class="chip chip-pass">Pass</span>`;
 
@@ -172,7 +207,7 @@ function renderWeek() {
     <div><div class="label">Sportsbook odds</div><div class="big">${withOdds}<span class="label"> / ${rows.length}</span></div><div class="small">Board built ${esc(generated)}</div></div>
   </div>`;
 
-  const notes = (info.notes || []).length ? `<div class="notes">${info.notes.map(n => `<div class="notice warn"><p>${esc(n)}</p></div>`).join("")}</div>` : "";
+  const notes = (info.notes || []).length ? `<div class="notes">${notesBox(info.notes)}</div>` : "";
   const trust = info.bet_basis ? `<div class="notice"><p><b>Bet probability = ${esc(info.bet_basis)}.</b> The Benter-style combination is refit every season and the model only gets weight if it clears t ≥ 3. Right now it doesn't, so edges can only come from Kalshi prices that differ from the sportsbook consensus, or from injuries.csv. The circle still shows the raw model.</p></div>` : "";
   if (!shown.length) {
     body.innerHTML = notes + trust + summary + `<div class="games"><div class="empty">${onlyFlags ? "No games are flagged this week. That's normal: the rule is strict on purpose." : "No upcoming games found for this week."}</div></div>`;
@@ -193,7 +228,10 @@ function gameRow(r) {
   const id = `src-${esc(g.id)}`;
   return `<article class="game ${r.flag ? "is-flag" : ""}">
     <div class="matchup">
-      <div class="teams">${esc(g.away)}<span class="at">@</span>${esc(g.home)}</div>
+      <div class="vs">
+        <div class="team">${teamBadge(g.away_code, g.away)}<span>${esc(g.away)}</span></div>
+        <div class="team home">${teamBadge(g.home_code, g.home)}<span>${esc(g.home)}</span> <span class="at-tag">home</span></div>
+      </div>
       <div class="meta"><span>${esc(kickoff(g.start))}</span>${g.neutral ? `<span class="tag">Neutral</span>` : ""}${inj}<span class="mono">ID ${esc(g.id)}</span></div>
     </div>
     <div class="spreads">
@@ -474,7 +512,7 @@ function renderBets() {
   if (!BETS) { body.innerHTML = `<div class="panel"><p class="label">Checking every game against the market and Kalshi…</p><div class="progress"><span></span></div></div>`; if (WEEK) loadBets(); return; }
   const { info, bets: b } = BETS;
   const money = x => x ? `$${x.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "–";
-  const notes = (info.notes || []).map(n => `<div class="notice warn"><p>${esc(n)}</p></div>`).join("");
+  const notes = notesBox(info.notes);
   const basis = info.bet_basis ? `<div class="notice ${info.bet_basis === "market" ? "warn" : ""}"><h3>Read this first</h3><p>Bet probability = <b>${esc(info.bet_basis)}</b>. The NFL backtest found the model adds nothing the closing market doesn't already know, so it gets no weight. Real opportunities here come from <b>Kalshi prices that disagree with the sportsbook consensus</b> or from injury news you add to injuries.csv before the market reacts. Every recommendation is logged as a paper trade, so you can see whether it beat the closing line (<code>python main.py clv</code>).</p></div>` : `<div class="notice"><p>Check the Backtest tab before trusting these. If the model loses to the closing line, its edges are mostly noise.</p></div>`;
   const controls = `<div class="panel" style="display:flex;gap:14px;align-items:end;flex-wrap:wrap">
       <label class="field inline"><span class="label">Bankroll ($)</span><input id="bankroll" type="number" min="0" step="50" value="${bankroll()}"></label>
@@ -530,15 +568,24 @@ function renderProps() {
   const rows = PROPS.rows.filter(r => (PROPS_FILTER.stat === "all" || r.stat === PROPS_FILTER.stat)
     && (PROPS_FILTER.game === "all" || r.matchup === PROPS_FILTER.game) && (!q || r.player.toLowerCase().includes(q)));
   const hasLines = PROPS.rows.some(r => r.market);
-  const notes = PROPS.notes.map(n => `<div class="notice warn"><p>${esc(n)}</p></div>`).join("");
+  const notes = notesBox(PROPS.notes);
   const warn = `<div class="notice"><p><b>Unvalidated edges.</b> The projections are tested: on 2023–2025 their 25/50/75% points held about 24/50/75% of the time (see Backtest). But there's no free history of prop <i>lines</i>, so the model can't be tested for profit against books. Any prop edge is logged as a paper trade so you can see whether it beats the closing line.</p></div>`;
   const filters = `<div class="panel" style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
       <label class="field"><span class="label">Stat</span><select id="pf-stat"><option value="all">All stats</option>${stats.map(([k, l]) => `<option value="${k}" ${PROPS_FILTER.stat === k ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
       <label class="field" style="flex:1;min-width:200px"><span class="label">Game</span><select id="pf-game"><option value="all">All games</option>${games.map(g => `<option ${PROPS_FILTER.game === g ? "selected" : ""}>${esc(g)}</option>`).join("")}</select></label>
       <label class="field"><span class="label">Player</span><input id="pf-q" type="text" placeholder="Search" value="${esc(PROPS_FILTER.q)}"></label>
     </div>`;
-  const head = `<tr><th>Player</th><th>Team</th><th>Stat</th><th>Median</th><th>Middle 50%</th><th>Fair line</th>${hasLines ? "<th>Book line</th><th>P(over)</th><th>Pick</th><th>EV / $1</th><th>Stake</th>" : ""}</tr>`;
-  const tr = r => `<tr><td>${esc(r.player)} <span class="src">${esc(r.position)}</span></td><td>${esc(r.team)}</td><td>${esc(r.label)}</td><td>${r.median.toFixed(1)}</td><td>${r.q25.toFixed(0)}–${r.q75.toFixed(0)}</td><td>${r.fair_line}</td>${hasLines ? (r.market ? `<td>${r.market.line}</td><td>${pct(r.p_over)}</td><td>${esc(r.pick)}${r.flag ? " ★" : ""}</td><td class="${r.ev >= 0 ? "ev-pos" : "ev-neg"}">${signed(r.ev, 3)}</td><td>${money(r.stake)}</td>` : `<td colspan="5" class="src">no line</td>`) : ""}</tr>`;
+  const head = `<tr><th>Player</th><th>Stat</th><th>Median</th><th style="text-align:left">Middle 50%${hasLines ? " · book line" : ""}</th><th>Fair line</th>${hasLines ? "<th>Book line</th><th>P(over)</th><th>Pick</th><th>EV / $1</th><th>Stake</th>" : ""}</tr>`;
+  // Range bars share one scale per stat so players can be compared at a glance.
+  const scale = {};
+  PROPS.rows.forEach(r => { scale[r.stat] = Math.max(scale[r.stat] || 1, r.q75 * 1.15, r.market ? r.market.line * 1.15 : 0); });
+  const rbar = r => {
+    const X = v => Math.max(0, Math.min(100, v / scale[r.stat] * 100)).toFixed(1);
+    return `<div class="rbar" data-tip="${esc(`${r.player} · ${r.label}<br>Middle 50%: ${r.q25.toFixed(0)}–${r.q75.toFixed(0)}<br>Median: ${r.median.toFixed(1)}${r.market ? `<br>Book line: ${r.market.line}` : ""}`)}">
+      <div class="rt"></div><div class="rb" style="left:${X(r.q25)}%;width:${(X(r.q75) - X(r.q25)).toFixed(1)}%"></div>
+      <div class="rm" style="left:${X(r.median)}%"></div>${r.market ? `<div class="rl" style="left:${X(r.market.line)}%"></div>` : ""}</div>`;
+  };
+  const tr = r => `<tr><td class="player-td"><div class="player-cell">${teamBadge(r.team, r.team, true)}<div><b>${esc(r.player)}</b> <span class="src">${esc(r.position)}</span></div></div></td><td>${esc(r.label)}</td><td>${r.median.toFixed(1)}</td><td style="min-width:160px">${rbar(r)}<span class="src">${r.q25.toFixed(0)}–${r.q75.toFixed(0)}</span></td><td>${r.fair_line}</td>${hasLines ? (r.market ? `<td>${r.market.line}</td><td>${pct(r.p_over)}</td><td>${esc(r.pick)}${r.flag ? " ★" : ""}</td><td class="${r.ev >= 0 ? "ev-pos" : "ev-neg"}">${signed(r.ev, 3)}</td><td>${money(r.stake)}</td>` : `<td colspan="5" class="src">no line</td>`) : ""}</tr>`;
   body.innerHTML = `<div class="notes">${notes}${warn}</div>${filters}
     <p class="label" style="margin:12px 0 8px;text-transform:none;letter-spacing:0">${rows.length} projections · ${esc(PROPS.source)}${hasLines ? " · ★ = edge ≥ 3% and within 10 pts of the market" : ""}</p>
     ${rows.length ? `<div class="table-wrap"><table><thead>${head}</thead><tbody>${rows.map(tr).join("")}</tbody></table></div>` : `<div class="panel empty">No players match those filters.</div>`}`;
@@ -760,6 +807,27 @@ $(".tabs").addEventListener("keydown", e => {
 });
 document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (g) setTab(g.dataset.goto); });
 addEventListener("hashchange", () => setTab(location.hash.slice(1)));
+
+// ---------------------------------------------------------------- clock & theme
+function tickClock() {
+  const el = $("#clock");
+  if (el) el.textContent = new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" }) + " ET";
+}
+tickClock(); setInterval(tickClock, 15000);
+const SUN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
+const MOON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
+function paintThemeBtn() {
+  const dark = document.documentElement.dataset.theme !== "light";
+  $("#theme-btn").innerHTML = dark ? SUN : MOON;
+  $("#theme-btn").title = dark ? "Day game (light)" : "Night game (dark)";
+}
+$("#theme-btn").addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = next;
+  store.set("theme", next);
+  paintThemeBtn();
+});
+paintThemeBtn();
 
 function setSport(sp) {
   SPORT = sp === "cfb" ? "cfb" : "nfl";

@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/app.css">
+<script>try { document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
 </head>
 <body>
 <header class="topbar">
@@ -19,10 +20,12 @@
       </svg>
       <div>
         <div class="brand-name">Hashmark</div>
-        <div class="brand-sub">Football model · read-only</div>
+        <div class="brand-sub">Football model · market-checked · read-only</div>
       </div>
     </div>
     <div class="topbar-right">
+      <span class="clock" aria-label="Current time, Eastern"><i class="live"></i><span id="clock">--:-- ET</span></span>
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch between night and day theme"></button>
       <div class="seg sport-seg" role="group" aria-label="Sport">
         <button type="button" data-sport="nfl" aria-pressed="false">NFL</button>
         <button type="button" data-sport="cfb" aria-pressed="false">College</button>
