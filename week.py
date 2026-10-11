@@ -108,7 +108,7 @@ def build_week(now=None):
             "game": g, "pred": pred, "market": mkt, "kalshi": km, "best": best, "flag": flag,
             "sources": {
                 "model": f"CFBD games+adv. stats @ {model_stamp}",
-                "market": (f"The Odds API, {mkt['ml_books']} books, book update {mkt['updated']}"
+                "market": (f"The Odds API, {mkt['ml_books']} book{'s' if mkt['ml_books'] != 1 else ''}, book update {mkt['updated']}"
                            if mkt else f"The Odds API @ {odds_stamp}: no odds for this game"),
                 "kalshi": (f"Kalshi {km['home']['event_ticker']} @ {kalshi_stamp}"
                            if km else f"Kalshi @ {kalshi_stamp}: no market"),
@@ -132,3 +132,54 @@ def side_of(row, team):
     if t == normalize(row["game"]["away"]):
         return "away"
     return None
+
+
+class ParlayInputError(ValueError):
+    pass
+
+
+def price_parlay(rows, picks, offered=None):
+    """picks: list of (game_id, team name). offered: optional American odds.
+    Returns a dict with the legs, fair prices, offered price, and EV."""
+    from odds import american_to_decimal, prob_to_american
+    from parlay import expected_value, fair_price, offered_decimal, same_game_warning
+
+    if not 2 <= len(picks) <= 3:
+        raise ParlayInputError("Pick 2 or 3 legs.")
+    legs = []
+    for gid, team in picks:
+        row = find_row(rows, gid)
+        if row is None:
+            raise ParlayInputError(f"Game {gid} is not in this week's games.")
+        side = side_of(row, team)
+        if side is None:
+            g = row["game"]
+            raise ParlayInputError(f"'{team}' is not in game {gid} ({g['away']} @ {g['home']}).")
+        p_model = row["pred"]["home_prob"] if side == "home" else 1 - row["pred"]["home_prob"]
+        m = row["market"]
+        p_mkt = None if not m or m["home_prob"] is None else (
+            m["home_prob"] if side == "home" else 1 - m["home_prob"])
+        legs.append({"game_id": row["game"]["id"], "team": row["game"][side],
+                     "matchup": f"{row['game']['away']} @ {row['game']['home']}",
+                     "p_model": p_model, "p_market": p_mkt,
+                     "decimal": None if not m else m[f"{side}_ml_dec"]})
+
+    p, american, dec = fair_price([l["p_model"] for l in legs])
+    result = {"legs": legs, "warning": same_game_warning([l["game_id"] for l in legs]),
+              "model": {"prob": p, "american": american, "decimal": dec}, "market": None,
+              "offered": None}
+    if all(l["p_market"] for l in legs):
+        pm, am, dm = fair_price([l["p_market"] for l in legs])
+        result["market"] = {"prob": pm, "american": am, "decimal": dm}
+
+    if offered is not None:
+        off_dec, how = american_to_decimal(offered), "entered"
+    elif all(l["decimal"] for l in legs):
+        off_dec, how = offered_decimal([l["decimal"] for l in legs]), "book moneylines multiplied"
+    else:
+        off_dec = None
+    if off_dec:
+        result["offered"] = {"decimal": off_dec, "american": prob_to_american(1 / off_dec),
+                             "implied": 1 / off_dec, "how": how,
+                             "ev": expected_value(p, off_dec)}
+    return result

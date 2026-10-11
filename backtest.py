@@ -93,18 +93,18 @@ def ats_record(records):
     return w, l, p
 
 
-def calibration_table(probs, outcomes, buckets=10):
-    rows = []
+def calibration_bins(probs, outcomes, buckets=10):
+    """Group games by predicted probability; compare to how often they won."""
+    bins = []
     for b in range(buckets):
         lo, hi = b / buckets, (b + 1) / buckets
         idx = [i for i, p in enumerate(probs) if lo <= p < hi or (b == buckets - 1 and p == 1)]
         if not idx:
             continue
-        avg_p = sum(probs[i] for i in idx) / len(idx)
-        win = sum(outcomes[i] for i in idx) / len(idx)
-        rows.append([f"{lo:.0%}-{hi:.0%}", len(idx), f"{avg_p:.1%}", f"{win:.1%}",
-                     f"{(win - avg_p) * 100:+.1f}"])
-    return rows
+        bins.append({"lo": lo, "hi": hi, "games": len(idx),
+                     "avg_pred": sum(probs[i] for i in idx) / len(idx),
+                     "actual": sum(outcomes[i] for i in idx) / len(idx)})
+    return bins
 
 
 def run_backtest(seasons=None):
@@ -139,48 +139,78 @@ def run_backtest(seasons=None):
     return records
 
 
-def report(records):
-    out = []
-    out.append("BACKTEST: walk-forward, FBS vs FBS games, ratings warmed up on "
-               f"{config.BURN_IN_SEASONS[0]}-{config.BURN_IN_SEASONS[-1]} (not scored).")
-    out.append("Parameters are fixed in config.py and were NOT tuned on these seasons.\n")
+def _scores(probs, outcomes):
+    return {"accuracy": accuracy(probs, outcomes), "brier": brier(probs, outcomes),
+            "log_loss": log_loss(probs, outcomes)}
 
-    summary = []
-    for label, recs in [(str(s), [r for r in records if r["season"] == s])
-                        for s in sorted({r["season"] for r in records})] + [("ALL", records)]:
+
+def summarize(records):
+    """All backtest numbers as plain data (used by the CLI report and the web app)."""
+    seasons = []
+    groups = [(str(s), [r for r in records if r["season"] == s])
+              for s in sorted({r["season"] for r in records})] + [("ALL", records)]
+    for label, recs in groups:
         if not recs:
             continue
-        p, y = [r["p"] for r in recs], [r["y"] for r in recs]
         w, l, push = ats_record(recs)
-        ats = f"{w}-{l}-{push} ({w / (w + l):.1%})" if w + l else "n/a"
-        summary.append([label, len(recs), f"{accuracy(p, y):.1%}", f"{brier(p, y):.4f}",
-                        f"{log_loss(p, y):.4f}", ats])
-    out.append(tabulate(summary, headers=["Season", "Games", "SU accuracy", "Brier",
-                                          "Log loss", "ATS vs close (W-L-P)"]))
-    out.append("  Brier: 0 = perfect, 0.25 = coin flip. Log loss: lower is better.")
-    out.append("  ATS: you need ~52.4% to break even at -110 odds.\n")
+        seasons.append({"label": label, "games": len(recs),
+                        **_scores([r["p"] for r in recs], [r["y"] for r in recs]),
+                        "ats": {"w": w, "l": l, "p": push, "pct": w / (w + l) if w + l else None}})
 
     # Head-to-head vs the closing market on games where it has a moneyline.
+    vs_market = None
     both = [r for r in records if r["market_p"] is not None]
     if both:
         y = [r["y"] for r in both]
-        mp, kp = [r["p"] for r in both], [r["market_p"] for r in both]
-        model_b, market_b = brier(mp, y), brier(kp, y)
+        model = _scores([r["p"] for r in both], y)
+        market = _scores([r["market_p"] for r in both], y)
+        vs_market = {"games": len(both), "model": model, "market": market,
+                     "model_worse": model["brier"] > market["brier"]}
+
+    return {"burn_in": config.BURN_IN_SEASONS, "seasons": seasons, "vs_market": vs_market,
+            "calibration": calibration_bins([r["p"] for r in records], [r["y"] for r in records])}
+
+
+def verdict(vs_market):
+    if vs_market is None:
+        return "No closing moneylines found, so no head-to-head vs market."
+    m, k = vs_market["model"]["brier"], vs_market["market"]["brier"]
+    if vs_market["model_worse"]:
+        return (f"The model is WORSE than the closing-line market on Brier score "
+                f"({m:.4f} vs {k:.4f}). Treat its 'edges' with heavy skepticism.")
+    return (f"The model beat the closing-line market on Brier score ({m:.4f} vs {k:.4f}). "
+            "This is unusual; double-check before trusting it.")
+
+
+def report(records):
+    s = summarize(records)
+    out = ["BACKTEST: walk-forward, FBS vs FBS games, ratings warmed up on "
+           f"{s['burn_in'][0]}-{s['burn_in'][-1]} (not scored).",
+           "Parameters are fixed in config.py and were NOT tuned on these seasons.\n"]
+
+    def ats_text(a):
+        return f"{a['w']}-{a['l']}-{a['p']} ({a['pct']:.1%})" if a["pct"] is not None else "n/a"
+
+    out.append(tabulate([[r["label"], r["games"], f"{r['accuracy']:.1%}", f"{r['brier']:.4f}",
+                          f"{r['log_loss']:.4f}", ats_text(r["ats"])] for r in s["seasons"]],
+                        headers=["Season", "Games", "SU accuracy", "Brier", "Log loss",
+                                 "ATS vs close (W-L-P)"]))
+    out.append("  Brier: 0 = perfect, 0.25 = coin flip. Log loss: lower is better.")
+    out.append("  ATS: you need ~52.4% to break even at -110 odds.\n")
+
+    vm = s["vs_market"]
+    if vm:
         out.append(tabulate([
-            ["Model", f"{accuracy(mp, y):.1%}", f"{model_b:.4f}", f"{log_loss(mp, y):.4f}"],
-            ["Closing market (no-vig)", f"{accuracy(kp, y):.1%}", f"{market_b:.4f}", f"{log_loss(kp, y):.4f}"],
-        ], headers=[f"vs CLOSING LINE ({len(both)} games w/ moneylines)", "SU accuracy", "Brier", "Log loss"]))
-        if model_b > market_b:
-            out.append(f"\n>>> The model is WORSE than the closing-line market on Brier score "
-                       f"({model_b:.4f} vs {market_b:.4f}). Treat its 'edges' with heavy skepticism.\n")
-        else:
-            out.append(f"\n>>> The model beat the closing-line market on Brier score "
-                       f"({model_b:.4f} vs {market_b:.4f}). This is unusual; double-check before trusting it.\n")
-    else:
-        out.append("No closing moneylines found, so no head-to-head vs market.\n")
+            [name, f"{x['accuracy']:.1%}", f"{x['brier']:.4f}", f"{x['log_loss']:.4f}"]
+            for name, x in (("Model", vm["model"]), ("Closing market (no-vig)", vm["market"]))],
+            headers=[f"vs CLOSING LINE ({vm['games']} games w/ moneylines)", "SU accuracy",
+                     "Brier", "Log loss"]))
+    out.append(f"\n>>> {verdict(vm)}\n")
 
     out.append("CALIBRATION (home-team win probability):")
-    out.append(tabulate(calibration_table([r["p"] for r in records], [r["y"] for r in records]),
+    out.append(tabulate([[f"{b['lo']:.0%}-{b['hi']:.0%}", b["games"], f"{b['avg_pred']:.1%}",
+                          f"{b['actual']:.1%}", f"{(b['actual'] - b['avg_pred']) * 100:+.1f}"]
+                         for b in s["calibration"]],
                         headers=["Predicted", "Games", "Avg predicted", "Actual win %", "Gap (pts)"]))
     out.append("  Well calibrated = 'Avg predicted' close to 'Actual win %' in every row.")
     return "\n".join(out)

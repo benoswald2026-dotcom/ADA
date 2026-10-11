@@ -3,6 +3,7 @@
     python main.py week                      current-week table
     python main.py backtest                  2023-2025 validation report
     python main.py parlay ID:TEAM ID:TEAM    parlay fair price (2 or 3 legs)
+    python main.py serve                     local web app at http://127.0.0.1:8000
 
 Read-only: this program never places trades, bets, or orders.
 """
@@ -66,57 +67,44 @@ def cmd_backtest(_args):
 
 
 def cmd_parlay(args):
-    from odds import american_to_decimal, prob_to_american
-    from parlay import expected_value, fair_price, offered_decimal, same_game_warning
-    from week import build_week, find_row, side_of
+    from week import ParlayInputError, build_week, price_parlay
 
-    if not 2 <= len(args.legs) <= 3:
-        sys.exit("Give 2 or 3 legs, e.g. python main.py parlay 401234:Georgia 401235:Texas")
-    _week, rows = build_week()
-    legs = []
+    picks = []
     for leg in args.legs:
         if ":" not in leg:
             sys.exit(f"Bad leg '{leg}'. Use GAMEID:TEAM (IDs are in `python main.py week`).")
-        gid, team = leg.split(":", 1)
-        row = find_row(rows, gid)
-        if row is None:
-            sys.exit(f"Game {gid} not found in this week's games.")
-        side = side_of(row, team)
-        if side is None:
-            sys.exit(f"'{team}' is not in game {gid} ({row['game']['away']} @ {row['game']['home']}).")
-        p_model = row["pred"]["home_prob"] if side == "home" else 1 - row["pred"]["home_prob"]
-        m = row["market"]
-        p_mkt = None if not m or m["home_prob"] is None else (m["home_prob"] if side == "home" else 1 - m["home_prob"])
-        dec = None if not m else m[f"{side}_ml_dec"]
-        legs.append({"gid": gid, "team": row["game"][side], "p_model": p_model,
-                     "p_mkt": p_mkt, "dec": dec})
+        picks.append(tuple(leg.split(":", 1)))
+    if not 2 <= len(picks) <= 3:
+        sys.exit("Give 2 or 3 legs, e.g. python main.py parlay 401234:Georgia 401235:Texas")
+    _week, rows = build_week()
+    try:
+        r = price_parlay(rows, picks, args.offered)
+    except ParlayInputError as e:
+        sys.exit(str(e))
 
-    warn = same_game_warning([l["gid"] for l in legs])
-    if warn:
-        print(warn + "\n")
-    print(tabulate([[l["gid"], l["team"], pct(l["p_model"]), pct(l["p_mkt"]),
-                     "n/a" if l["dec"] is None else f"{l['dec']:.3f}"] for l in legs],
+    if r["warning"]:
+        print(r["warning"] + "\n")
+    print(tabulate([[l["game_id"], l["team"], pct(l["p_model"]), pct(l["p_market"]),
+                     "n/a" if l["decimal"] is None else f"{l['decimal']:.3f}"] for l in r["legs"]],
                    headers=["Game", "Team", "Model win%", "Market win% (no-vig)", "Avg book decimal odds"]))
-
-    p, am, dec = fair_price([l["p_model"] for l in legs])
-    print(f"\nModel fair price:   {p:.1%}  =  {am:+.0f}  (decimal {dec:.2f})")
-    if all(l["p_mkt"] for l in legs):
-        pm, amm, decm = fair_price([l["p_mkt"] for l in legs])
-        print(f"Market fair price:  {pm:.1%}  =  {amm:+.0f}  (decimal {decm:.2f})")
-
-    if args.offered is not None:
-        off_dec, label = american_to_decimal(args.offered), f"{args.offered:+.0f} (you entered)"
-    elif all(l["dec"] for l in legs):
-        off_dec = offered_decimal([l["dec"] for l in legs])
-        label = f"{prob_to_american(1 / off_dec):+.0f} (legs' avg book moneylines multiplied)"
-    else:
-        off_dec = None
-    if off_dec:
-        print(f"Offered price:      {label}  (decimal {off_dec:.2f}, implies {1 / off_dec:.1%})")
-        print(f"Model EV per $1:    {expected_value(p, off_dec):+.3f}")
+    m = r["model"]
+    print(f"\nModel fair price:   {m['prob']:.1%}  =  {m['american']:+.0f}  (decimal {m['decimal']:.2f})")
+    if r["market"]:
+        k = r["market"]
+        print(f"Market fair price:  {k['prob']:.1%}  =  {k['american']:+.0f}  (decimal {k['decimal']:.2f})")
+    o = r["offered"]
+    if o:
+        print(f"Offered price:      {o['american']:+.0f} ({o['how']})  "
+              f"(decimal {o['decimal']:.2f}, implies {o['implied']:.1%})")
+        print(f"Model EV per $1:    {o['ev']:+.3f}")
     else:
         print("Offered price:      n/a (no moneylines; pass --offered +450 to enter your book's price)")
     print("\nSources: model = CFBD; market & book odds = The Odds API. Independence assumed. Not betting advice.")
+
+
+def cmd_serve(args):
+    from server import serve
+    serve(args.port)
 
 
 def main():
@@ -128,6 +116,9 @@ def main():
     p.add_argument("legs", nargs="+", help="GAMEID:TEAM (2 or 3 legs)")
     p.add_argument("--offered", type=float, help="your book's parlay price in American odds, e.g. 450")
     p.set_defaults(func=cmd_parlay)
+    s = sub.add_parser("serve", help="open the local web app")
+    s.add_argument("--port", type=int, default=8000)
+    s.set_defaults(func=cmd_serve)
     args = parser.parse_args()
     try:
         args.func(args)

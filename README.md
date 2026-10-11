@@ -36,6 +36,24 @@ python main.py parlay 401628374:Georgia 401628380:Texas --offered 260   # your b
 
 `GAMEID` is the `ID` column printed by `week`. `parlay` accepts 2 or 3 legs.
 
+### Local web app
+
+```bash
+python main.py serve             # opens http://127.0.0.1:8000 in your browser
+python main.py serve --port 8080 # if 8000 is taken
+```
+
+| Tab | What it shows |
+|---|---|
+| **This week** | One row per game with a 0–100% strip: model (circle), market consensus (bar), Kalshi price (diamond), and the ±10-point band the FLAG rule needs. "Sources & timestamps" opens the citation for each number. |
+| **Backtest** | Runs the 2023–2025 backtest in the background, then shows the verdict, accuracy / Brier / ATS, per-season table, and a calibration chart. |
+| **Parlay** | Pick 2–3 teams. Shows model fair price, market fair price, offered price, and EV, with a warning for same-game legs. |
+| **How it works** | Interactive version of the worked example below. Change any input and every step recalculates with the real Python functions. Works without API keys. |
+
+The server uses only Python's built-in `http.server` (no new dependencies) and
+listens on `127.0.0.1`, so only your own computer can open it. It is read-only like
+the CLI, and API keys never reach the browser.
+
 ## 3. How data flows
 
 ```
@@ -61,6 +79,9 @@ python main.py parlay 401628374:Georgia 401628380:Texas --offered 260   # your b
 | `backtest.py` | Walk-forward test and the report |
 | `week.py` | Assembles the weekly comparison |
 | `main.py` | Command-line entry point |
+| `server.py` | Local web app server (`python main.py serve`) |
+| `explain.py` | Step-by-step calculator behind the "How it works" tab |
+| `static/` | The web app's page, styles, and script |
 
 ## 4. How each number is calculated
 
@@ -236,4 +257,4 @@ Weight = 0.4 (both teams have 6+ games), so `0.6 × 5.3 + 0.4 × 9.0 = 6.78`.
 ```bash
 python -m pytest -q
 ```
-Covers vig removal, Kalshi fee math, parlay math, and Elo updates.
+Covers vig removal, Kalshi fee math, parlay math, Elo updates, and the README worked example.

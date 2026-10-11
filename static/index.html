@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hashmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="4" fill="var(--accent)"/>
+        <path d="M9 7v18M23 7v18M5 12h4M5 20h4M23 12h4M23 20h4M13 16h6" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="brand-name">Hashmark</div>
+        <div class="brand-sub">College football model · read-only</div>
+      </div>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+  </div>
+  <nav class="wrap tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="tab-week" data-tab="week" aria-selected="true">This week</button>
+    <button role="tab" id="tab-backtest" data-tab="backtest" aria-selected="false">Backtest</button>
+    <button role="tab" id="tab-parlay" data-tab="parlay" aria-selected="false">Parlay</button>
+    <button role="tab" id="tab-explain" data-tab="explain" aria-selected="false">How it works</button>
+  </nav>
+</header>
+
+<main class="wrap">
+  <!-- THIS WEEK -->
+  <section id="view-week" class="view" role="tabpanel" aria-labelledby="tab-week">
+    <div class="view-head">
+      <div>
+        <h1 id="week-title">This week</h1>
+        <p class="lede">Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.</p>
+      </div>
+      <div class="view-actions">
+        <label class="toggle"><input type="checkbox" id="flags-only"> Flags only</label>
+        <button class="btn" id="week-refresh">Refresh</button>
+      </div>
+    </div>
+    <div id="week-body"></div>
+  </section>
+
+  <!-- BACKTEST -->
+  <section id="view-backtest" class="view" role="tabpanel" aria-labelledby="tab-backtest" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Backtest, 2023–2025</h1>
+        <p class="lede">Each week is predicted using only games played before it, then scored. 2021–22 only warm up the ratings. Nothing was tuned on these seasons.</p>
+      </div>
+      <div class="view-actions"><button class="btn btn-primary" id="bt-run">Run backtest</button></div>
+    </div>
+    <div id="bt-body"></div>
+  </section>
+
+  <!-- PARLAY -->
+  <section id="view-parlay" class="view" role="tabpanel" aria-labelledby="tab-parlay" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Parlay pricer</h1>
+        <p class="lede">Pick 2 or 3 teams from this week. The fair price multiplies the model's win probabilities, which assumes the legs are independent.</p>
+      </div>
+    </div>
+    <div id="parlay-body"></div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="view-explain" class="view" role="tabpanel" aria-labelledby="tab-explain" hidden>
+    <div class="view-head">
+      <div>
+        <h1>How one game is priced</h1>
+        <p class="lede">Change any input and every step recalculates, using the same Python code the weekly board uses. The starting values are the README's made-up example.</p>
+      </div>
+      <div class="view-actions"><button class="btn" id="ex-reset">Reset example</button></div>
+    </div>
+    <div class="explain-grid">
+      <form id="ex-form" class="panel ex-form" autocomplete="off"></form>
+      <div id="ex-steps" class="ex-steps"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  Data: CollegeFootballData, The Odds API, Kalshi public market data. Hashmark only reads data. It never places bets, trades, or orders. Not betting advice.
+</footer>
+
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<script src="/app.js"></script>
+</body>
+</html>
