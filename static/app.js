@@ -173,7 +173,7 @@ function renderWeek() {
   </div>`;
 
   const notes = (info.notes || []).length ? `<div class="notes">${info.notes.map(n => `<div class="notice warn"><p>${esc(n)}</p></div>`).join("")}</div>` : "";
-  const trust = isNum(info.blend_weight) ? `<div class="notice"><p><b>Trust weight ${info.blend_weight.toFixed(2)}.</b> In the backtest the model added ${info.blend_weight === 0 ? "nothing" : "only a little"} beyond the closing market, so bet probabilities are ${Math.round((1 - info.blend_weight) * 100)}% market + ${Math.round(info.blend_weight * 100)}% model, plus your injuries.csv. The circle still shows the raw model.</p></div>` : "";
+  const trust = info.bet_basis ? `<div class="notice"><p><b>Bet probability = ${esc(info.bet_basis)}.</b> The Benter-style combination is refit every season and the model only gets weight if it clears t ≥ 3. Right now it doesn't, so edges can only come from Kalshi prices that differ from the sportsbook consensus, or from injuries.csv. The circle still shows the raw model.</p></div>` : "";
   if (!shown.length) {
     body.innerHTML = notes + trust + summary + `<div class="games"><div class="empty">${onlyFlags ? "No games are flagged this week. That's normal: the rule is strict on purpose." : "No upcoming games found for this week."}</div></div>`;
     return;
@@ -270,7 +270,7 @@ function renderBacktest(s) {
   if (s.state === "error") { body.innerHTML = setupNotice(s.error); return; }
 
   const r = s.result, all = r.seasons.find(x => x.label === "ALL"), vm = r.vs_market;
-  const verdictBox = `<div class="notice ${vm && vm.model_worse ? "warn" : ""}"><h3>${vm ? (vm.model_worse ? "The market wins" : "Model ahead of the market") : "No market comparison"}</h3><p>${esc(r.verdict)}</p></div>`;
+  const verdictBox = `<div class="notice ${vm && vm.model_worse ? "warn" : ""}"><h3>${vm ? (Math.abs(vm.model.brier - vm.market.brier) < 0.0005 ? "Tied with the market" : vm.model_worse ? "The market wins" : "Model ahead of the market") : "No market comparison"}</h3><p>${esc(r.verdict)}</p></div>`;
   const ats = all.ats;
   const tiles = `<div class="tiles">
     <div class="tile"><div class="label">Straight-up accuracy</div><div class="big">${pct(all.accuracy)}</div>
@@ -306,30 +306,29 @@ function renderBacktest(s) {
 }
 
 function nflExtras(r) {
-  const e = r.env, b = r.blend, a = r.ablation, t = r.totals;
-  const row = (k, name) => {
-    const x = e[k], z = Math.abs(x.coef / x.se);
-    return `<tr><td>${name}</td><td>${signed(x.coef, 3)}</td><td>${x.se.toFixed(3)}</td><td>${z >= 2 ? "Likely real" : "Could be noise"}</td><td style="text-align:left;white-space:normal">${esc(x.unit)}</td></tr>`;
-  };
-  const ats = x => `${x[0]}–${x[1]}–${x[2]}`;
+  const tag = ok => ok ? `<span class="chip-env" style="color:var(--good)"><b>Used</b></span>` : `<span class="chip-env">Rejected</span>`;
+  const feats = ["margin", "total"].flatMap(g => Object.entries(r.env[g]).map(([k, v]) =>
+    `<tr><td>${esc(k)}</td><td>${signed(v.coef, 3)}</td><td>${v.se.toFixed(3)}</td><td>${signed(v.t, 2)}</td><td>${tag(v.accepted)}</td><td style="text-align:left;white-space:normal">${esc(v.unit)}</td></tr>`)).join("");
+  const wf = r.walk_forward.map(w => `<tr><td>${w.season}</td><td>${w.combo.games}</td><td>${w.combo.a1.toFixed(3)}</td><td>${signed(w.combo.a2, 3)}</td><td>${signed(w.combo.t_model, 2)}</td><td>${signed(w.combo.ll_gain_vs_market, 2)}</td><td>${w.combo.market_only.a1.toFixed(3)} (t ${signed(w.combo.market_only.t_bias, 2)})</td><td>${esc(w.combo.mode)}</td><td>${w.sigma.toFixed(2)}</td></tr>`).join("");
+  const names = { raw_moneyline: "Raw model · moneyline", combo_moneyline: "Bet prob · moneyline", raw_spread: "Raw model · spread", combo_spread: "Bet prob · spread" };
+  const sim = Object.entries(r.betting).map(([k, v]) => `<tr><td>${names[k] || esc(k)}</td><td>${v.bets}</td><td>${pct(v.roi)}</td><td>${v.ci95[0] == null ? "n/a" : `${signed(v.ci95[0] * 100)}% to ${signed(v.ci95[1] * 100)}%`}</td><td>${v.t == null ? "n/a" : signed(v.t, 2)}</td><td>${v.kelly_final.toFixed(3)}×</td><td>${pct(v.kelly_max_drawdown)}</td></tr>`).join("");
+  const rm = r.raw_model, t = r.totals;
   const ou = x => `${x.w}–${x.l}–${x.p}${x.pct == null ? "" : ` (${pct(x.pct)})`}`;
-  return `<div class="notice ${b.weight === 0 ? "warn" : ""}" style="margin-bottom:18px">
-      <h3>Trust weight: ${b.weight.toFixed(2)}</h3>
-      <p>Fitted on ${e.seasons[0]}–${e.seasons[1]}: the best blend was <b>${Math.round((1 - b.weight) * 100)}% market + ${Math.round(b.weight * 100)}% model</b>. On the test seasons that blend scored Brier ${b.brier.toFixed(4)} vs the market's ${b.market_brier.toFixed(4)}. Live bet probabilities use this blend, so the model can only move prices as far as it has earned.</p>
+  return `<div class="notice" style="margin-bottom:18px">
+      <h3>How this was tested</h3>
+      <p>Walk-forward: each test season is fitted only on earlier seasons (McLean &amp; Pontiff: edges decay, so refit). Features are decided in advance and used only if t ≥ 3 (Harvey, Liu &amp; Zhu). All ${r.trials} betting variants are shown, not just the best (Bailey &amp; López de Prado). The raw Elo+EPA model scored Brier ${rm.brier.toFixed(4)} on its own; see the Research tab for every source.</p>
     </div>
+    <h3 style="margin-bottom:10px">Benter-style blend of market and model, refit each season</h3>
+    <div class="table-wrap" style="margin-bottom:8px"><table><thead><tr><th>Season</th><th>Fit games</th><th>Market weight a1</th><th>Model weight a2</th><th>t (model)</th><th>LL gain</th><th>Market-only slope</th><th>Used</th><th>Spread σ</th></tr></thead><tbody>${wf}</tbody></table></div>
+    <p class="label" style="margin-bottom:18px;text-transform:none;letter-spacing:0">A model weight near 0 means the model adds nothing beyond the market. A market-only slope above 1 would mean favorites are underpriced (favorite-longshot bias). "Used" is whatever cleared t ≥ 3.</p>
     <div class="two-col" style="margin-bottom:18px">
-      <div><h3 style="margin-bottom:10px">Weather, rest &amp; travel</h3>
-        <div class="table-wrap"><table><thead><tr><th>Factor</th><th>Effect</th><th>Std err</th><th>Signal</th><th style="text-align:left">Meaning</th></tr></thead>
-        <tbody>${row("wind", "Wind")}${row("cold", "Cold (≤32°F)")}${row("rest", "Rest")}${row("tz", "Travel east")}</tbody></table></div>
-        <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:0">Fitted on ${e.games} games from ${e.seasons[0]}–${e.seasons[1]} only. "Likely real" = effect at least 2× its standard error.</p></div>
-      <div><h3 style="margin-bottom:10px">Did these factors help?</h3>
-        <div class="table-wrap"><table><thead><tr><th>Test seasons</th><th>Brier</th><th>Log loss</th><th>ATS</th></tr></thead><tbody>
-          <tr><td>Without factors</td><td>${a.without_env.brier.toFixed(4)}</td><td>${a.without_env.log_loss.toFixed(4)}</td><td>${ats(a.without_env.ats)}</td></tr>
-          <tr><td>With factors</td><td>${a.with_env.brier.toFixed(4)}</td><td>${a.with_env.log_loss.toFixed(4)}</td><td>${ats(a.with_env.ats)}</td></tr>
-        </tbody></table></div>
+      <div><h3 style="margin-bottom:10px">Candidate features (latest fit)</h3>
+        <div class="table-wrap"><table><thead><tr><th>Feature</th><th>Effect</th><th>Std err</th><th>t</th><th>Decision</th><th style="text-align:left">Meaning</th></tr></thead><tbody>${feats}</tbody></table></div></div>
+      <div><h3 style="margin-bottom:10px">Betting at closing prices</h3>
+        <div class="table-wrap"><table><thead><tr><th>Variant</th><th>Bets</th><th>ROI</th><th>95% CI</th><th>t</th><th>¼ Kelly</th><th>Max DD</th></tr></thead><tbody>${sim}</tbody></table></div>
+        <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:0">Flat 1-unit ROI with bootstrap 95% CI. An edge counts only if t ≥ 3 and the CI stays above 0.</p>
         <div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>Totals</th><th>Avg miss (pts)</th><th>O/U vs close</th></tr></thead><tbody>
-          <tr><td>Model, with weather</td><td>${t.mae_model.toFixed(2)}</td><td>${ou(t.ou_with_env)}</td></tr>
-          <tr><td>Model, without weather</td><td>n/a</td><td>${ou(t.ou_without_env)}</td></tr>
+          <tr><td>Model, with wind</td><td>${t.mae_model.toFixed(2)}</td><td>${ou(t.ou_with_env)}</td></tr>
           <tr><td>Closing total</td><td>${t.mae_market.toFixed(2)}</td><td>n/a</td></tr>
         </tbody></table></div></div>
     </div>`;
@@ -454,12 +453,14 @@ $("#parlay-body").addEventListener("input", e => {
 // ---------------------------------------------------------------- bets
 let BETS = null, BETS_ERR = null;
 
+function bankroll() { const v = Number(store.get("bankroll")); return v > 0 ? v : 1000; }
+
 async function loadBets(force = false) {
   if (force) { await loadWeek(true); }
   else if (!WEEK && !WEEK_ERR) { await loadWeek(); }
   if (WEEK_ERR) { renderBets(); return; }
   const sport = SPORT;
-  try { const d = await api(withSport("/api/bets")); if (sport === SPORT) { BETS = d; BETS_ERR = null; } }
+  try { const d = await api(withSport(`/api/bets?bankroll=${bankroll()}`)); if (sport === SPORT) { BETS = d; BETS_ERR = null; } }
   catch (e) { if (sport === SPORT) BETS_ERR = e.message; }
   renderBets();
 }
@@ -470,22 +471,58 @@ function renderBets() {
   if (BETS_ERR) { body.innerHTML = setupNotice(BETS_ERR); return; }
   if (!BETS) { body.innerHTML = `<div class="panel"><p class="label">Checking every game against the market and Kalshi…</p><div class="progress"><span></span></div></div>`; if (WEEK) loadBets(); return; }
   const { info, bets: b } = BETS;
+  const money = x => x ? `$${x.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "–";
   const notes = (info.notes || []).map(n => `<div class="notice warn"><p>${esc(n)}</p></div>`).join("");
-  const trust = isNum(info.blend_weight) ? `<div class="notice ${info.blend_weight === 0 ? "warn" : ""}"><h3>Read this first</h3><p>The NFL backtest found the model ${info.blend_weight === 0 ? "adds nothing beyond" : "adds little beyond"} the closing market (trust weight ${info.blend_weight.toFixed(2)}), so bet probabilities lean on the market. Real opportunities here mostly come from Kalshi prices that disagree with the sportsbook consensus, or from injury news you add to injuries.csv before the market reacts.</p></div>` : `<div class="notice"><p>Check the Backtest tab before trusting these. If the model loses to the closing line, its edges are mostly noise.</p></div>`;
-  const kRows = b.kalshi.map(k => `<tr><td>${esc(k.team)}</td><td>${esc(k.matchup)}</td><td>${pct(k.model)}</td><td>${pct(k.market)}</td><td>${cents(k.price)}</td><td>$${k.fee.toFixed(4)}</td><td>${pts(k.edge)}</td><td>${chip(k.flag)}</td></tr>`).join("");
-  const bookRows = b.book.map(x => `<tr><td>${esc(x.team)}</td><td>${esc(x.matchup)}</td><td>${pct(x.model)}</td><td>${pct(x.market)}</td><td>${x.decimal.toFixed(2)}</td><td class="${x.ev >= 0 ? "ev-pos" : "ev-neg"}">${x.ev >= 0 ? "+" : "−"}$${Math.abs(x.ev).toFixed(3)}</td></tr>`).join("");
+  const basis = info.bet_basis ? `<div class="notice ${info.bet_basis === "market" ? "warn" : ""}"><h3>Read this first</h3><p>Bet probability = <b>${esc(info.bet_basis)}</b>. The NFL backtest found the model adds nothing the closing market doesn't already know, so it gets no weight. Real opportunities here come from <b>Kalshi prices that disagree with the sportsbook consensus</b> or from injury news you add to injuries.csv before the market reacts. Every recommendation is logged as a paper trade, so you can see whether it beat the closing line (<code>python main.py clv</code>).</p></div>` : `<div class="notice"><p>Check the Backtest tab before trusting these. If the model loses to the closing line, its edges are mostly noise.</p></div>`;
+  const controls = `<div class="panel" style="display:flex;gap:14px;align-items:end;flex-wrap:wrap">
+      <label class="field inline"><span class="label">Bankroll ($)</span><input id="bankroll" type="number" min="0" step="50" value="${bankroll()}"></label>
+      <p class="lede" style="margin:0;flex:1;min-width:240px">Stakes are quarter Kelly with caps of 2% per bet, 3% per game, and 10% per slate. Only bets with at least 3% edge get a stake. Suggested total: <b>${money(b.total_stake)}</b>.</p>
+    </div>`;
+  const kRows = b.kalshi.map(k => `<tr><td>${esc(k.team)}</td><td>${esc(k.matchup)}</td><td>${pct(k.model)}</td><td>${pct(k.market)}</td><td>${cents(k.price)}</td><td>$${k.fee.toFixed(4)}</td><td>${pts(k.edge)}</td><td>${k.longshot ? `<span class="chip chip-pass" title="Kalshi contracts under 20¢ lose far more than their price implies (Bürgi, Deng & Whelan)">Long shot</span>` : chip(k.flag)}</td><td>${money(k.stake)}</td></tr>`).join("");
+  const evCell = ev => `<td class="${ev >= 0 ? "ev-pos" : "ev-neg"}">${ev >= 0 ? "+" : "−"}$${Math.abs(ev).toFixed(3)}</td>`;
+  const bookRows = b.book.map(x => `<tr><td>${esc(x.team)}</td><td>${esc(x.matchup)}</td><td>${pct(x.model)}</td><td>${pct(x.market)}</td><td>${x.decimal.toFixed(2)}</td>${evCell(x.ev)}<td>${money(x.stake)}</td></tr>`).join("");
+  const spRows = (b.spreads || []).map(x => `<tr><td>${esc(x.team)} ${signed(x.line)}</td><td>${esc(x.matchup)}</td><td>${pct(x.model)}</td><td>${x.decimal.toFixed(2)}</td>${evCell(x.ev)}<td>${money(x.stake)}</td></tr>`).join("");
   const parRows = b.parlays.map(x => `<tr><td style="white-space:normal;text-align:left">${x.legs.map(l => esc(l.team)).join(" + ")}</td><td>${pct(x.prob)}</td><td>${pct(x.market_prob)}</td><td>${x.decimal.toFixed(2)} (${american(x.decimal >= 2 ? (x.decimal - 1) * 100 : -100 / (x.decimal - 1))})</td><td class="ev-pos">+$${x.ev.toFixed(3)}</td></tr>`).join("");
   const empty = msg => `<div class="panel empty">${msg}</div>`;
-  body.innerHTML = `<div class="notes">${trust}${notes}</div>
-    <section class="bets-section"><h2>Kalshi</h2><p class="lede">Buy-YES edge after Kalshi's fee. FLAG needs at least 3 points of edge.</p>
-      ${kRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>YES ask</th><th>Fee</th><th>Edge (pts)</th><th>Call</th></tr></thead><tbody>${kRows}</tbody></table></div>` : empty("No Kalshi prices right now. Kalshi may have no markets for these games, or this computer can't reach it.")}</section>
-    <section class="bets-section"><h2>Sportsbook singles</h2><p class="lede">Sides where the bet probability beats the average book moneyline. EV is expected profit per $1.</p>
-      ${bookRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>Decimal</th><th>EV / $1</th></tr></thead><tbody>${bookRows}</tbody></table></div>` : empty("None. The bet probabilities don't beat any book price after the vig. With a trust weight of 0, that's the expected answer.")}</section>
-    <section class="bets-section"><h2>Parlays</h2><p class="lede">2–3 legs from different games, each leg already a positive-EV side. Win chance multiplies, so even "good" parlays usually lose.</p>
+  body.innerHTML = `<div class="notes">${basis}${notes}</div>${controls}
+    <section class="bets-section"><h2>Kalshi</h2><p class="lede">Buy-YES edge after Kalshi's fee. A FLAG needs at least 3 points of edge and a price of at least 20¢. A resting limit order (maker) usually beats paying the ask.</p>
+      ${kRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>YES ask</th><th>Fee</th><th>Edge (pts)</th><th>Call</th><th>Stake</th></tr></thead><tbody>${kRows}</tbody></table></div>` : empty("No Kalshi prices right now. Kalshi may have no markets for these games, or this computer can't reach it.")}</section>
+    <section class="bets-section"><h2>Moneylines</h2><p class="lede">Sides where the bet probability beats the average book price. EV is expected profit per $1.</p>
+      ${bookRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>Decimal</th><th>EV / $1</th><th>Stake</th></tr></thead><tbody>${bookRows}</tbody></table></div>` : empty("None. The bet probabilities don't beat any book price after the vig, which is expected when the bet probability is the market.")}</section>
+    <section class="bets-section"><h2>Spreads</h2><p class="lede">Cover chance from a normal spread of margins around the line (Stern), with σ fitted on our own data.</p>
+      ${spRows ? `<div class="table-wrap"><table><thead><tr><th>Side</th><th>Game</th><th>Cover %</th><th>Decimal</th><th>EV / $1</th><th>Stake</th></tr></thead><tbody>${spRows}</tbody></table></div>` : empty("None.")}</section>
+    <section class="bets-section"><h2>Parlays</h2><p class="lede">2–3 legs from different games, each leg already a positive-EV side. Not staked: the house margin compounds and the variance is large.</p>
       ${parRows ? `<div class="table-wrap"><table><thead><tr><th>Legs</th><th>Hit %</th><th>Market hit %</th><th>Payout</th><th>EV / $1</th></tr></thead><tbody>${parRows}</tbody></table></div>` : empty("None. A parlay needs at least two positive-EV legs from different games.")}</section>
     ${b.excluded_gap.length ? `<section class="bets-section"><h2>Left out</h2><p class="lede">Model and market more than 10 points apart, so the model is probably missing news (often a quarterback change):</p><p>${b.excluded_gap.map(esc).join(" · ")}</p></section>` : ""}`;
 }
 $("#bets-refresh").addEventListener("click", () => { BETS = null; renderBets(); loadBets(true); });
+$("#bets-body").addEventListener("change", e => {
+  if (e.target.id === "bankroll") { store.set("bankroll", String(Number(e.target.value) || 1000)); BETS = null; renderBets(); loadBets(); }
+});
+
+// ---------------------------------------------------------------- research
+let RESEARCH = null;
+async function renderResearch() {
+  const body = $("#research-body");
+  if (!RESEARCH) {
+    body.innerHTML = `<div class="panel"><p class="label">Loading the research library…</p></div>`;
+    try { RESEARCH = await api("/api/research"); } catch (e) { body.innerHTML = `<div class="notice bad"><p>${esc(e.message)}</p></div>`; return; }
+  }
+  const conf = { "peer-reviewed": "Peer-reviewed", primary: "Author's own report", reported: "Reported (book/press)", practitioner: "Practitioner practice" };
+  const groups = {};
+  RESEARCH.studies.forEach(x => (groups[x.domain] = groups[x.domain] || []).push(x));
+  body.innerHTML = `<p class="lede" style="margin-bottom:16px">${esc(RESEARCH.about)}</p>` + Object.entries(groups).map(([d, xs]) => `
+    <section class="bets-section"><h2>${esc(d)}</h2>
+      <div class="games">${xs.map(x => `<article class="study">
+        <div class="study-head"><h3>${esc(x.title)}</h3><span class="chip-env">${esc(conf[x.confidence] || x.confidence)}</span><span class="chip-env">${esc(x.scale)} scale</span></div>
+        <p class="label" style="text-transform:none;letter-spacing:0">${esc(x.authors)}${x.year ? ` · ${x.year}` : ""} · ${esc(x.venue)}</p>
+        <p><b>Found:</b> ${esc(x.finding)}</p>
+        <p><b>Why it worked:</b> ${esc(x.why_it_worked)}</p>
+        <p><b>Used in Hashmark:</b> ${esc(x.used_in)}</p>
+        <p><a href="${esc(x.url)}" target="_blank" rel="noopener">Source</a> · <span class="mono">${esc(x.id)}</span></p>
+      </article>`).join("")}</div>
+    </section>`).join("");
+}
 
 // ---------------------------------------------------------------- explain
 const EX_FIELDS = [
@@ -600,7 +637,7 @@ $("#ex-form").addEventListener("submit", e => e.preventDefault());
 $("#ex-reset").addEventListener("click", () => { if (EX_DEFAULT) { buildExForm(EX_DEFAULT); runExplain(); } });
 
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "bets", "backtest", "parlay", "explain"];
+const TABS = ["week", "bets", "backtest", "parlay", "research", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -614,6 +651,7 @@ function setTab(name) {
   if (name === "backtest") loadBacktest(false);
   if (name === "parlay") renderParlay();
   if (name === "explain") initExplain();
+  if (name === "research") renderResearch();
 }
 $(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) setTab(b.dataset.tab); });
 $(".tabs").addEventListener("keydown", e => {

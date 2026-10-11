@@ -24,9 +24,14 @@ def edge_after_fee(model_prob, price):
     return model_prob - price - kalshi_fee(price)
 
 
-def should_flag(edge, model_prob, market_prob):
-    """FLAG only if edge >= 3 points AND model and market are within 10 points."""
+def should_flag(edge, model_prob, market_prob, price=None):
+    """FLAG only if edge >= 3 points AND model and market are within 10 points.
+    Cheap YES contracts (under strategy.LONGSHOT_MIN_PRICE) are never flagged:
+    on Kalshi they lose far more than their price implies (burgi-deng-whelan-2025)."""
+    from strategy import LONGSHOT_MIN_PRICE
     if edge is None or market_prob is None:
+        return False
+    if price is not None and price < LONGSHOT_MIN_PRICE:
         return False
     return edge >= config.MIN_EDGE and abs(model_prob - market_prob) <= config.MAX_MODEL_MARKET_GAP
 

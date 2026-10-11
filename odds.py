@@ -57,6 +57,7 @@ def parse_odds_event(event, home_name, away_name):
     updated (latest book update time).
     """
     ml_pairs, spreads, totals, updates = [], [], [], []
+    spread_prices = {"home": [], "away": []}
     for book in event.get("bookmakers", []):
         updates.append(book.get("last_update", ""))
         for market in book.get("markets", []):
@@ -66,6 +67,9 @@ def parse_odds_event(event, home_name, away_name):
             elif market["key"] == "spreads" and home_name in outs:
                 if outs[home_name].get("point") is not None:
                     spreads.append(float(outs[home_name]["point"]))
+                    spread_prices["home"].append(american_to_decimal(outs[home_name]["price"]))
+                    if away_name in outs:
+                        spread_prices["away"].append(american_to_decimal(outs[away_name]["price"]))
             elif market["key"] == "totals" and "Over" in outs:
                 if outs["Over"].get("point") is not None:
                     totals.append(float(outs["Over"]["point"]))
@@ -78,4 +82,6 @@ def parse_odds_event(event, home_name, away_name):
         "home_ml_dec": (sum(american_to_decimal(h) for h, _ in ml_pairs) / len(ml_pairs)) if ml_pairs else None,
         "away_ml_dec": (sum(american_to_decimal(a) for _, a in ml_pairs) / len(ml_pairs)) if ml_pairs else None,
         "updated": max(updates) if updates else None,
+        "home_spread_dec": (sum(spread_prices["home"]) / len(spread_prices["home"])) if spread_prices["home"] else None,
+        "away_spread_dec": (sum(spread_prices["away"]) / len(spread_prices["away"])) if spread_prices["away"] else None,
     }

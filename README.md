@@ -93,6 +93,29 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 - So live NFL "edges" mainly come from Kalshi prices that disagree with the
   sportsbook consensus, or from injury news you enter before the market moves.
 
+## 2c. What worked elsewhere, and how it's built in
+
+The full library, with sources, is in `data/research.json` (also the **Research** tab).
+
+| Lesson | Source | Where it lives |
+|---|---|---|
+| Combine your model with the market and fit the weights | Benter 1994; Bates & Granger 1969 | `nfl.fit_combo`, `nfl.combo_prob` |
+| Published edges decay, so refit walk-forward | McLean & Pontiff 2016 | `nfl.run_backtest` (each test season fitted on earlier seasons only) |
+| Demand t ≥ 3, decide features in advance, report every trial | Harvey, Liu & Zhu 2016; Bailey & López de Prado 2014 | `nfl.MARGIN_FEATURES`, `nfl.TOTAL_FEATURES`, `strategy.T_STAT_BAR` |
+| Size by edge, but use fractional Kelly with caps | Kelly 1956; MacLean, Thorp & Ziemba | `strategy.size_bets` (¼ Kelly; 2% per bet, 3% per game, 10% per slate) |
+| Cheap prediction-market contracts are overpriced | Bürgi, Deng & Whelan; Thaler & Ziemba 1988 | `strategy.LONGSHOT_MIN_PRICE` (no Kalshi FLAG under 20¢) |
+| NFL margins are roughly normal around the spread | Stern 1991 | `strategy.cover_prob`, σ fitted on our data (≈12.8) |
+| Momentum | Jegadeesh & Titman 1993 | "form" candidate feature |
+| Many small edges, explicit costs, correlation and leverage risk | Medallion (Zuckerman); LTCM (Lowenstein) | caps, same-game warnings, net-of-fee EV |
+| Score yourself by closing line value | practitioner consensus | `data/paper_trades.csv`, `python main.py clv` |
+
+**What the NFL data said (walk-forward 2023–2025):**
+- The model's weight in the Benter blend is about −0.1 (t ≈ −1.1 to −1.8), so it isn't used. The bet probability is the closing market itself.
+- NFL closing moneylines show no significant favorite-longshot bias (slope 1.03–1.06, t < 1.1).
+- Of the five pre-registered features, only wind (t ≈ −4) is used. Rest, travel, form, and cold were rejected.
+- Betting the raw model at closing prices lost: moneyline −1.3% ROI and spread −3.4%, with t near 0 and confidence intervals that include 0.
+- Conclusion: in the NFL, the defensible edges are Kalshi prices that disagree with the sportsbook consensus, and news (injuries.csv) the market hasn't priced yet. Paper trades and CLV will show whether those hold up.
+
 ## 3. How data flows
 
 ```
@@ -123,7 +146,9 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 | `static/` | The web app's page, styles, and script |
 | `nfl.py` | NFL data, model, weather/rest/travel, trust weight, backtest, today's slate |
 | `nfl_teams.py` | NFL team names, time zones, stadium coordinates |
-| `bets.py` | Bet finder: Kalshi singles, sportsbook singles, parlays (ranked by EV) |
+| `bets.py` | Bet finder: Kalshi singles, moneyline and spread singles, parlays, Kelly stakes |
+| `strategy.py` | Kelly sizing, exposure caps, longshot guard, cover probability, bootstrap/t-stats, paper trades and CLV |
+| `data/research.json` | The research library: findings, why they worked, where they're used |
 
 ## 4. How each number is calculated
 

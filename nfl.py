@@ -91,6 +91,7 @@ def game_record(r):
         "roof": roof, "temp": _num(r.get("temp")), "wind": _num(r.get("wind")),
         "spread_line": _num(r.get("spread_line")), "total_line": _num(r.get("total_line")),
         "home_ml": _num(r.get("home_moneyline")), "away_ml": _num(r.get("away_moneyline")),
+        "home_spread_odds": _num(r.get("home_spread_odds")), "away_spread_odds": _num(r.get("away_spread_odds")),
         "stadium": None if pd.isna(r.get("stadium")) else str(r["stadium"]),
     }
 
@@ -128,45 +129,149 @@ def _ols(X, y):
     return beta, np.sqrt(np.diag(cov))
 
 
-def fit_environment(records):
-    """Fit the rest/travel effect on margin and the wind/cold effect on total,
-    using ONLY the fit seasons (2015-2022)."""
-    fit = [r for r in records if r["season"] in config.NFL_FIT_SEASONS]
-    Xm = [[r["f"]["rest"], r["f"]["tz"]] for r in fit]
+# Pre-registered candidate features (harvey-liu-zhu-2016, bailey-lopezdeprado-2014).
+# Written down BEFORE testing; nothing is added after seeing results. Each one
+# is used only if it clears |t| >= 3 on the seasons it is fitted on.
+MARGIN_FEATURES = {
+    "rest": "pts of margin per day of rest advantage",
+    "tz": "pts of margin per hour the away team traveled east",
+    "form": "pts of margin per point of recent form gap (last 3 games vs expectation)",
+}
+TOTAL_FEATURES = {
+    "wind_x": f"pts of total per mph above {config.WIND_THRESHOLD_MPH}",
+    "cold": "pts of total when 32°F or colder",
+}
+
+
+def fit_environment(records, seasons):
+    """Fit the candidate features on `seasons`, keep only those with |t| >= 3
+    (strategy.T_STAT_BAR), then refit using only the kept ones."""
+    from strategy import T_STAT_BAR
+    fit = [r for r in records if r["season"] in seasons]
+
+    def test(names, X_extra, y, intercept):
+        X = [([1.0] if intercept else []) + [r["f"][n] for n in names] for r in fit]
+        b, se = _ols(X, y)
+        off = 1 if intercept else 0
+        out = {n: {"coef": float(b[i + off]), "se": float(se[i + off]),
+                   "t": float(b[i + off] / se[i + off]) if se[i + off] > 0 else 0.0} for i, n in enumerate(names)}
+        for n in names:
+            out[n]["accepted"] = abs(out[n]["t"]) >= T_STAT_BAR
+        kept = [n for n in names if out[n]["accepted"]]
+        applied = {n: 0.0 for n in names}
+        if kept:
+            Xk = [([1.0] if intercept else []) + [r["f"][n] for n in kept] for r in fit]
+            bk, _ = _ols(Xk, y)
+            for i, n in enumerate(kept):
+                applied[n] = float(bk[i + off])
+        return out, applied
+
     ym = [r["margin_actual"] - r["base_margin"] for r in fit]
-    bm, sm = _ols(Xm, ym)
-    Xt = [[1.0, r["f"]["wind_x"], r["f"]["cold"]] for r in fit]
     yt = [r["total_actual"] - r["base_total"] for r in fit]
-    bt, st = _ols(Xt, yt)
-    return {
-        "games": len(fit), "seasons": [config.NFL_FIT_SEASONS[0], config.NFL_FIT_SEASONS[-1]],
-        "rest": {"coef": bm[0], "se": sm[0], "unit": "pts of margin per day of rest advantage"},
-        "tz": {"coef": bm[1], "se": sm[1], "unit": "pts of margin per hour the away team traveled east"},
-        "wind": {"coef": bt[1], "se": st[1], "unit": f"pts of total per mph above {config.WIND_THRESHOLD_MPH}"},
-        "cold": {"coef": bt[2], "se": st[2], "unit": "pts of total when 32°F or colder"},
-    }
+    m_tests, m_applied = test(list(MARGIN_FEATURES), None, ym, intercept=False)
+    t_tests, t_applied = test(list(TOTAL_FEATURES), None, yt, intercept=True)
+    for n in m_tests:
+        m_tests[n]["unit"] = MARGIN_FEATURES[n]
+    for n in t_tests:
+        t_tests[n]["unit"] = TOTAL_FEATURES[n]
+    return {"games": len(fit), "seasons": [min(seasons), max(seasons)],
+            "margin": m_tests, "total": t_tests, "applied": {**m_applied, **t_applied}}
 
 
-def model_prob(r, env):
+def apply_environment(env, f):
+    """Returns (margin adjustment, total adjustment) in points, using only accepted features."""
+    a = env["applied"]
+    dm = sum(a[n] * f[n] for n in MARGIN_FEATURES)
+    dt = sum(a[n] * f[n] for n in TOTAL_FEATURES)
+    return dm, dt
+
+
+def _logit(p):
+    p = np.clip(np.asarray(p, float), 1e-6, 1 - 1e-6)
+    return np.log(p / (1 - p))
+
+
+def _sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+
+def _logistic_fit(X, y, iters=50):
+    """Logistic regression by Newton's method (IRLS). Returns (coefs, std errors, log-likelihood)."""
+    X, y = np.asarray(X, float), np.asarray(y, float)
+    b = np.zeros(X.shape[1])
+    for _ in range(iters):
+        p = _sigmoid(X @ b)
+        H = X.T @ (X * (p * (1 - p))[:, None]) + 1e-9 * np.eye(X.shape[1])
+        step = np.linalg.solve(H, X.T @ (y - p))
+        b += step
+        if np.max(np.abs(step)) < 1e-10:
+            break
+    p = np.clip(_sigmoid(X @ b), 1e-12, 1 - 1e-12)
+    ll = float(np.sum(y * np.log(p) + (1 - y) * np.log(1 - p)))
+    return b, np.sqrt(np.diag(np.linalg.inv(H))), ll
+
+
+def raw_model_prob(r, env):
     dm, _ = apply_environment(env, r["f"])
     return margin_to_prob(r["base_margin"] + dm, config.NFL.ELO_PER_POINT)
 
 
-def fit_blend(records, env):
-    """How much should the model be trusted versus the market?
+def fit_combo(records, env, seasons):
+    """Benter-style combination (benter-1994, bates-granger-1969):
 
-    blended = (1 - w) * market + w * model. Pick the w (0 to 1, step 0.05)
-    with the lowest log loss on the FIT seasons only. w = 0 means "the model
-    adds nothing the market doesn't already know".
+        logit(p) = a0 + a1 * logit(market) + a2 * logit(model)
+
+    fitted by maximum likelihood on `seasons`. a2 near 0 means the model adds
+    nothing the market doesn't know. a1 above 1 means the market under-rates
+    favorites (favorite-longshot bias, thaler-ziemba-1988).
+    Also reports the market-only refit and the log-likelihood gain over the
+    raw market, which is Benter's own yardstick.
     """
-    fit = [r for r in records if r["season"] in config.NFL_FIT_SEASONS and r["market_p"] is not None]
-    best = None
-    for w in np.arange(0, 1.0001, 0.05):
-        probs = [(1 - w) * r["market_p"] + w * model_prob(r, env) for r in fit]
-        ll = log_loss(probs, [r["y"] for r in fit])
-        if best is None or ll < best[1]:
-            best = (float(round(w, 2)), ll)
-    return best[0]
+    fit = [r for r in records if r["season"] in seasons and r["market_p"] is not None]
+    y = np.array([r["y"] for r in fit], float)
+    lm = _logit([r["market_p"] for r in fit])
+    lmod = _logit([raw_model_prob(r, env) for r in fit])
+    ones = np.ones(len(fit))
+    b, se, ll = _logistic_fit(np.column_stack([ones, lm, lmod]), y)
+    bm, sem, llm = _logistic_fit(np.column_stack([ones, lm]), y)
+    pm = np.clip(np.array([r["market_p"] for r in fit]), 1e-12, 1 - 1e-12)
+    ll_raw = float(np.sum(y * np.log(pm) + (1 - y) * np.log(1 - pm)))
+    # Same t >= 3 bar as every other feature: only use what clears it.
+    from strategy import T_STAT_BAR
+    t_model = float(b[2] / se[2]) if se[2] > 0 else 0.0
+    t_recal = max(abs(bm[0] / sem[0]), abs((bm[1] - 1) / sem[1]))
+    if abs(t_model) >= T_STAT_BAR:
+        mode = "model+market"
+    elif t_recal >= T_STAT_BAR:
+        mode = "recalibrated market"
+    else:
+        mode = "market"
+    return {"games": len(fit), "seasons": [min(seasons), max(seasons)], "mode": mode,
+            "a0": float(b[0]), "a1": float(b[1]), "a2": float(b[2]),
+            "se": [float(x) for x in se], "t_model": float(b[2] / se[2]) if se[2] > 0 else 0.0,
+            "ll_gain_vs_market": ll - ll_raw,
+            "market_only": {"a0": float(bm[0]), "a1": float(bm[1]), "se_a1": float(sem[1]),
+                            "t_bias": float((bm[1] - 1) / sem[1]), "ll_gain_vs_market": llm - ll_raw}}
+
+
+def combo_prob(c, market, model):
+    """Apply a fitted combination in whatever mode cleared the t >= 3 bar.
+    Falls back to the raw model when there is no market."""
+    if market is None:
+        return model
+    if c["mode"] == "market":
+        return float(market)
+    if c["mode"] == "recalibrated market":
+        m = c["market_only"]
+        return float(_sigmoid(m["a0"] + m["a1"] * _logit(market)))
+    return float(_sigmoid(c["a0"] + c["a1"] * _logit(market) + c["a2"] * _logit(model)))
+
+
+def fit_sigma(records, seasons):
+    """Spread of final margins around the closing line (stern-1991), fitted on our data."""
+    res = [r["margin_actual"] + r["close_spread"] for r in records
+           if r["season"] in seasons and r["close_spread"] is not None]
+    return float(np.std(res, ddof=1))
 
 
 def prob_to_margin(p):
@@ -175,16 +280,10 @@ def prob_to_margin(p):
     return 400 / config.NFL.ELO_PER_POINT * np.log10(p / (1 - p))
 
 
-def blend(model, market, w):
-    """Blend one probability with the market (falls back to the model if no market)."""
-    return model if market is None else (1 - w) * market + w * model
-
-
-def apply_environment(env, f):
-    """Returns (margin adjustment, total adjustment) in points."""
-    dm = env["rest"]["coef"] * f["rest"] + env["tz"]["coef"] * f["tz"]
-    dt = env["wind"]["coef"] * f["wind_x"] + env["cold"]["coef"] * f["cold"]
-    return dm, dt
+def fit_all(records, seasons):
+    """Everything that is learned from data, fitted on `seasons` only."""
+    env = fit_environment(records, seasons)
+    return {"env": env, "combo": fit_combo(records, env, seasons), "sigma": fit_sigma(records, seasons)}
 
 
 # ----------------------------------------------------------- replay -------
@@ -213,19 +312,41 @@ def replay(games_df, current_season, on_game=None):
     return rs
 
 
+class FormTracker:
+    """Recent form (jegadeesh-titman-1993 momentum, adapted): each team's average
+    margin above the model's expectation over its last 3 games this season."""
+    def __init__(self):
+        self.season, self.res = None, {}
+
+    def gap(self, g):
+        if g["season"] != self.season:
+            self.season, self.res = g["season"], {}
+        f = lambda t: float(np.mean(self.res[t][-3:])) if self.res.get(t) else 0.0
+        return f(g["home"]) - f(g["away"])
+
+    def record(self, g, base_margin):
+        resid = (g["home_pts"] - g["away_pts"]) - base_margin
+        self.res.setdefault(g["home"], []).append(resid)
+        self.res.setdefault(g["away"], []).append(-resid)
+
+
 def collect_records(games_df, current_season):
     """Base (Elo+EPA) prediction for every completed game, made before it was played."""
-    records = []
+    records, form = [], FormTracker()
 
     def on_game(g, rs):
-        if not g["completed"] or g["home_pts"] == g["away_pts"]:
-            return  # ties are rare and have no winner to score
+        gap = form.gap(g)
+        if not g["completed"]:
+            return
         p = rs.predict(g["home"], g["away"], g["neutral"])
+        form.record(g, p["margin"])  # this game's result only feeds LATER games
+        if g["home_pts"] == g["away_pts"]:
+            return  # ties are rare and have no winner to score
         mkt = None
         if g["home_ml"] is not None and g["away_ml"] is not None:
             mkt = remove_vig(g["home_ml"], g["away_ml"])[0]
         records.append({
-            "season": g["season"], "id": g["id"], "f": features(g),
+            "season": g["season"], "id": g["id"], "f": {**features(g), "form": gap},
             "base_margin": p["margin"], "base_total": p["total"],
             "margin_actual": g["home_pts"] - g["away_pts"],
             "total_actual": g["home_pts"] + g["away_pts"],
@@ -234,45 +355,111 @@ def collect_records(games_df, current_season):
             # betting convention (negative = home favored), so flip the sign.
             "close_spread": None if g["spread_line"] is None else -g["spread_line"],
             "total_line": g["total_line"], "market_p": mkt,
+            "home_ml": g["home_ml"], "away_ml": g["away_ml"],
+            "home_spread_odds": g["home_spread_odds"], "away_spread_odds": g["away_spread_odds"],
         })
 
     replay(games_df, current_season, on_game)
     return records
 
 
+# ------------------------------------------------------ betting sim -------
+
+def simulate_bets(test, prob_key, kind="moneyline", min_ev=config.MIN_EDGE):
+    """Bet the test seasons at CLOSING prices, the hardest benchmark there is:
+    any profit here would be real edge, not just catching a stale line.
+
+    A side is bet when EV >= 3% and the raw model is within 10 pts of the
+    market (the project's rules). Reports flat-stake ROI with a bootstrap 95%
+    CI and t-stat, plus a quarter-Kelly bankroll curve.
+    """
+    from strategy import (KELLY_FRACTION, MAX_BET_FRACTION, bootstrap_ci, cover_prob,
+                          kelly_fraction_decimal, max_drawdown, t_stat)
+    flat, bankroll, equity, hits = [], 1.0, [1.0], 0
+    for r in test:
+        if r["market_p"] is None:
+            continue
+        p_home = r[prob_key]
+        raw_home = r["raw_p"]
+        options = []
+        if kind == "moneyline":
+            for side, p, raw, mkt, ml in (("home", p_home, raw_home, r["market_p"], r["home_ml"]),
+                                          ("away", 1 - p_home, 1 - raw_home, 1 - r["market_p"], r["away_ml"])):
+                won = (r["y"] == 1) if side == "home" else (r["y"] == 0)
+                options.append((p, raw, mkt, american_to_decimal(ml), won, False))
+        else:
+            if r["close_spread"] is None:
+                continue
+            # Center on the market's own line and shift only by how much the bet
+            # probability disagrees with the market (no moneyline-vs-spread artifacts).
+            m_bet = -r["close_spread"] + prob_to_margin(p_home) - prob_to_margin(r["market_p"])
+            pc = cover_prob(m_bet, r["close_spread"], r["sigma"])
+            cover = r["margin_actual"] + r["close_spread"]
+            for side, p, ml in (("home", pc, r["home_spread_odds"]), ("away", 1 - pc, r["away_spread_odds"])):
+                dec = american_to_decimal(ml if ml is not None else -110)
+                won = cover > 0 if side == "home" else cover < 0
+                options.append((p, raw_home if side == "home" else 1 - raw_home,
+                                r["market_p"] if side == "home" else 1 - r["market_p"], dec, won, cover == 0))
+        for p, raw, mkt, dec, won, push in options:
+            if p * dec - 1 < min_ev or abs(raw - mkt) > config.MAX_MODEL_MARKET_GAP:
+                continue
+            ret = 0.0 if push else (dec - 1 if won else -1.0)
+            flat.append(ret)
+            hits += 1 if (won and not push) else 0
+            f = min(kelly_fraction_decimal(p, dec) * KELLY_FRACTION, MAX_BET_FRACTION)
+            bankroll *= 1 + f * ret
+            equity.append(bankroll)
+    lo, hi = bootstrap_ci(flat)
+    return {"bets": len(flat), "roi": float(np.mean(flat)) if flat else None,
+            "ci95": [lo, hi], "t": t_stat(flat), "hit_rate": hits / len(flat) if flat else None,
+            "kelly_final": bankroll, "kelly_max_drawdown": max_drawdown(equity)}
+
+
 def run_backtest(now=None):
-    now = now or datetime.now(ET)
+    """Walk-forward (mclean-pontiff-2016): each test season is scored with
+    weights fitted only on seasons before it (expanding window from 2015)."""
     games_df, stamp = load_games()
     last_test = config.NFL_TEST_SEASONS[-1]
     records = collect_records(games_df, last_test)
-    env = fit_environment(records)
-    w = fit_blend(records, env)
 
-    test = [r for r in records if r["season"] in config.NFL_TEST_SEASONS]
-    for r in test:
-        dm, dt = apply_environment(env, r["f"])
-        r["margin_pred"] = r["base_margin"] + dm
-        r["p"] = margin_to_prob(r["margin_pred"], config.NFL.ELO_PER_POINT)
-        r["total_pred"] = r["base_total"] + dt
+    per_season, test = [], []
+    for S in config.NFL_TEST_SEASONS:
+        seasons = list(range(config.NFL_FIT_SEASONS[0], S))
+        fitted = fit_all(records, seasons)
+        per_season.append({"season": S, **fitted})
+        for r in (r for r in records if r["season"] == S):
+            dm, dt = apply_environment(fitted["env"], r["f"])
+            r["raw_p"] = margin_to_prob(r["base_margin"] + dm, config.NFL.ELO_PER_POINT)
+            r["p"] = combo_prob(fitted["combo"], r["market_p"], r["raw_p"])
+            r["margin_pred"] = prob_to_margin(r["p"])
+            r["total_pred"] = r["base_total"] + dt
+            r["sigma"] = fitted["sigma"]
+            test.append(r)
 
     s = summarize(test)
     s["verdict"] = verdict(s["vs_market"])
     s["burn_in"] = [config.NFL_START_SEASON, config.NFL_TEST_SEASONS[0] - 1]
-    s["env"] = env
     s["source"] = f"nflverse schedules + team stats @ {stamp}"
+    s["walk_forward"] = per_season
+    s["env"] = per_season[-1]["env"]          # latest fit, for display
+    s["combo"] = per_season[-1]["combo"]
 
-    # Did the environment adjustments help on the test seasons? (ablation)
+    # The raw model (no market) for contrast: what you'd get trusting it alone.
     y = [r["y"] for r in test]
-    base_p = [margin_to_prob(r["base_margin"], config.NFL.ELO_PER_POINT) for r in test]
-    base_ats = ats_record([{**r, "margin_pred": r["base_margin"]} for r in test])
-    full_ats = ats_record(test)
-    s["ablation"] = {
-        "without_env": {"brier": brier(base_p, y), "log_loss": log_loss(base_p, y), "ats": base_ats},
-        "with_env": {"brier": brier([r["p"] for r in test], y),
-                     "log_loss": log_loss([r["p"] for r in test], y), "ats": full_ats},
-    }
+    raw = [r["raw_p"] for r in test]
+    s["raw_model"] = {"brier": brier(raw, y), "log_loss": log_loss(raw, y),
+                      "ats": ats_record([{**r, "margin_pred": prob_to_margin(r["raw_p"])} for r in test])}
 
-    # Totals: over/under record vs the closing total (weather mostly moves totals).
+    # Betting simulation at closing prices. 4 variants are run and ALL are
+    # reported (bailey-lopezdeprado-2014: no picking the best afterwards).
+    s["betting"] = {
+        "raw_moneyline": simulate_bets(test, "raw_p", "moneyline"),
+        "combo_moneyline": simulate_bets(test, "p", "moneyline"),
+        "raw_spread": simulate_bets(test, "raw_p", "spread"),
+        "combo_spread": simulate_bets(test, "p", "spread"),
+    }
+    s["trials"] = len(s["betting"])
+
     def ou(key):
         w = l = p = 0
         for r in test:
@@ -285,13 +472,6 @@ def run_backtest(now=None):
             else:
                 l += 1
         return {"w": w, "l": l, "p": p, "pct": w / (w + l) if w + l else None}
-
-    both = [r for r in test if r["market_p"] is not None]
-    yb = [r["y"] for r in both]
-    bl = [blend(r["p"], r["market_p"], w) for r in both]
-    s["blend"] = {"weight": w, "games": len(both), "brier": brier(bl, yb), "log_loss": log_loss(bl, yb),
-                  "market_brier": brier([r["market_p"] for r in both], yb),
-                  "market_log_loss": log_loss([r["market_p"] for r in both], yb)}
 
     s["totals"] = {
         "mae_model": float(np.mean([abs(r["total_pred"] - r["total_actual"]) for r in test])),
@@ -356,12 +536,23 @@ def build_slate(now=None, days=0):
     season = _season_now(now)
     games_df, games_stamp = load_games()
 
-    # Environment effects: fitted on 2015-2022 only (same as the backtest).
-    records = collect_records(games_df, config.NFL_FIT_SEASONS[-1])
-    env = fit_environment(records)
-    w = fit_blend(records, env)
+    # Everything learned from data is refit on every completed season before
+    # this one (walk-forward, same procedure the backtest validated).
+    fit_seasons = list(range(config.NFL_FIT_SEASONS[0], season))
+    records = collect_records(games_df, season - 1)
+    fitted = fit_all(records, fit_seasons)
+    env, combo, sigma = fitted["env"], fitted["combo"], fitted["sigma"]
 
-    rs = replay(games_df, season)
+    form, form_gap = FormTracker(), {}
+
+    def track_form(g, rs_):
+        gap = form.gap(g)
+        if g["completed"]:
+            form.record(g, rs_.predict(g["home"], g["away"], g["neutral"])["margin"])
+        elif g["season"] == season:
+            form_gap[g["id"]] = gap
+
+    rs = replay(games_df, season, track_form)
     first, last = now.date(), now.date() + timedelta(days=days)
     df = games_df[(games_df["season"] == season) & games_df["home_score"].isna()]
     slate = [game_record(r) for _, r in df.iterrows()
@@ -391,8 +582,9 @@ def build_slate(now=None, days=0):
             except ApiError as e:
                 weather_failed = True
                 notes.append(f"Weather forecast unavailable ({e}). No wind/cold adjustment applied.")
-        f = features(g, wind=wx["wind"] if wx else None, temp=wx["temp"] if wx else None)
-        if wx is None:  # no forecast: only rest and travel adjust (wind/cold left at 0)
+        f = {**features(g, wind=wx["wind"] if wx else None, temp=wx["temp"] if wx else None),
+             "form": form_gap.get(g["id"], 0.0)}
+        if wx is None:  # no forecast: no wind/cold adjustment
             f["wind_x"], f["cold"] = 0.0, 0.0
         dm, dt = apply_environment(env, f)
         home_name, away_name = T.full_name(g["home"]), T.full_name(g["away"])
@@ -417,12 +609,15 @@ def build_slate(now=None, days=0):
             mkt = {"home_prob": remove_vig(g["home_ml"], g["away_ml"])[0], "ml_books": 1,
                    "home_spread": None if g["spread_line"] is None else -g["spread_line"],
                    "total": g["total_line"], "home_ml_dec": american_to_decimal(g["home_ml"]),
-                   "away_ml_dec": american_to_decimal(g["away_ml"]), "updated": games_stamp}
+                   "away_ml_dec": american_to_decimal(g["away_ml"]), "updated": games_stamp,
+                   "home_spread_dec": american_to_decimal(g["home_spread_odds"]) if g["home_spread_odds"] else None,
+                   "away_spread_dec": american_to_decimal(g["away_spread_odds"]) if g["away_spread_odds"] else None}
             mkt_source = f"nflverse schedule file (one consensus line, as of its last update) @ {games_stamp}"
 
-        # Bets use the market-blended probability (weight fitted on 2015-2022).
-        p["home_prob"] = blend(p["raw_home_prob"], mkt["home_prob"] if mkt else None, w)
-        p["blend_weight"] = w if mkt else 1.0
+        # Bet probability: the Benter-style combination, in whatever mode
+        # cleared the t >= 3 bar (often just the market itself).
+        p["home_prob"] = combo_prob(combo, mkt["home_prob"] if mkt else None, p["raw_home_prob"])
+        p["bet_basis"] = combo["mode"] if mkt else "raw model (no market)"
         if injury_adj:
             # Your injuries.csv is news the market may not have priced yet, so it
             # moves the blended number directly (as a shift in points of margin).
@@ -443,7 +638,7 @@ def build_slate(now=None, days=0):
         raw_side = None
         if best:
             raw_side = p["raw_home_prob"] if best[1] == home_name else 1 - p["raw_home_prob"]
-        flag = bool(best) and should_flag(best[0], raw_side, best[3])
+        flag = bool(best) and should_flag(best[0], raw_side, best[3], price=best[4])
 
         kick = None
         if g["gametime"]:
@@ -452,7 +647,7 @@ def build_slate(now=None, days=0):
             "game": {"id": g["id"], "home": home_name, "away": away_name, "home_code": g["home"],
                      "away_code": g["away"], "start": kick, "neutral": g["neutral"],
                      "stadium": g["stadium"], "roof": g["roof"]},
-            "pred": p, "market": mkt, "kalshi": km, "best": best, "flag": flag,
+            "pred": p, "market": mkt, "kalshi": km, "best": best, "flag": flag, "sigma": sigma,
             "env": {**f, "forecast": wx, "home_rest": g["home_rest"], "away_rest": g["away_rest"]},
             "sources": {
                 "model": f"nflverse schedules + team EPA @ {games_stamp}",
@@ -465,45 +660,60 @@ def build_slate(now=None, days=0):
             },
         })
     info = {"sport": "nfl", "label": f"NFL · {first.strftime('%a %b %-d')}" + (f"–{last.strftime('%b %-d')}" if days else ""),
-            "env": env, "blend_weight": w, "notes": notes}
+            "env": env, "combo": combo, "sigma": sigma, "bet_basis": combo["mode"], "notes": notes}
     return info, rows
 
 
 def report(s):
-    """Plain-text NFL backtest report (reuses the college report layout)."""
+    """Plain-text NFL backtest report."""
     from tabulate import tabulate
-    out = [f"NFL BACKTEST: walk-forward, ratings start {s['burn_in'][0]}, scored seasons "
-           f"{config.NFL_TEST_SEASONS[0]}-{config.NFL_TEST_SEASONS[-1]}. Source: {s['source']}",
-           "Parameters fixed in config.py; rest/travel/weather effects fitted on "
-           f"{s['env']['seasons'][0]}-{s['env']['seasons'][1]} only.\n"]
+    from strategy import T_STAT_BAR
+    pct = lambda x: "n/a" if x is None else f"{x:.1%}"
     ats = lambda a: f"{a['w']}-{a['l']}-{a['p']} ({a['pct']:.1%})" if a["pct"] is not None else "n/a"
+    out = [f"NFL BACKTEST (walk-forward). Ratings start {s['burn_in'][0]}; each test season is fitted only on "
+           f"{config.NFL_FIT_SEASONS[0]}..(season-1). Source: {s['source']}",
+           f"Rules fixed in advance: features need |t| >= {T_STAT_BAR:.0f}; bets need EV >= 3% and model within 10 pts "
+           f"of market; {s['trials']} betting variants run and all reported.\n"]
     out.append(tabulate([[r["label"], r["games"], f"{r['accuracy']:.1%}", f"{r['brier']:.4f}",
                           f"{r['log_loss']:.4f}", ats(r["ats"])] for r in s["seasons"]],
                         headers=["Season", "Games", "SU accuracy", "Brier", "Log loss", "ATS vs close"]))
-    vm = s["vs_market"]
-    if vm:
-        out.append("\n" + tabulate([[n, f"{x['accuracy']:.1%}", f"{x['brier']:.4f}", f"{x['log_loss']:.4f}"]
-                                     for n, x in (("Model", vm["model"]), ("Closing market (no-vig)", vm["market"]))],
-                                    headers=[f"vs CLOSING LINE ({vm['games']} games)", "SU accuracy", "Brier", "Log loss"]))
+    vm, rm = s["vs_market"], s["raw_model"]
+    out.append("\n" + tabulate([
+        ["Bet probability (final model)", f"{vm['model']['brier']:.4f}", f"{vm['model']['log_loss']:.4f}"],
+        ["Raw Elo+EPA model alone", f"{rm['brier']:.4f}", f"{rm['log_loss']:.4f}"],
+        ["Closing market (no-vig)", f"{vm['market']['brier']:.4f}", f"{vm['market']['log_loss']:.4f}"]],
+        headers=[f"Test seasons ({vm['games']} games)", "Brier", "Log loss"]))
     out.append(f"\n>>> {s['verdict']}\n")
-    out.append(f"ENVIRONMENT EFFECTS (fitted on {s['env']['games']} games, {s['env']['seasons'][0]}-{s['env']['seasons'][1]}):")
-    out.append(tabulate([[k, f"{s['env'][k]['coef']:+.3f}", f"{s['env'][k]['se']:.3f}", s["env"][k]["unit"]]
-                         for k in ("rest", "tz", "wind", "cold")], headers=["Factor", "Effect", "Std err", "Meaning"]))
-    out.append("  An effect smaller than about 2x its std err could easily be noise.\n")
-    a = s["ablation"]
-    out.append(tabulate([[n, f"{x['brier']:.4f}", f"{x['log_loss']:.4f}", "{}-{}-{}".format(*x['ats'])]
-                         for n, x in (("Without environment", a["without_env"]), ("With environment", a["with_env"]))],
-                        headers=["Test seasons", "Brier", "Log loss", "ATS"]))
-    b = s["blend"]
-    out.append(f"\nTRUST WEIGHT: blended = {1 - b['weight']:.2f} x market + {b['weight']:.2f} x model "
-               f"(weight fitted on {config.NFL_FIT_SEASONS[0]}-{config.NFL_FIT_SEASONS[-1]}).")
-    out.append(f"  Test seasons: blend Brier {b['brier']:.4f} vs market {b['market_brier']:.4f}; "
-               f"log loss {b['log_loss']:.4f} vs {b['market_log_loss']:.4f}.")
-    out.append("  Live bets use this blended probability, so the model only moves prices as far as it has earned.")
+
+    out.append("BENTER-STYLE COMBINATION, refit each season: logit(p) = a0 + a1*logit(market) + a2*logit(model)")
+    out.append(tabulate([[w["season"], w["combo"]["games"], f"{w['combo']['a1']:.3f}", f"{w['combo']['a2']:+.3f}",
+                          f"{w['combo']['t_model']:+.2f}", f"{w['combo']['ll_gain_vs_market']:+.2f}",
+                          f"{w['combo']['market_only']['a1']:.3f} (t vs 1: {w['combo']['market_only']['t_bias']:+.2f})",
+                          w["combo"]["mode"], f"{w['sigma']:.2f}"] for w in s["walk_forward"]],
+                        headers=["Season", "Fit games", "a1 market", "a2 model", "t(model)", "LL gain",
+                                 "Market-only slope", "Used", "Spread sigma"]))
+    out.append("  a2 near 0 = model adds nothing beyond the market. Market-only slope above 1 = favorite-longshot bias.")
+    out.append("  'Used' is what cleared |t| >= 3; otherwise the plain market is used.\n")
+
+    e = s["env"]
+    out.append(f"CANDIDATE FEATURES (latest fit, {e['games']} games, {e['seasons'][0]}-{e['seasons'][1]}):")
+    rows = [[n, f"{v['coef']:+.3f}", f"{v['se']:.3f}", f"{v['t']:+.2f}", "USED" if v["accepted"] else "rejected", v["unit"]]
+            for grp in ("margin", "total") for n, v in e[grp].items()]
+    out.append(tabulate(rows, headers=["Feature", "Effect", "Std err", "t", "Decision", "Meaning"]))
+
+    out.append("\nBETTING SIMULATION at closing prices (test seasons, flat 1 unit; Kelly = quarter Kelly, 2% cap):")
+    b = s["betting"]
+    out.append(tabulate([[k.replace("_", " "), v["bets"], pct(v["roi"]),
+                          "n/a" if v["ci95"][0] is None else f"[{v['ci95'][0]:+.1%}, {v['ci95'][1]:+.1%}]",
+                          "n/a" if v["t"] is None else f"{v['t']:+.2f}", pct(v["hit_rate"]),
+                          f"{v['kelly_final']:.3f}x", f"{v['kelly_max_drawdown']:.1%}"] for k, v in b.items()],
+                        headers=["Variant", "Bets", "ROI", "95% CI", "t", "Hit rate", "Kelly bankroll", "Max drawdown"]))
+    out.append(f"  An edge counts as real only if t >= {T_STAT_BAR:.0f} (harvey-liu-zhu-2016) and the CI excludes 0.")
     t = s["totals"]
-    out.append(f"\nTOTALS: model MAE {t['mae_model']:.2f} vs closing total MAE {t['mae_market']:.2f} points. "
-               f"O/U record vs close: {ats(t['ou_with_env'])} with weather, {ats(t['ou_without_env'])} without.\n")
-    out.append("CALIBRATION (home-team win probability):")
-    out.append(tabulate([[f"{b['lo']:.0%}-{b['hi']:.0%}", b["games"], f"{b['avg_pred']:.1%}", f"{b['actual']:.1%}"]
-                         for b in s["calibration"]], headers=["Predicted", "Games", "Avg predicted", "Actual"]))
+    out.append(f"\nTOTALS: model MAE {t['mae_model']:.2f} vs closing total MAE {t['mae_market']:.2f}. "
+               f"O/U vs close: {ats(t['ou_with_env'])} with weather, {ats(t['ou_without_env'])} without.\n")
+    out.append("CALIBRATION of the bet probability:")
+    out.append(tabulate([[f"{x['lo']:.0%}-{x['hi']:.0%}", x["games"], f"{x['avg_pred']:.1%}", f"{x['actual']:.1%}"]
+                         for x in s["calibration"]], headers=["Predicted", "Games", "Avg predicted", "Actual"]))
+    out.append("\nSources for every method: data/research.json")
     return "\n".join(out)

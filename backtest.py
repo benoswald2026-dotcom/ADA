@@ -175,6 +175,9 @@ def verdict(vs_market):
     if vs_market is None:
         return "No closing moneylines found, so no head-to-head vs market."
     m, k = vs_market["model"]["brier"], vs_market["market"]["brier"]
+    if abs(m - k) < 0.0005:
+        return (f"The model TIES the closing-line market on Brier score ({m:.4f} vs {k:.4f}). "
+                "It has no demonstrated edge; any 'edge' it shows is noise or a price that differs from the market.")
     if vs_market["model_worse"]:
         return (f"The model is WORSE than the closing-line market on Brier score "
                 f"({m:.4f} vs {k:.4f}). Treat its 'edges' with heavy skepticism.")

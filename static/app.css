@@ -290,3 +290,9 @@ tr.total td { font-weight: 500; background: var(--surface-2); }
 @media (prefers-reduced-motion: reduce) {
   .progress span, .skeleton { animation: none; }
 }
+
+.study { padding: 16px 18px; border-top: 1px solid var(--line); display: grid; gap: 6px; max-width: 100%; }
+.study:first-child { border-top: 0; }
+.study p { max-width: 80ch; }
+.study-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.study-head h3 { text-transform: none; letter-spacing: 0; font-size: 1.2rem; margin-right: 4px; }

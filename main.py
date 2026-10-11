@@ -2,7 +2,8 @@
 
     python main.py week [--sport nfl]                 this week's (NFL: today's) table
     python main.py backtest [--sport nfl]             2023-2025 validation report
-    python main.py bets [--sport nfl]                 ranked Kalshi bets, singles, parlays
+    python main.py bets [--sport nfl] [--bankroll N]  ranked Kalshi bets, singles, parlays, stakes
+    python main.py clv                                score paper trades against the closing line
     python main.py parlay ID:TEAM ID:TEAM [--sport nfl]   parlay fair price (2 or 3 legs)
     python main.py serve                              local web app at http://127.0.0.1:8000
 
@@ -92,32 +93,57 @@ def cmd_backtest(args):
 def cmd_bets(args):
     from bets import find_bets
     title, notes, rows = load_slate(args.sport, args.days)
-    b = find_bets(rows)
-    print(f"\nBET FINDER — {title}")
+    b = find_bets(rows, bankroll=args.bankroll, log_sport=args.sport)
+    money = lambda x: f"${x:,.2f}" if x else "-"
+    print(f"\nBET FINDER — {title}   (bankroll {money(args.bankroll)}, quarter Kelly, caps 2%/bet 3%/game 10%/slate)")
     for n in notes:
         print(f"NOTE: {n}")
-    print("Ranked by expected value, not win chance. Only sides where model and market are within 10 pts.")
+    print("Ranked by expected value, not win chance. Only sides where the raw model is within 10 pts of the market.")
     print("Check `python main.py backtest" + (" --sport nfl" if args.sport == "nfl" else "") +
-          "` first: if the model loses to the closing line, treat these as noise.\n")
-    print("KALSHI (FLAG = edge after fee >= 3 pts and gap <= 10):")
+          "` first: if the model loses to (or ties) the closing line, treat model edges as noise.\n")
+    print("KALSHI (FLAG = edge after fee >= 3 pts, gap <= 10, price >= 20c):")
     if b["kalshi"]:
         print(tabulate([[k["matchup"], k["team"], pct(k["model"]), pct(k["market"]), f"{k['price']:.2f}",
-                         f"{k['edge'] * 100:+.1f}", "FLAG" if k["flag"] else "PASS"] for k in b["kalshi"]],
-                       headers=["Game", "Team", "Model", "Market", "YES ask", "Edge pts", "Bet"]))
+                         f"{k['edge'] * 100:+.1f}", "longshot" if k["longshot"] else ("FLAG" if k["flag"] else "PASS"),
+                         money(k["stake"])] for k in b["kalshi"]],
+                       headers=["Game", "Team", "Bet prob", "Market", "YES ask", "Edge pts", "Call", "Stake"]))
     else:
         print("  No Kalshi prices available.")
-    print("\nSPORTSBOOK SINGLES with positive model EV (at average book moneyline):")
+    print("\nSPORTSBOOK MONEYLINE singles with positive EV (average book price):")
     print(tabulate([[x["matchup"], x["team"], pct(x["model"]), pct(x["market"]), f"{x['decimal']:.2f}",
-                     f"{x['ev']:+.3f}"] for x in b["book"]],
-                   headers=["Game", "Team", "Model", "Market", "Decimal", "EV per $1"]) if b["book"] else "  None.")
-    print("\nPARLAYS (different games only, legs assumed independent):")
+                     f"{x['ev']:+.3f}", money(x["stake"])] for x in b["book"]],
+                   headers=["Game", "Team", "Bet prob", "Market", "Decimal", "EV per $1", "Stake"]) if b["book"] else "  None.")
+    print("\nSPREAD singles with positive EV (cover prob from a normal margin around the line):")
+    print(tabulate([[x["matchup"], f"{x['team']} {x['line']:+.1f}", pct(x["model"]), f"{x['decimal']:.2f}",
+                     f"{x['ev']:+.3f}", money(x["stake"])] for x in b["spreads"]],
+                   headers=["Game", "Side", "Cover prob", "Decimal", "EV per $1", "Stake"]) if b["spreads"] else "  None.")
+    print("\nPARLAYS (different games only, legs assumed independent; not staked):")
     print(tabulate([[" + ".join(l["team"] for l in x["legs"]), pct(x["prob"]), pct(x["market_prob"]),
                      f"{x['decimal']:.2f}", f"{x['ev']:+.3f}"] for x in b["parlays"]],
-                   headers=["Legs", "Model hit %", "Market hit %", "Decimal", "EV per $1"]) if b["parlays"] else "  None.")
+                   headers=["Legs", "Hit %", "Market hit %", "Decimal", "EV per $1"]) if b["parlays"] else "  None.")
     if b["excluded_gap"]:
         print("\nExcluded (model and market more than 10 pts apart; model likely missing info):")
         print("  " + "; ".join(b["excluded_gap"]))
-    print("\nNot betting advice. This tool never places bets.")
+    print(f"\nTotal suggested stake: {money(b['total_stake'])}. Paper trades logged: {b['logged']} "
+          "(data/paper_trades.csv; score them later with `python main.py clv`).")
+    print("Not betting advice. This tool never places bets.")
+
+
+def cmd_clv(_args):
+    from strategy import clv_report
+    r = clv_report()
+    if not r["scored"]:
+        print("No NFL paper trades to score yet. Run `python main.py bets --sport nfl` before games, "
+              "then run this after they finish.")
+        return
+    print(f"\nCLOSING LINE VALUE — {r['scored']} of {r['trades']} paper trades scored. Source: {r['source']}")
+    print(tabulate([[x["logged_at"], x["matchup"], x["team"], f"{float(x['price_decimal']):.2f}",
+                     f"{x['close_decimal']:.2f}", f"{x['clv_ev']:+.3f}",
+                     "pending" if x["result_per_unit"] is None else f"{x['result_per_unit']:+.2f}"] for x in r["rows"]],
+                   headers=["Logged", "Game", "Team", "Our price", "Close", "CLV EV", "Result/unit"]))
+    print(f"\nAverage CLV EV {r['avg_clv_ev']:+.3f} per $1; beat the closing price {r['beat_close_rate']:.0%} of the time.")
+    if r["settled"]:
+        print(f"Settled: {r['settled']} bets, ROI {r['roi']:+.1%} (results are noisy; CLV is the faster skill signal).")
 
 
 def cmd_parlay(args):
@@ -171,7 +197,10 @@ def main():
         return sp
     sport_args(sub.add_parser("week", help="current-week table")).set_defaults(func=cmd_week)
     sport_args(sub.add_parser("backtest", help="2023-2025 validation report"), days=False).set_defaults(func=cmd_backtest)
-    sport_args(sub.add_parser("bets", help="ranked bets and parlays")).set_defaults(func=cmd_bets)
+    bp = sport_args(sub.add_parser("bets", help="ranked bets and parlays"))
+    bp.add_argument("--bankroll", type=float, default=1000.0, help="for suggested stakes (default 1000)")
+    bp.set_defaults(func=cmd_bets)
+    sub.add_parser("clv", help="score logged paper trades against the closing line").set_defaults(func=cmd_clv)
     p = sport_args(sub.add_parser("parlay", help="parlay fair price"))
     p.add_argument("legs", nargs="+", help="GAMEID:TEAM (2 or 3 legs)")
     p.add_argument("--offered", type=float, help="your book's parlay price in American odds, e.g. 450")

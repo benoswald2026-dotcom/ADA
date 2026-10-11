@@ -103,7 +103,7 @@ def build_week(now=None):
                 if best is None or e > best[0]:
                     best = (e, team, p, m_side, price)
 
-        flag = bool(best) and should_flag(best[0], best[2], best[3])
+        flag = bool(best) and should_flag(best[0], best[2], best[3], price=best[4])
         rows.append({
             "game": g, "pred": pred, "market": mkt, "kalshi": km, "best": best, "flag": flag,
             "sources": {

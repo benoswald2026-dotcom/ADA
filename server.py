@@ -142,9 +142,22 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/week":
                 return self._send(200, week_json(_sport(self.path), force="refresh=1" in self.path))
             if path == "/api/bets":
+                from urllib.parse import parse_qs, urlparse
                 from bets import find_bets
-                info, rows = cached_week(_sport(self.path))
-                return self._send(200, {"info": info, "bets": find_bets(rows)})
+                q = parse_qs(urlparse(self.path).query)
+                try:
+                    bankroll = max(0.0, float(q.get("bankroll", ["1000"])[0]))
+                except ValueError:
+                    bankroll = 1000.0
+                sport = _sport(self.path)
+                info, rows = cached_week(sport)
+                return self._send(200, {"info": info, "bets": find_bets(rows, bankroll=bankroll, log_sport=sport)})
+            if path == "/api/research":
+                with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "research.json")) as f:
+                    return self._send(200, json.load(f))
+            if path == "/api/clv":
+                from strategy import clv_report
+                return self._send(200, clv_report())
             if path == "/api/backtest":
                 sport = _sport(self.path)
                 job = _backtests[sport]
