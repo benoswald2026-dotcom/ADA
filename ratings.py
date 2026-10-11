@@ -47,10 +47,10 @@ def elo_update(r_home, r_away, home_pts, away_pts, home_field_elo=0.0, k=config.
     return r_home + change, r_away - change
 
 
-def margin_to_prob(margin):
+def margin_to_prob(margin, elo_per_point=config.ELO_PER_POINT):
     """Predicted home margin (points) -> home win probability, using the
     same Elo curve: margin * 25 Elo/point, then expected_score."""
-    return 1 / (1 + 10 ** (-margin * config.ELO_PER_POINT / 400))
+    return 1 / (1 + 10 ** (-margin * elo_per_point / 400))
 
 
 def opponent_adjusted_epa(rows, iterations=config.EPA_OPP_ADJ_ITERATIONS):
@@ -85,7 +85,8 @@ def opponent_adjusted_epa(rows, iterations=config.EPA_OPP_ADJ_ITERATIONS):
 # ---------------------------------------------------------- rating system --
 
 class RatingSystem:
-    def __init__(self):
+    def __init__(self, cfg=config.CFB):
+        self.cfg = cfg                            # sport constants (config.CFB or config.NFL)
         self.elo = {}
         self.is_fbs = {}                          # team -> was FBS when last seen
         self.season_epa_rows = []                 # this season only
@@ -97,8 +98,8 @@ class RatingSystem:
     def start_season(self):
         """Seed from the prior season: pull every rating 1/3 back toward the mean."""
         for team, r in self.elo.items():
-            mean = config.ELO_START_FBS if self.is_fbs.get(team, True) else config.ELO_START_OTHER
-            self.elo[team] = r + (mean - r) * config.SEASON_REGRESSION
+            mean = self.cfg.ELO_START_FBS if self.is_fbs.get(team, True) else self.cfg.ELO_START_OTHER
+            self.elo[team] = r + (mean - r) * self.cfg.SEASON_REGRESSION
         all_pts = [p for lst in self.points.values() for p, _ in lst]
         if all_pts:
             self.league_avg_pts = sum(all_pts) / len(all_pts)
@@ -109,7 +110,7 @@ class RatingSystem:
     def rating(self, team, is_fbs=True):
         self.is_fbs[team] = is_fbs
         if team not in self.elo:
-            self.elo[team] = config.ELO_START_FBS if is_fbs else config.ELO_START_OTHER
+            self.elo[team] = self.cfg.ELO_START_FBS if is_fbs else self.cfg.ELO_START_OTHER
         return self.elo[team]
 
     def epa_table(self):
@@ -124,17 +125,17 @@ class RatingSystem:
         Returns a dict. 'margin' = predicted home points minus away points.
         'home_spread' uses betting convention: negative = home favored.
         """
-        hfa = 0.0 if neutral else config.HOME_FIELD_POINTS
+        hfa = 0.0 if neutral else self.cfg.HOME_FIELD_POINTS
         r_h, r_a = self.rating(home, home_fbs), self.rating(away, away_fbs)
-        elo_margin = (r_h - r_a) / config.ELO_PER_POINT + hfa
+        elo_margin = (r_h - r_a) / self.cfg.ELO_PER_POINT + hfa
 
         epa = self.epa_table()
         epa_margin, weight = None, 0.0
         if home in epa and away in epa:
             off_h, def_h, n_h = epa[home]
             off_a, def_a, n_a = epa[away]
-            epa_margin = config.PLAYS_PER_GAME * ((off_h + def_a) - (off_a + def_h)) + hfa
-            weight = config.EPA_WEIGHT_MAX * min(min(n_h, n_a) / config.EPA_FULL_WEIGHT_GAMES, 1.0)
+            epa_margin = self.cfg.PLAYS_PER_GAME * ((off_h + def_a) - (off_a + def_h)) + hfa
+            weight = self.cfg.EPA_WEIGHT_MAX * min(min(n_h, n_a) / self.cfg.EPA_FULL_WEIGHT_GAMES, 1.0)
 
         base = elo_margin if epa_margin is None else (1 - weight) * elo_margin + weight * epa_margin
         margin = base + injury_adj
@@ -142,14 +143,14 @@ class RatingSystem:
             "elo_home": r_h, "elo_away": r_a, "hfa": hfa,
             "elo_margin": elo_margin, "epa_margin": epa_margin, "epa_weight": weight,
             "injury_adj": injury_adj, "margin": margin, "home_spread": -margin,
-            "home_prob": margin_to_prob(margin), "total": self.predict_total(home, away),
+            "home_prob": margin_to_prob(margin, self.cfg.ELO_PER_POINT), "total": self.predict_total(home, away),
         }
 
     def predict_total(self, home, away):
         """Each team's expected points = league avg + (its scoring vs avg)
         + (opponent's points allowed vs avg), each shrunk toward average
         when a team has played few games. Total = sum of both."""
-        avg, k = self.league_avg_pts, config.TOTAL_SHRINK_GAMES
+        avg, k = self.league_avg_pts, self.cfg.TOTAL_SHRINK_GAMES
 
         def tilt(team):
             g = self.points.get(team, [])
@@ -169,10 +170,10 @@ class RatingSystem:
         """Feed in one completed game (normalized CFBD dict) and its EPA rows."""
         if game["home_pts"] is None or game["away_pts"] is None:
             return
-        hfa_elo = 0.0 if game["neutral"] else config.HOME_FIELD_POINTS * config.ELO_PER_POINT
+        hfa_elo = 0.0 if game["neutral"] else self.cfg.HOME_FIELD_POINTS * self.cfg.ELO_PER_POINT
         h, a = game["home"], game["away"]
         new_h, new_a = elo_update(self.rating(h, game["home_fbs"]), self.rating(a, game["away_fbs"]),
-                                  game["home_pts"], game["away_pts"], hfa_elo)
+                                  game["home_pts"], game["away_pts"], hfa_elo, k=self.cfg.ELO_K)
         self.elo[h], self.elo[a] = new_h, new_a
         self.points[h].append((game["home_pts"], game["away_pts"]))
         self.points[a].append((game["away_pts"], game["home_pts"]))

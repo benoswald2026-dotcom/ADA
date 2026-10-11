@@ -54,6 +54,45 @@ The server uses only Python's built-in `http.server` (no new dependencies) and
 listens on `127.0.0.1`, so only your own computer can open it. It is read-only like
 the CLI, and API keys never reach the browser.
 
+## 2b. NFL (added later)
+
+```bash
+python main.py week --sport nfl        # today's NFL games (add --days 6 for the rest of the week)
+python main.py bets --sport nfl        # ranked Kalshi bets, sportsbook singles, parlays
+python main.py backtest --sport nfl    # 2023-2025 NFL validation
+python main.py parlay 2026_05_LV_NE:Patriots 2026_05_IND_PIT:Steelers --sport nfl
+```
+
+**Extra sources (approved):** nflverse (GitHub releases: schedules, scores,
+closing lines, rest days, roof, recorded weather, weekly team EPA; no key),
+Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
+(`americanfootball_nfl`, same key), Kalshi (`KXNFLGAME`, no key).
+
+**How an NFL game is priced:**
+1. Elo + opponent-adjusted EPA, as for college, with NFL constants in `config.NFL`
+   (ratings start in 2012, home field 1.5 points).
+2. Rest, travel, and weather adjustments. Their sizes are **fitted on 2015–2022 only**:
+   - rest: points per day of rest advantage
+   - travel: points per hour the away team traveled east
+   - wind: points of total per mph above 10
+   - cold: points of total at 32°F or colder
+3. **Trust weight.** The bet probability is `(1 − w) × market + w × model`. `w`
+   is fitted on 2015–2022 by log loss. If the model adds nothing beyond the
+   market, `w` comes out near 0.
+4. Your `injuries.csv` (team = city, nickname, or code like `GB`) is applied
+   after the blend, because it's news the market may not have priced yet.
+5. The 10-point rule compares the raw model with the market. A bigger gap
+   means the model is probably missing news, so that game is left out.
+
+**What the 2023–2025 backtest found:**
+- The model loses to the closing market on Brier score: 0.2235 vs 0.2102.
+- It went 49.2% against the spread.
+- The fitted trust weight is **0.00**.
+- Wind does lower scoring (−0.41 points per mph above 10, about 4 standard
+  errors), but closing totals already account for it.
+- So live NFL "edges" mainly come from Kalshi prices that disagree with the
+  sportsbook consensus, or from injury news you enter before the market moves.
+
 ## 3. How data flows
 
 ```
@@ -82,6 +121,9 @@ the CLI, and API keys never reach the browser.
 | `server.py` | Local web app server (`python main.py serve`) |
 | `explain.py` | Step-by-step calculator behind the "How it works" tab |
 | `static/` | The web app's page, styles, and script |
+| `nfl.py` | NFL data, model, weather/rest/travel, trust weight, backtest, today's slate |
+| `nfl_teams.py` | NFL team names, time zones, stadium coordinates |
+| `bets.py` | Bet finder: Kalshi singles, sportsbook singles, parlays (ranked by EV) |
 
 ## 4. How each number is calculated
 

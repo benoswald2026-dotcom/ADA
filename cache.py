@@ -63,3 +63,35 @@ def cached_get(url, params=None, headers=None, ttl=None, source="unknown"):
             last_error = type(e).__name__  # message may contain the URL/key
         time.sleep(1)
     raise ApiError(f"{source} request failed twice ({last_error}). Stopping.")
+
+
+def cached_download(url, ttl=None, source="unknown", suffix=".csv"):
+    """Download a file (e.g. a CSV) into the cache. Returns (local path, fetched_at).
+    Same two-tries-then-stop rule as cached_get."""
+    base = _cache_path(url, None)[:-5]
+    path, meta = base + suffix, base + ".meta.json"
+    if os.path.exists(path) and os.path.exists(meta):
+        with open(meta) as f:
+            m = json.load(f)
+        if ttl is None or time.time() - m["fetched_at_epoch"] < ttl:
+            return path, m["fetched_at"]
+
+    last_error = None
+    for _attempt in range(2):
+        try:
+            resp = requests.get(url, timeout=60)
+            if resp.status_code == 200:
+                now = datetime.now(timezone.utc)
+                os.makedirs(config.CACHE_DIR, exist_ok=True)
+                with open(path, "wb") as f:
+                    f.write(resp.content)
+                with open(meta, "w") as f:
+                    json.dump({"source": source, "url": url,
+                               "fetched_at": now.strftime("%Y-%m-%d %H:%MZ"),
+                               "fetched_at_epoch": now.timestamp()}, f)
+                return path, now.strftime("%Y-%m-%d %H:%MZ")
+            last_error = f"HTTP {resp.status_code}"
+        except requests.RequestException as e:
+            last_error = type(e).__name__
+        time.sleep(1)
+    raise ApiError(f"{source} download failed twice ({last_error}). Stopping.")

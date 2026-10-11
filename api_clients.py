@@ -155,12 +155,12 @@ def _kalshi_price(m, field):
     return cents / 100 if cents is not None else None
 
 
-def kalshi_markets():
-    """Open college-football game-winner markets (public, no key).
+def kalshi_markets(series=KALSHI_CFB_SERIES):
+    """Open game-winner markets for one Kalshi series (public, no key).
     Returns (list of markets, fetched_at)."""
     markets, cursor, stamp = [], None, None
     for _page in range(20):  # safety cap
-        params = {"series_ticker": KALSHI_CFB_SERIES, "status": "open", "limit": 1000}
+        params = {"series_ticker": series, "status": "open", "limit": 1000}
         if cursor:
             params["cursor"] = cursor
         data, stamp = cached_get(KALSHI_BASE + "/markets", params=params,

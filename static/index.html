@@ -19,13 +19,20 @@
       </svg>
       <div>
         <div class="brand-name">Hashmark</div>
-        <div class="brand-sub">College football model · read-only</div>
+        <div class="brand-sub">Football model · read-only</div>
       </div>
     </div>
-    <div class="status" id="status" aria-live="polite"></div>
+    <div class="topbar-right">
+      <div class="seg sport-seg" role="group" aria-label="Sport">
+        <button type="button" data-sport="nfl" aria-pressed="false">NFL</button>
+        <button type="button" data-sport="cfb" aria-pressed="false">College</button>
+      </div>
+      <div class="status" id="status" aria-live="polite"></div>
+    </div>
   </div>
   <nav class="wrap tabs" role="tablist" aria-label="Sections">
     <button role="tab" id="tab-week" data-tab="week" aria-selected="true">This week</button>
+    <button role="tab" id="tab-bets" data-tab="bets" aria-selected="false">Best bets</button>
     <button role="tab" id="tab-backtest" data-tab="backtest" aria-selected="false">Backtest</button>
     <button role="tab" id="tab-parlay" data-tab="parlay" aria-selected="false">Parlay</button>
     <button role="tab" id="tab-explain" data-tab="explain" aria-selected="false">How it works</button>
@@ -38,7 +45,7 @@
     <div class="view-head">
       <div>
         <h1 id="week-title">This week</h1>
-        <p class="lede">Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.</p>
+        <p class="lede" id="week-lede">Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.</p>
       </div>
       <div class="view-actions">
         <label class="toggle"><input type="checkbox" id="flags-only"> Flags only</label>
@@ -48,12 +55,24 @@
     <div id="week-body"></div>
   </section>
 
+  <!-- BEST BETS -->
+  <section id="view-bets" class="view" role="tabpanel" aria-labelledby="tab-bets" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Best bets</h1>
+        <p class="lede">Ranked by expected value, not by how likely a bet is to win. An 80% favorite is a bad bet if the price assumes 85%. Only sides where the model and market are within 10 points qualify.</p>
+      </div>
+      <div class="view-actions"><button class="btn" id="bets-refresh">Refresh</button></div>
+    </div>
+    <div id="bets-body"></div>
+  </section>
+
   <!-- BACKTEST -->
   <section id="view-backtest" class="view" role="tabpanel" aria-labelledby="tab-backtest" hidden>
     <div class="view-head">
       <div>
-        <h1>Backtest, 2023–2025</h1>
-        <p class="lede">Each week is predicted using only games played before it, then scored. 2021–22 only warm up the ratings. Nothing was tuned on these seasons.</p>
+        <h1 id="bt-title">Backtest, 2023–2025</h1>
+        <p class="lede" id="bt-lede">Each week is predicted using only games played before it, then scored. Nothing was tuned on the test seasons.</p>
       </div>
       <div class="view-actions"><button class="btn btn-primary" id="bt-run">Run backtest</button></div>
     </div>
@@ -88,7 +107,7 @@
 </main>
 
 <footer class="wrap foot">
-  Data: CollegeFootballData, The Odds API, Kalshi public market data. Hashmark only reads data. It never places bets, trades, or orders. Not betting advice.
+  Data: CollegeFootballData, nflverse, Open-Meteo, The Odds API, Kalshi public market data. Hashmark only reads data. It never places bets, trades, or orders. Not betting advice.
 </footer>
 
 <div class="tip" id="tip" role="tooltip" hidden></div>

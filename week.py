@@ -127,10 +127,16 @@ def find_row(rows, game_id):
 def side_of(row, team):
     """'home' or 'away' for a team name typed by the user, else None."""
     t = normalize(team)
-    if t == normalize(row["game"]["home"]):
-        return "home"
-    if t == normalize(row["game"]["away"]):
-        return "away"
+    g = row["game"]
+    for side in ("home", "away"):
+        if t == normalize(g[side]) or t == normalize(g.get(f"{side}_code") or "\0"):
+            return side
+    if g.get("home_code"):  # NFL: also accept "Packers", "Green Bay", ...
+        import nfl_teams
+        code = nfl_teams.code_for(team)
+        for side in ("home", "away"):
+            if code and code == g[f"{side}_code"]:
+                return side
     return None
 
 

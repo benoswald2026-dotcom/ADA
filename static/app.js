@@ -27,7 +27,7 @@ function kickoff(iso) {
   if (!iso) return "";
   const d = new Date(iso);
   if (isNaN(d)) return "";
-  return d.toLocaleString(undefined, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  return d.toLocaleString(undefined, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" }) + " ET";
 }
 
 async function api(path, opts = {}) {
@@ -44,6 +44,10 @@ const store = {
   get(k) { try { return localStorage.getItem(k); } catch { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch { /* storage blocked: fine */ } },
 };
+
+// ---------------------------------------------------------------- sport
+let SPORT = store.get("sport") === "cfb" ? "cfb" : "nfl";
+const withSport = path => path + (path.includes("?") ? "&" : "?") + "sport=" + SPORT;
 
 const FLAG_SVG = `<svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1.5 1v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M2 1.5h8l-2 3 2 3H2z" fill="currentColor"/></svg>`;
 const chip = flag => flag ? `<span class="chip chip-flag">${FLAG_SVG}Flag</span>` : `<span class="chip chip-pass">Pass</span>`;
@@ -67,7 +71,7 @@ document.addEventListener("scroll", () => { tip.hidden = true; }, true);
 /* The "hashmark" strip: one 0–100% track with the model (circle), market
    consensus (bar), Kalshi price (diamond), and the ±10-point agreement band
    around the market that the FLAG rule requires. */
-function strip(model, market, kalshi, kalshiLabel = "Kalshi") {
+function strip(model, market, kalshi, kalshiLabel = "Kalshi", bet = null) {
   const L = p => (clamp01(p) * 100).toFixed(2) + "%";
   let band = "";
   if (isNum(market)) {
@@ -77,6 +81,7 @@ function strip(model, market, kalshi, kalshiLabel = "Kalshi") {
   const lines = [`Model: ${pct(model)}`];
   if (isNum(market)) lines.push(`Market: ${pct(market)}`, `Gap: ${pts(model - market)} pts (limit ±10)`);
   if (isNum(kalshi)) lines.push(`${kalshiLabel}: ${cents(kalshi)}`);
+  if (isNum(bet) && Math.abs(bet - model) > 1e-9) lines.push(`Bet probability: ${pct(bet)}`);
   return `<div class="strip">
       <div class="strip-track"></div>${band}<div class="strip-mid"></div>
       ${isNum(market) ? `<div class="m m-market" style="left:${L(market)}"></div>` : ""}
@@ -85,7 +90,7 @@ function strip(model, market, kalshi, kalshiLabel = "Kalshi") {
       <div class="strip-scale"><span>0%</span><span>50%</span><span>100%</span></div>
       <div class="strip-hit" data-tip="${esc(lines.join("<br>"))}"></div>
     </div>
-    <div class="strip-vals"><span>Model <b>${pct(model)}</b></span><span>Market <b>${pct(market)}</b></span>${isNum(kalshi) ? `<span>${esc(kalshiLabel)} <b>${cents(kalshi)}</b></span>` : ""}</div>`;
+    <div class="strip-vals"><span>Model <b>${pct(model)}</b></span><span>Market <b>${pct(market)}</b></span>${isNum(kalshi) ? `<span>${esc(kalshiLabel)} <b>${cents(kalshi)}</b></span>` : ""}${isNum(bet) && Math.abs(bet - model) > 1e-9 ? `<span title="Probability used for edges">Bet <b>${pct(bet)}</b></span>` : ""}</div>`;
 }
 
 const LEGEND = `<div class="legend" aria-label="Legend">
@@ -102,7 +107,7 @@ async function loadStatus() {
   const el = $("#status");
   if (!STATUS) { el.innerHTML = `<span class="pill missing"><i class="dot"></i>Server unreachable</span>`; return; }
   const p = (ok, label, title) => `<span class="pill ${ok ? "ok" : "missing"}" title="${esc(title)}"><i class="dot"></i>${label}</span>`;
-  el.innerHTML = p(STATUS.cfbd_key, "CFBD key", STATUS.cfbd_key ? "CFBD_API_KEY is set" : "CFBD_API_KEY is missing")
+  el.innerHTML = (SPORT === "nfl" ? `<span class="pill ok" title="nflverse data needs no key"><i class="dot"></i>nflverse</span>` : p(STATUS.cfbd_key, "CFBD key", STATUS.cfbd_key ? "CFBD_API_KEY is set" : "CFBD_API_KEY is missing"))
     + p(STATUS.odds_key, "Odds API key", STATUS.odds_key ? "ODDS_API_KEY is set" : "ODDS_API_KEY is missing")
     + `<span class="pill ok" title="Kalshi public data needs no key"><i class="dot"></i>Kalshi public</span>`
     + `<span class="pill" title="Optional hand-entered injuries"><i class="dot"></i>injuries.csv ${STATUS.injuries_file ? "loaded" : "none"}</span>`;
@@ -134,15 +139,17 @@ let WEEK = null, WEEK_ERR = null, weekPromise = null;
 
 function loadWeek(force = false) {
   if (weekPromise && !force) return weekPromise;
-  WEEK = null; WEEK_ERR = null; LEGS = null; PARLAY_RESULT = null; PARLAY_ERR = null;
+  WEEK = null; WEEK_ERR = null; LEGS = null; PARLAY_RESULT = null; PARLAY_ERR = null; BETS = null;
   renderWeek();
-  weekPromise = api("/api/week" + (force ? "?refresh=1" : "")).then(d => { WEEK = d; }).catch(e => { WEEK_ERR = e.message; }).finally(() => {
+  const sport = SPORT;
+  weekPromise = api(withSport("/api/week" + (force ? "?refresh=1" : ""))).then(d => { if (sport === SPORT) WEEK = d; })
+    .catch(e => { if (sport === SPORT) WEEK_ERR = e.message; }).finally(() => {
     renderWeek();
     if (!$("#view-parlay").hidden) renderParlay();
+    if (!$("#view-bets").hidden) renderBets();
   });
   return weekPromise;
 }
-
 function renderWeek() {
   const body = $("#week-body");
   if (WEEK_ERR) { body.innerHTML = setupNotice(WEEK_ERR); return; }
@@ -150,8 +157,8 @@ function renderWeek() {
     body.innerHTML = `<p class="label" style="margin-bottom:10px">Loading games, odds, and Kalshi prices…</p><div class="games">${"<div class=\"skeleton\"></div>".repeat(5)}</div>`;
     return;
   }
-  const { week, rows, generated } = WEEK;
-  $("#week-title").textContent = `Week ${week.week}${week.season_type === "postseason" ? " · Postseason" : ""}`;
+  const { info, rows, generated } = WEEK;
+  $("#week-title").textContent = info.label;
   const flags = rows.filter(r => r.flag).length;
   const withKalshi = rows.filter(r => r.kalshi).length;
   const withOdds = rows.filter(r => r.market).length;
@@ -159,18 +166,20 @@ function renderWeek() {
   const shown = onlyFlags ? rows.filter(r => r.flag) : rows;
 
   const summary = `<div class="summary">
-    <div><div class="label">Games</div><div class="big">${rows.length}</div><div class="small">Upcoming, at least one FBS team</div></div>
+    <div><div class="label">Games</div><div class="big">${rows.length}</div><div class="small">${SPORT === "nfl" ? "Not yet played" : "Upcoming, at least one FBS team"}</div></div>
     <div><div class="label">Flags</div><div class="big flag-count">${flags}</div><div class="small">Edge ≥ 3 pts and gap ≤ 10 pts</div></div>
     <div><div class="label">Kalshi markets</div><div class="big">${withKalshi}<span class="label"> / ${rows.length}</span></div><div class="small">Others show "no market"</div></div>
     <div><div class="label">Sportsbook odds</div><div class="big">${withOdds}<span class="label"> / ${rows.length}</span></div><div class="small">Board built ${esc(generated)}</div></div>
   </div>`;
 
+  const notes = (info.notes || []).length ? `<div class="notes">${info.notes.map(n => `<div class="notice warn"><p>${esc(n)}</p></div>`).join("")}</div>` : "";
+  const trust = isNum(info.blend_weight) ? `<div class="notice"><p><b>Trust weight ${info.blend_weight.toFixed(2)}.</b> In the backtest the model added ${info.blend_weight === 0 ? "nothing" : "only a little"} beyond the closing market, so bet probabilities are ${Math.round((1 - info.blend_weight) * 100)}% market + ${Math.round(info.blend_weight * 100)}% model, plus your injuries.csv. The circle still shows the raw model.</p></div>` : "";
   if (!shown.length) {
-    body.innerHTML = summary + `<div class="games"><div class="empty">${onlyFlags ? "No games are flagged this week. That's normal: the rule is strict on purpose." : "No upcoming games found for this week."}</div></div>`;
+    body.innerHTML = notes + trust + summary + `<div class="games"><div class="empty">${onlyFlags ? "No games are flagged this week. That's normal: the rule is strict on purpose." : "No upcoming games found for this week."}</div></div>`;
     return;
   }
 
-  body.innerHTML = summary + LEGEND + `<div class="games">${shown.map(gameRow).join("")}</div>`;
+  body.innerHTML = notes + trust + summary + LEGEND + `<div class="games">${shown.map(gameRow).join("")}</div>`;
 }
 
 function gameRow(r) {
@@ -188,18 +197,35 @@ function gameRow(r) {
       <div class="meta"><span>${esc(kickoff(g.start))}</span>${g.neutral ? `<span class="tag">Neutral</span>` : ""}${inj}<span class="mono">ID ${esc(g.id)}</span></div>
     </div>
     <div class="spreads">
-      <span class="k">Model</span><span class="v">${esc(spreadText(g.home, g.away, p.home_spread))}</span>
-      <span class="k">Market</span><span class="v">${esc(spreadText(g.home, g.away, m ? m.home_spread : null))}</span>
+      <span class="k">Model</span><span class="v">${esc(spreadText(g.home_code || g.home, g.away_code || g.away, p.home_spread))}</span>
+      <span class="k">Market</span><span class="v">${esc(spreadText(g.home_code || g.home, g.away_code || g.away, m ? m.home_spread : null))}</span>
     </div>
-    <div class="strip-cell">${strip(p.home_prob, m ? m.home_prob : null, kalshiHome)}</div>
+    <div class="strip-cell">${strip(isNum(p.raw_home_prob) ? p.raw_home_prob : p.home_prob, m ? m.home_prob : null, kalshiHome, "Kalshi", p.home_prob)}</div>
     <div class="verdict">${chip(r.flag)}<div class="edge">${edgeLine}</div></div>
+    ${r.env ? envChips(r) : ""}
     <button class="src-toggle" aria-expanded="false" aria-controls="${id}">Sources &amp; timestamps</button>
     <div class="sources" id="${id}" hidden>
       <div><span class="label">Model spread &amp; win %</span>${esc(r.sources.model)}</div>
       <div><span class="label">Market spread &amp; win %</span>${esc(r.sources.market)}</div>
       <div><span class="label">Kalshi price</span>${esc(r.sources.kalshi)}</div>
+      ${r.sources.weather ? `<div><span class="label">Weather</span>${esc(r.sources.weather)}</div>` : ""}
     </div>
   </article>`;
+}
+
+function envChips(r) {
+  const e = r.env, p = r.pred, g = r.game, fx = e.forecast;
+  const chips = [];
+  if (isNum(e.home_rest) && isNum(e.away_rest)) chips.push(`Rest <b>${e.away_rest}d / ${e.home_rest}d</b>`);
+  if (e.tz) chips.push(`${esc(e.tz > 0 ? g.away : g.home)} traveled <b>${Math.abs(e.tz)}h east</b>`);
+  if (g.roof && !["outdoors", "open"].includes(g.roof)) chips.push(`Roof <b>${esc(g.roof)}</b>`);
+  else if (fx) chips.push(`Kickoff <b>${Math.round(fx.temp)}°F, wind ${Math.round(fx.wind)} mph${isNum(fx.gusts) ? ` (gusts ${Math.round(fx.gusts)})` : ""}, rain ${isNum(fx.precip_prob) ? fx.precip_prob + "%" : "n/a"}</b>`);
+  else if (g.neutral) chips.push("Neutral site");
+  else chips.push("Weather <b>forecast unavailable</b>");
+  if (p.env_margin) chips.push(`Rest/travel <b>${signed(p.env_margin)} pts</b> to ${esc(g.home)}`);
+  if (p.env_total) chips.push(`Weather <b>${signed(p.env_total)} pts</b> to total`);
+  if (p.injury_adj) chips.push(`Injuries <b>${signed(p.injury_adj)} pts</b>`);
+  return `<div class="env">${chips.map(c => `<span class="chip-env">${c}</span>`).join("")}</div>`;
 }
 
 $("#week-body").addEventListener("click", e => {
@@ -218,8 +244,9 @@ let btTimer = null;
 
 async function loadBacktest(start = false) {
   let s;
-  try { s = await api("/api/backtest" + (start ? "?start=1" : "")); }
+  try { s = await api(withSport("/api/backtest" + (start ? "?start=1" : ""))); }
   catch (e) { $("#bt-body").innerHTML = setupNotice(e.message); return; }
+  if (s.sport !== SPORT) return;
   renderBacktest(s);
   clearTimeout(btTimer);
   if (s.state === "running") btTimer = setTimeout(() => loadBacktest(false), 2000);
@@ -237,7 +264,7 @@ function renderBacktest(s) {
     return;
   }
   if (s.state === "running") {
-    body.innerHTML = `<div class="panel"><h3>Replaying 2021–2025, week by week</h3><p class="lede">Started ${esc(s.started)}. Each week is predicted before its results are learned.</p><div class="progress"><span></span></div></div>`;
+    body.innerHTML = `<div class="panel"><h3>Replaying ${SPORT === "nfl" ? "2012–2025" : "2021–2025"}, week by week</h3><p class="lede">Started ${esc(s.started)}. Each week is predicted before its results are learned.</p><div class="progress"><span></span></div></div>`;
     return;
   }
   if (s.state === "error") { body.innerHTML = setupNotice(s.error); return; }
@@ -271,10 +298,40 @@ function renderBacktest(s) {
     <tbody>${r.calibration.map(b => `<tr><td>${Math.round(b.lo * 100)}–${Math.round(b.hi * 100)}%</td><td>${b.games}</td><td>${pct(b.avg_pred)}</td><td>${pct(b.actual)}</td><td>${signed((b.actual - b.avg_pred) * 100)}</td></tr>`).join("")}</tbody>
   </table></div>`;
 
-  body.innerHTML = verdictBox + tiles + `<div class="two-col">
+  body.innerHTML = verdictBox + tiles + (r.env ? nflExtras(r) : "") + `<div class="two-col">
       <div><h3 style="margin-bottom:10px">By season</h3>${seasonTable}${vmTable}</div>
       <div><h3 style="margin-bottom:4px">Calibration</h3><p class="label" style="margin-bottom:8px;text-transform:none;letter-spacing:0">Dots on the dashed line mean "70% predicted" really won about 70% of the time.</p>
         <div class="panel" style="padding:10px">${calibrationChart(r.calibration)}</div>${calTable}</div>
+    </div>`;
+}
+
+function nflExtras(r) {
+  const e = r.env, b = r.blend, a = r.ablation, t = r.totals;
+  const row = (k, name) => {
+    const x = e[k], z = Math.abs(x.coef / x.se);
+    return `<tr><td>${name}</td><td>${signed(x.coef, 3)}</td><td>${x.se.toFixed(3)}</td><td>${z >= 2 ? "Likely real" : "Could be noise"}</td><td style="text-align:left;white-space:normal">${esc(x.unit)}</td></tr>`;
+  };
+  const ats = x => `${x[0]}–${x[1]}–${x[2]}`;
+  const ou = x => `${x.w}–${x.l}–${x.p}${x.pct == null ? "" : ` (${pct(x.pct)})`}`;
+  return `<div class="notice ${b.weight === 0 ? "warn" : ""}" style="margin-bottom:18px">
+      <h3>Trust weight: ${b.weight.toFixed(2)}</h3>
+      <p>Fitted on ${e.seasons[0]}–${e.seasons[1]}: the best blend was <b>${Math.round((1 - b.weight) * 100)}% market + ${Math.round(b.weight * 100)}% model</b>. On the test seasons that blend scored Brier ${b.brier.toFixed(4)} vs the market's ${b.market_brier.toFixed(4)}. Live bet probabilities use this blend, so the model can only move prices as far as it has earned.</p>
+    </div>
+    <div class="two-col" style="margin-bottom:18px">
+      <div><h3 style="margin-bottom:10px">Weather, rest &amp; travel</h3>
+        <div class="table-wrap"><table><thead><tr><th>Factor</th><th>Effect</th><th>Std err</th><th>Signal</th><th style="text-align:left">Meaning</th></tr></thead>
+        <tbody>${row("wind", "Wind")}${row("cold", "Cold (≤32°F)")}${row("rest", "Rest")}${row("tz", "Travel east")}</tbody></table></div>
+        <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:0">Fitted on ${e.games} games from ${e.seasons[0]}–${e.seasons[1]} only. "Likely real" = effect at least 2× its standard error.</p></div>
+      <div><h3 style="margin-bottom:10px">Did these factors help?</h3>
+        <div class="table-wrap"><table><thead><tr><th>Test seasons</th><th>Brier</th><th>Log loss</th><th>ATS</th></tr></thead><tbody>
+          <tr><td>Without factors</td><td>${a.without_env.brier.toFixed(4)}</td><td>${a.without_env.log_loss.toFixed(4)}</td><td>${ats(a.without_env.ats)}</td></tr>
+          <tr><td>With factors</td><td>${a.with_env.brier.toFixed(4)}</td><td>${a.with_env.log_loss.toFixed(4)}</td><td>${ats(a.with_env.ats)}</td></tr>
+        </tbody></table></div>
+        <div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>Totals</th><th>Avg miss (pts)</th><th>O/U vs close</th></tr></thead><tbody>
+          <tr><td>Model, with weather</td><td>${t.mae_model.toFixed(2)}</td><td>${ou(t.ou_with_env)}</td></tr>
+          <tr><td>Model, without weather</td><td>n/a</td><td>${ou(t.ou_without_env)}</td></tr>
+          <tr><td>Closing total</td><td>${t.mae_market.toFixed(2)}</td><td>n/a</td></tr>
+        </tbody></table></div></div>
     </div>`;
 }
 
@@ -364,7 +421,7 @@ function parlayResult() {
 async function priceParlay() {
   const raw = (store.get("parlay-offered") || "").replace(/[^\d+\-.]/g, "");
   try {
-    PARLAY_RESULT = await api("/api/parlay", { body: { legs: LEGS.map(l => ({ game_id: l.gid, team: l.team })), offered: raw || null } });
+    PARLAY_RESULT = await api("/api/parlay", { body: { sport: SPORT, legs: LEGS.map(l => ({ game_id: l.gid, team: l.team })), offered: raw || null } });
     PARLAY_ERR = null;
   } catch (e) { PARLAY_RESULT = null; PARLAY_ERR = e.message; }
   const box = $("#parlay-result");
@@ -393,6 +450,42 @@ $("#parlay-body").addEventListener("change", e => {
 $("#parlay-body").addEventListener("input", e => {
   if (e.target.id === "parlay-offered") store.set("parlay-offered", e.target.value);
 });
+
+// ---------------------------------------------------------------- bets
+let BETS = null, BETS_ERR = null;
+
+async function loadBets(force = false) {
+  if (force) { await loadWeek(true); }
+  else if (!WEEK && !WEEK_ERR) { await loadWeek(); }
+  if (WEEK_ERR) { renderBets(); return; }
+  const sport = SPORT;
+  try { const d = await api(withSport("/api/bets")); if (sport === SPORT) { BETS = d; BETS_ERR = null; } }
+  catch (e) { if (sport === SPORT) BETS_ERR = e.message; }
+  renderBets();
+}
+
+function renderBets() {
+  const body = $("#bets-body");
+  if (WEEK_ERR) { body.innerHTML = setupNotice(WEEK_ERR); return; }
+  if (BETS_ERR) { body.innerHTML = setupNotice(BETS_ERR); return; }
+  if (!BETS) { body.innerHTML = `<div class="panel"><p class="label">Checking every game against the market and Kalshi…</p><div class="progress"><span></span></div></div>`; if (WEEK) loadBets(); return; }
+  const { info, bets: b } = BETS;
+  const notes = (info.notes || []).map(n => `<div class="notice warn"><p>${esc(n)}</p></div>`).join("");
+  const trust = isNum(info.blend_weight) ? `<div class="notice ${info.blend_weight === 0 ? "warn" : ""}"><h3>Read this first</h3><p>The NFL backtest found the model ${info.blend_weight === 0 ? "adds nothing beyond" : "adds little beyond"} the closing market (trust weight ${info.blend_weight.toFixed(2)}), so bet probabilities lean on the market. Real opportunities here mostly come from Kalshi prices that disagree with the sportsbook consensus, or from injury news you add to injuries.csv before the market reacts.</p></div>` : `<div class="notice"><p>Check the Backtest tab before trusting these. If the model loses to the closing line, its edges are mostly noise.</p></div>`;
+  const kRows = b.kalshi.map(k => `<tr><td>${esc(k.team)}</td><td>${esc(k.matchup)}</td><td>${pct(k.model)}</td><td>${pct(k.market)}</td><td>${cents(k.price)}</td><td>$${k.fee.toFixed(4)}</td><td>${pts(k.edge)}</td><td>${chip(k.flag)}</td></tr>`).join("");
+  const bookRows = b.book.map(x => `<tr><td>${esc(x.team)}</td><td>${esc(x.matchup)}</td><td>${pct(x.model)}</td><td>${pct(x.market)}</td><td>${x.decimal.toFixed(2)}</td><td class="${x.ev >= 0 ? "ev-pos" : "ev-neg"}">${x.ev >= 0 ? "+" : "−"}$${Math.abs(x.ev).toFixed(3)}</td></tr>`).join("");
+  const parRows = b.parlays.map(x => `<tr><td style="white-space:normal;text-align:left">${x.legs.map(l => esc(l.team)).join(" + ")}</td><td>${pct(x.prob)}</td><td>${pct(x.market_prob)}</td><td>${x.decimal.toFixed(2)} (${american(x.decimal >= 2 ? (x.decimal - 1) * 100 : -100 / (x.decimal - 1))})</td><td class="ev-pos">+$${x.ev.toFixed(3)}</td></tr>`).join("");
+  const empty = msg => `<div class="panel empty">${msg}</div>`;
+  body.innerHTML = `<div class="notes">${trust}${notes}</div>
+    <section class="bets-section"><h2>Kalshi</h2><p class="lede">Buy-YES edge after Kalshi's fee. FLAG needs at least 3 points of edge.</p>
+      ${kRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>YES ask</th><th>Fee</th><th>Edge (pts)</th><th>Call</th></tr></thead><tbody>${kRows}</tbody></table></div>` : empty("No Kalshi prices right now. Kalshi may have no markets for these games, or this computer can't reach it.")}</section>
+    <section class="bets-section"><h2>Sportsbook singles</h2><p class="lede">Sides where the bet probability beats the average book moneyline. EV is expected profit per $1.</p>
+      ${bookRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>Decimal</th><th>EV / $1</th></tr></thead><tbody>${bookRows}</tbody></table></div>` : empty("None. The bet probabilities don't beat any book price after the vig. With a trust weight of 0, that's the expected answer.")}</section>
+    <section class="bets-section"><h2>Parlays</h2><p class="lede">2–3 legs from different games, each leg already a positive-EV side. Win chance multiplies, so even "good" parlays usually lose.</p>
+      ${parRows ? `<div class="table-wrap"><table><thead><tr><th>Legs</th><th>Hit %</th><th>Market hit %</th><th>Payout</th><th>EV / $1</th></tr></thead><tbody>${parRows}</tbody></table></div>` : empty("None. A parlay needs at least two positive-EV legs from different games.")}</section>
+    ${b.excluded_gap.length ? `<section class="bets-section"><h2>Left out</h2><p class="lede">Model and market more than 10 points apart, so the model is probably missing news (often a quarterback change):</p><p>${b.excluded_gap.map(esc).join(" · ")}</p></section>` : ""}`;
+}
+$("#bets-refresh").addEventListener("click", () => { BETS = null; renderBets(); loadBets(true); });
 
 // ---------------------------------------------------------------- explain
 const EX_FIELDS = [
@@ -507,7 +600,7 @@ $("#ex-form").addEventListener("submit", e => e.preventDefault());
 $("#ex-reset").addEventListener("click", () => { if (EX_DEFAULT) { buildExForm(EX_DEFAULT); runExplain(); } });
 
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "backtest", "parlay", "explain"];
+const TABS = ["week", "bets", "backtest", "parlay", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -517,6 +610,7 @@ function setTab(name) {
   store.set("tab", name);
   if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
   if (name === "week") loadWeek();
+  if (name === "bets") renderBets();
   if (name === "backtest") loadBacktest(false);
   if (name === "parlay") renderParlay();
   if (name === "explain") initExplain();
@@ -531,9 +625,24 @@ $(".tabs").addEventListener("keydown", e => {
 document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (g) setTab(g.dataset.goto); });
 addEventListener("hashchange", () => setTab(location.hash.slice(1)));
 
+function setSport(sp) {
+  SPORT = sp === "cfb" ? "cfb" : "nfl";
+  store.set("sport", SPORT);
+  $$(".sport-seg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.sport === SPORT)));
+  $("#week-lede").textContent = SPORT === "nfl"
+    ? "Today's NFL games: model vs. sportsbook consensus vs. Kalshi, with weather, rest, and travel. Percentages are for the home team."
+    : "Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.";
+  $("#bt-title").textContent = SPORT === "nfl" ? "NFL backtest, 2023–2025" : "College backtest, 2023–2025";
+  weekPromise = null; WEEK = null; WEEK_ERR = null; BETS = null; BETS_ERR = null; LEGS = null; PARLAY_RESULT = null; PARLAY_ERR = null;
+  clearTimeout(btTimer);
+  loadStatus();
+  setTab(store.get("tab") || "week");
+}
+$(".sport-seg").addEventListener("click", e => { const b = e.target.closest("[data-sport]"); if (b && b.dataset.sport !== SPORT) setSport(b.dataset.sport); });
+
 (async function boot() {
   await loadStatus();
   const wanted = location.hash.slice(1) || store.get("tab");
-  const keysReady = STATUS && STATUS.cfbd_key && STATUS.odds_key;
-  setTab(TABS.includes(wanted) ? wanted : (keysReady ? "week" : "explain"));
+  if (TABS.includes(wanted)) store.set("tab", wanted);
+  setSport(SPORT);
 })();
