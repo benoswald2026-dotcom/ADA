@@ -53,6 +53,7 @@ QUICK_QUESTIONS = [
     "Is the model better than the market?",
     "Why avoid cheap Kalshi contracts?",
     "What does wind do to totals?",
+    "How do player props work here?",
 ]
 
 
@@ -204,7 +205,21 @@ def game_facts(r, side):
 
 # ------------------------------------------------------------- answer -----
 
-def answer(question, rows=None, info=None, backtest=None, bankroll=1000.0, slate_error=None):
+def find_players(question, props_rows):
+    """Players named in the question (full name, or a last name that is unique)."""
+    q = " " + normalize(re.sub(r"[^\w&().' ]", " ", question)) + " "
+    names = sorted({r["player"] for r in props_rows})
+    last = {}
+    for n in names:
+        last.setdefault(normalize(n).split()[-1], []).append(n)
+    hits = [n for n in names if " " + normalize(n) + " " in q]
+    for ln, ns in last.items():
+        if len(ns) == 1 and len(ln) > 3 and " " + ln + " " in q and ns[0] not in hits:
+            hits.append(ns[0])
+    return hits
+
+
+def answer(question, rows=None, info=None, backtest=None, bankroll=1000.0, slate_error=None, props_rows=None):
     """Build an answer. rows/info = current slate (or None), backtest = finished
     backtest summary (or None). Returns a dict the web app renders."""
     q = (question or "").strip()
@@ -218,6 +233,29 @@ def answer(question, rows=None, info=None, backtest=None, bankroll=1000.0, slate
     rows = rows or []
     teams = find_teams(q, rows) if rows else []
     handled = False
+
+    players = find_players(q, props_rows) if props_rows else []
+    if players or _has(ql, "prop", "player"):
+        handled = True
+        if players:
+            for name in players[:2]:
+                for x in [r for r in props_rows if r["player"] == name]:
+                    line = (f"{name} ({x['team']}) {x['label'].lower()}: median {x['median']:.1f}, middle 50% "
+                            f"{x['q25']:.0f}–{x['q75']:.0f}, fair line {x['fair_line']}.")
+                    if x.get("market"):
+                        line += (f" Book line {x['market']['line']}: model P(over) {x['p_over']:.0%} vs market "
+                                 f"{x['market']['p_over']:.0%} → {x['pick']} EV {x['ev']:+.3f}"
+                                 + (" (FLAG, unvalidated)" if x.get("flag") else "") + ".")
+                    out["facts"].append(line)
+            out["answer"].append("Player projections from the props model (calibrated on 2023–2025: its 25/50/75% "
+                                 "points held about 24/50/75% of the time). Prop edges are unvalidated because "
+                                 "there's no free history of prop lines.")
+            out["sources"].append("nflverse player stats; props model (props.py)")
+        elif props_rows is None:
+            out["answer"].append("Open the Props tab once to load today's player projections, then ask about a player "
+                                 "by name, e.g. \"Bijan Robinson rushing\".")
+        else:
+            out["answer"].append("Name a player from today's games, e.g. \"Jared Goff passing yards\".")
 
     if _has(ql, "clv", "closing line", "paper trade"):
         handled = True

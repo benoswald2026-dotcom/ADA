@@ -327,6 +327,8 @@ function nflExtras(r) {
       <div><h3 style="margin-bottom:10px">Betting at closing prices</h3>
         <div class="table-wrap"><table><thead><tr><th>Variant</th><th>Bets</th><th>ROI</th><th>95% CI</th><th>t</th><th>¼ Kelly</th><th>Max DD</th></tr></thead><tbody>${sim}</tbody></table></div>
         <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:0">Flat 1-unit ROI with bootstrap 95% CI. An edge counts only if t ≥ 3 and the CI stays above 0.</p>
+        ${r.props ? `<div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>Player props</th><th>Avg miss</th><th>vs recent avg</th><th>Below 25/50/75% pts</th></tr></thead><tbody>${r.props.map(p => `<tr><td>${esc(p.label)}</td><td>${p.mae_model.toFixed(1)}</td><td>${p.mae_baseline.toFixed(1)}</td><td>${pct(p.coverage["0.25"])} / ${pct(p.coverage["0.5"])} / ${pct(p.coverage["0.75"])}</td></tr>`).join("")}</tbody></table></div>
+        <p class="label" style="margin-top:6px;text-transform:none;letter-spacing:0">Props are calibrated when the last column reads about 25% / 50% / 75%.</p>` : ""}
         <div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>Totals</th><th>Avg miss (pts)</th><th>O/U vs close</th></tr></thead><tbody>
           <tr><td>Model, with wind</td><td>${t.mae_model.toFixed(2)}</td><td>${ou(t.ou_with_env)}</td></tr>
           <tr><td>Closing total</td><td>${t.mae_market.toFixed(2)}</td><td>n/a</td></tr>
@@ -499,6 +501,56 @@ $("#bets-refresh").addEventListener("click", () => { BETS = null; renderBets(); 
 $("#bets-body").addEventListener("change", e => {
   if (e.target.id === "bankroll") { store.set("bankroll", String(Number(e.target.value) || 1000)); BETS = null; renderBets(); loadBets(); }
 });
+
+// ---------------------------------------------------------------- props
+let PROPS = null, PROPS_ERR = null, propsLoading = false;
+const PROPS_FILTER = { stat: "all", game: "all", q: "" };
+
+async function loadProps(force = false) {
+  if (propsLoading) return;
+  if (force) PROPS = null;
+  propsLoading = true; PROPS_ERR = null; renderProps();
+  try { PROPS = await api(`/api/props?bankroll=${bankroll()}`); } catch (e) { PROPS_ERR = e.message; }
+  propsLoading = false; renderProps();
+}
+
+function renderProps() {
+  const body = $("#props-body");
+  if (SPORT !== "nfl") { body.innerHTML = `<div class="panel empty">Player props are NFL-only for now. Switch to NFL at the top.</div>`; return; }
+  if (PROPS_ERR) { body.innerHTML = setupNotice(PROPS_ERR); return; }
+  if (!PROPS) {
+    body.innerHTML = `<div class="panel"><h3>Building player projections</h3><p class="lede">The first load fits the model on 2019–2025 (about 30–60 seconds). After that it's cached.</p><div class="progress"><span></span></div></div>`;
+    if (!propsLoading) loadProps();
+    return;
+  }
+  const money = x => x ? `$${x.toFixed(2)}` : "–";
+  const games = [...new Set(PROPS.rows.map(r => r.matchup))];
+  const stats = [...new Map(PROPS.rows.map(r => [r.stat, r.label])).entries()];
+  const q = PROPS_FILTER.q.trim().toLowerCase();
+  const rows = PROPS.rows.filter(r => (PROPS_FILTER.stat === "all" || r.stat === PROPS_FILTER.stat)
+    && (PROPS_FILTER.game === "all" || r.matchup === PROPS_FILTER.game) && (!q || r.player.toLowerCase().includes(q)));
+  const hasLines = PROPS.rows.some(r => r.market);
+  const notes = PROPS.notes.map(n => `<div class="notice warn"><p>${esc(n)}</p></div>`).join("");
+  const warn = `<div class="notice"><p><b>Unvalidated edges.</b> The projections are tested: on 2023–2025 their 25/50/75% points held about 24/50/75% of the time (see Backtest). But there's no free history of prop <i>lines</i>, so the model can't be tested for profit against books. Any prop edge is logged as a paper trade so you can see whether it beats the closing line.</p></div>`;
+  const filters = `<div class="panel" style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+      <label class="field"><span class="label">Stat</span><select id="pf-stat"><option value="all">All stats</option>${stats.map(([k, l]) => `<option value="${k}" ${PROPS_FILTER.stat === k ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
+      <label class="field" style="flex:1;min-width:200px"><span class="label">Game</span><select id="pf-game"><option value="all">All games</option>${games.map(g => `<option ${PROPS_FILTER.game === g ? "selected" : ""}>${esc(g)}</option>`).join("")}</select></label>
+      <label class="field"><span class="label">Player</span><input id="pf-q" type="text" placeholder="Search" value="${esc(PROPS_FILTER.q)}"></label>
+    </div>`;
+  const head = `<tr><th>Player</th><th>Team</th><th>Stat</th><th>Median</th><th>Middle 50%</th><th>Fair line</th>${hasLines ? "<th>Book line</th><th>P(over)</th><th>Pick</th><th>EV / $1</th><th>Stake</th>" : ""}</tr>`;
+  const tr = r => `<tr><td>${esc(r.player)} <span class="src">${esc(r.position)}</span></td><td>${esc(r.team)}</td><td>${esc(r.label)}</td><td>${r.median.toFixed(1)}</td><td>${r.q25.toFixed(0)}–${r.q75.toFixed(0)}</td><td>${r.fair_line}</td>${hasLines ? (r.market ? `<td>${r.market.line}</td><td>${pct(r.p_over)}</td><td>${esc(r.pick)}${r.flag ? " ★" : ""}</td><td class="${r.ev >= 0 ? "ev-pos" : "ev-neg"}">${signed(r.ev, 3)}</td><td>${money(r.stake)}</td>` : `<td colspan="5" class="src">no line</td>`) : ""}</tr>`;
+  body.innerHTML = `<div class="notes">${notes}${warn}</div>${filters}
+    <p class="label" style="margin:12px 0 8px;text-transform:none;letter-spacing:0">${rows.length} projections · ${esc(PROPS.source)}${hasLines ? " · ★ = edge ≥ 3% and within 10 pts of the market" : ""}</p>
+    ${rows.length ? `<div class="table-wrap"><table><thead>${head}</thead><tbody>${rows.map(tr).join("")}</tbody></table></div>` : `<div class="panel empty">No players match those filters.</div>`}`;
+}
+$("#props-body").addEventListener("change", e => {
+  if (e.target.id === "pf-stat") { PROPS_FILTER.stat = e.target.value; renderProps(); }
+  if (e.target.id === "pf-game") { PROPS_FILTER.game = e.target.value; renderProps(); }
+});
+$("#props-body").addEventListener("input", e => {
+  if (e.target.id === "pf-q") { PROPS_FILTER.q = e.target.value; const pos = e.target.selectionStart; renderProps(); const i = $("#pf-q"); i.focus(); i.setSelectionRange(pos, pos); }
+});
+$("#props-refresh").addEventListener("click", () => loadProps(true));
 
 // ---------------------------------------------------------------- ask (chat)
 const CHAT = [];   // {role: "user"|"bot", data}
@@ -681,7 +733,7 @@ $("#ex-form").addEventListener("submit", e => e.preventDefault());
 $("#ex-reset").addEventListener("click", () => { if (EX_DEFAULT) { buildExForm(EX_DEFAULT); runExplain(); } });
 
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "bets", "backtest", "parlay", "ask", "research", "explain"];
+const TABS = ["week", "bets", "props", "backtest", "parlay", "ask", "research", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -697,6 +749,7 @@ function setTab(name) {
   if (name === "explain") initExplain();
   if (name === "research") renderResearch();
   if (name === "ask") renderChat();
+  if (name === "props") renderProps();
 }
 $(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) setTab(b.dataset.tab); });
 $(".tabs").addEventListener("keydown", e => {
@@ -717,6 +770,7 @@ function setSport(sp) {
     : "Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.";
   $("#bt-title").textContent = SPORT === "nfl" ? "NFL backtest, 2023–2025" : "College backtest, 2023–2025";
   weekPromise = null; WEEK = null; WEEK_ERR = null; BETS = null; BETS_ERR = null; LEGS = null; PARLAY_RESULT = null; PARLAY_ERR = null;
+  PROPS_ERR = null;
   clearTimeout(btTimer);
   loadStatus();
   setTab(store.get("tab") || "week");

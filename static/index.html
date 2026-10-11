@@ -33,6 +33,7 @@
   <nav class="wrap tabs" role="tablist" aria-label="Sections">
     <button role="tab" id="tab-week" data-tab="week" aria-selected="true">This week</button>
     <button role="tab" id="tab-bets" data-tab="bets" aria-selected="false">Best bets</button>
+    <button role="tab" id="tab-props" data-tab="props" aria-selected="false">Props</button>
     <button role="tab" id="tab-backtest" data-tab="backtest" aria-selected="false">Backtest</button>
     <button role="tab" id="tab-parlay" data-tab="parlay" aria-selected="false">Parlay</button>
     <button role="tab" id="tab-ask" data-tab="ask" aria-selected="false">Ask</button>
@@ -67,6 +68,18 @@
       <div class="view-actions"><button class="btn" id="bets-refresh">Refresh</button></div>
     </div>
     <div id="bets-body"></div>
+  </section>
+
+  <!-- PROPS -->
+  <section id="view-props" class="view" role="tabpanel" aria-labelledby="tab-props" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Player props</h1>
+        <p class="lede">Each player's likely range for passing yards, rushing yards, receptions, and receiving yards. The median is the middle outcome; the fair line is where over and under are even. With sportsbook prop lines (Odds API key), it also shows P(over), the better side, and EV.</p>
+      </div>
+      <div class="view-actions"><button class="btn" id="props-refresh">Refresh</button></div>
+    </div>
+    <div id="props-body"></div>
   </section>
 
   <!-- BACKTEST -->

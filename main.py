@@ -4,6 +4,7 @@
     python main.py backtest [--sport nfl]             2023-2025 validation report
     python main.py bets [--sport nfl] [--bankroll N]  ranked Kalshi bets, singles, parlays, stakes
     python main.py clv                                score paper trades against the closing line
+    python main.py props [--backtest]                 NFL player props: projections, fair lines, edges
     python main.py parlay ID:TEAM ID:TEAM [--sport nfl]   parlay fair price (2 or 3 legs)
     python main.py serve                              local web app at http://127.0.0.1:8000
 
@@ -129,6 +130,29 @@ def cmd_bets(args):
     print("Not betting advice. This tool never places bets.")
 
 
+def cmd_props(args):
+    import props
+    if args.backtest:
+        print(props.report(props.run_backtest()))
+        return
+    _title, notes, rows = load_slate("nfl", args.days)
+    r = props.build_props(rows, bankroll=args.bankroll)
+    for n in notes + r["notes"]:
+        print(f"NOTE: {n}")
+    money = lambda x: f"${x:,.2f}" if x else "-"
+    print("\nPLAYER PROPS — NFL. Median = the model's middle outcome; fair line = where over and under are even.")
+    print("Prop edges are UNVALIDATED: there's no free history of prop lines to backtest against.\n")
+    print(tabulate([[x["matchup"][:30], x["player"], x["position"], x["label"], f"{x['median']:.1f}",
+                     f"{x['q25']:.0f}-{x['q75']:.0f}", x["fair_line"],
+                     "-" if not x["market"] else f"{x['market']['line']}",
+                     "-" if not x["market"] else f"{x['p_over']:.0%}",
+                     "-" if not x["market"] else f"{x['pick']} {x['ev']:+.3f}",
+                     money(x["stake"])] for x in r["rows"]],
+                   headers=["Game", "Player", "Pos", "Stat", "Median", "25-75%", "Fair line", "Book line",
+                            "P(over)", "Pick / EV", "Stake"]))
+    print(f"\nSource: {r['source']}. Not betting advice; this tool never places bets.")
+
+
 def cmd_clv(_args):
     from strategy import clv_report
     r = clv_report()
@@ -201,6 +225,11 @@ def main():
     bp.add_argument("--bankroll", type=float, default=1000.0, help="for suggested stakes (default 1000)")
     bp.set_defaults(func=cmd_bets)
     sub.add_parser("clv", help="score logged paper trades against the closing line").set_defaults(func=cmd_clv)
+    pp = sub.add_parser("props", help="NFL player-prop projections (and edges when lines are available)")
+    pp.add_argument("--days", type=int, default=0)
+    pp.add_argument("--bankroll", type=float, default=1000.0)
+    pp.add_argument("--backtest", action="store_true", help="show the walk-forward validation instead")
+    pp.set_defaults(func=cmd_props)
     p = sport_args(sub.add_parser("parlay", help="parlay fair price"))
     p.add_argument("legs", nargs="+", help="GAMEID:TEAM (2 or 3 legs)")
     p.add_argument("--offered", type=float, help="your book's parlay price in American odds, e.g. 450")

@@ -49,7 +49,9 @@ def _run_backtest(sport):
     try:
         if sport == "nfl":
             import nfl
+            import props
             s = nfl.run_backtest()
+            s["props"] = props.run_backtest()["stats"]
         else:
             from backtest import run_backtest, summarize, verdict
             s = summarize(run_backtest())
@@ -83,6 +85,23 @@ def cached_week(sport="cfb", force=False):
                                "week": week}, rows)
             c["at"] = time.time()
         return c["value"]
+
+
+_props_cache = {"at": 0.0, "value": None}
+_props_lock = threading.Lock()
+
+
+def cached_props(bankroll=1000.0):
+    """Player props for today's NFL slate, rebuilt at most every 5 minutes."""
+    import time
+    import props
+    with _props_lock:
+        c = _props_cache
+        if c["value"] is None or time.time() - c["at"] > WEEK_CACHE_SECONDS or c["value"][0] != bankroll:
+            _info, rows = cached_week("nfl")
+            c["value"] = (bankroll, props.build_props(rows, bankroll=bankroll))
+            c["at"] = time.time()
+        return c["value"][1]
 
 
 def week_json(sport="cfb", force=False):
@@ -152,6 +171,14 @@ class Handler(BaseHTTPRequestHandler):
                 sport = _sport(self.path)
                 info, rows = cached_week(sport)
                 return self._send(200, {"info": info, "bets": find_bets(rows, bankroll=bankroll, log_sport=sport)})
+            if path == "/api/props":
+                from urllib.parse import parse_qs, urlparse
+                q = parse_qs(urlparse(self.path).query)
+                try:
+                    bankroll = max(0.0, float(q.get("bankroll", ["1000"])[0]))
+                except ValueError:
+                    bankroll = 1000.0
+                return self._send(200, cached_props(bankroll))
             if path == "/api/research":
                 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "research.json")) as f:
                     return self._send(200, json.load(f))
@@ -197,9 +224,10 @@ class Handler(BaseHTTPRequestHandler):
                     bankroll = max(0.0, float(body.get("bankroll") or 1000))
                 except (TypeError, ValueError):
                     bankroll = 1000.0
+                props_rows = _props_cache["value"][1]["rows"] if (sport == "nfl" and _props_cache["value"]) else None
                 return self._send(200, chat.answer(str(body.get("message", ""))[:500], rows, info,
                                                    job["result"] if job["state"] == "done" else None,
-                                                   bankroll, slate_error))
+                                                   bankroll, slate_error, props_rows=props_rows))
             if path == "/api/parlay":
                 from week import ParlayInputError, price_parlay
                 picks = [(str(l["game_id"]), str(l["team"])) for l in body.get("legs", [])]

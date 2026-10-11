@@ -93,6 +93,33 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 - So live NFL "edges" mainly come from Kalshi prices that disagree with the
   sportsbook consensus, or from injury news you enter before the market moves.
 
+## 2b-1. NFL player props
+
+```bash
+python main.py props              # projections, fair lines (and edges when prop lines are available)
+python main.py props --backtest   # walk-forward validation, 2023-2025
+```
+
+Stats: passing yards, rushing yards, receptions, and receiving yards (`props.py`).
+1. **Baseline:** a recency-weighted average of the player's earlier games
+   (4-game half-life), shrunk toward the league average when he has few games.
+2. **Adjustments**, each used only if t ≥ 3:
+   - the opponent's defense against that stat
+   - the team's expected points from the market spread and total
+3. **Outcome range:** sd = s0 + s1 × projection, using the actual shape of past
+   misses rather than a normal curve. Yards are skewed, and a normal curve
+   would lean toward overs.
+4. **Prop lines:** with an Odds API key, it averages the books' over/under
+   prices after removing the vig and compares P(over) with them. The same rules
+   apply (EV ≥ 3%, within 10 pts of the market, capped Kelly stakes), and each
+   pick is logged as a paper trade.
+
+**Validation (2023–2025, walk-forward):**
+- Predicted 25% / 50% / 75% points held about 24–25% / 48–51% / 75–76% of the time.
+- Projections miss by 1–3% less than the plain recent average.
+- There is **no free history of prop lines**, so prop edges are labelled
+  *unvalidated* until paper trades build a record.
+
 ## 2b-2. Ask Hashmark (chat)
 
 The **Ask** tab answers questions in plain English. It runs offline on your
@@ -172,6 +199,7 @@ The full library, with sources, is in `data/research.json` (also the **Research*
 | `strategy.py` | Kelly sizing, exposure caps, longshot guard, cover probability, bootstrap/t-stats, paper trades and CLV |
 | `data/research.json` | The research library: findings, why they worked, where they're used |
 | `chat.py` | Offline Ask Hashmark chat: research search + answers from live app data |
+| `props.py` | NFL player props: projections, calibrated ranges, prop-line edges |
 
 ## 4. How each number is calculated
 
