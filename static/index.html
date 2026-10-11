@@ -35,6 +35,7 @@
     <button role="tab" id="tab-bets" data-tab="bets" aria-selected="false">Best bets</button>
     <button role="tab" id="tab-backtest" data-tab="backtest" aria-selected="false">Backtest</button>
     <button role="tab" id="tab-parlay" data-tab="parlay" aria-selected="false">Parlay</button>
+    <button role="tab" id="tab-ask" data-tab="ask" aria-selected="false">Ask</button>
     <button role="tab" id="tab-research" data-tab="research" aria-selected="false">Research</button>
     <button role="tab" id="tab-explain" data-tab="explain" aria-selected="false">How it works</button>
   </nav>
@@ -89,6 +90,26 @@
       </div>
     </div>
     <div id="parlay-body"></div>
+  </section>
+
+  <!-- ASK -->
+  <section id="view-ask" class="view" role="tabpanel" aria-labelledby="tab-ask" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Ask Hashmark</h1>
+        <p class="lede">Ask about bets, a team, a parlay, stake sizing, Kalshi fees, or the research. Answers come only from the research library and the app's current numbers, with sources. It runs on your computer with no AI model.</p>
+      </div>
+      <div class="view-actions"><button class="btn" id="ask-clear">Clear chat</button></div>
+    </div>
+    <div class="chat">
+      <div id="chat-log" class="chat-log" aria-live="polite"></div>
+      <div id="chat-suggest" class="chat-suggest"></div>
+      <form id="chat-form" class="chat-form" autocomplete="off">
+        <label for="chat-input" class="label" hidden>Your question</label>
+        <input id="chat-input" type="text" maxlength="500" placeholder="e.g. Should I parlay the Patriots and Steelers?">
+        <button class="btn btn-primary" type="submit" id="chat-send">Ask</button>
+      </form>
+    </div>
   </section>
 
   <!-- RESEARCH -->

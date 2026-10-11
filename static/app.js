@@ -500,6 +500,50 @@ $("#bets-body").addEventListener("change", e => {
   if (e.target.id === "bankroll") { store.set("bankroll", String(Number(e.target.value) || 1000)); BETS = null; renderBets(); loadBets(); }
 });
 
+// ---------------------------------------------------------------- ask (chat)
+const CHAT = [];   // {role: "user"|"bot", data}
+const CHAT_STARTERS = ["What are the best bets right now?", "How much should I bet?", "Should I bet a parlay?",
+  "Is the model better than the market?", "Why avoid cheap Kalshi contracts?", "What does wind do to totals?"];
+
+function botHtml(d) {
+  const list = (xs, cls = "") => xs.length ? `<ul class="${cls}">${xs.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const cites = d.citations.length ? `<div><p class="label">From the research</p><div class="cites">${d.citations.map(c =>
+    `<div class="cite"><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title)}</a> <span class="src">${esc(c.authors)}${c.year ? `, ${c.year}` : ""}</span><br>${esc(c.snippet)}</div>`).join("")}</div></div>` : "";
+  const facts = d.facts.length ? `<div><p class="label">From the app's data</p>${list(d.facts, "facts")}</div>` : "";
+  const src = d.sources.length ? `<p class="src">Sources: ${d.sources.map(esc).join(" · ")}</p>` : "";
+  return `<div class="msg-bot">${list(d.answer)}${facts}${cites}${src}</div>`;
+}
+
+function renderChat(pending = false) {
+  const log = $("#chat-log");
+  log.innerHTML = CHAT.map(m => m.role === "user" ? `<div class="msg-user">${esc(m.data)}</div>` : botHtml(m.data)).join("")
+    + (pending ? `<div class="msg-bot typing">Looking through the research and today's numbers…</div>` : "");
+  const last = CHAT.length ? CHAT[CHAT.length - 1] : null;
+  const sugg = !CHAT.length ? CHAT_STARTERS : (last && last.role === "bot" && last.data.suggestions.length ? last.data.suggestions : []);
+  $("#chat-suggest").innerHTML = sugg.map(q => `<button type="button" data-q="${esc(q)}">${esc(q)}</button>`).join("");
+  if (!CHAT.length) log.innerHTML = `<div class="msg-bot"><ul><li>Hi! I answer from ${SPORT === "nfl" ? "today’s NFL slate" : "this week’s college slate"}, the backtest (once it has run), and the studies in the research library. Every answer shows its sources.</li></ul></div>`;
+  if (CHAT.length) log.lastElementChild?.scrollIntoView({ block: "nearest" });
+}
+
+async function ask(q) {
+  q = (q || "").trim();
+  if (!q) return;
+  CHAT.push({ role: "user", data: q });
+  renderChat(true);
+  $("#chat-send").disabled = true;
+  try {
+    const d = await api("/api/chat", { body: { message: q, sport: SPORT, bankroll: bankroll() } });
+    CHAT.push({ role: "bot", data: d });
+  } catch (e) {
+    CHAT.push({ role: "bot", data: { answer: [`Couldn't answer: ${e.message}`], facts: [], citations: [], sources: [], suggestions: [] } });
+  }
+  $("#chat-send").disabled = false;
+  renderChat();
+}
+$("#chat-form").addEventListener("submit", e => { e.preventDefault(); const i = $("#chat-input"); ask(i.value); i.value = ""; });
+$("#chat-suggest").addEventListener("click", e => { const b = e.target.closest("[data-q]"); if (b) ask(b.dataset.q); });
+$("#ask-clear").addEventListener("click", () => { CHAT.length = 0; renderChat(); });
+
 // ---------------------------------------------------------------- research
 let RESEARCH = null;
 async function renderResearch() {
@@ -637,7 +681,7 @@ $("#ex-form").addEventListener("submit", e => e.preventDefault());
 $("#ex-reset").addEventListener("click", () => { if (EX_DEFAULT) { buildExForm(EX_DEFAULT); runExplain(); } });
 
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "bets", "backtest", "parlay", "research", "explain"];
+const TABS = ["week", "bets", "backtest", "parlay", "ask", "research", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -652,6 +696,7 @@ function setTab(name) {
   if (name === "parlay") renderParlay();
   if (name === "explain") initExplain();
   if (name === "research") renderResearch();
+  if (name === "ask") renderChat();
 }
 $(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) setTab(b.dataset.tab); });
 $(".tabs").addEventListener("keydown", e => {

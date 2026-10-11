@@ -184,6 +184,22 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/explain":
                 from explain import explain
                 return self._send(200, explain(body))
+            if path == "/api/chat":
+                import chat
+                sport = "nfl" if body.get("sport") == "nfl" else "cfb"
+                rows = info = slate_error = None
+                try:
+                    info, rows = cached_week(sport)
+                except Exception as e:  # the research half still works without live data
+                    slate_error = _friendly(e)
+                job = _backtests[sport]
+                try:
+                    bankroll = max(0.0, float(body.get("bankroll") or 1000))
+                except (TypeError, ValueError):
+                    bankroll = 1000.0
+                return self._send(200, chat.answer(str(body.get("message", ""))[:500], rows, info,
+                                                   job["result"] if job["state"] == "done" else None,
+                                                   bankroll, slate_error))
             if path == "/api/parlay":
                 from week import ParlayInputError, price_parlay
                 picks = [(str(l["game_id"]), str(l["team"])) for l in body.get("legs", [])]

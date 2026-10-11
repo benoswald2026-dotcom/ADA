@@ -93,6 +93,28 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 - So live NFL "edges" mainly come from Kalshi prices that disagree with the
   sportsbook consensus, or from injury news you enter before the market moves.
 
+## 2b-2. Ask Hashmark (chat)
+
+The **Ask** tab answers questions in plain English. It runs offline on your
+computer with **no AI model and no extra dependencies** (`chat.py`):
+
+1. **Search:** scores each study in `data/research.json` against your question
+   (TF-IDF, a standard keyword-weighting method, plus a small synonym list)
+   and quotes the best-matching sentence, with a link.
+2. **Question types:** recognizes common questions and answers them from the
+   app's live numbers:
+   - best bets
+   - a team ("What about the Packers?")
+   - a parlay ("parlay Patriots and Steelers")
+   - stake sizing
+   - Kalshi fees ("fee at 55c")
+   - model accuracy (after you run the backtest)
+   - weather
+   - closing line value
+
+Every answer lists its sources. It never invents numbers. If it can't match a
+question, it says so and suggests ones it can answer.
+
 ## 2c. What worked elsewhere, and how it's built in
 
 The full library, with sources, is in `data/research.json` (also the **Research** tab).
@@ -149,6 +171,7 @@ The full library, with sources, is in `data/research.json` (also the **Research*
 | `bets.py` | Bet finder: Kalshi singles, moneyline and spread singles, parlays, Kelly stakes |
 | `strategy.py` | Kelly sizing, exposure caps, longshot guard, cover probability, bootstrap/t-stats, paper trades and CLV |
 | `data/research.json` | The research library: findings, why they worked, where they're used |
+| `chat.py` | Offline Ask Hashmark chat: research search + answers from live app data |
 
 ## 4. How each number is calculated
 

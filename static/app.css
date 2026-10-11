@@ -296,3 +296,21 @@ tr.total td { font-weight: 500; background: var(--surface-2); }
 .study p { max-width: 80ch; }
 .study-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
 .study-head h3 { text-transform: none; letter-spacing: 0; font-size: 1.2rem; margin-right: 4px; }
+
+/* ---------- ask (chat) ---------- */
+.chat { display: grid; gap: 12px; max-width: 860px; }
+.chat-log { display: grid; gap: 12px; }
+.msg-user { justify-self: end; max-width: 80%; background: var(--accent); color: var(--on-accent); padding: 10px 14px; border-radius: 12px 12px 2px 12px; overflow-wrap: anywhere; }
+.msg-bot { background: var(--surface); border: 1px solid var(--line); border-radius: 2px 12px 12px 12px; padding: 14px 16px; display: grid; gap: 10px; min-width: 0; }
+.msg-bot ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.msg-bot .facts li { font-family: var(--font-data); font-size: var(--step--1); }
+.msg-bot .src { font-size: 0.75rem; color: var(--muted); overflow-wrap: anywhere; }
+.cites { display: grid; gap: 8px; }
+.cite { border-left: 3px solid var(--market); padding: 4px 0 4px 10px; font-size: var(--step--1); }
+.cite a { font-weight: 600; }
+.chat-suggest { display: flex; flex-wrap: wrap; gap: 8px; }
+.chat-suggest button { font: 500 var(--step--1) var(--font-body); background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.chat-suggest button:hover { border-color: var(--accent); }
+.chat-form { display: flex; gap: 8px; position: sticky; bottom: env(safe-area-inset-bottom, 0px); background: var(--bg); padding-block: 8px; }
+.chat-form input { flex: 1; font-family: var(--font-body); }
+.typing { color: var(--muted); font-size: var(--step--1); }
