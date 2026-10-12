@@ -93,6 +93,28 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 - So live NFL "edges" mainly come from Kalshi prices that disagree with the
   sportsbook consensus, or from injury news you enter before the market moves.
 
+## 2a. Run it online (Render)
+
+`render.yaml` sets everything up. Steps (all doable from a phone):
+1. Sign in at render.com with GitHub. Go to **New → Blueprint**, pick this repo, and confirm the branch.
+2. When asked for secrets, enter:
+   - `HASHMARK_PASSWORD`: anything you like; the site asks for it
+   - `ODDS_API_KEY`
+   - `CFBD_API_KEY`
+3. Deploy. Render gives you an `https://hashmark-….onrender.com` URL. Open it and enter the password (any username).
+
+Notes:
+- **Kalshi** public prices need no Kalshi account or key. The server only reads
+  them. Hashmark never logs in to Kalshi or places orders.
+- **Free plan:** the server sleeps after about 15 minutes of no visits, and the
+  first visit after that wakes it (about 30–60 s). The props model fit is slow
+  on the free plan's small CPU, so a background warm-up starts it at launch.
+  The $7 Starter plan is much faster.
+- **Storage resets:** the cache and `data/paper_trades.csv` are wiped on each
+  redeploy or restart. Copy the paper trades out first if you want to keep them.
+- **Locally**, `python main.py serve` still only listens on your own computer.
+  It switches to public mode only when the host sets `PORT`.
+
 ## 2b-1. NFL player props
 
 ```bash

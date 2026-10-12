@@ -207,8 +207,12 @@ def cmd_parlay(args):
 
 
 def cmd_serve(args):
+    import os
     from server import serve
-    serve(args.port)
+    if os.environ.get("PORT"):   # cloud host (Render sets PORT): listen publicly, no browser
+        serve(int(os.environ["PORT"]), open_browser=False, host="0.0.0.0", warm=True)
+    else:
+        serve(args.port)
 
 
 def main():

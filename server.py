@@ -5,6 +5,8 @@ Uses only Python's built-in http.server (no extra dependencies). Listens on
 it never places trades, bets, or orders. API keys never leave the server;
 /api/status only reports whether each key is set.
 """
+import base64
+import hmac
 import json
 import os
 import threading
@@ -150,7 +152,31 @@ class Handler(BaseHTTPRequestHandler):
         with open(full, "rb") as f:
             self._send(200, f.read(), TYPES.get(os.path.splitext(full)[1], "application/octet-stream"))
 
+    def _authorized(self):
+        """If HASHMARK_PASSWORD is set, require it (HTTP Basic auth, any username).
+        The host serves over https, so the password is encrypted in transit."""
+        password = os.environ.get("HASHMARK_PASSWORD", "")
+        if not password or self.path.split("?", 1)[0] == "/healthz":
+            return True
+        header = self.headers.get("Authorization", "")
+        if header.startswith("Basic "):
+            try:
+                _user, _, given = base64.b64decode(header[6:]).decode("utf-8").partition(":")
+                if hmac.compare_digest(given.encode(), password.encode()):
+                    return True
+            except (ValueError, UnicodeDecodeError):
+                pass
+        self.send_response(401)
+        self.send_header("WWW-Authenticate", 'Basic realm="Hashmark", charset="UTF-8"')
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+        return False
+
     def do_GET(self):
+        if not self._authorized():
+            return
+        if self.path == "/healthz":
+            return self._send(200, {"ok": True})
         path = self.path.split("?", 1)[0]
         try:
             if path == "/api/status":
@@ -205,6 +231,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send(500, {"error": _friendly(e)})
 
     def do_POST(self):
+        if not self._authorized():
+            return
         path = self.path.split("?", 1)[0]
         try:
             body = self._body()
@@ -248,10 +276,28 @@ class Handler(BaseHTTPRequestHandler):
             self._send(500, {"error": _friendly(e)})
 
 
-def serve(port=8000, open_browser=True):
-    httpd = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    url = f"http://127.0.0.1:{port}"
-    print(f"Serving on {url}  (Ctrl+C to stop)")
+def _warm_up():
+    """Load today's NFL board and props in the background so the first visitor
+    doesn't wait for the whole model fit (slow on small cloud machines)."""
+    try:
+        cached_week("nfl")
+        cached_props()
+        print("Warm-up done: NFL board and props are cached.")
+    except Exception as e:  # never crash the server over a warm-up
+        print(f"Warm-up skipped: {_friendly(e)}")
+
+
+def serve(port=8000, open_browser=True, host="127.0.0.1", warm=False):
+    """Local by default (127.0.0.1). In the cloud, main.py passes host 0.0.0.0
+    and the PORT the host assigns."""
+    httpd = ThreadingHTTPServer((host, port), Handler)
+    url = f"http://{'127.0.0.1' if host == '127.0.0.1' else host}:{port}"
+    print(f"Serving on {url}  (Ctrl+C to stop)"
+          + ("  [password required]" if os.environ.get("HASHMARK_PASSWORD") else ""))
+    if host != "127.0.0.1" and not os.environ.get("HASHMARK_PASSWORD"):
+        print("WARNING: listening publicly with no HASHMARK_PASSWORD set. Anyone with the URL can use it.")
+    if warm:
+        threading.Thread(target=_warm_up, daemon=True).start()
     if open_browser:
         threading.Timer(0.5, lambda: webbrowser.open(url)).start()
     try:
