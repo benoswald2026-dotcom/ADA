@@ -47,3 +47,12 @@ def test_bootstrap_and_t_stat():
 
 def test_max_drawdown():
     assert S.max_drawdown([1.0, 1.2, 0.9, 1.3]) == pytest.approx(0.25)
+
+
+def test_fresh_mode_bypasses_ttl_but_keeps_history():
+    import cache
+    assert cache._still_valid(300, 10) is True          # recent live data reused normally
+    with cache.fresh():
+        assert cache._still_valid(300, 10) is False     # Refresh: re-download live data
+        assert cache._still_valid(None, 10**9) is True  # finished seasons never re-download
+    assert cache._still_valid(300, 10) is True

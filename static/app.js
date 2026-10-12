@@ -548,7 +548,7 @@ async function loadProps(force = false) {
   if (propsLoading) return;
   if (force) PROPS = null;
   propsLoading = true; PROPS_ERR = null; renderProps();
-  try { PROPS = await api(`/api/props?bankroll=${bankroll()}`); } catch (e) { PROPS_ERR = e.message; }
+  try { PROPS = await api(`/api/props?bankroll=${bankroll()}${force ? "&refresh=1" : ""}`); } catch (e) { PROPS_ERR = e.message; }
   propsLoading = false; renderProps();
 }
 

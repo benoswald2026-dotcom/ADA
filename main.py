@@ -33,8 +33,12 @@ def pct(x):
     return "n/a" if x is None else f"{x:.1%}"
 
 
-def load_slate(sport, days=0):
-    """Returns (title, notes, rows) for either sport."""
+def load_slate(sport, days=0, fresh=False):
+    """Returns (title, notes, rows) for either sport. fresh=True re-downloads live data now."""
+    if fresh:
+        from cache import fresh as fresh_ctx
+        with fresh_ctx():
+            return load_slate(sport, days)
     if sport == "nfl":
         from nfl import build_slate
         info, rows = build_slate(days=days)
@@ -45,7 +49,7 @@ def load_slate(sport, days=0):
 
 
 def cmd_week(args):
-    title, notes, rows = load_slate(args.sport, args.days)
+    title, notes, rows = load_slate(args.sport, args.days, fresh=args.fresh)
     print(f"\n{title} — percentages are for the HOME team.\n")
     for n in notes:
         print(f"NOTE: {n}")
@@ -93,7 +97,7 @@ def cmd_backtest(args):
 
 def cmd_bets(args):
     from bets import find_bets
-    title, notes, rows = load_slate(args.sport, args.days)
+    title, notes, rows = load_slate(args.sport, args.days, fresh=args.fresh)
     b = find_bets(rows, bankroll=args.bankroll, log_sport=args.sport)
     money = lambda x: f"${x:,.2f}" if x else "-"
     print(f"\nBET FINDER — {title}   (bankroll {money(args.bankroll)}, quarter Kelly, caps 2%/bet 3%/game 10%/slate)")
@@ -135,8 +139,13 @@ def cmd_props(args):
     if args.backtest:
         print(props.report(props.run_backtest()))
         return
-    _title, notes, rows = load_slate("nfl", args.days)
-    r = props.build_props(rows, bankroll=args.bankroll)
+    _title, notes, rows = load_slate("nfl", args.days, fresh=args.fresh)
+    if args.fresh:
+        from cache import fresh
+        with fresh():
+            r = props.build_props(rows, bankroll=args.bankroll)
+    else:
+        r = props.build_props(rows, bankroll=args.bankroll)
     for n in notes + r["notes"]:
         print(f"NOTE: {n}")
     money = lambda x: f"${x:,.2f}" if x else "-"
@@ -180,7 +189,7 @@ def cmd_parlay(args):
         picks.append(tuple(leg.split(":", 1)))
     if not 2 <= len(picks) <= 3:
         sys.exit("Give 2 or 3 legs, e.g. python main.py parlay 401234:Georgia 401235:Texas")
-    _title, _notes, rows = load_slate(args.sport, args.days)
+    _title, _notes, rows = load_slate(args.sport, args.days, fresh=args.fresh)
     try:
         r = price_parlay(rows, picks, args.offered)
     except ParlayInputError as e:
@@ -222,6 +231,7 @@ def main():
         sp.add_argument("--sport", choices=["cfb", "nfl"], default="cfb")
         if days:
             sp.add_argument("--days", type=int, default=0, help="NFL: include the next N days too")
+            sp.add_argument("--fresh", action="store_true", help="re-download all live data right now")
         return sp
     sport_args(sub.add_parser("week", help="current-week table")).set_defaults(func=cmd_week)
     sport_args(sub.add_parser("backtest", help="2023-2025 validation report"), days=False).set_defaults(func=cmd_backtest)
@@ -232,6 +242,7 @@ def main():
     pp = sub.add_parser("props", help="NFL player-prop projections (and edges when lines are available)")
     pp.add_argument("--days", type=int, default=0)
     pp.add_argument("--bankroll", type=float, default=1000.0)
+    pp.add_argument("--fresh", action="store_true", help="re-download all live data right now")
     pp.add_argument("--backtest", action="store_true", help="show the walk-forward validation instead")
     pp.set_defaults(func=cmd_props)
     p = sport_args(sub.add_parser("parlay", help="parlay fair price"))

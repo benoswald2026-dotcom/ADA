@@ -93,6 +93,18 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 - So live NFL "edges" mainly come from Kalshi prices that disagree with the
   sportsbook consensus, or from injury news you enter before the market moves.
 
+## 1b. When data updates
+
+Hashmark never refreshes on its own. Data updates only when you ask:
+- **App:** tap **Refresh** on This week, Best bets, or Props. That re-downloads
+  every live source right then: Kalshi, sportsbook odds, weather, and nflverse
+  schedules and stats. Finished seasons are never re-downloaded.
+- **Command line:** add `--fresh`, e.g. `python main.py bets --sport nfl --fresh`.
+  Without it, recent downloads are reused (Kalshi 5 min, odds 30 min,
+  weather and nflverse 1 hour) to save your Odds API credits.
+
+Every number's source line shows when it was fetched, down to the second.
+
 ## 2a. Run it online (Render)
 
 `render.yaml` sets everything up. Steps (all doable from a phone):

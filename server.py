@@ -70,6 +70,15 @@ WEEK_CACHE_SECONDS = 5 * 60
 
 
 def cached_week(sport="cfb", force=False):
+    """force=True (the Refresh button) rebuilds AND re-downloads every live source."""
+    if force:
+        from cache import fresh
+        with fresh():
+            return _cached_week(sport, True)
+    return _cached_week(sport, False)
+
+
+def _cached_week(sport="cfb", force=False):
     """Rebuilding the board replays several seasons, so reuse it for a few minutes.
     API responses have their own cache too (cache.py). Returns (info, rows)."""
     import time
@@ -93,15 +102,20 @@ _props_cache = {"at": 0.0, "value": None}
 _props_lock = threading.Lock()
 
 
-def cached_props(bankroll=1000.0):
+def cached_props(bankroll=1000.0, force=False):
     """Player props for today's NFL slate, rebuilt at most every 5 minutes."""
     import time
     import props
     with _props_lock:
         c = _props_cache
-        if c["value"] is None or time.time() - c["at"] > WEEK_CACHE_SECONDS or c["value"][0] != bankroll:
-            _info, rows = cached_week("nfl")
-            c["value"] = (bankroll, props.build_props(rows, bankroll=bankroll))
+        if force or c["value"] is None or time.time() - c["at"] > WEEK_CACHE_SECONDS or c["value"][0] != bankroll:
+            _info, rows = cached_week("nfl", force=force)
+            if force:
+                from cache import fresh
+                with fresh():
+                    c["value"] = (bankroll, props.build_props(rows, bankroll=bankroll))
+            else:
+                c["value"] = (bankroll, props.build_props(rows, bankroll=bankroll))
             c["at"] = time.time()
         return c["value"][1]
 
@@ -204,7 +218,7 @@ class Handler(BaseHTTPRequestHandler):
                     bankroll = max(0.0, float(q.get("bankroll", ["1000"])[0]))
                 except ValueError:
                     bankroll = 1000.0
-                return self._send(200, cached_props(bankroll))
+                return self._send(200, cached_props(bankroll, force="refresh=1" in self.path))
             if path == "/api/research":
                 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "research.json")) as f:
                     return self._send(200, json.load(f))
