@@ -98,6 +98,14 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 - Fitting the EPA weight plus the QB adjustment improved it from 0.2236 to 0.2183
   (paired 95% CI −0.0099 to −0.0007, t = −2.2). Each change alone is not significant.
 - Don't list QB changes in `injuries.csv` as well: the QB adjustment already counts them.
+
+**Tried and not adopted** (so they aren't retried blindly):
+| Idea | Result |
+|---|---|
+| Play-by-play EPA with garbage time removed | Tracked margins worse on 2015–2022 (corr 0.349–0.360 vs 0.371) |
+| Kalman-filter team ratings instead of Elo (settings picked on 2015–2022) | Better on 2015–2022 (margin MSE 170.0 vs 171.2) but worse on 2023–2025 (Brier 0.2192 vs 0.2183) |
+| Props: discount games for a previous team | Worse for rushing, receptions, receiving yards on 2021–2022 |
+| Props: usage-based prior for passing yards | Worse on 2021–2022 (t = +4.7) |
 - Spread bets use a key-number margin distribution (a margin of 3 is ~2.6× as common
   as a smooth curve says, 7 is ~1.7×). On 2023–2025 it predicts "home wins by more
   than t" better than the plain normal curve (paired, game-resampled t = −2.7) and gets
