@@ -97,6 +97,10 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 - Fitting the EPA weight plus the QB adjustment improved it from 0.2236 to 0.2183
   (paired 95% CI −0.0099 to −0.0007, t = −2.2). Each change alone is not significant.
 - Don't list QB changes in `injuries.csv` as well: the QB adjustment already counts them.
+- Spread bets use a key-number margin distribution (a margin of 3 is ~2.6× as common
+  as a smooth curve says, 7 is ~1.7×). On 2023–2025 it predicts "home wins by more
+  than t" better than the plain normal curve (paired, game-resampled t = −2.7) and gets
+  pushes right (5.3% predicted vs 5.5% actual on whole-number lines; the normal curve says 0%).
 - Play-by-play EPA with garbage time removed (`NFL_EPA_SOURCE = "pbp"`) was tried and
   tracked margins slightly worse on the 2015–2022 fit seasons, so weekly team EPA stays the default.
 - It went 49.2% against the spread.
@@ -200,7 +204,7 @@ The full library, with sources, is in `data/research.json` (also the **Research*
 | Demand t ≥ 3, decide features in advance, report every trial | Harvey, Liu & Zhu 2016; Bailey & López de Prado 2014 | `nfl.MARGIN_FEATURES`, `nfl.TOTAL_FEATURES`, `strategy.T_STAT_BAR` |
 | Size by edge, but use fractional Kelly with caps | Kelly 1956; MacLean, Thorp & Ziemba | `strategy.size_bets` (¼ Kelly; 2% per bet, 3% per game, 10% per slate) |
 | Cheap prediction-market contracts are overpriced | Bürgi, Deng & Whelan; Thaler & Ziemba 1988 | `strategy.LONGSHOT_MIN_PRICE` (no Kalshi FLAG under 20¢) |
-| NFL margins are roughly normal around the spread | Stern 1991 | `strategy.cover_prob`, σ fitted on our data (≈12.8) |
+| NFL margins are roughly normal around the spread, with lumps at 3, 7, 10, 14 | Stern 1991 | `strategy.margin_dist`: discrete normal (σ fitted, ≈12.8) times key-number weights fitted on earlier seasons (`nfl.fit_key_weights`), centered so the line is the median |
 | Momentum | Jegadeesh & Titman 1993 | "form" candidate feature |
 | Many small edges, explicit costs, correlation and leverage risk | Medallion (Zuckerman); LTCM (Lowenstein) | caps, same-game warnings, net-of-fee EV |
 | Score yourself by closing line value | practitioner consensus | `data/paper_trades.csv`, `python main.py clv` |

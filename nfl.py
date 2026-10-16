@@ -384,6 +384,57 @@ def fit_sigma(records, seasons):
     return float(np.std(res, ddof=1))
 
 
+KEY_SMOOTH = 5.0   # pseudo-games added to observed and expected counts (shrinks weights to 1)
+SPREAD_THRESHOLDS = [t + 0.5 for t in range(-11, 11)]   # -10.5 .. 10.5, for the distribution test
+
+
+def fit_key_weights(records, seasons, sigma):
+    """Key-number weights (stern-1991 plus the NFL's scoring lumps), fitted on `seasons`.
+
+    For each margin k in 1..KEY_RANGE (and 0), compare how often games ended at
+    +/-k with how often the discrete normal centered on the closing line said
+    they would: w_k = (observed + KEY_SMOOTH) / (expected + KEY_SMOOTH).
+    +k and -k share one weight. Then renormalized by margin_dist."""
+    from strategy import KEY_RANGE, margin_dist
+    fit = [r for r in records if r["season"] in seasons and r["close_spread"] is not None]
+    obs, exp = np.zeros(KEY_RANGE + 1), np.zeros(KEY_RANGE + 1)
+    for r in fit:
+        ks, p = margin_dist(-r["close_spread"], sigma)
+        a = np.abs(ks)
+        for k in range(KEY_RANGE + 1):
+            exp[k] += p[a == k].sum()
+        m = abs(int(r["margin_actual"]))
+        if m <= KEY_RANGE:
+            obs[m] += 1
+    w = (obs + KEY_SMOOTH) / (exp + KEY_SMOOTH)
+    weights = {}
+    for k in range(KEY_RANGE + 1):
+        weights[k] = weights[-k] = float(w[k])
+    return weights
+
+
+def spread_dist_score(test, key_weights_by_season):
+    """Pre-registered test of the margin distribution: mean Brier score of
+    P(home margin > t) for t in SPREAD_THRESHOLDS, centered on the closing line.
+    Lower is better. The CI resamples whole GAMES (a game's thresholds are
+    correlated), so each game contributes its mean squared-error difference."""
+    from strategy import bootstrap_ci, margin_dist, t_stat
+    key_err, norm_err = [], []
+    for r in test:
+        if r["close_spread"] is None:
+            continue
+        mu = -r["close_spread"]
+        ks, pn = margin_dist(mu, r["sigma"])
+        _, pk = margin_dist(mu, r["sigma"], key_weights_by_season[r["season"]])
+        y = np.array([1.0 if r["margin_actual"] > t else 0.0 for t in SPREAD_THRESHOLDS])
+        key_err.append(float(np.mean((np.array([pk[ks > t].sum() for t in SPREAD_THRESHOLDS]) - y) ** 2)))
+        norm_err.append(float(np.mean((np.array([pn[ks > t].sum() for t in SPREAD_THRESHOLDS]) - y) ** 2)))
+    d = [k - n for k, n in zip(key_err, norm_err)]
+    lo, hi = bootstrap_ci(d)
+    return {"key": float(np.mean(key_err)), "normal": float(np.mean(norm_err)), "n": len(d),
+            "key_minus_normal": {"diff": float(np.mean(d)), "ci95": [lo, hi], "t": t_stat(d)}}
+
+
 def prob_to_margin(p):
     """Inverse of margin_to_prob: home win probability -> implied margin in points."""
     p = min(max(p, 1e-6), 1 - 1e-6)
@@ -425,8 +476,9 @@ def fit_all(records, seasons):
     epa_w = fit_epa_weight(records, seasons)
     set_base_margins(records, epa_w["w"])
     env = fit_environment(records, seasons)
+    sigma = fit_sigma(records, seasons)
     return {"epa_w": epa_w, "env": env, "combo": fit_combo(records, env, seasons),
-            "sigma": fit_sigma(records, seasons)}
+            "sigma": sigma, "key_weights": fit_key_weights(records, seasons, sigma)}
 
 
 # ----------------------------------------------------------- replay -------
@@ -598,8 +650,8 @@ def simulate_bets(test, prob_key, kind="moneyline", min_ev=config.MIN_EDGE):
     market (the project's rules). Reports flat-stake ROI with a bootstrap 95%
     CI and t-stat, plus a quarter-Kelly bankroll curve.
     """
-    from strategy import (KELLY_FRACTION, MAX_BET_FRACTION, bootstrap_ci, cover_prob,
-                          kelly_fraction_decimal, max_drawdown, t_stat)
+    from strategy import (KELLY_FRACTION, MAX_BET_FRACTION, bootstrap_ci, cover_push_prob,
+                          kelly_with_push, max_drawdown, t_stat)
     flat, bankroll, equity, hits = [], 1.0, [1.0], 0
     for r in test:
         if r["market_p"] is None:
@@ -611,27 +663,28 @@ def simulate_bets(test, prob_key, kind="moneyline", min_ev=config.MIN_EDGE):
             for side, p, raw, mkt, ml in (("home", p_home, raw_home, r["market_p"], r["home_ml"]),
                                           ("away", 1 - p_home, 1 - raw_home, 1 - r["market_p"], r["away_ml"])):
                 won = (r["y"] == 1) if side == "home" else (r["y"] == 0)
-                options.append((p, raw, mkt, american_to_decimal(ml), won, False))
+                options.append((p, 0.0, raw, mkt, american_to_decimal(ml), won, False))
         else:
             if r["close_spread"] is None:
                 continue
             # Center on the market's own line and shift only by how much the bet
             # probability disagrees with the market (no moneyline-vs-spread artifacts).
             m_bet = -r["close_spread"] + prob_to_margin(p_home) - prob_to_margin(r["market_p"])
-            pc = cover_prob(m_bet, r["close_spread"], r["sigma"])
+            pc, pp = cover_push_prob(m_bet, r["close_spread"], r["sigma"], r["key_weights"])
             cover = r["margin_actual"] + r["close_spread"]
-            for side, p, ml in (("home", pc, r["home_spread_odds"]), ("away", 1 - pc, r["away_spread_odds"])):
+            for side, p, ml in (("home", pc, r["home_spread_odds"]), ("away", 1 - pc - pp, r["away_spread_odds"])):
                 dec = american_to_decimal(ml if ml is not None else -110)
                 won = cover > 0 if side == "home" else cover < 0
-                options.append((p, raw_home if side == "home" else 1 - raw_home,
+                options.append((p, pp, raw_home if side == "home" else 1 - raw_home,
                                 r["market_p"] if side == "home" else 1 - r["market_p"], dec, won, cover == 0))
-        for p, raw, mkt, dec, won, push in options:
-            if p * dec - 1 < min_ev or abs(raw - mkt) > config.MAX_MODEL_MARKET_GAP:
+        for p, pp, raw, mkt, dec, won, push in options:
+            # A push refunds the stake, so EV = P(win) * odds + P(push) - 1.
+            if p * dec + pp - 1 < min_ev or abs(raw - mkt) > config.MAX_MODEL_MARKET_GAP:
                 continue
             ret = 0.0 if push else (dec - 1 if won else -1.0)
             flat.append(ret)
             hits += 1 if (won and not push) else 0
-            f = min(kelly_fraction_decimal(p, dec) * KELLY_FRACTION, MAX_BET_FRACTION)
+            f = min(kelly_with_push(p, pp, dec) * KELLY_FRACTION, MAX_BET_FRACTION)
             bankroll *= 1 + f * ret
             equity.append(bankroll)
     lo, hi = bootstrap_ci(flat)
@@ -659,6 +712,7 @@ def run_backtest(now=None):
             r["margin_pred"] = prob_to_margin(r["p"])
             r["total_pred"] = r["base_total"] + dt
             r["sigma"] = fitted["sigma"]
+            r["key_weights"] = fitted["key_weights"]
             test.append(r)
 
     s = summarize(test)
@@ -679,6 +733,8 @@ def run_backtest(now=None):
 
     # Betting simulation at closing prices. 4 variants are run and ALL are
     # reported (bailey-lopezdeprado-2014: no picking the best afterwards).
+    s["spread_dist"] = spread_dist_score(test, {w["season"]: w["key_weights"] for w in per_season})
+    s["key_weights"] = per_season[-1]["key_weights"]
     s["betting"] = {
         "raw_moneyline": simulate_bets(test, "raw_p", "moneyline"),
         "combo_moneyline": simulate_bets(test, "p", "moneyline"),
@@ -944,6 +1000,7 @@ def build_slate(now=None, days=0):
                      "away_code": g["away"], "start": kick, "neutral": g["neutral"],
                      "stadium": g["stadium"], "roof": g["roof"]},
             "pred": p, "market": mkt, "kalshi": km, "best": best, "flag": flag, "sigma": sigma,
+            "key_weights": fitted["key_weights"],
             "env": {**f, "forecast": wx, "home_rest": g["home_rest"], "away_rest": g["away_rest"],
                     "home_qb": g["home_qb"], "away_qb": g["away_qb"],
                     "qb_pts": env["applied"].get("qb", 0.0) * f["qb"]},
@@ -1014,6 +1071,15 @@ def report(s):
             for grp in ("margin", "total") for n, v in e[grp].items()]
     out.append(tabulate(rows, headers=["Feature", "Effect", "Std err", "t", "Decision", "Meaning"]))
 
+    sd = s["spread_dist"]
+    kw = s["key_weights"]
+    out.append(f"\nSPREAD DISTRIBUTION (P(home margin > t), t = -10.5..10.5, centered on the close; "
+               f"{sd['n']} games):")
+    out.append(f"  Normal curve Brier {sd['normal']:.5f} | key-number Brier {sd['key']:.5f} | key minus normal "
+               f"{sd['key_minus_normal']['diff']:+.5f}, 95% CI [{sd['key_minus_normal']['ci95'][0]:+.5f}, "
+               f"{sd['key_minus_normal']['ci95'][1]:+.5f}], t = {sd['key_minus_normal']['t']:+.2f}")
+    out.append("  Key-number weights (latest fit; 1.00 = as often as the normal curve says): " +
+               ", ".join(f"{k}: {kw[k]:.2f}" for k in (0, 1, 2, 3, 4, 6, 7, 8, 10, 14)))
     out.append("\nBETTING SIMULATION at closing prices (test seasons, flat 1 unit; Kelly = quarter Kelly, 2% cap):")
     b = s["betting"]
     out.append(tabulate([[k.replace("_", " "), v["bets"], pct(v["roi"]),

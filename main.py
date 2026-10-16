@@ -119,7 +119,7 @@ def cmd_bets(args):
     print(tabulate([[x["matchup"], x["team"], pct(x["model"]), pct(x["market"]), f"{x['decimal']:.2f}",
                      f"{x['ev']:+.3f}", money(x["stake"])] for x in b["book"]],
                    headers=["Game", "Team", "Bet prob", "Market", "Decimal", "EV per $1", "Stake"]) if b["book"] else "  None.")
-    print("\nSPREAD singles with positive EV (cover prob from a normal margin around the line):")
+    print("\nSPREAD singles with positive EV (key-number margin distribution; pushes refund the stake):")
     print(tabulate([[x["matchup"], f"{x['team']} {x['line']:+.1f}", pct(x["model"]), f"{x['decimal']:.2f}",
                      f"{x['ev']:+.3f}", money(x["stake"])] for x in b["spreads"]],
                    headers=["Game", "Side", "Cover prob", "Decimal", "EV per $1", "Stake"]) if b["spreads"] else "  None.")

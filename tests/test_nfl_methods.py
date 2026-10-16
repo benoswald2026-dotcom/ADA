@@ -140,3 +140,14 @@ def test_pbp_qb_rows_sums_dropbacks_per_qb():
     rows = {r["qb_id"]: r for r in nfl.pbp_qb_rows(pbp)}
     assert rows["A"]["dropbacks"] == 2 and rows["A"]["epa"] == pytest.approx(0.5 - 4.0)
     assert rows["Z"]["dropbacks"] == 1
+
+
+def test_fit_key_weights_finds_the_three():
+    rng = np.random.default_rng(3)
+    recs = []
+    for _ in range(3000):
+        m = int(rng.choice([3, -3])) if rng.random() < 0.15 else int(round(rng.normal(-2.5, 13)))
+        recs.append({"season": 2020, "close_spread": 2.5, "margin_actual": m})
+    w = nfl.fit_key_weights(recs, [2020], 13.0)
+    assert w[3] > 1.8 and w[-3] == w[3]
+    assert 0.6 < w[5] < 1.4
