@@ -70,7 +70,9 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 
 **How an NFL game is priced:**
 1. Elo + opponent-adjusted EPA, as for college, with NFL constants in `config.NFL`
-   (ratings start in 2012, home field 1.5 points).
+   (ratings start in 2012, home field 1.5 points). The EPA share is **fitted** each
+   season on earlier seasons only: the preset 0.40 is replaced only if the data
+   disagrees by |t| >= 3. It does (fitted ~0.12-0.14), so Elo carries most of the margin.
 2. Rest, travel, and weather adjustments. Their sizes are **fitted on 2015–2022 only**:
    - rest: points per day of rest advantage
    - travel: points per hour the away team traveled east
@@ -85,7 +87,11 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
    means the model is probably missing news, so that game is left out.
 
 **What the 2023–2025 backtest found:**
-- The model loses to the closing market on Brier score: 0.2235 vs 0.2102.
+- The raw model loses to the closing market on Brier score: 0.2211 vs 0.2102
+  (paired bootstrap 95% CI for the gap: +0.005 to +0.018). Fitting the EPA weight
+  improved it from 0.2236, but that gain alone isn't significant yet (t = −1.5).
+- Play-by-play EPA with garbage time removed (`NFL_EPA_SOURCE = "pbp"`) was tried and
+  tracked margins slightly worse on the 2015–2022 fit seasons, so weekly team EPA stays the default.
 - It went 49.2% against the spread.
 - The fitted trust weight is **0.00**.
 - Wind does lower scoring (−0.41 points per mph above 10, about 4 standard

@@ -61,3 +61,43 @@ def test_log_snapshot_appends_and_skips_already_logged_fetch(tmp_path):
     rows = list(csv.DictReader(open(path)))
     assert [r["kalshi_home_ask"] for r in rows] == ["0.74", "0.76"]
     assert rows[0]["prob_source"] == "Pinnacle (sharp)"
+
+
+def test_pbp_game_rows_drops_garbage_time_and_clips_epa():
+    import pandas as pd
+    pbp = pd.DataFrame([
+        # game G: home offense KC, away offense BUF
+        {"game_id": "G", "posteam": "KC", "defteam": "BUF", "epa": 0.5, "wp": 0.5, "pass": 1, "rush": 0},
+        {"game_id": "G", "posteam": "KC", "defteam": "BUF", "epa": 9.0, "wp": 0.6, "pass": 1, "rush": 0},  # clipped to 4
+        {"game_id": "G", "posteam": "KC", "defteam": "BUF", "epa": 3.0, "wp": 0.97, "pass": 0, "rush": 1},  # garbage time
+        {"game_id": "G", "posteam": "BUF", "defteam": "KC", "epa": -0.2, "wp": 0.4, "pass": 0, "rush": 1},
+        {"game_id": "G", "posteam": "BUF", "defteam": "KC", "epa": 1.0, "wp": 0.4, "pass": 0, "rush": 0},  # punt etc.
+    ])
+    rows = {r["team"]: r for r in nfl.pbp_game_rows(pbp)["G"]}
+    assert rows["KC"]["off_epa"] == pytest.approx((0.5 + 4.0) / 2)
+    assert rows["BUF"]["off_epa"] == pytest.approx(-0.2)
+    assert rows["KC"]["def_epa"] == pytest.approx(-0.2)
+
+
+def _epa_records(n, true_w, seed=1):
+    rng = np.random.default_rng(seed)
+    out = []
+    for _ in range(n):
+        elo, epa = rng.normal(0, 6), rng.normal(0, 9)
+        out.append({"season": 2016, "elo_margin": elo, "epa_margin": epa, "epa_ramp": 1.0,
+                    "margin_actual": elo + true_w * (epa - elo) + rng.normal(0, 3)})
+    return out
+
+
+def test_fit_epa_weight_replaces_prior_only_when_data_clearly_disagrees():
+    far = nfl.fit_epa_weight(_epa_records(2000, 0.1), [2016])
+    assert far["accepted"] and far["w"] == pytest.approx(0.1, abs=0.02)
+    near = nfl.fit_epa_weight(_epa_records(40, 0.42), [2016])
+    assert not near["accepted"] and near["w"] == nfl.config.NFL.EPA_WEIGHT_MAX
+
+
+def test_set_base_margins_uses_weight_and_ramp():
+    recs = [{"elo_margin": 2.0, "epa_margin": 6.0, "epa_ramp": 0.5}, {"elo_margin": 1.0, "epa_margin": None, "epa_ramp": 0}]
+    nfl.set_base_margins(recs, 0.2)
+    assert recs[0]["base_margin"] == pytest.approx(2.0 + 0.2 * 0.5 * 4.0)
+    assert recs[1]["base_margin"] == 1.0

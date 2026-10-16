@@ -56,3 +56,13 @@ def test_fresh_mode_bypasses_ttl_but_keeps_history():
         assert cache._still_valid(300, 10) is False     # Refresh: re-download live data
         assert cache._still_valid(None, 10**9) is True  # finished seasons never re-download
     assert cache._still_valid(300, 10) is True
+
+
+def test_paired_brier_diff_sign_and_ci():
+    from backtest import paired_brier_diff
+    y = [1, 0] * 200
+    good = [0.8, 0.2] * 200
+    bad = [0.6, 0.4] * 200
+    d = paired_brier_diff(good, bad, y)
+    assert d["diff"] == pytest.approx(0.04 - 0.16)
+    assert d["ci95"][1] < 0

@@ -22,8 +22,8 @@ import pandas as pd
 import config
 import injuries as inj
 import nfl_teams as T
-from backtest import ats_record, brier, calibration_bins, log_loss, summarize, verdict
-from cache import ApiError, cached_download, cached_get
+from backtest import ats_record, brier, calibration_bins, log_loss, paired_brier_diff, summarize, verdict
+from cache import ApiError, _still_valid, cached_download, cached_get
 from kalshi import edge_after_fee, should_flag
 from odds import american_to_decimal, parse_odds_event, remove_vig
 from ratings import RatingSystem, margin_to_prob
@@ -70,6 +70,76 @@ def load_team_epa(season, current_season):
                              "off_epa": float(me["off_epa"]), "def_epa": float(opp["off_epa"])})
         by_game[gid] = rows
     return by_game, stamp
+
+
+PBP_URL = NFLVERSE + "/pbp/play_by_play_{season}.csv.gz"
+PBP_COLS = ["game_id", "posteam", "defteam", "epa", "wp", "pass", "rush"]
+# Pre-registered before any test (no tuning on 2023-2025):
+PBP_WP_RANGE = (0.10, 0.90)   # drop garbage time: offense's win prob outside this range
+PBP_EPA_CLIP = 4.0            # cap single-play EPA so one fluke play can't define a game
+
+
+def pbp_game_rows(pbp):
+    """Play-by-play DataFrame -> {game_id: [team-game EPA rows]}, the same shape
+    as load_team_epa. Keeps pass and rush plays (sacks and scrambles count as
+    passes in nflverse) with the offense's win prob inside PBP_WP_RANGE, and
+    clips each play's EPA to +/-PBP_EPA_CLIP."""
+    p = pbp[((pbp["pass"] == 1) | (pbp["rush"] == 1)) & pbp["epa"].notna() & pbp["posteam"].notna()
+            & pbp["wp"].between(*PBP_WP_RANGE)].copy()
+    p["epa"] = p["epa"].clip(-PBP_EPA_CLIP, PBP_EPA_CLIP)
+    off = p.groupby(["game_id", "posteam", "defteam"])["epa"].mean().reset_index()
+    by_game = {}
+    for gid, grp in off.groupby("game_id"):
+        if len(grp) != 2:
+            continue
+        a, b = grp.iloc[0], grp.iloc[1]
+        by_game[gid] = [{"team": T.canon(me["posteam"]), "opponent": T.canon(opp["posteam"]),
+                         "off_epa": float(me["epa"]), "def_epa": float(opp["epa"])}
+                        for me, opp in ((a, b), (b, a))]
+    return by_game
+
+
+def load_pbp_epa(season, current_season):
+    """Garbage-time-filtered EPA per team-game from nflverse play-by-play.
+    The ~20 MB raw file is reduced to one small CSV per season and then deleted.
+    Finished seasons are kept forever; the current season refreshes hourly."""
+    ttl = 3600 if season >= current_season else None
+    agg = os.path.join(config.CACHE_DIR, f"pbp_epa_{season}.csv")
+    meta = agg + ".stamp"
+    if os.path.exists(agg) and os.path.exists(meta):
+        stamp, epoch = open(meta).read().split("|")
+        if _still_valid(ttl, datetime.now().timestamp() - float(epoch)):
+            return _read_pbp_agg(agg), stamp
+    try:
+        path, stamp = cached_download(PBP_URL.format(season=season), ttl=0, source="nflverse play-by-play",
+                                      suffix=".csv.gz")
+    except ApiError:
+        if season >= current_season:
+            return {}, None   # no games yet this season
+        raise
+    by_game = pbp_game_rows(pd.read_csv(path, usecols=PBP_COLS, low_memory=False))
+    os.remove(path)
+    os.makedirs(config.CACHE_DIR, exist_ok=True)
+    pd.DataFrame([{"game_id": g, **r} for g, rows in by_game.items() for r in rows],
+                 columns=["game_id", "team", "opponent", "off_epa", "def_epa"]).to_csv(agg, index=False)
+    with open(meta, "w") as f:
+        f.write(f"{stamp}|{datetime.now().timestamp()}")
+    return by_game, stamp
+
+
+def _read_pbp_agg(path):
+    by_game = {}
+    for r in pd.read_csv(path).to_dict("records"):
+        by_game.setdefault(r["game_id"], []).append(
+            {"team": r["team"], "opponent": r["opponent"], "off_epa": r["off_epa"], "def_epa": r["def_epa"]})
+    return by_game
+
+
+def season_epa(season, current_season):
+    """EPA rows for one season from the configured source (config.NFL_EPA_SOURCE)."""
+    if config.NFL_EPA_SOURCE == "pbp":
+        return load_pbp_epa(season, current_season)
+    return load_team_epa(season, current_season)
 
 
 def _num(x):
@@ -282,10 +352,43 @@ def prob_to_margin(p):
     return 400 / config.NFL.ELO_PER_POINT * np.log10(p / (1 - p))
 
 
+def fit_epa_weight(records, seasons):
+    """How much of the margin should come from EPA instead of Elo, fitted on `seasons`.
+
+        margin_actual - elo = w * ramp * (epa - elo)      (least squares, no intercept)
+
+    ramp grows from 0 to 1 over the first EPA_FULL_WEIGHT_GAMES games, as in
+    RatingSystem.predict. The pre-set config.NFL.EPA_WEIGHT_MAX is the prior;
+    the fitted w replaces it only if it differs from the prior by |t| >= 3
+    (the same bar as every other fitted number)."""
+    from strategy import T_STAT_BAR
+    fit = [r for r in records if r["season"] in seasons and r["epa_margin"] is not None and r["epa_ramp"] > 0]
+    x = np.array([r["epa_ramp"] * (r["epa_margin"] - r["elo_margin"]) for r in fit])
+    y = np.array([r["margin_actual"] - r["elo_margin"] for r in fit])
+    b, se = _ols(x[:, None], y)
+    prior = config.NFL.EPA_WEIGHT_MAX
+    t = float((b[0] - prior) / se[0]) if se[0] > 0 else 0.0
+    accepted = abs(t) >= T_STAT_BAR
+    w = float(np.clip(b[0], 0.0, 1.0)) if accepted else prior
+    return {"games": len(fit), "fitted": float(b[0]), "se": float(se[0]), "t": t,
+            "accepted": accepted, "w": w, "prior": config.NFL.EPA_WEIGHT_MAX}
+
+
+def set_base_margins(records, w):
+    """Recompute each record's pre-game margin with EPA weight w (no other change)."""
+    for r in records:
+        r["base_margin"] = r["elo_margin"] if r["epa_margin"] is None else \
+            r["elo_margin"] + w * r["epa_ramp"] * (r["epa_margin"] - r["elo_margin"])
+
+
 def fit_all(records, seasons):
-    """Everything that is learned from data, fitted on `seasons` only."""
+    """Everything that is learned from data, fitted on `seasons` only.
+    The EPA weight goes first because the other fits work on top of the margin it sets."""
+    epa_w = fit_epa_weight(records, seasons)
+    set_base_margins(records, epa_w["w"])
     env = fit_environment(records, seasons)
-    return {"env": env, "combo": fit_combo(records, env, seasons), "sigma": fit_sigma(records, seasons)}
+    return {"epa_w": epa_w, "env": env, "combo": fit_combo(records, env, seasons),
+            "sigma": fit_sigma(records, seasons)}
 
 
 # ----------------------------------------------------------- replay -------
@@ -301,7 +404,7 @@ def replay(games_df, current_season, on_game=None):
     seasons = range(config.NFL_START_SEASON, current_season + 1)
     df = games_df[games_df["season"].isin(seasons)].sort_values(["season", "week", "gameday"])
     for season, sgames in groupby((game_record(r) for _, r in df.iterrows()), key=lambda g: g["season"]):
-        epa, _ = load_team_epa(season, current_season)
+        epa, _ = season_epa(season, current_season)
         rs.start_season()
         for _week, wgames in groupby(sgames, key=lambda g: g["week"]):
             wgames = list(wgames)
@@ -350,6 +453,8 @@ def collect_records(games_df, current_season):
         records.append({
             "season": g["season"], "id": g["id"], "f": {**features(g), "form": gap},
             "base_margin": p["margin"], "base_total": p["total"],
+            "elo_margin": p["elo_margin"], "epa_margin": p["epa_margin"],
+            "epa_ramp": p["epa_weight"] / config.NFL.EPA_WEIGHT_MAX,
             "margin_actual": g["home_pts"] - g["away_pts"],
             "total_actual": g["home_pts"] + g["away_pts"],
             "y": 1 if g["home_pts"] > g["away_pts"] else 0,
@@ -450,6 +555,8 @@ def run_backtest(now=None):
     y = [r["y"] for r in test]
     raw = [r["raw_p"] for r in test]
     s["raw_model"] = {"brier": brier(raw, y), "log_loss": log_loss(raw, y),
+                      "vs_market": paired_brier_diff(raw, [r["market_p"] for r in test], y)
+                      if all(r["market_p"] is not None for r in test) else None,
                       "ats": ats_record([{**r, "margin_pred": prob_to_margin(r["raw_p"])} for r in test])}
 
     # Betting simulation at closing prices. 4 variants are run and ALL are
@@ -658,7 +765,7 @@ def build_slate(now=None, days=0):
         home_name, away_name = T.full_name(g["home"]), T.full_name(g["away"])
         injury_adj = sum(injury_pts.get(a, 0.0) for a in T.aliases(g["away"])) - \
             sum(injury_pts.get(a, 0.0) for a in T.aliases(g["home"]))
-        p = rs.predict(g["home"], g["away"], g["neutral"], injury_adj=dm)
+        p = rs.predict(g["home"], g["away"], g["neutral"], injury_adj=dm, epa_weight_max=fitted["epa_w"]["w"])
         p["total"] += dt
         p["env_margin"], p["env_total"], p["injury_adj"] = dm, dt, injury_adj
         p["raw_home_prob"] = p["home_prob"]
@@ -753,7 +860,20 @@ def report(s):
         ["Raw Elo+EPA model alone", f"{rm['brier']:.4f}", f"{rm['log_loss']:.4f}"],
         ["Closing market (no-vig)", f"{vm['market']['brier']:.4f}", f"{vm['market']['log_loss']:.4f}"]],
         headers=[f"Test seasons ({vm['games']} games)", "Brier", "Log loss"]))
+    if rm.get("vs_market"):
+        d = rm["vs_market"]
+        out.append(f"Raw model minus market, Brier (paired bootstrap): {d['diff']:+.4f}, "
+                   f"95% CI [{d['ci95'][0]:+.4f}, {d['ci95'][1]:+.4f}], t = {d['t']:+.2f}  (negative = model better)")
     out.append(f"\n>>> {s['verdict']}\n")
+
+    out.append(f"EPA WEIGHT (EPA source: {config.NFL_EPA_SOURCE}), refit each season: "
+               "margin - elo = w * ramp * (epa - elo)")
+    out.append(tabulate([[w["season"], w["epa_w"]["games"], f"{w['epa_w']['fitted']:.3f}", f"{w['epa_w']['se']:.3f}",
+                          f"{w['epa_w']['t']:+.2f}", f"{w['epa_w']['w']:.3f}",
+                          "fitted" if w["epa_w"]["accepted"] else f"prior {w['epa_w']['prior']}"]
+                         for w in s["walk_forward"]],
+                        headers=["Season", "Fit games", "Fitted w", "Std err", "t vs prior", "Used w", "Source"]))
+    out.append("")
 
     out.append("BENTER-STYLE COMBINATION, refit each season: logit(p) = a0 + a1*logit(market) + a2*logit(model)")
     out.append(tabulate([[w["season"], w["combo"]["games"], f"{w['combo']['a1']:.3f}", f"{w['combo']['a2']:+.3f}",
