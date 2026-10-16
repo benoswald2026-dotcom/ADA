@@ -44,6 +44,10 @@ OPP_SHRINK_GAMES = 4.0
 # and kept only where it cut the average miss with |t| >= 3: receiving yards
 # (t = -4.3). It made passing yards worse (t = +4.7): hot QB stretches regress.
 USAGE_PRIOR_STATS = {"rec_yds"}
+# Multiplicative adjustments, each kept only if |t| >= 3 on the fit seasons.
+# qb: the team's starting-QB gap (nfl.QBTracker, EPA per dropback): a backup
+# starting should cut his receivers' yards beyond what the team total says.
+TERMS = [("bias", None), ("opponent", "opp_x"), ("team_points", "team_x"), ("qb", "qb_x")]
 # Weight of games played for a previous team. Discounting them (0.5) made
 # rushing, receptions and receiving yards worse on 2021-2022, so it is off.
 OLD_TEAM_WEIGHT = 1.0
@@ -164,7 +168,7 @@ class History:
             self.league_allowed.append(tot)
 
 
-def build_examples(stat, df, games):
+def build_examples(stat, df, games, qb_gaps=None):
     """Every qualifying player-game with features computed from earlier games only.
     A player qualifies if, BEFORE the game, he averaged >= min_usage over his last
     3 games and has at least 2 earlier games (no peeking at this game's usage)."""
@@ -190,6 +194,7 @@ def build_examples(stat, df, games):
                         "team": r["team"], "opp": r["opponent_team"], "base": base, "n_eff": n_eff,
                         "opp_x": h.opp_ratio(r["opponent_team"]) - 1.0,
                         "team_x": (tp / LEAGUE_TEAM_POINTS - 1.0) if tp else 0.0,
+                        "qb_x": (qb_gaps or {}).get((r["game_id"], r["team"]), 0.0),
                         "actual": float(r[s["col"]]), "naive": base})
         h.add_game(recs)
     return out
@@ -199,12 +204,12 @@ def fit(examples, seasons):
     """Fit the adjustments (t >= 3 gate) and the outcome spread on `seasons`."""
     ex = [e for e in examples if e["season"] in seasons and e["base"] > 0]
     y = np.array([e["actual"] / e["base"] - 1.0 for e in ex])
-    X = np.column_stack([np.ones(len(ex)), [e["opp_x"] for e in ex], [e["team_x"] for e in ex]])
+    X = np.column_stack([np.ones(len(ex))] + [[e.get(key, 0.0) for e in ex] for _, key in TERMS[1:]])
     beta, *_ = np.linalg.lstsq(X, y, rcond=None)
     resid = y - X @ beta
-    cov = (resid @ resid / max(len(y) - 3, 1)) * np.linalg.pinv(X.T @ X)
+    cov = (resid @ resid / max(len(y) - X.shape[1], 1)) * np.linalg.pinv(X.T @ X)
     se = np.sqrt(np.diag(cov))
-    names = ["bias", "opponent", "team_points"]
+    names = [n for n, _ in TERMS]
     terms = {n: {"coef": float(b), "se": float(e), "t": float(b / e) if e > 0 else 0.0,
                  "accepted": bool(abs(b / e) >= T_STAT_BAR) if e > 0 else False}
              for n, b, e in zip(names, beta, se)}
@@ -225,9 +230,9 @@ def fit(examples, seasons):
 def project(e, fitted):
     t = fitted["terms"]
     mult = 1.0
-    for name, key in (("bias", None), ("opponent", "opp_x"), ("team_points", "team_x")):
-        if t[name]["accepted"]:
-            mult += t[name]["coef"] * (1.0 if key is None else e[key])
+    for name, key in TERMS:
+        if name in t and t[name]["accepted"]:
+            mult += t[name]["coef"] * (1.0 if key is None else e.get(key, 0.0))
     return max(0.0, e["base"] * mult)
 
 
@@ -250,10 +255,10 @@ def quantile(q, proj, sd, fitted):
     return proj + sd * float(np.interp(q, ZQ_LEVELS, fitted["zq"]))
 
 
-def evaluate(stat, df, games, test_seasons=None):
+def evaluate(stat, df, games, test_seasons=None, qb_gaps=None):
     """Walk-forward test: each test season fitted on FIT_START..season-1."""
     test_seasons = test_seasons or config.NFL_TEST_SEASONS
-    ex = build_examples(stat, df, games)
+    ex = build_examples(stat, df, games, qb_gaps)
     rows, fits, fits_by = [], [], {}
     for S in test_seasons:
         f = fit(ex, list(range(FIT_START, S)))
@@ -276,11 +281,12 @@ def evaluate(stat, df, games, test_seasons=None):
 
 
 def run_backtest():
-    from nfl import load_games
+    from nfl import load_games, qb_gap_table
     games, stamp = load_games()
     last = config.NFL_TEST_SEASONS[-1]
     df = load_player_weeks(last, last + 1)
-    return {"stats": [evaluate(s, df, games) for s in STATS], "source": f"nflverse player stats + schedules @ {stamp}"}
+    qb_gaps = qb_gap_table(games, last)
+    return {"stats": [evaluate(s, df, games, qb_gaps=qb_gaps) for s in STATS], "source": f"nflverse player stats + schedules @ {stamp}"}
 
 
 # ------------------------------------------------------------ live --------
@@ -332,7 +338,9 @@ def build_props(rows, bankroll=1000.0):
     df = load_player_weeks(season, season)
     notes, out = [], []
     if season not in _FIT_CACHE:   # the fit takes ~30 s; do it once per run
-        _FIT_CACHE[season] = {stat: fit(build_examples(stat, df, games), list(range(FIT_START, season)))
+        from nfl import qb_gap_table
+        qb_gaps = qb_gap_table(games, season)
+        _FIT_CACHE[season] = {stat: fit(build_examples(stat, df, games, qb_gaps), list(range(FIT_START, season)))
                               for stat in STATS}
     fits = _FIT_CACHE[season]
 
@@ -374,7 +382,8 @@ def build_props(rows, bankroll=1000.0):
                 tp = implied_team_points(m.get("total"), m.get("home_spread"), side == "home")
                 for (pid, name, pos), u in usage.items():
                     base, n_eff, _ = h.baseline(pid, team)
-                    e = {"base": base, "opp_x": h.opp_ratio(opp) - 1.0, "team_x": (tp / LEAGUE_TEAM_POINTS - 1.0) if tp else 0.0}
+                    e = {"base": base, "opp_x": h.opp_ratio(opp) - 1.0, "team_x": (tp / LEAGUE_TEAM_POINTS - 1.0) if tp else 0.0,
+                         "qb_x": (r.get("env") or {}).get(f"{side}_qb_gap", 0.0)}
                     pj = project(e, f)
                     sd = sd_for(pj, f)
                     row = {"game_id": g["id"], "matchup": f"{g['away']} @ {g['home']}", "start": g.get("start"),

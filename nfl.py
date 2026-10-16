@@ -603,6 +603,23 @@ class QBTracker:
             self.ln += r["dropbacks"]
 
 
+def qb_gap_table(games_df, current_season):
+    """{(game_id, team): starter V minus team baseline, in EPA per dropback},
+    each computed before that game, for every game (finished or not) from
+    NFL_START_SEASON on. Used by props; the game model gets the same numbers
+    through collect_records / build_slate."""
+    qbt, out = QBTracker(current_season), {}
+    df = games_df[games_df["season"].between(config.NFL_START_SEASON, current_season)]
+    for _, row in df.sort_values(["season", "week", "gameday"]).iterrows():
+        g = game_record(row)
+        qbt._season(g)
+        out[(g["id"], g["home"])] = qbt.team_gap(g["home"], g["home_qb_id"])
+        out[(g["id"], g["away"])] = qbt.team_gap(g["away"], g["away_qb_id"])
+        if g["completed"]:
+            qbt.record(g)
+    return out
+
+
 def collect_records(games_df, current_season):
     """Base (Elo+EPA) prediction for every completed game, made before it was played."""
     records, form, qbt = [], FormTracker(), QBTracker(current_season)
@@ -880,7 +897,7 @@ def build_slate(now=None, days=0):
     env, combo, sigma = fitted["env"], fitted["combo"], fitted["sigma"]
 
     form, form_gap = FormTracker(), {}
-    qbt, qb_gap = QBTracker(season), {}
+    qbt, qb_gap, team_qb_gap = QBTracker(season), {}, {}
 
     def track_form(g, rs_):
         gap, qb = form.gap(g), qbt.gap(g)
@@ -890,6 +907,8 @@ def build_slate(now=None, days=0):
         elif g["season"] == season:
             form_gap[g["id"]] = gap
             qb_gap[g["id"]] = qb
+            team_qb_gap[g["id"]] = (qbt.team_gap(g["home"], g["home_qb_id"]),
+                                    qbt.team_gap(g["away"], g["away_qb_id"]))
 
     rs = replay(games_df, season, track_form)
     first, last = now.date(), now.date() + timedelta(days=days)
@@ -1003,6 +1022,8 @@ def build_slate(now=None, days=0):
             "key_weights": fitted["key_weights"],
             "env": {**f, "forecast": wx, "home_rest": g["home_rest"], "away_rest": g["away_rest"],
                     "home_qb": g["home_qb"], "away_qb": g["away_qb"],
+                    "home_qb_gap": team_qb_gap.get(g["id"], (0.0, 0.0))[0],
+                    "away_qb_gap": team_qb_gap.get(g["id"], (0.0, 0.0))[1],
                     "qb_pts": env["applied"].get("qb", 0.0) * f["qb"]},
             "sources": {
                 "model": f"nflverse schedules + team EPA @ {games_stamp}",

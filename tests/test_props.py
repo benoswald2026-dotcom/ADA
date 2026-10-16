@@ -83,3 +83,10 @@ def test_games_for_an_old_team_count_less(monkeypatch):
     same_team, _, _ = h.baseline("p", "MIA")
     new_team, _, _ = h.baseline("p", "DEN")
     assert new_team < same_team      # the DEN game weighs more once he's a Bronco
+
+
+def test_project_applies_accepted_qb_term():
+    f = _fitted()
+    f["terms"]["qb"] = {"coef": 0.4, "accepted": True}
+    e = {"base": 50.0, "opp_x": 0.0, "team_x": 0.0, "qb_x": -0.15}   # backup starting
+    assert props.project(e, f) == pytest.approx(50 * (1 + 0.4 * -0.15))
