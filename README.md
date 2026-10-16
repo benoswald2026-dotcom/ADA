@@ -130,6 +130,18 @@ Kalshi market. `week` and `bets` also print a note for any game with no match, a
 games that have already kicked off (in-game prices aren't pregame edges). College names
 are matched through a fixed alias table in `names.py` (e.g. "Appalachian St." = "App State").
 
+### Kalshi scan (no API keys needed)
+
+```bash
+python main.py scan --sport cfb            # today + tomorrow (default --days 1)
+python main.py scan --sport nfl --days 3   # through Sunday
+python main.py scan --sport cfb --all      # every side, not just the top 15
+```
+Compares every Kalshi YES ask with the DraftKings moneyline on ESPN's public
+scoreboard (vig removed). Same FLAG rule as `bets` (edge after fee ≥ 3 pts, price
+≥ 20¢), quarter-Kelly stakes, started games skipped, FLAGs logged as paper trades.
+DraftKings is one recreational book; `bets` with `ODDS_API_KEY` uses Pinnacle instead.
+
 ## 1b. When data updates
 
 Hashmark never refreshes on its own. Data updates only when you ask:

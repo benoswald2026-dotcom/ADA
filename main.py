@@ -48,6 +48,34 @@ def load_slate(sport, days=0, fresh=False):
     return f"Week {week['week']} ({week['season_type']})", week.get("notes", []), rows
 
 
+def cmd_scan(args):
+    """Kalshi vs. sportsbook (DraftKings via ESPN), no API keys needed."""
+    from zoneinfo import ZoneInfo
+    from tabulate import tabulate
+    from cache import fresh as fresh_ctx
+    from scan import scan
+    from strategy import log_recommendations
+    with fresh_ctx():
+        r = scan(args.sport, days=args.days, bankroll=args.bankroll)
+    et = ZoneInfo("America/New_York")
+    print(f"\nKALSHI SCAN — {args.sport.upper()}, today + {args.days} day(s). Kalshi @ {r['kalshi_stamp']}, "
+          f"ESPN odds @ {r['espn_stamp']}. {r['games']} games compared.")
+    print("Bet prob = sportsbook no-vig price (not the model). FLAG = edge after fee >= 3 pts and price >= 20c.")
+    for n in r["notes"]:
+        print(f"NOTE: {n}")
+    rows = r["rows"] if args.all else r["rows"][:args.top]
+    print(tabulate([[x["matchup"], x["team"], x["kickoff"].astimezone(et).strftime("%a %-I:%M%p"),
+                     f"{x['book_ml']:+d}", f"{x['market']:.1%}", f"{x['price']:.2f}",
+                     "-" if x["bid"] is None else f"{x['bid']:.2f}", f"{x['edge'] * 100:+.1f}",
+                     "FLAG" if x["flag"] else ("longshot" if x["longshot"] and x["edge"] >= 0.03 else "PASS"),
+                     f"${x['stake']:,.2f}" if x["stake"] else "-"] for x in rows],
+                   headers=["Game", "Team", "Kickoff (ET)", "Book ML", "Book fair", "YES ask", "YES bid",
+                            "Edge pts", "Call", "Stake"]))
+    flagged = [x for x in r["rows"] if x["flag"]]
+    logged = log_recommendations(args.sport, flagged) if flagged else 0
+    print(f"\nFLAGS: {len(flagged)}. Paper trades logged: {logged}. Not betting advice; this tool never places bets.")
+
+
 def cmd_kalshi(args):
     """Check that Kalshi is reachable, fresh, and matched to this slate's games."""
     from datetime import datetime, timezone
@@ -270,6 +298,13 @@ def main():
     bp.set_defaults(func=cmd_bets)
     sub.add_parser("clv", help="score logged paper trades against the closing line").set_defaults(func=cmd_clv)
     sport_args(sub.add_parser("kalshi", help="check Kalshi is reachable, fresh, and matched to games")).set_defaults(func=cmd_kalshi)
+    sc = sub.add_parser("scan", help="Kalshi vs. sportsbook prices, no API keys needed")
+    sc.add_argument("--sport", choices=["cfb", "nfl"], default="cfb")
+    sc.add_argument("--days", type=int, default=1, help="today plus this many days (default 1)")
+    sc.add_argument("--top", type=int, default=15, help="rows to show (default 15)")
+    sc.add_argument("--all", action="store_true", help="show every side")
+    sc.add_argument("--bankroll", type=float, default=1000.0)
+    sc.set_defaults(func=cmd_scan)
     pp = sub.add_parser("props", help="NFL player-prop projections (and edges when lines are available)")
     pp.add_argument("--days", type=int, default=0)
     pp.add_argument("--bankroll", type=float, default=1000.0)
