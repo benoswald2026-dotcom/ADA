@@ -99,40 +99,73 @@ def pbp_game_rows(pbp):
     return by_game
 
 
-def load_pbp_epa(season, current_season):
-    """Garbage-time-filtered EPA per team-game from nflverse play-by-play.
-    The ~20 MB raw file is reduced to one small CSV per season and then deleted.
-    Finished seasons are kept forever; the current season refreshes hourly."""
+QB_COLS = ["game_id", "posteam", "id", "qb_dropback", "qb_epa"]
+
+
+def pbp_qb_rows(pbp):
+    """Play-by-play -> one row per QB per game: dropbacks and summed qb_epa
+    (EPA credited to the QB: passes, sacks and scrambles), each play clipped
+    to +/-PBP_EPA_CLIP. All dropbacks count; no garbage-time filter."""
+    p = pbp[(pbp["qb_dropback"] == 1) & pbp["qb_epa"].notna() & pbp["id"].notna()].copy()
+    p["qb_epa"] = p["qb_epa"].clip(-PBP_EPA_CLIP, PBP_EPA_CLIP)
+    g = p.groupby(["game_id", "posteam", "id"])["qb_epa"].agg(["count", "sum"]).reset_index()
+    return [{"game_id": r["game_id"], "team": T.canon(r["posteam"]), "qb_id": r["id"],
+             "dropbacks": int(r["count"]), "epa": float(r["sum"])} for _, r in g.iterrows()]
+
+
+def _load_pbp(season, current_season):
+    """Download one season of nflverse play-by-play once and reduce it to two
+    small cached CSVs: team-game EPA (pbp_game_rows) and QB-game EPA
+    (pbp_qb_rows). The ~20 MB raw file is then deleted. Finished seasons are
+    kept forever; the current season refreshes hourly. Returns (agg paths, stamp)."""
     ttl = 3600 if season >= current_season else None
-    agg = os.path.join(config.CACHE_DIR, f"pbp_epa_{season}.csv")
-    meta = agg + ".stamp"
-    if os.path.exists(agg) and os.path.exists(meta):
+    team_csv = os.path.join(config.CACHE_DIR, f"pbp_epa_{season}.csv")
+    qb_csv = os.path.join(config.CACHE_DIR, f"pbp_qb_{season}.csv")
+    meta = os.path.join(config.CACHE_DIR, f"pbp_{season}.stamp")
+    if all(os.path.exists(x) for x in (team_csv, qb_csv, meta)):
         stamp, epoch = open(meta).read().split("|")
         if _still_valid(ttl, datetime.now().timestamp() - float(epoch)):
-            return _read_pbp_agg(agg), stamp
+            return (team_csv, qb_csv), stamp
     try:
         path, stamp = cached_download(PBP_URL.format(season=season), ttl=0, source="nflverse play-by-play",
                                       suffix=".csv.gz")
     except ApiError:
         if season >= current_season:
-            return {}, None   # no games yet this season
+            return None, None   # no games yet this season
         raise
-    by_game = pbp_game_rows(pd.read_csv(path, usecols=PBP_COLS, low_memory=False))
+    pbp = pd.read_csv(path, usecols=sorted(set(PBP_COLS) | set(QB_COLS)), low_memory=False)
     os.remove(path)
     os.makedirs(config.CACHE_DIR, exist_ok=True)
+    by_game = pbp_game_rows(pbp)
     pd.DataFrame([{"game_id": g, **r} for g, rows in by_game.items() for r in rows],
-                 columns=["game_id", "team", "opponent", "off_epa", "def_epa"]).to_csv(agg, index=False)
+                 columns=["game_id", "team", "opponent", "off_epa", "def_epa"]).to_csv(team_csv, index=False)
+    pd.DataFrame(pbp_qb_rows(pbp), columns=["game_id", "team", "qb_id", "dropbacks", "epa"]).to_csv(qb_csv, index=False)
     with open(meta, "w") as f:
         f.write(f"{stamp}|{datetime.now().timestamp()}")
+    return (team_csv, qb_csv), stamp
+
+
+def load_pbp_epa(season, current_season):
+    """Garbage-time-filtered EPA per team-game, same shape as load_team_epa."""
+    paths, stamp = _load_pbp(season, current_season)
+    if paths is None:
+        return {}, None
+    by_game = {}
+    for r in pd.read_csv(paths[0]).to_dict("records"):
+        by_game.setdefault(r["game_id"], []).append(
+            {"team": r["team"], "opponent": r["opponent"], "off_epa": r["off_epa"], "def_epa": r["def_epa"]})
     return by_game, stamp
 
 
-def _read_pbp_agg(path):
-    by_game = {}
-    for r in pd.read_csv(path).to_dict("records"):
-        by_game.setdefault(r["game_id"], []).append(
-            {"team": r["team"], "opponent": r["opponent"], "off_epa": r["off_epa"], "def_epa": r["def_epa"]})
-    return by_game
+def load_qb_games(season, current_season):
+    """{game_id: [QB-game rows]} for one season (see pbp_qb_rows)."""
+    paths, _ = _load_pbp(season, current_season)
+    if paths is None:
+        return {}
+    out = {}
+    for r in pd.read_csv(paths[1]).to_dict("records"):
+        out.setdefault(r["game_id"], []).append(r)
+    return out
 
 
 def season_epa(season, current_season):
@@ -165,6 +198,10 @@ def game_record(r):
         "home_ml": _num(r.get("home_moneyline")), "away_ml": _num(r.get("away_moneyline")),
         "home_spread_odds": _num(r.get("home_spread_odds")), "away_spread_odds": _num(r.get("away_spread_odds")),
         "stadium": None if pd.isna(r.get("stadium")) else str(r["stadium"]),
+        "home_qb_id": None if pd.isna(r.get("home_qb_id")) else str(r["home_qb_id"]),
+        "away_qb_id": None if pd.isna(r.get("away_qb_id")) else str(r["away_qb_id"]),
+        "home_qb": None if pd.isna(r.get("home_qb_name")) else str(r["home_qb_name"]),
+        "away_qb": None if pd.isna(r.get("away_qb_name")) else str(r["away_qb_name"]),
     }
 
 
@@ -208,6 +245,7 @@ MARGIN_FEATURES = {
     "rest": "pts of margin per day of rest advantage",
     "tz": "pts of margin per hour the away team traveled east",
     "form": "pts of margin per point of recent form gap (last 3 games vs expectation)",
+    "qb": "pts of margin per point of starting-QB gap (QBTracker)",
 }
 TOTAL_FEATURES = {
     "wind_x": f"pts of total per mph above {config.WIND_THRESHOLD_MPH}",
@@ -435,14 +473,94 @@ class FormTracker:
         self.res.setdefault(g["away"], []).append(-resid)
 
 
+# QB model constants, fixed before any test (538-style QB adjustment, adapted):
+QB_DECAY = 0.97            # each new game a QB plays shrinks his older games' weight by 3%
+QB_PRIOR_DROPBACKS = 150   # pseudo-dropbacks of the prior mixed into every QB's average
+QB_REPLACEMENT = -0.10     # prior = league EPA/dropback minus this (an unknown QB is a backup)
+TEAM_QB_DECAY = 0.85       # how fast a team's "QB baseline" follows who actually plays
+DROPBACKS_PER_GAME = 38    # converts EPA/dropback into points per game
+
+
+class QBTracker:
+    """Starting-QB adjustment. Elo and EPA learn a team's strength with the QBs
+    who have been playing. When the listed starter is better or worse than that
+    recent baseline, the gap is news the ratings haven't absorbed yet:
+
+        qb feature = 38 * [(V_home_starter - home_baseline) - (V_away_starter - away_baseline)]
+
+    V = a QB's decayed, shrunk EPA per dropback. baseline = each QB's share of
+    the team's recent (decayed) dropbacks times his CURRENT V, so the usual
+    starter starting again gives a gap of exactly 0. Only games already
+    played feed V and baselines. The feature's size is fitted like every other
+    feature (|t| >= 3 or it is not used)."""
+
+    def __init__(self, current_season):
+        self.current, self.season, self.games = current_season, None, {}
+        self.S, self.N = {}, {}                 # qb -> decayed EPA sum, decayed dropbacks
+        self.share = {}                         # team -> {qb: decayed dropbacks}
+        self.lsum, self.ln = 0.0, 0             # league totals for the prior
+
+    def _prior(self):
+        return (self.lsum / self.ln if self.ln else 0.0) + QB_REPLACEMENT
+
+    def value(self, qb):
+        k = QB_PRIOR_DROPBACKS
+        return (self.S.get(qb, 0.0) + k * self._prior()) / (self.N.get(qb, 0.0) + k)
+
+    def _season(self, g):
+        if g["season"] != self.season:
+            self.season = g["season"]
+            self.games = load_qb_games(g["season"], self.current)
+
+    def baseline(self, team):
+        sh = self.share.get(team)
+        if not sh:
+            return None
+        return sum(n * self.value(q) for q, n in sh.items()) / sum(sh.values())
+
+    def team_gap(self, team, qb):
+        base = self.baseline(team)
+        if not isinstance(qb, str) or base is None:
+            return 0.0
+        return self.value(qb) - base
+
+    def gap(self, g):
+        """Feature value in points for game g (home view), from games before it."""
+        self._season(g)
+        return DROPBACKS_PER_GAME * (self.team_gap(g["home"], g.get("home_qb_id"))
+                                     - self.team_gap(g["away"], g.get("away_qb_id")))
+
+    def record(self, g):
+        """Learn from a finished game: update each QB who dropped back, then each team's baseline."""
+        self._season(g)
+        rows = self.games.get(g["id"], [])
+        for team in {r["team"] for r in rows}:
+            sh = self.share.setdefault(team, {})
+            for q in sh:
+                sh[q] *= TEAM_QB_DECAY
+            for r in rows:
+                if r["team"] == team:
+                    sh[r["qb_id"]] = sh.get(r["qb_id"], 0.0) + r["dropbacks"]
+            for q in [q for q, n in sh.items() if n < 1.0]:
+                del sh[q]   # long-gone QBs drop out
+        for r in rows:
+            q = r["qb_id"]
+            self.S[q] = QB_DECAY * self.S.get(q, 0.0) + r["epa"]
+            self.N[q] = QB_DECAY * self.N.get(q, 0.0) + r["dropbacks"]
+            self.lsum += r["epa"]
+            self.ln += r["dropbacks"]
+
+
 def collect_records(games_df, current_season):
     """Base (Elo+EPA) prediction for every completed game, made before it was played."""
-    records, form = [], FormTracker()
+    records, form, qbt = [], FormTracker(), QBTracker(current_season)
 
     def on_game(g, rs):
         gap = form.gap(g)
+        qb = qbt.gap(g)
         if not g["completed"]:
             return
+        qbt.record(g)  # this game's QB play only feeds LATER games
         p = rs.predict(g["home"], g["away"], g["neutral"])
         form.record(g, p["margin"])  # this game's result only feeds LATER games
         if g["home_pts"] == g["away_pts"]:
@@ -451,7 +569,7 @@ def collect_records(games_df, current_season):
         if g["home_ml"] is not None and g["away_ml"] is not None:
             mkt = remove_vig(g["home_ml"], g["away_ml"])[0]
         records.append({
-            "season": g["season"], "id": g["id"], "f": {**features(g), "form": gap},
+            "season": g["season"], "id": g["id"], "f": {**features(g), "form": gap, "qb": qb},
             "base_margin": p["margin"], "base_total": p["total"],
             "elo_margin": p["elo_margin"], "epa_margin": p["epa_margin"],
             "epa_ramp": p["epa_weight"] / config.NFL.EPA_WEIGHT_MAX,
@@ -706,13 +824,16 @@ def build_slate(now=None, days=0):
     env, combo, sigma = fitted["env"], fitted["combo"], fitted["sigma"]
 
     form, form_gap = FormTracker(), {}
+    qbt, qb_gap = QBTracker(season), {}
 
     def track_form(g, rs_):
-        gap = form.gap(g)
+        gap, qb = form.gap(g), qbt.gap(g)
         if g["completed"]:
             form.record(g, rs_.predict(g["home"], g["away"], g["neutral"])["margin"])
+            qbt.record(g)
         elif g["season"] == season:
             form_gap[g["id"]] = gap
+            qb_gap[g["id"]] = qb
 
     rs = replay(games_df, season, track_form)
     first, last = now.date(), now.date() + timedelta(days=days)
@@ -758,7 +879,7 @@ def build_slate(now=None, days=0):
                 weather_failed = True
                 notes.append(f"Weather forecast unavailable ({e}). No wind/cold adjustment applied.")
         f = {**features(g, wind=wx["wind"] if wx else None, temp=wx["temp"] if wx else None),
-             "form": form_gap.get(g["id"], 0.0)}
+             "form": form_gap.get(g["id"], 0.0), "qb": qb_gap.get(g["id"], 0.0)}
         if wx is None:  # no forecast: no wind/cold adjustment
             f["wind_x"], f["cold"] = 0.0, 0.0
         dm, dt = apply_environment(env, f)
@@ -823,7 +944,9 @@ def build_slate(now=None, days=0):
                      "away_code": g["away"], "start": kick, "neutral": g["neutral"],
                      "stadium": g["stadium"], "roof": g["roof"]},
             "pred": p, "market": mkt, "kalshi": km, "best": best, "flag": flag, "sigma": sigma,
-            "env": {**f, "forecast": wx, "home_rest": g["home_rest"], "away_rest": g["away_rest"]},
+            "env": {**f, "forecast": wx, "home_rest": g["home_rest"], "away_rest": g["away_rest"],
+                    "home_qb": g["home_qb"], "away_qb": g["away_qb"],
+                    "qb_pts": env["applied"].get("qb", 0.0) * f["qb"]},
             "sources": {
                 "model": f"nflverse schedules + team EPA @ {games_stamp}",
                 "market": mkt_source or "no odds for this game",

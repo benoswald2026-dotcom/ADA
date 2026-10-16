@@ -32,7 +32,7 @@ def test_feature_gate_rejects_noise_and_keeps_strong_signal():
     rng = np.random.default_rng(2)
     recs = []
     for _ in range(3000):
-        f = {"rest": rng.normal(), "tz": rng.normal(), "form": rng.normal(), "wind_x": 0.0, "cold": 0.0}
+        f = {"rest": rng.normal(), "tz": rng.normal(), "form": rng.normal(), "qb": rng.normal(), "wind_x": 0.0, "cold": 0.0}
         recs.append(_rec(2020, f, 2.0 * f["rest"] + rng.normal(0, 13)))   # only rest is real
     env = nfl.fit_environment(recs, [2020])
     assert env["margin"]["rest"]["accepted"] is True
@@ -101,3 +101,42 @@ def test_set_base_margins_uses_weight_and_ramp():
     nfl.set_base_margins(recs, 0.2)
     assert recs[0]["base_margin"] == pytest.approx(2.0 + 0.2 * 0.5 * 4.0)
     assert recs[1]["base_margin"] == 1.0
+
+
+def _qb_game(gid, home_qb, away_qb, rows):
+    return {"id": gid, "season": 2020, "home": "KC", "away": "BUF", "home_qb_id": home_qb, "away_qb_id": away_qb,
+            "_rows": rows}
+
+
+def test_qb_tracker_flags_a_backup_starting(monkeypatch):
+    games = {}
+    monkeypatch.setattr(nfl, "load_qb_games", lambda season, cur: games)
+    q = nfl.QBTracker(2020)
+    # five games where KC's starter A plays well and BUF's B is average
+    for i in range(5):
+        gid = f"G{i}"
+        games[gid] = [{"game_id": gid, "team": "KC", "qb_id": "A", "dropbacks": 40, "epa": 0.25 * 40},
+                      {"game_id": gid, "team": "BUF", "qb_id": "B", "dropbacks": 40, "epa": 0.0}]
+        g = _qb_game(gid, "A", "B", None)
+        assert q.gap(g) == pytest.approx(q.gap(g))  # deterministic
+        q.record(g)
+    usual = q.gap(_qb_game("N1", "A", "B", None))
+    assert usual == pytest.approx(0.0)            # same starters: no news
+    backup = q.gap(_qb_game("N2", "Z", "B", None))   # unknown backup starts for KC
+    assert abs(usual) < 2.0                           # same starters: little news
+    assert backup < usual - 3.0                       # backup: KC loses several points
+    assert q.gap(_qb_game("N3", None, "B", None)) == pytest.approx(
+        -nfl.DROPBACKS_PER_GAME * q.team_gap("BUF", "B"))  # unknown starter id: no KC adjustment
+
+
+def test_pbp_qb_rows_sums_dropbacks_per_qb():
+    import pandas as pd
+    pbp = pd.DataFrame([
+        {"game_id": "G", "posteam": "KC", "id": "A", "qb_dropback": 1, "qb_epa": 0.5},
+        {"game_id": "G", "posteam": "KC", "id": "A", "qb_dropback": 1, "qb_epa": -7.0},   # clipped to -4
+        {"game_id": "G", "posteam": "KC", "id": "A", "qb_dropback": 0, "qb_epa": 1.0},    # handoff: not a dropback
+        {"game_id": "G", "posteam": "KC", "id": "Z", "qb_dropback": 1, "qb_epa": 0.2},
+    ])
+    rows = {r["qb_id"]: r for r in nfl.pbp_qb_rows(pbp)}
+    assert rows["A"]["dropbacks"] == 2 and rows["A"]["epa"] == pytest.approx(0.5 - 4.0)
+    assert rows["Z"]["dropbacks"] == 1

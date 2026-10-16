@@ -260,7 +260,8 @@ function envChips(r) {
   else if (fx) chips.push(`Kickoff <b>${Math.round(fx.temp)}°F, wind ${Math.round(fx.wind)} mph${isNum(fx.gusts) ? ` (gusts ${Math.round(fx.gusts)})` : ""}, rain ${isNum(fx.precip_prob) ? fx.precip_prob + "%" : "n/a"}</b>`);
   else if (g.neutral) chips.push("Neutral site");
   else chips.push("Weather <b>forecast unavailable</b>");
-  if (p.env_margin) chips.push(`Rest/travel <b>${signed(p.env_margin)} pts</b> to ${esc(g.home)}`);
+  if (e.home_qb && e.away_qb) chips.push(`QBs <b>${esc(e.away_qb)} @ ${esc(e.home_qb)}</b>${e.qb_pts ? `: <b>${signed(e.qb_pts)} pts</b> to ${esc(g.home)}` : ""}`);
+  if (p.env_margin) chips.push(`Rest/travel/QB <b>${signed(p.env_margin)} pts</b> to ${esc(g.home)}`);
   if (p.env_total) chips.push(`Weather <b>${signed(p.env_total)} pts</b> to total`);
   if (p.injury_adj) chips.push(`Injuries <b>${signed(p.injury_adj)} pts</b>`);
   return `<div class="env">${chips.map(c => `<span class="chip-env">${c}</span>`).join("")}</div>`;

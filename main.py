@@ -71,7 +71,8 @@ def cmd_week(args):
         inj = f" (incl. injuries {p['injury_adj']:+.1f})" if p["injury_adj"] else ""
         if "env" in r:
             e = r["env"]
-            inj += (f" | env {p['env_margin']:+.1f} pts (rest {e['rest']:+.0f}d, travel {e['tz']:+.0f}h)"
+            qb = (f", QB {e['qb_pts']:+.1f} ({e['away_qb']} @ {e['home_qb']})" if e.get("home_qb") else "")
+            inj += (f" | env {p['env_margin']:+.1f} pts (rest {e['rest']:+.0f}d, travel {e['tz']:+.0f}h{qb})"
                     f", total {p['env_total']:+.1f}; {r['sources']['weather']}")
         sources.append([g["id"], r["sources"]["model"] + inj, r["sources"]["market"],
                         r["sources"]["kalshi"]])

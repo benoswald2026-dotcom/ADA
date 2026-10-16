@@ -73,23 +73,30 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
    (ratings start in 2012, home field 1.5 points). The EPA share is **fitted** each
    season on earlier seasons only: the preset 0.40 is replaced only if the data
    disagrees by |t| >= 3. It does (fitted ~0.12-0.14), so Elo carries most of the margin.
-2. Rest, travel, and weather adjustments. Their sizes are **fitted on 2015–2022 only**:
+2. Starting-QB adjustment (`QBTracker`): each QB's EPA per dropback (decayed, shrunk
+   toward a backup-level prior) vs. the QBs whose play the team's ratings already
+   reflect. A backup starting = points the ratings haven't absorbed yet. Starters come
+   from the nflverse schedule (projected starters for upcoming games). Fitted effect:
+   0.79 pts per point of gap, t = 7.4.
+3. Rest, travel, and weather adjustments. Their sizes are **fitted on 2015–2022 only**:
    - rest: points per day of rest advantage
    - travel: points per hour the away team traveled east
    - wind: points of total per mph above 10
    - cold: points of total at 32°F or colder
-3. **Trust weight.** The bet probability is `(1 − w) × market + w × model`. `w`
+4. **Trust weight.** The bet probability is `(1 − w) × market + w × model`. `w`
    is fitted on 2015–2022 by log loss. If the model adds nothing beyond the
    market, `w` comes out near 0.
-4. Your `injuries.csv` (team = city, nickname, or code like `GB`) is applied
+5. Your `injuries.csv` (team = city, nickname, or code like `GB`) is applied
    after the blend, because it's news the market may not have priced yet.
-5. The 10-point rule compares the raw model with the market. A bigger gap
+6. The 10-point rule compares the raw model with the market. A bigger gap
    means the model is probably missing news, so that game is left out.
 
 **What the 2023–2025 backtest found:**
-- The raw model loses to the closing market on Brier score: 0.2211 vs 0.2102
-  (paired bootstrap 95% CI for the gap: +0.005 to +0.018). Fitting the EPA weight
-  improved it from 0.2236, but that gain alone isn't significant yet (t = −1.5).
+- The raw model loses to the closing market on Brier score: 0.2183 vs 0.2102
+  (paired bootstrap 95% CI for the gap: +0.003 to +0.013).
+- Fitting the EPA weight plus the QB adjustment improved it from 0.2236 to 0.2183
+  (paired 95% CI −0.0099 to −0.0007, t = −2.2). Each change alone is not significant.
+- Don't list QB changes in `injuries.csv` as well: the QB adjustment already counts them.
 - Play-by-play EPA with garbage time removed (`NFL_EPA_SOURCE = "pbp"`) was tried and
   tracked margins slightly worse on the 2015–2022 fit seasons, so weekly team EPA stays the default.
 - It went 49.2% against the spread.
