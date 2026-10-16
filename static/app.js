@@ -887,7 +887,7 @@ function setSport(sp) {
   store.set("sport", SPORT);
   $$(".sport-seg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.sport === SPORT)));
   $("#week-lede").textContent = SPORT === "nfl"
-    ? "Today's NFL games: model vs. sportsbook consensus vs. Kalshi, with weather, rest, and travel. Percentages are for the home team."
+    ? "This week's NFL games: model vs. sportsbook consensus vs. Kalshi, with QB, weather, rest, and travel. Percentages are for the home team."
     : "Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.";
   $("#bt-title").textContent = SPORT === "nfl" ? "NFL backtest, 2023–2025" : "College backtest, 2023–2025";
   weekPromise = null; WEEK = null; WEEK_ERR = null; BETS = null; BETS_ERR = null; LEGS = null; PARLAY_RESULT = null; PARLAY_ERR = null;
