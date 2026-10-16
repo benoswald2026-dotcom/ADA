@@ -69,6 +69,28 @@ _week_lock = threading.Lock()
 WEEK_CACHE_SECONDS = 5 * 60
 
 
+_scan_cache = {}
+SCAN_CACHE_SECONDS = 60
+
+
+def scan_json(sport, days=1, force=False):
+    """Kalshi vs. sportsbook scan (no API keys). Reused for a minute; Refresh re-downloads."""
+    import time
+    from cache import fresh
+    from scan import scan
+    key = (sport, days)
+    c = _scan_cache.get(key)
+    if force or c is None or time.time() - c["at"] > SCAN_CACHE_SECONDS:
+        if force:
+            with fresh():
+                r = scan(sport, days=days)
+        else:
+            r = scan(sport, days=days)
+        rows = [{**x, "kickoff": x["kickoff"].isoformat()} for x in r["rows"]]
+        c = _scan_cache[key] = {"at": time.time(), "value": {**r, "rows": rows, "sport": sport, "days": days}}
+    return c["value"]
+
+
 def cached_week(sport="cfb", force=False):
     """force=True (the Refresh button) rebuilds AND re-downloads every live source."""
     if force:
@@ -87,7 +109,7 @@ def _cached_week(sport="cfb", force=False):
         if force or c["value"] is None or time.time() - c["at"] > WEEK_CACHE_SECONDS:
             if sport == "nfl":
                 import nfl
-                c["value"] = nfl.build_slate()
+                c["value"] = nfl.build_slate(days=6)   # the coming week, not just today
             else:
                 from week import build_week
                 week, rows = build_week()
@@ -219,6 +241,14 @@ class Handler(BaseHTTPRequestHandler):
                 except ValueError:
                     bankroll = 1000.0
                 return self._send(200, cached_props(bankroll, force="refresh=1" in self.path))
+            if path == "/api/scan":
+                from urllib.parse import parse_qs, urlparse
+                q = parse_qs(urlparse(self.path).query)
+                try:
+                    days = min(7, max(0, int(q.get("days", ["1"])[0])))
+                except ValueError:
+                    days = 1
+                return self._send(200, scan_json(_sport(self.path), days, force="refresh=1" in self.path))
             if path == "/api/research":
                 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "research.json")) as f:
                     return self._send(200, json.load(f))

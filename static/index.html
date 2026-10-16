@@ -6,36 +6,43 @@
 <title>Hashmark</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/app.css">
-<script>try { document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark"; } catch (e) { document.documentElement.dataset.theme = "dark"; }</script>
+<script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) { /* follow the system theme */ }</script>
 </head>
 <body>
 <header class="topbar">
-  <div class="wrap topbar-inner">
+  <div class="wrap masthead">
     <div class="brand">
-      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-        <rect x="1" y="1" width="30" height="30" rx="4" fill="var(--accent)"/>
-        <path d="M9 7v18M23 7v18M5 12h4M5 20h4M23 12h4M23 20h4M13 16h6" stroke="var(--on-accent)" stroke-width="2" stroke-linecap="round" fill="none"/>
-      </svg>
-      <div>
-        <div class="brand-name">Hashmark</div>
-        <div class="brand-sub">Football model · market-checked · read-only</div>
-      </div>
+      <div class="brand-name">Hashmark</div>
+      <div class="brand-sub">Football pricing sheet · model, sportsbooks and Kalshi side by side · read-only</div>
     </div>
     <div class="topbar-right">
-      <span class="clock" aria-label="Current time, Eastern"><i class="live"></i><span id="clock">--:-- ET</span></span>
-      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch between night and day theme"></button>
+      <span class="clock" aria-label="Current time, Eastern"><span id="clock">--:-- ET</span></span>
       <div class="seg sport-seg" role="group" aria-label="Sport">
         <button type="button" data-sport="nfl" aria-pressed="false">NFL</button>
         <button type="button" data-sport="cfb" aria-pressed="false">College</button>
       </div>
-      <div class="status" id="status" aria-live="polite"></div>
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch between light and dark"></button>
     </div>
+  </div>
+  <!-- Field ribbon: goal line to goal line, with the hash marks the app is named for. -->
+  <div class="wrap ribbon" aria-hidden="true">
+    <svg viewBox="0 0 1000 34" preserveAspectRatio="none" class="field-svg">
+      <g class="field-yards">
+        <line x1="0" y1="0" x2="0" y2="34"/><line x1="100" y1="0" x2="100" y2="34"/><line x1="200" y1="0" x2="200" y2="34"/>
+        <line x1="300" y1="0" x2="300" y2="34"/><line x1="400" y1="0" x2="400" y2="34"/><line x1="500" y1="0" x2="500" y2="34" class="mid"/>
+        <line x1="600" y1="0" x2="600" y2="34"/><line x1="700" y1="0" x2="700" y2="34"/><line x1="800" y1="0" x2="800" y2="34"/>
+        <line x1="900" y1="0" x2="900" y2="34"/><line x1="1000" y1="0" x2="1000" y2="34"/>
+      </g>
+      <g class="field-hash" id="hash"></g>
+    </svg>
+    <div class="field-nums"><span>G</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>40</span><span>30</span><span>20</span><span>10</span><span>G</span></div>
   </div>
   <nav class="wrap tabs" role="tablist" aria-label="Sections">
     <button role="tab" id="tab-week" data-tab="week" aria-selected="true">This week</button>
     <button role="tab" id="tab-bets" data-tab="bets" aria-selected="false">Best bets</button>
+    <button role="tab" id="tab-scan" data-tab="scan" aria-selected="false">Kalshi scan</button>
     <button role="tab" id="tab-props" data-tab="props" aria-selected="false">Props</button>
     <button role="tab" id="tab-backtest" data-tab="backtest" aria-selected="false">Backtest</button>
     <button role="tab" id="tab-parlay" data-tab="parlay" aria-selected="false">Parlay</button>
@@ -43,6 +50,7 @@
     <button role="tab" id="tab-research" data-tab="research" aria-selected="false">Research</button>
     <button role="tab" id="tab-explain" data-tab="explain" aria-selected="false">How it works</button>
   </nav>
+  <div class="wrap status-row"><div class="status" id="status" aria-live="polite"></div></div>
 </header>
 
 <main class="wrap">
@@ -71,6 +79,21 @@
       <div class="view-actions"><button class="btn" id="bets-refresh">Refresh</button></div>
     </div>
     <div id="bets-body"></div>
+  </section>
+
+  <!-- KALSHI SCAN -->
+  <section id="view-scan" class="view" role="tabpanel" aria-labelledby="tab-scan" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Kalshi scan</h1>
+        <p class="lede">Every Kalshi game price next to the DraftKings moneyline (vig removed), for today and tomorrow. No API keys needed. A FLAG needs at least 3 points of edge after Kalshi's fee and a price of 20¢ or more.</p>
+      </div>
+      <div class="view-actions">
+        <label class="toggle"><input type="checkbox" id="scan-all"> Show every side</label>
+        <button class="btn" id="scan-refresh">Refresh</button>
+      </div>
+    </div>
+    <div id="scan-body"></div>
   </section>
 
   <!-- PROPS -->

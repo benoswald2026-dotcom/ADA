@@ -530,7 +530,7 @@ function renderBets() {
       ${kRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>YES ask</th><th>Fee</th><th>Edge (pts)</th><th>Call</th><th>Stake</th></tr></thead><tbody>${kRows}</tbody></table></div>` : empty("No Kalshi prices right now. Kalshi may have no markets for these games, or this computer can't reach it.")}</section>
     <section class="bets-section"><h2>Moneylines</h2><p class="lede">Sides where the bet probability beats the average book price. EV is expected profit per $1.</p>
       ${bookRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>Decimal</th><th>EV / $1</th><th>Stake</th></tr></thead><tbody>${bookRows}</tbody></table></div>` : empty("None. The bet probabilities don't beat any book price after the vig, which is expected when the bet probability is the market.")}</section>
-    <section class="bets-section"><h2>Spreads</h2><p class="lede">Cover chance from a normal spread of margins around the line (Stern), with σ fitted on our own data.</p>
+    <section class="bets-section"><h2>Spreads</h2><p class="lede">Cover chance from the NFL's real margin shape: a bell curve (σ fitted on our data) with extra weight on 3, 7, 10 and 14. Pushes on whole-number lines refund the stake.</p>
       ${spRows ? `<div class="table-wrap"><table><thead><tr><th>Side</th><th>Game</th><th>Cover %</th><th>Decimal</th><th>EV / $1</th><th>Stake</th></tr></thead><tbody>${spRows}</tbody></table></div>` : empty("None.")}</section>
     <section class="bets-section"><h2>Parlays</h2><p class="lede">2–3 legs from different games, each leg already a positive-EV side. Not staked: the house margin compounds and the variance is large.</p>
       ${parRows ? `<div class="table-wrap"><table><thead><tr><th>Legs</th><th>Hit %</th><th>Market hit %</th><th>Payout</th><th>EV / $1</th></tr></thead><tbody>${parRows}</tbody></table></div>` : empty("None. A parlay needs at least two positive-EV legs from different games.")}</section>
@@ -540,6 +540,52 @@ $("#bets-refresh").addEventListener("click", () => { BETS = null; renderBets(); 
 $("#bets-body").addEventListener("change", e => {
   if (e.target.id === "bankroll") { store.set("bankroll", String(Number(e.target.value) || 1000)); BETS = null; renderBets(); loadBets(); }
 });
+
+// ---------------------------------------------------------------- kalshi scan
+let SCAN = null, SCAN_ERR = null, scanLoading = false;
+
+async function loadScan(force = false) {
+  if (scanLoading) return;
+  scanLoading = true; SCAN_ERR = null;
+  if (force) SCAN = null;
+  renderScan();
+  const sport = SPORT;
+  try { const d = await api(withSport(`/api/scan?days=1${force ? "&refresh=1" : ""}`)); if (sport === SPORT) SCAN = d; }
+  catch (e) { if (sport === SPORT) SCAN_ERR = e.message; }
+  scanLoading = false; renderScan();
+}
+
+function renderScan() {
+  const body = $("#scan-body");
+  if (SCAN_ERR) { body.innerHTML = setupNotice(SCAN_ERR); return; }
+  if (!SCAN || SCAN.sport !== SPORT) {
+    body.innerHTML = `<div class="panel"><p class="label">Fetching Kalshi and sportsbook prices…</p><div class="progress"><span></span></div></div>`;
+    if (!scanLoading) loadScan();
+    return;
+  }
+  const all = $("#scan-all").checked;
+  const flags = SCAN.rows.filter(r => r.flag);
+  const rows = all ? SCAN.rows : SCAN.rows.slice(0, 15);
+  const money = x => x ? `$${x.toFixed(2)}` : "–";
+  const call = r => r.flag ? chip(true) : (r.longshot && r.edge >= 0.03
+    ? `<span class="chip chip-pass" title="Kalshi contracts under 20¢ lose far more than their price implies">Long shot</span>` : chip(false));
+  const tr = r => `<tr class="${r.flag ? "is-flag" : ""}"><td class="player-td">${esc(r.team)}</td><td class="player-td">${esc(r.matchup)}</td>
+      <td>${kickoff(r.kickoff)}</td><td>${american(r.book_ml)}</td><td>${pct(r.market)}</td><td>${cents(r.price)}</td>
+      <td>${isNum(r.bid) ? cents(r.bid) : "–"}</td><td class="${r.edge >= 0 ? "ev-pos" : "ev-neg"}">${pts(r.edge)}</td><td>${call(r)}</td><td>${money(r.stake)}</td></tr>`;
+  const scanNotes = SCAN.notes.length ? `<div class="notice"><ul class="notes-box-list">${SCAN.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
+  body.innerHTML = `<div class="notes">${scanNotes}</div>
+    <div class="summary">
+      <div><div class="label">Flags</div><div class="big flag-count">${flags.length}</div><div class="small">edge ≥ 3 pts after fee</div></div>
+      <div><div class="label">Games compared</div><div class="big">${SCAN.games}</div><div class="small">Kalshi × ${esc(SCAN.rows[0]?.book || "sportsbook")}</div></div>
+      <div><div class="label">Best edge</div><div class="big">${SCAN.rows.length ? pts(SCAN.rows[0].edge) : "–"}</div><div class="small">${SCAN.rows.length ? esc(SCAN.rows[0].team) : ""}</div></div>
+      <div><div class="label">Prices as of</div><div class="big clock-big">${esc((SCAN.kalshi_stamp || "").slice(11, 16))}<span>Z</span></div><div class="small">Kalshi ${esc(SCAN.kalshi_stamp || "")}</div></div>
+    </div>
+    ${SCAN.rows.length ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th class="l">Game</th><th>Kickoff</th><th>Book ML</th><th>Book fair</th><th>YES ask</th><th>YES bid</th><th>Edge (pts)</th><th>Call</th><th>Stake</th></tr></thead>
+      <tbody>${rows.map(tr).join("")}</tbody></table></div>` : `<div class="panel empty">No upcoming games with both a Kalshi market and sportsbook odds.</div>`}
+    <p class="lede foot-note">Bet probability here is the sportsbook's price, not the model. DraftKings is one recreational book; with an Odds API key, Best bets uses Pinnacle instead. Prices move: recheck before kickoff.</p>`;
+}
+$("#scan-refresh").addEventListener("click", () => loadScan(true));
+$("#scan-all").addEventListener("change", renderScan);
 
 // ---------------------------------------------------------------- props
 let PROPS = null, PROPS_ERR = null, propsLoading = false;
@@ -781,7 +827,7 @@ $("#ex-form").addEventListener("submit", e => e.preventDefault());
 $("#ex-reset").addEventListener("click", () => { if (EX_DEFAULT) { buildExForm(EX_DEFAULT); runExplain(); } });
 
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "bets", "props", "backtest", "parlay", "ask", "research", "explain"];
+const TABS = ["week", "bets", "scan", "props", "backtest", "parlay", "ask", "research", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -798,6 +844,7 @@ function setTab(name) {
   if (name === "research") renderResearch();
   if (name === "ask") renderChat();
   if (name === "props") renderProps();
+  if (name === "scan") renderScan();
 }
 $(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) setTab(b.dataset.tab); });
 $(".tabs").addEventListener("keydown", e => {
@@ -815,15 +862,20 @@ function tickClock() {
   if (el) el.textContent = new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" }) + " ET";
 }
 tickClock(); setInterval(tickClock, 15000);
+// Hash marks on the field ribbon: one tick per yard-line gap, two rows like a real field.
+$("#hash").innerHTML = Array.from({ length: 99 }, (_, i) => (i + 1) * 10).filter(x => x % 100)
+  .map(x => `<line x1="${x}" y1="8" x2="${x}" y2="12"/><line x1="${x}" y1="22" x2="${x}" y2="26"/>`).join("");
 const SUN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
 const MOON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
+const isDark = () => document.documentElement.dataset.theme === "dark" ||
+  (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
 function paintThemeBtn() {
-  const dark = document.documentElement.dataset.theme !== "light";
+  const dark = isDark();
   $("#theme-btn").innerHTML = dark ? SUN : MOON;
-  $("#theme-btn").title = dark ? "Day game (light)" : "Night game (dark)";
+  $("#theme-btn").title = dark ? "Light" : "Dark";
 }
 $("#theme-btn").addEventListener("click", () => {
-  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  const next = isDark() ? "light" : "dark";
   document.documentElement.dataset.theme = next;
   store.set("theme", next);
   paintThemeBtn();
@@ -839,7 +891,7 @@ function setSport(sp) {
     : "Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.";
   $("#bt-title").textContent = SPORT === "nfl" ? "NFL backtest, 2023–2025" : "College backtest, 2023–2025";
   weekPromise = null; WEEK = null; WEEK_ERR = null; BETS = null; BETS_ERR = null; LEGS = null; PARLAY_RESULT = null; PARLAY_ERR = null;
-  PROPS_ERR = null;
+  PROPS_ERR = null; SCAN = null; SCAN_ERR = null;
   clearTimeout(btTimer);
   loadStatus();
   setTab(store.get("tab") || "week");
