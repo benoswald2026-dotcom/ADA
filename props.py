@@ -38,6 +38,15 @@ FIT_START = 2019
 HALF_LIFE = 4.0                # games
 SHRINK_GAMES = 3.0             # pseudo-games of league average
 OPP_SHRINK_GAMES = 4.0
+# Shrinkage prior. Default: one league average for the stat. USAGE_PRIOR_STATS
+# instead shrink toward the player's recent usage x the league rate per use
+# (e.g. targets x yards per target). Checked on 2021-2022 (inside the fit years)
+# and kept only where it cut the average miss with |t| >= 3: receiving yards
+# (t = -4.3). It made passing yards worse (t = +4.7): hot QB stretches regress.
+USAGE_PRIOR_STATS = {"rec_yds"}
+# Weight of games played for a previous team. Discounting them (0.5) made
+# rushing, receptions and receiving yards worse on 2021-2022, so it is off.
+OLD_TEAM_WEIGHT = 1.0
 LEAGUE_TEAM_POINTS = 22.5
 ZQ_LEVELS = np.linspace(0, 1, 201)      # average NFL team score, to scale the team-points adjustment
 
@@ -91,8 +100,9 @@ class History:
     """Running, leak-free state: each game is predicted before it is added."""
 
     def __init__(self, stat):
-        self.s = STATS[stat]
-        self.player = defaultdict(list)       # player_id -> [(value, usage)]
+        self.stat, self.s = stat, STATS[stat]
+        self.player = defaultdict(list)       # player_id -> [(value, usage, team)]
+        self.rate_v, self.rate_u = [], []     # qualifying player-games: value, usage (league rate)
         self.allowed = defaultdict(list)      # defense team -> [total allowed per game]
         self.league_vals = []                 # qualifying player-game values
         self.league_allowed = []              # per-defense-game totals
@@ -100,15 +110,29 @@ class History:
     def prior(self):
         return float(np.mean(self.league_vals[-4000:])) if self.league_vals else 0.0
 
-    def baseline(self, pid):
-        """(projection baseline, effective games, avg recent usage)."""
+    def rate(self):
+        """League value per unit of usage (e.g. yards per target), recent qualifying games."""
+        u = sum(self.rate_u[-4000:])
+        return sum(self.rate_v[-4000:]) / u if u > 0 else 0.0
+
+    def baseline(self, pid, team=None):
+        """(projection baseline, effective games, avg recent usage).
+        Recent games count more (HALF_LIFE); games for a team other than `team`
+        count OLD_TEAM_WEIGHT as much. The average is shrunk SHRINK_GAMES
+        pseudo-games toward a prior: the player's recent usage times the league
+        rate per use for USAGE_PRIOR_STATS, so a 9-target WR1 is shrunk toward a WR1."""
         hist = self.player.get(pid, [])
         if not hist:
             return self.prior(), 0.0, 0.0
-        vals = np.array([v for v, _ in hist[-16:]])
+        recent = hist[-16:]
+        vals = np.array([v for v, _, _ in recent])
         w = 0.5 ** (np.arange(len(vals))[::-1] / HALF_LIFE)
-        base = (np.sum(w * vals) + SHRINK_GAMES * self.prior()) / (np.sum(w) + SHRINK_GAMES)
-        usage = float(np.mean([u for _, u in hist[-3:]]))
+        if team is not None:
+            w = w * np.array([1.0 if t == team else OLD_TEAM_WEIGHT for _, _, t in recent])
+        usage = float(np.mean([u for _, u, _ in hist[-3:]]))
+        use_usage = self.stat in USAGE_PRIOR_STATS and usage > 0 and self.rate() > 0
+        prior = usage * self.rate() if use_usage else self.prior()
+        base = (np.sum(w * vals) + SHRINK_GAMES * prior) / (np.sum(w) + SHRINK_GAMES)
         return float(base), float(np.sum(w)), usage
 
     def opp_ratio(self, team):
@@ -130,9 +154,11 @@ class History:
                 by_def[(r["game_id"], r["opponent_team"])] += v
                 # Every game counts toward the player's history (keeping only
                 # high-usage games would bias his baseline upward).
-                self.player[r["player_id"]].append((v, u))
+                self.player[r["player_id"]].append((v, u, r.get("team")))
                 if u >= self.s["min_usage"]:
                     self.league_vals.append(v)
+                    self.rate_v.append(v)
+                    self.rate_u.append(u)
         for (_, team), tot in by_def.items():
             self.allowed[team].append(tot)
             self.league_allowed.append(tot)
@@ -151,7 +177,7 @@ def build_examples(stat, df, games):
         for r in recs:
             if r["position"] not in s["pos"]:
                 continue
-            base, n_eff, usage = h.baseline(r["player_id"])
+            base, n_eff, usage = h.baseline(r["player_id"], r["team"])
             if len(h.player.get(r["player_id"], [])) < 2 or usage < s["min_usage"]:
                 continue
             tp = None
@@ -347,7 +373,7 @@ def build_props(rows, bankroll=1000.0):
                 usage = usage[usage >= s["min_usage"]].sort_values(ascending=False).head(s["per_team"])
                 tp = implied_team_points(m.get("total"), m.get("home_spread"), side == "home")
                 for (pid, name, pos), u in usage.items():
-                    base, n_eff, _ = h.baseline(pid)
+                    base, n_eff, _ = h.baseline(pid, team)
                     e = {"base": base, "opp_x": h.opp_ratio(opp) - 1.0, "team_x": (tp / LEAGUE_TEAM_POINTS - 1.0) if tp else 0.0}
                     pj = project(e, f)
                     sd = sd_for(pj, f)

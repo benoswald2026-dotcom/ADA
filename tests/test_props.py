@@ -50,3 +50,36 @@ def test_parse_prop_market_devigs_at_consensus_line():
     q = props.parse_prop_market(event, "player_rush_yds")["bijan robinson"]
     assert q["line"] == 74.5 and q["books"] == 2
     assert 0.5 < q["p_over"] < 0.53
+
+
+def _rec_rows(pid, team, yards, targets, gid):
+    return {"player_id": pid, "position": "WR", "game_id": gid, "team": team, "opponent_team": "X",
+            "receiving_yards": float(yards), "targets": float(targets)}
+
+
+def test_usage_prior_shrinks_a_star_toward_a_star_not_the_league_average():
+    h = props.History("rec_yds")
+    for i in range(40):   # league: depth receivers, 4 targets, 30 yards
+        h.add_game([_rec_rows(f"d{i}", "AAA", 30, 4, f"g{i}")])
+    for i in range(3):    # star: 10 targets, 110 yards
+        h.add_game([_rec_rows("star", "SEA", 110, 10, f"s{i}")])
+    base, _, _ = h.baseline("star", "SEA")
+    old = props.USAGE_PRIOR_STATS
+    try:
+        props.USAGE_PRIOR_STATS = set()
+        flat, _, _ = h.baseline("star", "SEA")
+    finally:
+        props.USAGE_PRIOR_STATS = old
+    assert base > flat + 10          # shrunk toward ~10 targets' worth, not 4
+    assert base < 110
+
+
+def test_games_for_an_old_team_count_less(monkeypatch):
+    monkeypatch.setattr(props, "OLD_TEAM_WEIGHT", 0.5)
+    h = props.History("rec_yds")
+    for i in range(4):
+        h.add_game([_rec_rows("p", "MIA", 90, 8, f"m{i}")])
+    h.add_game([_rec_rows("p", "DEN", 20, 8, "d0")])
+    same_team, _, _ = h.baseline("p", "MIA")
+    new_team, _, _ = h.baseline("p", "DEN")
+    assert new_team < same_team      # the DEN game weighs more once he's a Bronco

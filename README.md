@@ -154,6 +154,11 @@ python main.py props --backtest   # walk-forward validation, 2023-2025
 Stats: passing yards, rushing yards, receptions, and receiving yards (`props.py`).
 1. **Baseline:** a recency-weighted average of the player's earlier games
    (4-game half-life), shrunk toward the league average when he has few games.
+   Receiving yards instead shrink toward his recent targets × the league's yards per
+   target, so a 9-target WR1 is shrunk toward a WR1. That was tested on 2021–2022 for all
+   four stats and kept only where it clearly helped (receiving yards, t = −4.3). For
+   passing yards it hurt: hot QB stretches really do cool off. Discounting games for a
+   previous team also hurt, so it is off.
 2. **Adjustments**, each used only if t ≥ 3:
    - the opponent's defense against that stat
    - the team's expected points from the market spread and total
