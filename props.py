@@ -330,6 +330,25 @@ def parse_prop_market(event, market_key):
 _FIT_CACHE = {}
 
 
+def _starting_qb_only(usage, starter, team, df):
+    """QB rows follow the listed starter (nflverse schedule): drop other QBs, and
+    add the starter if his recent usage was too low to qualify (a backup getting
+    the start). Non-QB rows are untouched. No listed starter -> unchanged."""
+    if not starter:
+        return usage
+    keep = [k for k in usage.index if k[2] != "QB" or k[1] == starter]
+    usage = usage.loc[keep] if keep else usage.iloc[0:0]
+    if any(k[2] == "QB" for k in usage.index) or "QB" not in set(df["position"]):
+        return usage
+    me = df[(df["player_display_name"] == starter) & (df["position"] == "QB")]
+    if me.empty:
+        return usage
+    on_team = me[me["team"] == team]
+    pid = (on_team if not on_team.empty else me).iloc[-1]["player_id"]
+    extra = pd.Series([0.0], index=pd.MultiIndex.from_tuples([(pid, starter, "QB")], names=usage.index.names))
+    return pd.concat([usage, extra]) if len(usage) else extra
+
+
 def build_props(rows, bankroll=1000.0):
     """Projections (and prop bets when lines are available) for a slate from nfl.build_slate."""
     from nfl import load_games
@@ -379,6 +398,7 @@ def build_props(rows, bankroll=1000.0):
                 pool = recent[(recent["team"] == team) & (recent["position"].isin(s["pos"]))]
                 usage = pool.groupby(["player_id", "player_display_name", "position"])[s["usage"]].mean()
                 usage = usage[usage >= s["min_usage"]].sort_values(ascending=False).head(s["per_team"])
+                usage = _starting_qb_only(usage, (r.get("env") or {}).get(f"{side}_qb"), team, df)
                 tp = implied_team_points(m.get("total"), m.get("home_spread"), side == "home")
                 for (pid, name, pos), u in usage.items():
                     base, n_eff, _ = h.baseline(pid, team)

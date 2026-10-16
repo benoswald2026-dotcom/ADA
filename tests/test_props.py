@@ -90,3 +90,16 @@ def test_project_applies_accepted_qb_term():
     f["terms"]["qb"] = {"coef": 0.4, "accepted": True}
     e = {"base": 50.0, "opp_x": 0.0, "team_x": 0.0, "qb_x": -0.15}   # backup starting
     assert props.project(e, f) == pytest.approx(50 * (1 + 0.4 * -0.15))
+
+
+def test_qb_props_follow_the_listed_starter():
+    import pandas as pd
+    idx = pd.MultiIndex.from_tuples([("c1", "Caleb Williams", "QB"), ("r1", "D'Andre Swift", "RB")],
+                                    names=["player_id", "player_display_name", "position"])
+    usage = pd.Series([34.0, 15.0], index=idx)
+    df = pd.DataFrame([{"player_id": "b1", "player_display_name": "Tyson Bagent", "position": "QB", "team": "CHI"},
+                       {"player_id": "c1", "player_display_name": "Caleb Williams", "position": "QB", "team": "CHI"}])
+    out = props._starting_qb_only(usage, "Tyson Bagent", "CHI", df)
+    names = [k[1] for k in out.index]
+    assert "Caleb Williams" not in names and "Tyson Bagent" in names and "D'Andre Swift" in names
+    assert props._starting_qb_only(usage, None, "CHI", df).equals(usage)
