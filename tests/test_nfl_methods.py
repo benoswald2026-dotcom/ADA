@@ -37,3 +37,27 @@ def test_feature_gate_rejects_noise_and_keeps_strong_signal():
     env = nfl.fit_environment(recs, [2020])
     assert env["margin"]["rest"]["accepted"] is True
     assert env["margin"]["tz"]["accepted"] is False and env["applied"]["tz"] == 0.0
+
+
+def test_kickoff_parses_eastern_time():
+    k = nfl._kickoff({"gameday": "2026-10-15", "gametime": "20:15"})
+    assert k.isoformat() == "2026-10-15T20:15:00-04:00"
+    assert nfl._kickoff({"gameday": "2026-10-15", "gametime": None}) is None
+
+
+def _row(gid, ask):
+    return {"game": {"id": gid, "start": "2026-10-18T13:00:00-04:00", "home_code": "NE", "away_code": "NYJ"},
+            "market": {"home_prob": 0.73, "prob_source": "Pinnacle (sharp)", "sharp_prob": 0.73,
+                       "consensus_prob": 0.72, "home_spread": -6.5, "total": 41.5},
+            "kalshi": {"home": {"yes_ask": ask}, "away": {"yes_ask": 0.25}}}
+
+
+def test_log_snapshot_appends_and_skips_already_logged_fetch(tmp_path):
+    import csv
+    path = str(tmp_path / "snap.csv")
+    assert nfl.log_snapshot([_row("G1", 0.74)], "t1", "k1", path=path) == 1
+    assert nfl.log_snapshot([_row("G1", 0.74)], "t1", "k1", path=path) == 0   # same cached fetch
+    assert nfl.log_snapshot([_row("G1", 0.76)], "t1", "k2", path=path) == 1   # new Kalshi fetch
+    rows = list(csv.DictReader(open(path)))
+    assert [r["kalshi_home_ask"] for r in rows] == ["0.74", "0.76"]
+    assert rows[0]["prob_source"] == "Pinnacle (sharp)"

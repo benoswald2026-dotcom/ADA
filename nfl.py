@@ -10,6 +10,8 @@ No lookahead: games are replayed week by week. Each prediction uses only
 earlier games. The rest/travel/weather effects are fitted on 2015-2022 ONLY
 and then applied unchanged to the 2023-2025 test seasons and to live games.
 """
+import csv
+import os
 from datetime import datetime, timedelta
 from itertools import groupby
 from zoneinfo import ZoneInfo
@@ -505,8 +507,61 @@ def _forecast(g):
             "temp": pick("temperature_2m"), "precip_prob": pick("precipitation_probability")}, stamp
 
 
+SNAPSHOTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "nfl_price_snapshots.csv")
+SNAPSHOT_FIELDS = ["logged_at", "odds_stamp", "kalshi_stamp", "game_id", "kickoff", "home", "away",
+                   "market_prob", "prob_source", "sharp_prob", "consensus_prob", "home_spread", "total",
+                   "kalshi_home_ask", "kalshi_away_ask"]
+
+
+def log_snapshot(rows, odds_stamp, kalshi_stamp, path=None):
+    """Append one row per game with the live prices just fetched. Over time this
+    becomes the line-movement history nflverse doesn't have (it keeps only the
+    close), which a Kalshi backtest and line-movement features need. A cached
+    response that was already logged is not logged again."""
+    path = path or SNAPSHOTS
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    seen = set()
+    if os.path.exists(path):
+        with open(path, newline="") as f:
+            seen = {(r["game_id"], r["odds_stamp"], r["kalshi_stamp"]) for r in csv.DictReader(f)}
+    new = []
+    for r in rows:
+        key = (r["game"]["id"], odds_stamp or "", kalshi_stamp or "")
+        if key in seen:
+            continue
+        seen.add(key)
+        m, k = r["market"] or {}, r["kalshi"] or {}
+        rnd = lambda x: "" if x is None else round(x, 4)
+        new.append({"logged_at": datetime.now(ZoneInfo("UTC")).strftime("%Y-%m-%d %H:%M:%SZ"),
+                    "odds_stamp": odds_stamp or "", "kalshi_stamp": kalshi_stamp or "",
+                    "game_id": r["game"]["id"], "kickoff": r["game"]["start"] or "",
+                    "home": r["game"]["home_code"], "away": r["game"]["away_code"],
+                    "market_prob": rnd(m.get("home_prob")), "prob_source": m.get("prob_source", "nflverse"),
+                    "sharp_prob": rnd(m.get("sharp_prob")), "consensus_prob": rnd(m.get("consensus_prob")),
+                    "home_spread": rnd(m.get("home_spread")), "total": rnd(m.get("total")),
+                    "kalshi_home_ask": rnd(k.get("home", {}).get("yes_ask")),
+                    "kalshi_away_ask": rnd(k.get("away", {}).get("yes_ask"))})
+    if new:
+        write_header = not os.path.exists(path)
+        with open(path, "a", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=SNAPSHOT_FIELDS)
+            if write_header:
+                w.writeheader()
+            w.writerows(new)
+    return len(new)
+
+
+def _kickoff(g):
+    """Kickoff as an aware ET datetime, or None if the schedule has no time."""
+    if not g.get("gametime"):
+        return None
+    return datetime.strptime(f"{g['gameday']} {g['gametime']}", "%Y-%m-%d %H:%M").replace(tzinfo=ET)
+
+
 def _odds_events():
-    params = {"apiKey": config.get_key("ODDS_API_KEY"), "regions": "us",
+    # Naming up to 10 books costs the same credits as one region, and lets us
+    # add Pinnacle (an EU book) as the sharp reference next to the US books.
+    params = {"apiKey": config.get_key("ODDS_API_KEY"), "bookmakers": ",".join(config.NFL_ODDS_BOOKS),
               "markets": "h2h,spreads,totals", "oddsFormat": "american", "dateFormat": "iso"}
     return cached_get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds",
                       params=params, ttl=config.TTL_ODDS, source="The Odds API")
@@ -560,6 +615,13 @@ def build_slate(now=None, days=0):
     slate.sort(key=lambda g: (g["gameday"], g["gametime"] or ""))
 
     notes = []
+    # A game with no final score yet may already be under way (nflverse fills
+    # scores in later). In-game prices are not pregame edges, so drop it.
+    started = [g for g in slate if _kickoff(g) is not None and _kickoff(g) <= now]
+    if started:
+        slate = [g for g in slate if g not in started]
+        notes.append("Skipped (already kicked off): " +
+                     "; ".join(f"{T.full_name(g['away'])} @ {T.full_name(g['home'])}" for g in started))
     try:
         events, odds_stamp = _odds_events()
     except (config.MissingKeyError, ApiError) as e:
@@ -570,7 +632,13 @@ def build_slate(now=None, days=0):
     except ApiError as e:
         markets, kalshi_stamp = None, None
         notes.append(f"Kalshi unavailable ({e}).")
-    injury_pts = inj.load_injuries()
+    injury_pts, inj_expired, inj_undated = inj.injury_report(now=now)
+    if inj_expired:
+        notes.append(f"Ignored {len(inj_expired)} injuries.csv row(s) older than {inj.MAX_AGE_HOURS} h "
+                     "(the market has priced them by now): " + ", ".join(p for _, p in inj_expired))
+    if inj_undated:
+        notes.append(f"{len(inj_undated)} injuries.csv row(s) have no 'entered' date, so they never expire. "
+                     "Add one to avoid counting old news twice.")
     weather_failed = False
 
     rows = []
@@ -603,7 +671,8 @@ def build_slate(now=None, days=0):
                 if (h, a) in ((g["home"], g["away"]), (g["away"], g["home"])):
                     oh, oa = (e["home_team"], e["away_team"]) if h == g["home"] else (e["away_team"], e["home_team"])
                     mkt = parse_odds_event(e, oh, oa)
-                    mkt_source = f"The Odds API, {mkt['ml_books']} book{'s' if mkt['ml_books'] != 1 else ''}, book update {mkt['updated']}"
+                    mkt_source = (f"The Odds API, {mkt['prob_source']} no-vig; {mkt['ml_books']} bettable "
+                                  f"book{'s' if mkt['ml_books'] != 1 else ''}, book update {mkt['updated']}")
                     break
         if mkt is None and g["home_ml"] is not None and g["away_ml"] is not None:
             mkt = {"home_prob": remove_vig(g["home_ml"], g["away_ml"])[0], "ml_books": 1,
@@ -640,9 +709,8 @@ def build_slate(now=None, days=0):
             raw_side = p["raw_home_prob"] if best[1] == home_name else 1 - p["raw_home_prob"]
         flag = bool(best) and should_flag(best[0], raw_side, best[3], price=best[4])
 
-        kick = None
-        if g["gametime"]:
-            kick = datetime.strptime(f"{g['gameday']} {g['gametime']}", "%Y-%m-%d %H:%M").replace(tzinfo=ET).isoformat()
+        kick = _kickoff(g)
+        kick = kick.isoformat() if kick else None
         rows.append({
             "game": {"id": g["id"], "home": home_name, "away": away_name, "home_code": g["home"],
                      "away_code": g["away"], "start": kick, "neutral": g["neutral"],
@@ -659,6 +727,8 @@ def build_slate(now=None, days=0):
                             if g["roof"] not in OUTDOOR or g["neutral"] else "Forecast unavailable"),
             },
         })
+    if events is not None or markets is not None:
+        log_snapshot(rows, odds_stamp, kalshi_stamp)
     info = {"sport": "nfl", "label": f"NFL · {first.strftime('%a %b %-d')}" + (f"–{last.strftime('%b %-d')}" if days else ""),
             "env": env, "combo": combo, "sigma": sigma, "bet_basis": combo["mode"], "notes": notes}
     return info, rows

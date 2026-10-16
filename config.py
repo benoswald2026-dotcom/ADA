@@ -69,6 +69,10 @@ NFL_START_SEASON = 2012          # ratings start here (all teams 1500)
 NFL_FIT_SEASONS = list(range(2015, 2023))  # weather/rest/travel effects are fitted here only
 NFL_TEST_SEASONS = [2023, 2024, 2025]
 WIND_THRESHOLD_MPH = 10          # wind below this is treated as no effect
+# Odds API books for NFL. 10 named books = the credit cost of one region.
+# Pinnacle is the sharp reference only (odds.SHARP_BOOKS); the rest are bettable US books.
+NFL_ODDS_BOOKS = ["pinnacle", "draftkings", "fanduel", "betmgm", "williamhill_us",
+                  "espnbet", "fanatics", "betrivers", "bovada", "betonlineag"]
 
 CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
 

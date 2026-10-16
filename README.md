@@ -285,11 +285,14 @@ as above, with the margin converted back into Elo points.
 
 ### 4.6 Injuries (`injuries.csv`, optional; you fill it in by hand)
 ```
-team,player,position,status,impact_points
-Georgia,Example Player,QB,out,6.0
+team,player,position,status,impact_points,entered
+Georgia,Example Player,QB,out,6.0,2026-10-14 09:30
 ```
 - `impact_points` = margin the team loses if the player is fully out.
 - The status scales it: out 100%, doubtful 75%, questionable 50%, probable 10%.
+- `entered` (optional) = when you added the row, Eastern time (`YYYY-MM-DD` or `YYYY-MM-DD HH:MM`).
+  NFL rows older than 48 hours are ignored, because the market has priced the news by then
+  and applying it on top of the market would count it twice. Rows without a date never expire.
 - Home injuries lower the home margin; away injuries raise it.
 - See `injuries.example.csv`. The `team` name must match CFBD's spelling.
 
