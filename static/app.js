@@ -550,7 +550,8 @@ async function loadScan(force = false) {
   if (force) SCAN = null;
   renderScan();
   const sport = SPORT;
-  try { const d = await api(withSport(`/api/scan?days=1${force ? "&refresh=1" : ""}`)); if (sport === SPORT) SCAN = d; }
+  const days = SPORT === "nfl" ? 3 : 1;   // NFL games are mostly Sunday; college Friday-Saturday
+  try { const d = await api(withSport(`/api/scan?days=${days}${force ? "&refresh=1" : ""}`)); if (sport === SPORT) SCAN = d; }
   catch (e) { if (sport === SPORT) SCAN_ERR = e.message; }
   scanLoading = false; renderScan();
 }
