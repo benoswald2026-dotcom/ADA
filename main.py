@@ -45,7 +45,36 @@ def load_slate(sport, days=0, fresh=False):
         return info["label"], info["notes"], rows
     from week import build_week
     week, rows = build_week()
-    return f"Week {week['week']} ({week['season_type']})", [], rows
+    return f"Week {week['week']} ({week['season_type']})", week.get("notes", []), rows
+
+
+def cmd_kalshi(args):
+    """Check that Kalshi is reachable, fresh, and matched to this slate's games."""
+    from datetime import datetime, timezone
+    from api_clients import kalshi_markets
+    from cache import fresh as fresh_ctx
+    series = "KXNFLGAME" if args.sport == "nfl" else "KXNCAAFGAME"
+    with fresh_ctx():
+        markets, stamp = kalshi_markets(series)
+    age = (datetime.now(timezone.utc) - datetime.strptime(stamp, "%Y-%m-%d %H:%M:%SZ").replace(tzinfo=timezone.utc)).total_seconds()
+    events = {m["event_ticker"] for m in markets}
+    wide = [m for m in markets if m["yes_ask"] is not None and m["yes_bid"] is not None and m["yes_ask"] - m["yes_bid"] > 0.05]
+    print(f"Kalshi {series}: {len(markets)} open markets in {len(events)} games, fetched {stamp} ({age:.0f} s ago).")
+    print(f"  No YES ask: {sum(m['yes_ask'] is None for m in markets)}.  Bid-ask spread over 5c (thin): {len(wide)}.")
+    print("  Prices refresh every 5 minutes on their own; --fresh or the app's Refresh button fetches them now.")
+    try:
+        _, notes, rows = load_slate(args.sport, args.days, fresh=True)
+    except Exception as e:   # e.g. no CFBD key for college
+        print(f"  Could not build the {args.sport} slate to check matching: {e}")
+        return
+    matched = [r for r in rows if r["kalshi"]]
+    print(f"  Slate games matched to a Kalshi market: {len(matched)} of {len(rows)}.")
+    for r in rows:
+        if not r["kalshi"]:
+            print(f"    no market: {r['game']['away']} @ {r['game']['home']}")
+    for n in notes:
+        if n.startswith("Skipped"):
+            print(f"  {n}")
 
 
 def cmd_week(args):
@@ -240,6 +269,7 @@ def main():
     bp.add_argument("--bankroll", type=float, default=1000.0, help="for suggested stakes (default 1000)")
     bp.set_defaults(func=cmd_bets)
     sub.add_parser("clv", help="score logged paper trades against the closing line").set_defaults(func=cmd_clv)
+    sport_args(sub.add_parser("kalshi", help="check Kalshi is reachable, fresh, and matched to games")).set_defaults(func=cmd_kalshi)
     pp = sub.add_parser("props", help="NFL player-prop projections (and edges when lines are available)")
     pp.add_argument("--days", type=int, default=0)
     pp.add_argument("--bankroll", type=float, default=1000.0)

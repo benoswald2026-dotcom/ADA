@@ -1035,6 +1035,9 @@ def build_slate(now=None, days=0):
                             if g["roof"] not in OUTDOOR or g["neutral"] else "Forecast unavailable"),
             },
         })
+    unmatched = [f"{r['game']['away']} @ {r['game']['home']}" for r in rows if r["kalshi"] is None]
+    if markets and unmatched:
+        notes.append(f"No Kalshi market matched for {len(unmatched)} of {len(rows)} games: " + "; ".join(unmatched))
     if events is not None or markets is not None:
         log_snapshot(rows, odds_stamp, kalshi_stamp)
     info = {"sport": "nfl", "label": f"NFL · {first.strftime('%a %b %-d')}" + (f"–{last.strftime('%b %-d')}" if days else ""),

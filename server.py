@@ -91,7 +91,7 @@ def _cached_week(sport="cfb", force=False):
             else:
                 from week import build_week
                 week, rows = build_week()
-                c["value"] = ({"sport": "cfb", "notes": [],
+                c["value"] = ({"sport": "cfb", "notes": week.get("notes", []),
                                "label": f"Week {week['week']}" + (" · Postseason" if week["season_type"] == "postseason" else ""),
                                "week": week}, rows)
             c["at"] = time.time()

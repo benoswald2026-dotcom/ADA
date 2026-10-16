@@ -110,6 +110,17 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 - So live NFL "edges" mainly come from Kalshi prices that disagree with the
   sportsbook consensus, or from injury news you enter before the market moves.
 
+## 1a. Checking Kalshi
+
+```bash
+python main.py kalshi --sport nfl --days 4   # or --sport cfb (needs CFBD_API_KEY)
+```
+Fetches Kalshi right now and prints: open markets, how many seconds old the prices
+are, thin markets (bid-ask spread over 5¢), and which slate games did or didn't match a
+Kalshi market. `week` and `bets` also print a note for any game with no match, and skip
+games that have already kicked off (in-game prices aren't pregame edges). College names
+are matched through a fixed alias table in `names.py` (e.g. "Appalachian St." = "App State").
+
 ## 1b. When data updates
 
 Hashmark never refreshes on its own. Data updates only when you ask:
