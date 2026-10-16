@@ -151,3 +151,13 @@ def test_fit_key_weights_finds_the_three():
     w = nfl.fit_key_weights(recs, [2020], 13.0)
     assert w[3] > 1.8 and w[-3] == w[3]
     assert 0.6 < w[5] < 1.4
+
+
+def test_forecast_like_weather_is_noisy_but_repeatable():
+    g = {"id": "2020_01_KC_BUF", "wind": 12.0, "temp": 40.0}
+    w1, t1 = nfl.forecast_like(g)
+    w2, t2 = nfl.forecast_like(g)
+    assert (w1, t1) == (w2, t2)                 # same draw every run
+    assert (w1, t1) != (12.0, 40.0)             # but not the recorded value
+    assert nfl.forecast_like({"id": "x", "wind": None, "temp": None}) == (None, None)
+    assert nfl.forecast_like({"id": "y", "wind": 0.0, "temp": 50.0})[0] >= 0.0

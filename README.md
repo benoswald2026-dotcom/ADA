@@ -81,7 +81,8 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 3. Rest, travel, and weather adjustments. Their sizes are **fitted on 2015–2022 only**:
    - rest: points per day of rest advantage
    - travel: points per hour the away team traveled east
-   - wind: points of total per mph above 10
+   - wind: points of total per mph above 10 (fitted on recorded weather plus a
+     realistic forecast error, ±4 mph / ±3°F, because live picks only see forecasts)
    - cold: points of total at 32°F or colder
 4. **Trust weight.** The bet probability is `(1 − w) × market + w × model`. `w`
    is fitted on 2015–2022 by log loss. If the model adds nothing beyond the
@@ -105,8 +106,8 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
   tracked margins slightly worse on the 2015–2022 fit seasons, so weekly team EPA stays the default.
 - It went 49.2% against the spread.
 - The fitted trust weight is **0.00**.
-- Wind does lower scoring (−0.41 points per mph above 10, about 4 standard
-  errors), but closing totals already account for it.
+- Wind does lower scoring (−0.35 points per mph above 10 on forecast-like weather,
+  about 4 standard errors), but closing totals already account for it.
 - So live NFL "edges" mainly come from Kalshi prices that disagree with the
   sportsbook consensus, or from injury news you enter before the market moves.
 

@@ -228,6 +228,24 @@ def features(g, wind=None, temp=None):
     return {"rest": rest, "tz": tz, "wind_x": wind_x, "cold": cold}
 
 
+# Forecast error, fixed before testing: a 1-2 day kickoff forecast misses
+# 10 m wind by roughly 4 mph and temperature by roughly 3 F (typical errors).
+WIND_FORECAST_SD = 4.0
+TEMP_FORECAST_SD = 3.0
+
+
+def forecast_like(g):
+    """Recorded wind/temperature plus a fixed random forecast error (seeded by
+    game id, so every run gets the same draw). The backtest fits and scores
+    weather on these, because live picks only ever see a forecast."""
+    import zlib
+    rng = np.random.default_rng(zlib.crc32(str(g["id"]).encode()))
+    e_w, e_t = rng.normal(0, WIND_FORECAST_SD), rng.normal(0, TEMP_FORECAST_SD)
+    wind = None if g["wind"] is None else max(0.0, g["wind"] + e_w)
+    temp = None if g["temp"] is None else g["temp"] + e_t
+    return wind, temp
+
+
 def _ols(X, y):
     """Least squares with standard errors. Returns (coefs, std errors)."""
     X, y = np.asarray(X, float), np.asarray(y, float)
@@ -638,7 +656,8 @@ def collect_records(games_df, current_season):
         if g["home_ml"] is not None and g["away_ml"] is not None:
             mkt = remove_vig(g["home_ml"], g["away_ml"])[0]
         records.append({
-            "season": g["season"], "id": g["id"], "f": {**features(g), "form": gap, "qb": qb},
+            "season": g["season"], "id": g["id"],
+            "f": {**features(g, *forecast_like(g)), "form": gap, "qb": qb},
             "base_margin": p["margin"], "base_total": p["total"],
             "elo_margin": p["elo_margin"], "epa_margin": p["epa_margin"],
             "epa_ramp": p["epa_weight"] / config.NFL.EPA_WEIGHT_MAX,
