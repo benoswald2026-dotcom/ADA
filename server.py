@@ -69,6 +69,32 @@ _week_lock = threading.Lock()
 WEEK_CACHE_SECONDS = 5 * 60
 
 
+_picks_cache = {}
+
+
+def picks_json(sport, force=False):
+    """Consensus picks; reused for 10 minutes (the sources update a few times a day)."""
+    import time
+    import consensus as C
+    from cache import fresh
+    c = _picks_cache.get(sport)
+    if force or c is None or time.time() - c["at"] > 600:
+        days = 3 if sport == "nfl" else 0
+        if force:
+            with fresh():
+                r = C.build(sport, days=days)
+        else:
+            r = C.build(sport, days=days)
+        C.log_picks(r)
+        best = [{"tier": p["tier"], "type": p["type"], "pick": p["pick"], "gap": p["gap"], "agree": p["agree"],
+                 "n": p["n"], "matchup": p["game"]["matchup"]} for p in C.best_bets(r)]
+        games = [{**g, "kickoff": g["kickoff"].isoformat()} for g in r["games"]]
+        g = C.grade()
+        c = _picks_cache[sport] = {"at": time.time(), "value": {"games": games, "best": best, "notes": r["notes"],
+                                                                "record": g["record"], "sport": sport}}
+    return c["value"]
+
+
 _scan_cache = {}
 SCAN_CACHE_SECONDS = 60
 
@@ -241,6 +267,8 @@ class Handler(BaseHTTPRequestHandler):
                 except ValueError:
                     bankroll = 1000.0
                 return self._send(200, cached_props(bankroll, force="refresh=1" in self.path))
+            if path == "/api/picks":
+                return self._send(200, picks_json(_sport(self.path), force="refresh=1" in self.path))
             if path == "/api/scan":
                 from urllib.parse import parse_qs, urlparse
                 q = parse_qs(urlparse(self.path).query)

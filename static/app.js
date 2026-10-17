@@ -541,6 +541,57 @@ $("#bets-body").addEventListener("change", e => {
   if (e.target.id === "bankroll") { store.set("bankroll", String(Number(e.target.value) || 1000)); BETS = null; renderBets(); loadBets(); }
 });
 
+// ---------------------------------------------------------------- consensus picks
+let PICKS = null, PICKS_ERR = null, picksLoading = false;
+
+async function loadPicks(force = false) {
+  if (picksLoading) return;
+  picksLoading = true; PICKS_ERR = null;
+  if (force) PICKS = null;
+  renderPicks();
+  const sport = SPORT;
+  try { const d = await api(withSport(`/api/picks${force ? "?refresh=1" : ""}`)); if (sport === SPORT) PICKS = d; }
+  catch (e) { if (sport === SPORT) PICKS_ERR = e.message; }
+  picksLoading = false; renderPicks();
+}
+
+function renderPicks() {
+  const body = $("#picks-body");
+  if (PICKS_ERR) { body.innerHTML = setupNotice(PICKS_ERR); return; }
+  if (!PICKS || PICKS.sport !== SPORT) {
+    body.innerHTML = `<div class="panel"><p class="label">Collecting predictions from ESPN FPI, Dratings and Sagarin…</p><div class="progress"><span></span></div></div>`;
+    if (!picksLoading) loadPicks();
+    return;
+  }
+  const rec = PICKS.record || {};
+  const recLine = k => { const r = rec[k]; if (!r) return "–"; const n = r.W + r.L; return `${r.W}-${r.L}-${r.P}${n ? ` · ${(100 * r.W / n).toFixed(1)}%` : ""}`; };
+  const strong = PICKS.best.filter(b => b.tier === "Strong");
+  const notes = PICKS.notes.length ? `<div class="notice"><ul class="notes-box-list">${PICKS.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
+  const bestRows = PICKS.best.map(b => `<tr class="${b.tier === "Strong" ? "is-flag" : ""}"><td class="player-td"><b>${esc(b.pick)}</b></td>
+      <td class="player-td">${esc(b.matchup)}</td><td>${esc(b.type)}</td><td>${b.tier === "Strong" ? chip(true).replace("Flag", "Strong") : `<span class="chip chip-pass">Lean</span>`}</td>
+      <td>${Math.abs(b.gap).toFixed(1)} pts</td><td>${b.agree}/${b.n}</td></tr>`).join("");
+  const srcCell = g => Object.entries(g.sources).map(([k, v]) => `${esc(k)}: ${isNum(v.margin) ? esc(g.home) + " " + signed(v.margin) : pct(v.p)}`).join("<br>");
+  const gameRows = PICKS.games.map(g => `<tr><td>${kickoff(g.kickoff)}</td><td class="player-td">${esc(g.matchup)}</td>
+      <td class="player-td">${esc(g.winner)} ${pct(g.winner_p, 0)} <span class="tag">${g.winner_agree}/${g.n_sources}</span></td>
+      <td>${isNum(g.margin) ? esc(g.home) + " " + signed(g.margin) : "–"}</td>
+      <td class="player-td">${g.ats ? `${esc(g.ats.pick)} <span class="tag">${signed(g.ats.gap)} · ${g.ats.agree}/${g.ats.n}</span>` : "–"}</td>
+      <td class="player-td">${g.ou ? `${esc(g.ou.pick)} <span class="tag">proj ${g.total.toFixed(1)}</span>` : "–"}</td>
+      <td>${g.ml && isNum(g.ml.kalshi_ask) ? `${cents(g.ml.kalshi_ask)} · ${pts(g.ml.kalshi_edge)}` : "–"}</td>
+      <td class="player-td" style="font-size:.72rem;color:var(--muted)">${srcCell(g)}</td></tr>`).join("");
+  body.innerHTML = `<div class="notes">${notes}</div>
+    <div class="summary">
+      <div><div class="label">Strong picks</div><div class="big flag-count">${strong.length}</div><div class="small">all sources agree, line off 3+</div></div>
+      <div><div class="label">Lean picks</div><div class="big">${PICKS.best.length - strong.length}</div><div class="small">2/3 agree</div></div>
+      <div><div class="label">Graded record</div><div class="big">${recLine("all").split(" · ")[0]}</div><div class="small">${recLine("all").includes("·") ? recLine("all").split(" · ")[1] + " · need 52.4% at −110" : "no finished picks yet"}</div></div>
+      <div><div class="label">Games</div><div class="big">${PICKS.games.length}</div><div class="small">with 1+ forecast</div></div>
+    </div>
+    <section class="bets-section"><h2>Best bets</h2><p class="lede">Picks where the forecasters agree and the line is off. Not validated yet: judge them by the graded record after 100+ picks.</p>
+      ${bestRows ? `<div class="table-wrap"><table><thead><tr><th>Pick</th><th class="l">Game</th><th>Type</th><th>Tier</th><th>Line off by</th><th>Agree</th></tr></thead><tbody>${bestRows}</tbody></table></div>` : `<div class="panel empty">No Strong or Lean picks right now.</div>`}</section>
+    <section class="bets-section"><h2>Every game</h2><p class="lede">Consensus winner, predicted margin (home team's view), spread and total picks, the Kalshi price for the consensus winner, and each source's number.</p>
+      <div class="table-wrap"><table><thead><tr><th>Kickoff</th><th class="l">Game</th><th class="l">Winner</th><th>Margin</th><th class="l">Spread pick</th><th class="l">Total pick</th><th>Kalshi</th><th class="l">Sources</th></tr></thead><tbody>${gameRows}</tbody></table></div></section>`;
+}
+$("#picks-refresh").addEventListener("click", () => loadPicks(true));
+
 // ---------------------------------------------------------------- kalshi scan
 let SCAN = null, SCAN_ERR = null, scanLoading = false;
 
@@ -830,7 +881,7 @@ $("#ex-form").addEventListener("submit", e => e.preventDefault());
 $("#ex-reset").addEventListener("click", () => { if (EX_DEFAULT) { buildExForm(EX_DEFAULT); runExplain(); } });
 
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "bets", "scan", "props", "backtest", "parlay", "ask", "research", "explain"];
+const TABS = ["week", "picks", "bets", "scan", "props", "backtest", "parlay", "ask", "research", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -848,6 +899,7 @@ function setTab(name) {
   if (name === "ask") renderChat();
   if (name === "props") renderProps();
   if (name === "scan") renderScan();
+  if (name === "picks") renderPicks();
 }
 $(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) setTab(b.dataset.tab); });
 $(".tabs").addEventListener("keydown", e => {
@@ -894,7 +946,7 @@ function setSport(sp) {
     : "Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.";
   $("#bt-title").textContent = SPORT === "nfl" ? "NFL backtest, 2023–2025" : "College backtest, 2023–2025";
   weekPromise = null; WEEK = null; WEEK_ERR = null; BETS = null; BETS_ERR = null; LEGS = null; PARLAY_RESULT = null; PARLAY_ERR = null;
-  PROPS_ERR = null; SCAN = null; SCAN_ERR = null;
+  PROPS_ERR = null; SCAN = null; SCAN_ERR = null; PICKS = null; PICKS_ERR = null;
   clearTimeout(btTimer);
   loadStatus();
   setTab(store.get("tab") || "week");

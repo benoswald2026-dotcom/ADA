@@ -42,6 +42,7 @@
   </div>
   <nav class="wrap tabs" role="tablist" aria-label="Sections">
     <button role="tab" id="tab-week" data-tab="week" aria-selected="true">This week</button>
+    <button role="tab" id="tab-picks" data-tab="picks" aria-selected="false">Picks</button>
     <button role="tab" id="tab-bets" data-tab="bets" aria-selected="false">Best bets</button>
     <button role="tab" id="tab-scan" data-tab="scan" aria-selected="false">Kalshi scan</button>
     <button role="tab" id="tab-props" data-tab="props" aria-selected="false">Props</button>
@@ -80,6 +81,18 @@
       <div class="view-actions"><button class="btn" id="bets-refresh">Refresh</button></div>
     </div>
     <div id="bets-body"></div>
+  </section>
+
+  <!-- CONSENSUS PICKS -->
+  <section id="view-picks" class="view" role="tabpanel" aria-labelledby="tab-picks" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Consensus picks</h1>
+        <p class="lede">What ESPN FPI, Dratings, Sagarin and Hashmark's own model expect, averaged, next to the DraftKings spread and total. Strong = every source on the same side and the line off by 3+ points (NFL 2+). Picks are logged before kickoff and graded after, so the record below tells you whether to trust them.</p>
+      </div>
+      <div class="view-actions"><button class="btn" id="picks-refresh">Refresh</button></div>
+    </div>
+    <div id="picks-body"></div>
   </section>
 
   <!-- KALSHI SCAN -->
