@@ -91,7 +91,9 @@ MIN_TRUST = 0.25   # a source below this trust no longer votes on Strong/Lean
 # moves a pick or votes. A full college Saturday grades ~50 games.
 TRUST_PRIOR = 0.0
 PICK_FIELDS = ["logged_at", "sport", "event_id", "game_date", "matchup", "home", "away", "bet_type", "pick",
-               "line", "consensus", "tier", "sources", "agree"]
+               "line", "consensus", "tier", "sources", "agree", "rules"]
+# Which pick rules made a row. Rows without one came from v1 (sources trusted at 1.0).
+RULES_VERSION = "v2"
 
 
 def _game_date(dt):
@@ -660,7 +662,7 @@ def log_lock(lock, path=None, now=None):
            "kickoff_utc": lock["kickoff"].astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
            "matchup": lock["matchup"], "home": lock["home"], "away": lock["away"], "bet_type": lock["type"],
            "pick": lock["pick"], "line": lock["line"], "consensus": round(lock["gap"], 2), "tier": "Lock",
-           "sources": lock["n"], "agree": lock["agree"]}
+           "sources": lock["n"], "agree": lock["agree"], "rules": RULES_VERSION}
     if mine:
         rows[mine[0]] = row
     else:
@@ -697,7 +699,7 @@ def log_picks(result, path=None):
                "matchup": gm["matchup"], "home": gm["home"], "away": gm["away"], "bet_type": p["type"],
                "pick": p["pick"], "line": p["line"],
                "consensus": round(gm["margin"] if p["type"] == "Spread" else gm["total"], 2),
-               "tier": p["tier"], "sources": p["n"], "agree": p["agree"]}
+               "tier": p["tier"], "sources": p["n"], "agree": p["agree"], "rules": RULES_VERSION}
         key = (today, gm["event_id"], p["type"])
         if key in index:
             rows[index[key]] = row
@@ -762,7 +764,7 @@ def grade(path=None):
             continue
         res = grade_pick(p, *finals[p["event_id"]])
         rows.append({**p, "result": res, "score": "%g-%g" % (finals[p["event_id"]][1], finals[p["event_id"]][0])})
-        for key in ("all", f"{p['bet_type']} {p['tier']}"):
+        for key in ("all", f"{p['bet_type']} {p['tier']}", f"rules {p.get('rules') or 'v1'}"):
             r = record.setdefault(key, {"W": 0, "L": 0, "P": 0})
             r[res] += 1
     return {"rows": rows, "record": record}

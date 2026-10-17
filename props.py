@@ -301,7 +301,10 @@ PROPS_LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "pr
 PROPS_WEIGHTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "props_weights.json")
 PROPS_LOG_FIELDS = ["logged_at", "season", "game_id", "kickoff", "player_id", "player", "team", "stat", "strike",
                     "side", "ask", "mid", "p_model", "p_used", "edge", "flag"]
-PRIOR_PICKS = 40           # learned trust starts at 1.0 and moves only as graded props pile up
+PRIOR_PICKS = 40           # learned trust moves from TRUST_PRIOR only as graded props pile up
+# 0 = use Kalshi's price until graded props show the model's disagreements come true
+# (changed 2026-10-17 from 1.0, matching consensus.TRUST_PRIOR).
+TRUST_PRIOR = 0.0
 _KALSHI_NAME = re.compile(r"^(.*):\s*(\d+)\+")
 
 
@@ -494,7 +497,7 @@ def build_props(rows, bankroll=1000.0):
         inj = espn_injuries(rows)
     except Exception:
         inj = {}
-    trust = load_props_trust().get("trust", 1.0)
+    trust = load_props_trust().get("trust", TRUST_PRIOR)
     latest = df.sort_values(["season", "week"]).groupby("player_id").tail(1)
     team_of = {player_key(n): t for n, t in zip(latest["player_display_name"], latest["team"])}
 
@@ -654,10 +657,10 @@ def log_props(result, path=None):
 
 def learn_props(path=None, weights_path=None):
     """Grade logged props against nflverse box scores and learn the trust factor:
-    the slope of (result - Kalshi price) on (model - Kalshi price), shrunk toward 1.0
+    the slope of (result - Kalshi price) on (model - Kalshi price), shrunk toward TRUST_PRIOR
     with PRIOR_PICKS and kept in [0, 1.2]. Also keeps the FLAG record. Saves and returns it."""
     path, weights_path = path or PROPS_LOG, weights_path or PROPS_WEIGHTS
-    out = load_props_trust(weights_path) or {"trust": 1.0, "graded": 0}
+    out = load_props_trust(weights_path) or {"trust": TRUST_PRIOR, "graded": 0}
     if not os.path.exists(path):
         return out
     with open(path, newline="") as f:
@@ -691,7 +694,7 @@ def learn_props(path=None, weights_path=None):
         if r["flag"] == "1":
             rec["W" if won else "L"] += 1
     slope = sxy / sxx if sxx > 0 else 1.0
-    trust = (n * slope + PRIOR_PICKS) / (n + PRIOR_PICKS)
+    trust = (n * slope + PRIOR_PICKS * TRUST_PRIOR) / (n + PRIOR_PICKS)
     out = {"trust": round(min(1.2, max(0.0, trust)), 4), "graded": n, "raw_slope": round(slope, 3),
            "flag_record": rec, "updated": datetime.now().astimezone().strftime("%Y-%m-%d %H:%M%z")}
     os.makedirs(os.path.dirname(weights_path), exist_ok=True)

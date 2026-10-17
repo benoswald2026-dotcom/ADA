@@ -288,7 +288,7 @@ Stats: passing yards, rushing yards, receptions, and receiving yards (`props.py`
    `data/props_log.csv`. `python main.py props --learn` (and every app refresh)
    grades finished games from nflverse box scores and fits a **trust** number:
    - trust 0 = use Kalshi's price; trust 1 = use the model's price
-   - it starts at 1.0 and moves only as graded results build up (prior of 40)
+   - it starts at 0 (use Kalshi's price) and moves only as graded results build up (prior of 40)
    - it is saved in `data/props_weights.json` with the flag win/loss record
 
 **Validation (2023–2025, walk-forward):**
