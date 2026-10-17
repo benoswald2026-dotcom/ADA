@@ -173,6 +173,7 @@ def kalshi_markets(series=KALSHI_CFB_SERIES):
                 "team": m.get("yes_sub_title", ""),
                 "yes_ask": _kalshi_price(m, "yes_ask"),
                 "yes_bid": _kalshi_price(m, "yes_bid"),
+                "no_ask": _kalshi_price(m, "no_ask"),
                 "last_price": _kalshi_price(m, "last_price"),
             })
         cursor = data.get("cursor")

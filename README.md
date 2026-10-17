@@ -137,8 +137,10 @@ python main.py scan --sport cfb            # today + tomorrow (default --days 1)
 python main.py scan --sport nfl --days 3   # through Sunday
 python main.py scan --sport cfb --all      # every side, not just the top 15
 ```
-Compares every Kalshi YES ask with the DraftKings moneyline on ESPN's public
-scoreboard (vig removed). Same FLAG rule as `bets` (edge after fee ≥ 3 pts, price
+Compares Kalshi's winner, spread and total contracts with DraftKings' moneyline,
+spread and total on ESPN's public scoreboard (vig removed). Spreads and totals are
+compared only where Kalshi has a contract at exactly DraftKings' line, on both sides
+(YES and NO); other lines are skipped rather than estimated with an assumed margin curve. Same FLAG rule as `bets` (edge after fee ≥ 3 pts, price
 ≥ 20¢), quarter-Kelly stakes, started games skipped, FLAGs logged as paper trades.
 DraftKings is one recreational book; `bets` with `ODDS_API_KEY` uses Pinnacle instead.
 

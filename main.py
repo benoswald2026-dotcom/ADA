@@ -64,13 +64,14 @@ def cmd_scan(args):
     for n in r["notes"]:
         print(f"NOTE: {n}")
     rows = r["rows"] if args.all else r["rows"][:args.top]
-    print(tabulate([[x["matchup"], x["team"], x["kickoff"].astimezone(et).strftime("%a %-I:%M%p"),
-                     f"{x['book_ml']:+d}", f"{x['market']:.1%}", f"{x['price']:.2f}",
-                     "-" if x["bid"] is None else f"{x['bid']:.2f}", f"{x['edge'] * 100:+.1f}",
+    kind = {"moneyline": "ML", "spread": "Spread", "total": "Total"}
+    print(tabulate([[x["matchup"], kind.get(x.get("market_type"), "ML"), x["team"] if x.get("market_type") != "moneyline"
+                     else f"{x['team']} to win", x["kickoff"].astimezone(et).strftime("%a %-I:%M%p"),
+                     f"{x['market']:.1%}", f"{'YES' if x.get('market_type') == 'moneyline' else x['side'].upper()} {x['price']:.2f}",
+                     f"{x['edge'] * 100:+.1f}",
                      "FLAG" if x["flag"] else ("longshot" if x["longshot"] and x["edge"] >= 0.03 else "PASS"),
                      f"${x['stake']:,.2f}" if x["stake"] else "-"] for x in rows],
-                   headers=["Game", "Team", "Kickoff (ET)", "Book ML", "Book fair", "YES ask", "YES bid",
-                            "Edge pts", "Call", "Stake"]))
+                   headers=["Game", "Type", "Bet", "Kickoff (ET)", "Book fair", "Kalshi ask", "Edge pts", "Call", "Stake"]))
     flagged = [x for x in r["rows"] if x["flag"]]
     logged = log_recommendations(args.sport, flagged) if flagged else 0
     print(f"\nFLAGS: {len(flagged)}. Paper trades logged: {logged}. Not betting advice; this tool never places bets.")

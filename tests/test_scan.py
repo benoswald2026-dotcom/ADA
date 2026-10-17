@@ -37,3 +37,20 @@ def test_parse_event_without_odds():
     e["competitions"][0]["odds"] = []
     g = scan.parse_event(e)
     assert g["home_ml"] is None and g["away_ml"] is None
+
+
+def test_line_rows_compare_only_exact_lines_on_both_sides():
+    g = {"kickoff": datetime(2026, 10, 17, 19, 30, tzinfo=timezone.utc), "book": "DraftKings",
+         "home": {"location": "Air Force"}, "away": {"location": "UNLV"},
+         "home_spread": (-1.5, -110), "away_spread": (1.5, -110),
+         "over": (47.5, -110), "under": (47.5, -110)}
+    spread = [{"team": "Air Force wins by over 1.5 points", "yes_ask": 0.44, "no_ask": 0.58, "ticker": "S1"},
+              {"team": "Air Force wins by over 2.5 points", "yes_ask": 0.30, "no_ask": 0.72, "ticker": "S2"}]
+    total = [{"team": "Over 46.5 points", "yes_ask": 0.40, "no_ask": 0.62, "ticker": "T1"}]   # not DK's 47.5
+    rows, missed = scan.line_rows(g, "UNLV @ Air Force", spread, total, "espn_1")
+    assert missed == 1                                   # the total had no exact Kalshi strike
+    yes = next(r for r in rows if r["side"] == "yes")
+    assert yes["team"] == "Air Force -1.5" and yes["ticker"] == "S1"
+    assert yes["edge"] == pytest.approx(0.5 - 0.44 - 0.07 * 0.44 * 0.56) and yes["flag"]
+    no = next(r for r in rows if r["side"] == "no")
+    assert no["team"] == "UNLV +1.5" and not no["flag"]

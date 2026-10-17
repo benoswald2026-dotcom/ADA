@@ -570,8 +570,10 @@ function renderScan() {
   const money = x => x ? `$${x.toFixed(2)}` : "–";
   const call = r => r.flag ? chip(true) : (r.longshot && r.edge >= 0.03
     ? `<span class="chip chip-pass" title="Kalshi contracts under 20¢ lose far more than their price implies">Long shot</span>` : chip(false));
-  const tr = r => `<tr class="${r.flag ? "is-flag" : ""}"><td class="player-td">${esc(r.team)}</td><td class="player-td">${esc(r.matchup)}</td>
-      <td>${kickoff(r.kickoff)}</td><td>${american(r.book_ml)}</td><td>${pct(r.market)}</td><td>${cents(r.price)}</td>
+  const bet = r => r.market_type === "moneyline" ? `${esc(r.team)} to win` : `${esc(r.team)} <span class="tag">${r.side.toUpperCase()}</span>`;
+  const book = r => r.market_type === "moneyline" ? american(r.book_ml) : (r.market_type === "total" ? "O/U " : "") + signed(r.book_line, 1).replace("+", r.market_type === "total" ? "" : "+");
+  const tr = r => `<tr class="${r.flag ? "is-flag" : ""}"><td class="player-td">${bet(r)}</td><td class="player-td">${esc(r.matchup)}</td>
+      <td>${kickoff(r.kickoff)}</td><td>${book(r)}</td><td>${pct(r.market)}</td><td>${cents(r.price)}</td>
       <td>${isNum(r.bid) ? cents(r.bid) : "–"}</td><td class="${r.edge >= 0 ? "ev-pos" : "ev-neg"}">${pts(r.edge)}</td><td>${call(r)}</td><td>${money(r.stake)}</td></tr>`;
   const scanNotes = SCAN.notes.length ? `<div class="notice"><ul class="notes-box-list">${SCAN.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
   body.innerHTML = `<div class="notes">${scanNotes}</div>
@@ -581,7 +583,7 @@ function renderScan() {
       <div><div class="label">Best edge</div><div class="big">${SCAN.rows.length ? pts(SCAN.rows[0].edge) : "–"}</div><div class="small">${SCAN.rows.length ? esc(SCAN.rows[0].team) : ""}</div></div>
       <div><div class="label">Prices as of</div><div class="big clock-big">${esc((SCAN.kalshi_stamp || "").slice(11, 16))}<span>Z</span></div><div class="small">Kalshi ${esc(SCAN.kalshi_stamp || "")}</div></div>
     </div>
-    ${SCAN.rows.length ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th class="l">Game</th><th>Kickoff</th><th>Book ML</th><th>Book fair</th><th>YES ask</th><th>YES bid</th><th>Edge (pts)</th><th>Call</th><th>Stake</th></tr></thead>
+    ${SCAN.rows.length ? `<div class="table-wrap"><table><thead><tr><th>Bet</th><th class="l">Game</th><th>Kickoff</th><th>Book line</th><th>Book fair</th><th>YES ask</th><th>YES bid</th><th>Edge (pts)</th><th>Call</th><th>Stake</th></tr></thead>
       <tbody>${rows.map(tr).join("")}</tbody></table></div>` : `<div class="panel empty">No upcoming games with both a Kalshi market and sportsbook odds.</div>`}
     <p class="lede foot-note">Bet probability here is the sportsbook's price, not the model. DraftKings is one recreational book; with an Odds API key, Best bets uses Pinnacle instead. Prices move: recheck before kickoff.</p>`;
 }
