@@ -78,3 +78,18 @@ def test_parse_dimers_and_oddsshark():
            "<img alt=\"WVU logo\"></a><span>y</span> 32.43 </span>")
     o = C.parse_oddsshark("x" + osk)[0]
     assert o["away"] == "cincinnati bearcats" and o["s_home"] == pytest.approx(32.43)
+
+
+def test_name_matching_handles_mascots_entities_and_long_names():
+    hk = {C.team_key("UL Monroe"), "ul monroe warhawks"}
+    ak = {C.team_key("Louisiana Tech"), "louisiana tech bulldogs"}
+    rows = [{"home": "ULM Warhawks", "away": "Louisiana Tech Bulldogs"}]
+    assert C._find(rows, hk, ak) is rows[0]
+    assert C.team_key("Southern Methodist") == C.team_key("SMU")
+    assert C.team_key("Texas-El Paso") == C.team_key("UTEP")
+    assert C.team_key("Army West Point") == C.team_key("Army")
+    d = C.parse_dratings('<tr><a href="/teams/x/1">Troy Trojans</a><a href="/teams/x/2">Louisiana Ragin&#39; Cajuns</a>'
+                         '<span>40.0%</span><span>60.0%</span></tr>')[0]
+    assert d["home"] == "Louisiana Ragin' Cajuns"
+    # both teams must match: a lone mascot-stripped hit never pairs the wrong game
+    assert C._find([{"home": "Miami RedHawks", "away": "Akron Zips"}], {C.team_key("Miami")}, {C.team_key("Toledo")}) is None

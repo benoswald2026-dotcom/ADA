@@ -58,6 +58,15 @@ _ALIAS_GROUPS = {
     "hawaii": ["hawai i", "hawaii"],
     "ut martin": ["tennessee-martin", "ut martin"],
     "albany": ["university at albany", "albany"],
+    "smu": ["smu", "southern methodist"],
+    "byu": ["byu", "brigham young"],
+    "utep": ["utep", "texas-el paso", "texas el paso"],
+    "utsa": ["utsa", "texas-san antonio", "texas san antonio", "ut san antonio"],
+    "uab": ["uab", "alabama-birmingham", "alabama birmingham"],
+    "army": ["army", "army west point"],
+    "tcu": ["tcu", "texas christian"],
+    "lsu": ["lsu", "louisiana state"],
+    "unlv": ["unlv", "nevada-las vegas", "nevada las vegas"],
     "utrgv": ["ut rio grande valley", "utrgv"],
 }
 _ALIASES = {spelling: key for key, spellings in _ALIAS_GROUPS.items() for spelling in spellings}

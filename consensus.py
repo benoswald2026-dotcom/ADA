@@ -20,6 +20,7 @@ against final scores, so the record decides whether to trust it.
 Read-only: nothing here places a bet.
 """
 import csv
+import html as _html_mod
 import math
 import os
 import re
@@ -70,7 +71,7 @@ def parse_dratings(html):
         score = re.search(r'<td class="table-division">([\d.]+)<br\s*/?>([\d.]+)</td>\s*<td>([\d.]+)</td>', row)
         if len(names) < 2 or len(pcts) < 2:
             continue
-        g = {"away": names[0].strip(), "home": names[1].strip(),
+        g = {"away": _html_mod.unescape(names[0]).strip(), "home": _html_mod.unescape(names[1]).strip(),
              "p_away": float(pcts[0]) / 100, "p_home": float(pcts[1]) / 100}
         if score:
             g.update(s_away=float(score.group(1)), s_home=float(score.group(2)), total=float(score.group(3)))
@@ -106,7 +107,7 @@ def parse_dimers(html):
         if num("PythagHome") is None or num("PredHomeScore") is None:
             continue
         seen.add((away, home))
-        out.append({"away": away, "home": home, "p_home": num("PythagHome"),
+        out.append({"away": _html_mod.unescape(away), "home": _html_mod.unescape(home), "p_home": num("PythagHome"),
                     "s_away": num("PredAwayScore"), "s_home": num("PredHomeScore")})
     return out
 
@@ -150,11 +151,24 @@ def _names(team):
     return out
 
 
+def _keys(name):
+    """Ways to match a source's team name: as written, through the alias table, and with
+    a one- or two-word mascot removed ('ULM Warhawks' -> 'ulm' -> 'ul monroe')."""
+    n = normalize(name)
+    words = n.split()
+    out = {n, team_key(n)}
+    for cut in (1, 2):
+        if len(words) > cut:
+            out.add(team_key(" ".join(words[:-cut])))
+    return out
+
+
 def _find(rows, hk, ak, abv=False):
-    """The row whose home and away names match an ESPN game's teams (location or full name)."""
+    """The row whose home AND away names both match an ESPN game's teams. Requiring both
+    keeps the mascot-stripping fallback from pairing the wrong game."""
     for x in rows:
-        h = {normalize(x["home"]), team_key(x["home"])} | ({"abv:" + x["home_abv"].lower()} if abv and x.get("home_abv") else set())
-        a = {normalize(x["away"]), team_key(x["away"])} | ({"abv:" + x["away_abv"].lower()} if abv and x.get("away_abv") else set())
+        h = _keys(x["home"]) | ({"abv:" + x["home_abv"].lower()} if abv and x.get("home_abv") else set())
+        a = _keys(x["away"]) | ({"abv:" + x["away_abv"].lower()} if abv and x.get("away_abv") else set())
         if h & hk and a & ak:
             return x
     return None
