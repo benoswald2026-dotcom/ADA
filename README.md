@@ -168,6 +168,14 @@ source's prediction against the line. One lock per day is kept in `data/locks.cs
   graded games show its disagreements with the line come true; a college Saturday
   grades about 50 games, so this takes days, not months. Ratings-only sources (Sagarin, Sonny Moore,
   TeamRankings) get the starting-QB injury adjustment, since ratings can't see injuries.
+- **Track records from history** (collected 2026-10-17, `data/history_<source>_<sport>.csv`):
+  Dratings (9,395 college + 1,779 NFL games), TeamRankings (1,522 + 650), nfelo (1,307 NFL).
+  None beat the closing line: Dratings went 50.0% ATS in college and 50.4% in the NFL when
+  3+ points off the line; TeamRankings 51.3% / 50.0%. Only nfelo (0.36) and Dratings NFL
+  (0.27) earn a small vote. No history exists for Sagarin, Sonny Moore, Dimers, OddsShark.
+- 26 classic angles (13 NFL 1999–2025, 13 college 2014–2026) were also tested out of sample
+  with a Holm correction; none survived. Kalshi prices sit within ~1¢ of devigged DraftKings
+  and showed no fee-positive arbitrage.
 - ESPN FPI gets a head start from its own past predictions (`--backfill`, 2025–26): on 513
   college and 172 NFL games, its side covered 45.9% when it disagreed with the closing line
   by 3+ points (39.3% at 5+), and blending it with the line didn't beat the line alone.

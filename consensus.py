@@ -883,17 +883,29 @@ def learn(pred_path=None, weights_path=None):
     return out
 
 
+# Past predictions with closing lines and final scores, one file per source and sport
+# (data/history_<file key>_<sport>.csv; the source's margin is in the fpi_margin column).
+# FPI comes from backfill_fpi; the others were collected 2026-10-17: Dratings' own completed
+# pages (margin from its win % with SPORTS sigma), TeamRankings' dated ratings + home field,
+# and nfelo's published projected spreads (github greerreNFL/nfelo).
+HISTORY_SOURCES = {"fpi": "ESPN FPI", "dratings": "Dratings", "teamrankings": "TeamRankings", "nfelo": "nfelo"}
+
+
 def _history_games(sport):
-    """Past ESPN FPI predictions with closing lines and final scores (from backfill_fpi),
-    as learning games. Only FPI publishes its old predictions, so only FPI gets a head start."""
-    path = HISTORY_FILE.format(sport=sport)
+    """Every source's past predictions as learning games, so trust starts from hundreds or
+    thousands of graded games instead of waiting for new ones."""
     mg, tg = [], []
-    if not os.path.exists(path):
-        return mg, tg
-    with open(path, newline="") as f:
-        for r in csv.DictReader(f):
-            act = float(r["home"]) - float(r["away"])
-            mg.append(({"ESPN FPI": float(r["fpi_margin"])}, act, -float(r["home_line"])))
+    for key, name in HISTORY_SOURCES.items():
+        path = os.path.join(os.path.dirname(HISTORY_FILE), f"history_{key}_{sport}.csv")
+        if not os.path.exists(path):
+            continue
+        with open(path, newline="") as f:
+            for r in csv.DictReader(f):
+                try:
+                    act = float(r["home"]) - float(r["away"])
+                    mg.append(({name: float(r["fpi_margin"])}, act, -float(r["home_line"])))
+                except (TypeError, ValueError):
+                    continue
     return mg, tg
 
 
