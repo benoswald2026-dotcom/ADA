@@ -70,28 +70,154 @@ Open-Meteo (kickoff forecast for outdoor stadiums; no key), The Odds API
 
 **How an NFL game is priced:**
 1. Elo + opponent-adjusted EPA, as for college, with NFL constants in `config.NFL`
-   (ratings start in 2012, home field 1.5 points).
-2. Rest, travel, and weather adjustments. Their sizes are **fitted on 2015–2022 only**:
+   (ratings start in 2012, home field 1.5 points). The EPA share is **fitted** each
+   season on earlier seasons only: the preset 0.40 is replaced only if the data
+   disagrees by |t| >= 3. It does (fitted ~0.12-0.14), so Elo carries most of the margin.
+2. Starting-QB adjustment (`QBTracker`): each QB's EPA per dropback (decayed, shrunk
+   toward a backup-level prior) vs. the QBs whose play the team's ratings already
+   reflect. A backup starting = points the ratings haven't absorbed yet. Starters come
+   from the nflverse schedule (projected starters for upcoming games). Fitted effect:
+   0.79 pts per point of gap, t = 7.4.
+3. Rest, travel, and weather adjustments. Their sizes are **fitted on 2015–2022 only**:
    - rest: points per day of rest advantage
    - travel: points per hour the away team traveled east
-   - wind: points of total per mph above 10
+   - wind: points of total per mph above 10 (fitted on recorded weather plus a
+     realistic forecast error, ±4 mph / ±3°F, because live picks only see forecasts)
    - cold: points of total at 32°F or colder
-3. **Trust weight.** The bet probability is `(1 − w) × market + w × model`. `w`
+4. **Trust weight.** The bet probability is `(1 − w) × market + w × model`. `w`
    is fitted on 2015–2022 by log loss. If the model adds nothing beyond the
    market, `w` comes out near 0.
-4. Your `injuries.csv` (team = city, nickname, or code like `GB`) is applied
+5. Your `injuries.csv` (team = city, nickname, or code like `GB`) is applied
    after the blend, because it's news the market may not have priced yet.
-5. The 10-point rule compares the raw model with the market. A bigger gap
+6. The 10-point rule compares the raw model with the market. A bigger gap
    means the model is probably missing news, so that game is left out.
 
 **What the 2023–2025 backtest found:**
-- The model loses to the closing market on Brier score: 0.2235 vs 0.2102.
+- The raw model loses to the closing market on Brier score: 0.2183 vs 0.2102
+  (paired bootstrap 95% CI for the gap: +0.003 to +0.013).
+- Fitting the EPA weight plus the QB adjustment improved it from 0.2236 to 0.2183
+  (paired 95% CI −0.0099 to −0.0007, t = −2.2). Each change alone is not significant.
+- Don't list QB changes in `injuries.csv` as well: the QB adjustment already counts them.
+
+**Tried and not adopted** (so they aren't retried blindly):
+| Idea | Result |
+|---|---|
+| Play-by-play EPA with garbage time removed | Tracked margins worse on 2015–2022 (corr 0.349–0.360 vs 0.371) |
+| Kalman-filter team ratings instead of Elo (settings picked on 2015–2022) | Better on 2015–2022 (margin MSE 170.0 vs 171.2) but worse on 2023–2025 (Brier 0.2192 vs 0.2183) |
+| Props: discount games for a previous team | Worse for rushing, receptions, receiving yards on 2021–2022 |
+| Props: usage-based prior for passing yards | Worse on 2021–2022 (t = +4.7) |
+- Spread bets use a key-number margin distribution (a margin of 3 is ~2.6× as common
+  as a smooth curve says, 7 is ~1.7×). On 2023–2025 it predicts "home wins by more
+  than t" better than the plain normal curve (paired, game-resampled t = −2.7) and gets
+  pushes right (5.3% predicted vs 5.5% actual on whole-number lines; the normal curve says 0%).
+- Play-by-play EPA with garbage time removed (`NFL_EPA_SOURCE = "pbp"`) was tried and
+  tracked margins slightly worse on the 2015–2022 fit seasons, so weekly team EPA stays the default.
 - It went 49.2% against the spread.
 - The fitted trust weight is **0.00**.
-- Wind does lower scoring (−0.41 points per mph above 10, about 4 standard
-  errors), but closing totals already account for it.
+- Wind does lower scoring (−0.35 points per mph above 10 on forecast-like weather,
+  about 4 standard errors), but closing totals already account for it.
 - So live NFL "edges" mainly come from Kalshi prices that disagree with the
   sportsbook consensus, or from injury news you enter before the market moves.
+
+## 1a. Checking Kalshi
+
+```bash
+python main.py kalshi --sport nfl --days 4   # or --sport cfb (needs CFBD_API_KEY)
+```
+Fetches Kalshi right now and prints: open markets, how many seconds old the prices
+are, thin markets (bid-ask spread over 5¢), and which slate games did or didn't match a
+Kalshi market. `week` and `bets` also print a note for any game with no match, and skip
+games that have already kicked off (in-game prices aren't pregame edges). College names
+are matched through a fixed alias table in `names.py` (e.g. "Appalachian St." = "App State").
+
+### Consensus picks (no API keys needed)
+
+```bash
+python main.py picks --sport cfb            # today's college games
+python main.py picks --sport nfl --days 3   # through Sunday
+python main.py picks --grade                # score logged picks against final scores
+```
+Pulls predictions from independent forecasters (ESPN FPI, Dratings, Sagarin, Dimers,
+OddsShark computer picks, Sonny Moore and TeamRankings power ratings, nfelo for the NFL, plus
+Hashmark's own model for the NFL, and for college once `CFBD_API_KEY` is set) and
+averages them: consensus winner and win %, predicted margin vs the DraftKings spread,
+projected total vs the over/under, how many sources agree, and the Kalshi price for
+the consensus winner. Fixed rules, set before any grading:
+- **Strong**: 3+ sources on the same side (all of them; 80% when there are 5+), line off by 3+ pts (NFL 2+), spread under 28
+- **Lean**: 2/3 of sources agree, line off by 1.5+ pts (NFL 1+); totals need 3+ pts (NFL 2+)
+
+**Lock of the day (website, Lock tab):** the single best Strong pick kicking off in the
+next 36 hours, college or NFL, ranked by how far past the Strong bar its gap is (so 4.5
+college points = 3 NFL points), then by agreement. You have to make a field goal to see
+it: tap to set the aim (the wind pushes the ball), tap to set the power. Miss three and
+the kick moves 10 yards closer; miss five and it's an extra point. The card shows every
+source's prediction against the line. One lock per day is kept in `data/locks.csv`
+(frozen at kickoff) and graded like the other picks, so the lock gets its own record.
+
+**It learns from results.** Each run logs every game's per-source predictions
+(`data/consensus_predictions.csv`), then grades finished games and updates
+`data/consensus_weights.json` (`python main.py picks --learn` shows it):
+- *weight* per source = 1 / its average squared miss on the final margin (40-game prior);
+- *trust* per source = how much of its disagreement with the line actually showed up in
+  results (slope of result-vs-line on source-vs-line, 40-game prior, clipped to 0–1.2).
+  Gaps are multiplied by trust, and a source under 0.25 stops voting.
+- **Every source starts at trust 0** (changed 2026-10-17; it was 1). The one source
+  tested against the line (FPI) came out at 0, and the first day at trust 1 went badly
+  (the lock, Maryland −5.5, was driven by untested rating systems while the
+  market-like sources sat on the line). A source now moves picks and votes only after
+  graded games show its disagreements with the line come true; a college Saturday
+  grades about 50 games, so this takes days, not months. Ratings-only sources (Sagarin, Sonny Moore,
+  TeamRankings) get the starting-QB injury adjustment, since ratings can't see injuries.
+- **Track records from history** (collected 2026-10-17, `data/history_<source>_<sport>.csv`):
+  Dratings (9,395 college + 1,779 NFL games), TeamRankings (1,522 + 650), nfelo (1,307 NFL).
+  None beat the closing line: Dratings went 50.0% ATS in college and 50.4% in the NFL when
+  3+ points off the line; TeamRankings 51.3% / 50.0%. Only nfelo (0.36) and Dratings NFL
+  (0.27) earn a small vote. No history exists for Sagarin, Sonny Moore, Dimers, OddsShark.
+- 26 classic angles (13 NFL 1999–2025, 13 college 2014–2026) were also tested out of sample
+  with a Holm correction; none survived. Kalshi prices sit within ~1¢ of devigged DraftKings
+  and showed no fee-positive arbitrage.
+- ESPN FPI gets a head start from its own past predictions (`--backfill`, 2025–26): on 513
+  college and 172 NFL games, its side covered 45.9% when it disagreed with the closing line
+  by 3+ points (39.3% at 5+), and blending it with the line didn't beat the line alone.
+  Its trust is therefore 0: FPI's disagreements no longer create picks.
+- A scheduled routine runs `picks` (both sports), `--learn` and `--grade` at 10:52 AM and
+  2:52 AM Eastern and commits the data files, so the model updates after every game day.
+
+**Kalshi lines.** DraftKings posts one line; Kalshi posts a ladder of contracts
+("Alabama wins by over 4.5 / 5.5 / … points", "Over 47.5 / 48.5 / … points"). The tool reads the
+whole ladder and finds where its prices cross 50¢: that's Kalshi's own line, shown next to
+DraftKings' (DK · K). Each pick names the Kalshi contract that is the same bet at the strike
+closest to DraftKings' line, and says whether that's a better or worse number. Ladders are
+matched to games by the team names in the contracts, because Kalshi's tickers for one game can
+carry different dates in different series (e.g. 26OCT16 for the winner, 26OCT17 for the spread).
+
+**Injuries and weather.** Starting QB = the team's season passing leader (ESPN). If he's listed
+Out / Doubtful / Questionable (ESPN for the NFL, Covers for college), Sagarin's and Dratings'
+margins (pure ratings that can't know) move 7 points in college, 5 in the NFL, times 1 / 0.75 /
+0.5. Weather comes from ESPN's game summary (gusts, temperature, indoor/outdoor) and is shown
+for every game. It is not added to the forecasters' totals: on 2026-10-17 their totals sat as
+close to DraftKings' in windy games as in calm ones, so they (or the line) already reflect it.
+Hashmark's own NFL model uses forecast wind itself.
+
+Strong/Lean picks are logged to `data/consensus_picks.csv` before kickoff and graded with
+`--grade`. They are **not validated yet**: forecasters like these usually lose to the closing
+line on their own, so trust the graded record after 100+ picks, not the label. Massey and
+Sports-Reference block automated access and OddsTrader's robots.txt blocks AI crawlers, so
+they're left out; Action Network picks are paywalled.
+
+### Kalshi scan (no API keys needed)
+
+```bash
+python main.py scan --sport cfb            # today + tomorrow (default --days 1)
+python main.py scan --sport nfl --days 3   # through Sunday
+python main.py scan --sport cfb --all      # every side, not just the top 15
+```
+Compares Kalshi's winner, spread and total contracts with DraftKings' moneyline,
+spread and total on ESPN's public scoreboard (vig removed). Spreads and totals are
+compared only where Kalshi has a contract at exactly DraftKings' line, on both sides
+(YES and NO); other lines are skipped rather than estimated with an assumed margin curve. Same FLAG rule as `bets` (edge after fee ≥ 3 pts, price
+≥ 20¢), quarter-Kelly stakes, started games skipped, FLAGs logged as paper trades.
+DraftKings is one recreational book; `bets` with `ODDS_API_KEY` uses Pinnacle instead.
 
 ## 1b. When data updates
 
@@ -137,6 +263,11 @@ python main.py props --backtest   # walk-forward validation, 2023-2025
 Stats: passing yards, rushing yards, receptions, and receiving yards (`props.py`).
 1. **Baseline:** a recency-weighted average of the player's earlier games
    (4-game half-life), shrunk toward the league average when he has few games.
+   Receiving yards instead shrink toward his recent targets × the league's yards per
+   target, so a 9-target WR1 is shrunk toward a WR1. That was tested on 2021–2022 for all
+   four stats and kept only where it clearly helped (receiving yards, t = −4.3). For
+   passing yards it hurt: hot QB stretches really do cool off. Discounting games for a
+   previous team also hurt, so it is off.
 2. **Adjustments**, each used only if t ≥ 3:
    - the opponent's defense against that stat
    - the team's expected points from the market spread and total
@@ -147,6 +278,26 @@ Stats: passing yards, rushing yards, receptions, and receiving yards (`props.py`
    prices after removing the vig and compares P(over) with them. The same rules
    apply (EV ≥ 3%, within 10 pts of the market, capped Kelly stakes), and each
    pick is logged as a paper trade.
+5. **Kalshi prop ladders (no key needed):** Kalshi lists "Player: N+" contracts
+   for passing yards, rushing yards, receptions, and receiving yards. For each
+   player the tool:
+   - finds the **Kalshi line** (where the ladder's mid prices cross 50%)
+   - prices every rung with the model's P(N or more) after paying the fee
+   - picks the best YES or NO contract between 20¢ and 80¢
+   - marks it **★ FLAG** only when the edge is real *and* the model is within
+     10 pts of Kalshi's price
+6. **QBs and injuries:**
+   - Players ESPN lists as Out or IR are dropped.
+   - If ESPN lists the scheduled starting QB as out or doubtful, the QB Kalshi
+     prices is used instead (e.g. Lamar out → Tyler Huntley).
+   - If Kalshi prices a different QB with **no** injury news, the tool keeps
+     the schedule's QB and prints a warning instead of guessing.
+7. **Learning:** every priced prop is saved before kickoff in
+   `data/props_log.csv`. `python main.py props --learn` (and every app refresh)
+   grades finished games from nflverse box scores and fits a **trust** number:
+   - trust 0 = use Kalshi's price; trust 1 = use the model's price
+   - it starts at 0 (use Kalshi's price) and moves only as graded results build up (prior of 40)
+   - it is saved in `data/props_weights.json` with the flag win/loss record
 
 **Validation (2023–2025, walk-forward):**
 - Predicted 25% / 50% / 75% points held about 24–25% / 48–51% / 75–76% of the time.
@@ -187,7 +338,7 @@ The full library, with sources, is in `data/research.json` (also the **Research*
 | Demand t ≥ 3, decide features in advance, report every trial | Harvey, Liu & Zhu 2016; Bailey & López de Prado 2014 | `nfl.MARGIN_FEATURES`, `nfl.TOTAL_FEATURES`, `strategy.T_STAT_BAR` |
 | Size by edge, but use fractional Kelly with caps | Kelly 1956; MacLean, Thorp & Ziemba | `strategy.size_bets` (¼ Kelly; 2% per bet, 3% per game, 10% per slate) |
 | Cheap prediction-market contracts are overpriced | Bürgi, Deng & Whelan; Thaler & Ziemba 1988 | `strategy.LONGSHOT_MIN_PRICE` (no Kalshi FLAG under 20¢) |
-| NFL margins are roughly normal around the spread | Stern 1991 | `strategy.cover_prob`, σ fitted on our data (≈12.8) |
+| NFL margins are roughly normal around the spread, with lumps at 3, 7, 10, 14 | Stern 1991 | `strategy.margin_dist`: discrete normal (σ fitted, ≈12.8) times key-number weights fitted on earlier seasons (`nfl.fit_key_weights`), centered so the line is the median |
 | Momentum | Jegadeesh & Titman 1993 | "form" candidate feature |
 | Many small edges, explicit costs, correlation and leverage risk | Medallion (Zuckerman); LTCM (Lowenstein) | caps, same-game warnings, net-of-fee EV |
 | Score yourself by closing line value | practitioner consensus | `data/paper_trades.csv`, `python main.py clv` |
@@ -285,11 +436,14 @@ as above, with the margin converted back into Elo points.
 
 ### 4.6 Injuries (`injuries.csv`, optional; you fill it in by hand)
 ```
-team,player,position,status,impact_points
-Georgia,Example Player,QB,out,6.0
+team,player,position,status,impact_points,entered
+Georgia,Example Player,QB,out,6.0,2026-10-14 09:30
 ```
 - `impact_points` = margin the team loses if the player is fully out.
 - The status scales it: out 100%, doubtful 75%, questionable 50%, probable 10%.
+- `entered` (optional) = when you added the row, Eastern time (`YYYY-MM-DD` or `YYYY-MM-DD HH:MM`).
+  Rows older than 48 hours are ignored (college and NFL), because the market has priced the news by then
+  and applying it on top of the market would count it twice. Rows without a date never expire.
 - Home injuries lower the home margin; away injuries raise it.
 - See `injuries.example.csv`. The `team` name must match CFBD's spelling.
 

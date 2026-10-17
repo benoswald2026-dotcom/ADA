@@ -1,6 +1,6 @@
 """Kalshi fee and edge math, plus matching Kalshi markets to games. Read-only."""
 import config
-from names import normalize
+from names import team_key
 
 
 def kalshi_fee(price):
@@ -39,15 +39,16 @@ def should_flag(edge, model_prob, market_prob, price=None):
 def match_market(markets, home, away):
     """Find the Kalshi event that has a YES market for BOTH teams.
     Returns {"home": market, "away": market} or None ("no market").
-    Matching is by exact normalized team name; no fuzzy guessing.
+    Matching is by exact normalized team name plus a fixed alias table
+    (names.team_key); no fuzzy guessing.
     """
     by_event = {}
     for m in markets:
         by_event.setdefault(m["event_ticker"], []).append(m)
-    h, a = normalize(home), normalize(away)
+    h, a = team_key(home), team_key(away)
     found = []
     for event_markets in by_event.values():
-        named = {normalize(m["team"]): m for m in event_markets}
+        named = {team_key(m["team"]): m for m in event_markets}
         if h in named and a in named:
             found.append({"home": named[h], "away": named[a]})
     return found[0] if len(found) == 1 else None

@@ -75,6 +75,16 @@ def build_week(now=None):
              and g["season_type"] == week["season_type"] and not g["completed"]
              and (g["home_fbs"] or g["away_fbs"])]
 
+    # A game without a final score may already be under way; its Kalshi price
+    # is then an in-game price, not a pregame edge.
+    now = datetime.now(timezone.utc)
+    started = [g for g in games if _started(g, now)]
+    games = [g for g in games if not _started(g, now)]
+    week["notes"] = []
+    if started:
+        week["notes"].append("Skipped (already kicked off): " +
+                             "; ".join(f"{g['away']} @ {g['home']}" for g in started))
+
     teams, _ = cfbd_teams(year)
     events, odds_stamp = odds_events()
     markets, kalshi_stamp = kalshi_markets()
@@ -114,7 +124,23 @@ def build_week(now=None):
                            if km else f"Kalshi @ {kalshi_stamp}: no market"),
             },
         })
+    unmatched = [f"{r['game']['away']} @ {r['game']['home']}" for r in rows if r["kalshi"] is None]
+    if markets and unmatched:
+        week["notes"].append(f"No Kalshi market matched for {len(unmatched)} of {len(rows)} games: "
+                             + "; ".join(unmatched[:12]) + (" ..." if len(unmatched) > 12 else ""))
     return week, rows
+
+
+def _started(g, now):
+    if not g.get("start"):
+        return False
+    try:
+        kick = datetime.fromisoformat(str(g["start"]).replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    if kick.tzinfo is None:
+        kick = kick.replace(tzinfo=timezone.utc)
+    return kick <= now
 
 
 def find_row(rows, game_id):

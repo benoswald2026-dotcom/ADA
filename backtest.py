@@ -217,3 +217,17 @@ def report(records):
                         headers=["Predicted", "Games", "Avg predicted", "Actual win %", "Gap (pts)"]))
     out.append("  Well calibrated = 'Avg predicted' close to 'Actual win %' in every row.")
     return "\n".join(out)
+
+
+def paired_brier_diff(p_a, p_b, outcomes, n=2000, seed=7, level=0.95):
+    """Brier(a) - Brier(b) on the same games, with a paired bootstrap CI.
+    Negative = a is better. Resampling games (not each model separately) keeps
+    the pairing, so a real difference shows up even when both are noisy."""
+    import numpy as np
+    pa, pb, y = (np.asarray(x, float) for x in (p_a, p_b, outcomes))
+    d = (pa - y) ** 2 - (pb - y) ** 2
+    rng = np.random.default_rng(seed)
+    means = rng.choice(d, size=(n, len(d)), replace=True).mean(axis=1)
+    lo, hi = np.percentile(means, [(1 - level) / 2 * 100, (1 + level) / 2 * 100])
+    se = float(d.std(ddof=1) / np.sqrt(len(d)))
+    return {"diff": float(d.mean()), "ci95": [float(lo), float(hi)], "t": float(d.mean() / se) if se > 0 else 0.0}

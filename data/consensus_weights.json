@@ -1,0 +1,121 @@
+{
+ "cfb": {
+  "games": 11447,
+  "margin_stats": {
+   "mse": {
+    "Dimers": 172.06,
+    "Dratings": 257.41,
+    "ESPN FPI": 241.51,
+    "OddsShark": 185.7,
+    "Sagarin": 188.73,
+    "Sonny Moore": 279.67,
+    "TeamRankings": 392.13
+   },
+   "n": {
+    "Dimers": 16,
+    "Dratings": 9412,
+    "ESPN FPI": 530,
+    "OddsShark": 15,
+    "Sagarin": 17,
+    "Sonny Moore": 15,
+    "TeamRankings": 1537
+   },
+   "slope": {
+    "Dimers": 0.239,
+    "Dratings": 0.013,
+    "ESPN FPI": -0.193,
+    "OddsShark": -0.807,
+    "Sagarin": -0.297,
+    "Sonny Moore": -0.264,
+    "TeamRankings": -0.027
+   }
+  },
+  "margin_w": {
+   "Dimers": 1.1173,
+   "Dratings": 1.0176,
+   "ESPN FPI": 1.0758,
+   "OddsShark": 1.0794,
+   "Sagarin": 1.0843,
+   "Sonny Moore": 0.9501,
+   "TeamRankings": 0.6755
+  },
+  "total_games": 17,
+  "total_stats": {
+   "mse": {
+    "Dimers": 238.54,
+    "Dratings": 220.78,
+    "OddsShark": 233.39
+   },
+   "n": {
+    "Dimers": 16,
+    "Dratings": 17,
+    "OddsShark": 15
+   },
+   "slope": {
+    "Dimers": -1.83,
+    "Dratings": 0.904,
+    "OddsShark": -0.029
+   }
+  },
+  "total_w": {
+   "Dimers": 0.9903,
+   "Dratings": 1.0131,
+   "OddsShark": 0.9966
+  },
+  "trust_src": {
+   "Dimers": 0.0682,
+   "Dratings": 0.0132,
+   "ESPN FPI": 0.0,
+   "OddsShark": 0.0,
+   "Sagarin": 0.0,
+   "Sonny Moore": 0.0,
+   "TeamRankings": 0.0
+  },
+  "trust_total_src": {
+   "Dimers": 0.0,
+   "Dratings": 0.2696,
+   "OddsShark": 0.0
+  },
+  "updated": "2026-10-17 22:02Z"
+ },
+ "nfl": {
+  "games": 3908,
+  "margin_stats": {
+   "mse": {
+    "Dratings": 162.98,
+    "ESPN FPI": 166.57,
+    "TeamRankings": 167.68,
+    "nfelo": 163.65
+   },
+   "n": {
+    "Dratings": 1779,
+    "ESPN FPI": 172,
+    "TeamRankings": 650,
+    "nfelo": 1307
+   },
+   "slope": {
+    "Dratings": 0.276,
+    "ESPN FPI": -0.296,
+    "TeamRankings": -0.1,
+    "nfelo": 0.371
+   }
+  },
+  "margin_w": {
+   "Dratings": 1.0125,
+   "ESPN FPI": 0.9936,
+   "TeamRankings": 0.9855,
+   "nfelo": 1.0084
+  },
+  "total_games": 0,
+  "total_stats": {},
+  "total_w": {},
+  "trust_src": {
+   "Dratings": 0.2703,
+   "ESPN FPI": 0.0,
+   "TeamRankings": 0.0,
+   "nfelo": 0.3598
+  },
+  "trust_total_src": {},
+  "updated": "2026-10-17 22:02Z"
+ }
+}

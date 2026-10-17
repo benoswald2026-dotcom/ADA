@@ -69,6 +69,15 @@ NFL_START_SEASON = 2012          # ratings start here (all teams 1500)
 NFL_FIT_SEASONS = list(range(2015, 2023))  # weather/rest/travel effects are fitted here only
 NFL_TEST_SEASONS = [2023, 2024, 2025]
 WIND_THRESHOLD_MPH = 10          # wind below this is treated as no effect
+# Where team EPA comes from: "team_week" = nflverse weekly team totals, or
+# "pbp" = play-by-play with garbage time removed (nfl.pbp_game_rows).
+# Checked on the 2015-2022 fit seasons only: filtering garbage time tracked
+# final margins slightly WORSE (corr 0.349-0.360 vs 0.371), so team_week stays.
+NFL_EPA_SOURCE = "team_week"
+# Odds API books for NFL. 10 named books = the credit cost of one region.
+# Pinnacle is the sharp reference only (odds.SHARP_BOOKS); the rest are bettable US books.
+NFL_ODDS_BOOKS = ["pinnacle", "draftkings", "fanduel", "betmgm", "williamhill_us",
+                  "espnbet", "fanatics", "betrivers", "bovada", "betonlineag"]
 
 CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
 
