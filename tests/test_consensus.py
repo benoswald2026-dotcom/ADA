@@ -1,0 +1,61 @@
+import pytest
+
+import consensus as C
+
+
+def test_tier_rules():
+    assert C.tier_for(3.5, 3, 3, 3.0, 1.5) == "Strong"
+    assert C.tier_for(3.5, 3, 2, 3.0, 1.5) == "Lean"       # not unanimous
+    assert C.tier_for(1.0, 3, 3, 3.0, 1.5) is None          # line close to consensus
+    assert C.tier_for(2.0, 2, 1, 3.0, 1.5) is None          # sources split
+    assert C.tier_for(-4.0, 3, 3, 3.0, 1.5) == "Strong"     # direction doesn't matter
+
+
+def test_grade_spread_and_total():
+    p = {"bet_type": "Spread", "pick": "Indiana +3", "home": "Indiana", "line": "3.0"}
+    assert C.grade_pick(p, 24, 26) == "W"      # Indiana lost by 2, +3 covers
+    assert C.grade_pick(p, 24, 27) == "P"
+    assert C.grade_pick(p, 20, 27) == "L"
+    away = {"bet_type": "Spread", "pick": "Ohio State -3", "home": "Indiana", "line": "3.0"}
+    assert C.grade_pick(away, 20, 27) == "W"   # Ohio State won by 7
+    over = {"bet_type": "Total", "pick": "Over 50.5", "home": "Indiana", "line": "50.5"}
+    assert C.grade_pick(over, 30, 21) == "W" and C.grade_pick(over, 20, 21) == "L"
+
+
+def test_parse_dratings_row():
+    html = ('<tr><td><time datetime="2026-10-17T16:00:00Z"></time></td><td>'
+            '<a href="/teams/x/1-ohio-state-buckeyes">Ohio State Buckeyes</a><br />'
+            '<a href="/teams/x/2-indiana-hoosiers">Indiana Hoosiers</a></td>'
+            '<td class="table-division"><span class="tc--green">56.8%</span><br /><span class="tc--red">43.2%</span></td>'
+            '<td class="table-division">26.8<br />24.1</td><td>50.9</td></tr>')
+    g = C.parse_dratings(html)[0]
+    assert g["away"] == "Ohio State Buckeyes" and g["home"] == "Indiana Hoosiers"
+    assert g["p_home"] == pytest.approx(0.432) and g["total"] == pytest.approx(50.9)
+    assert g["s_home"] - g["s_away"] == pytest.approx(-2.7)
+
+
+def test_parse_sagarin_lines():
+    text = ("HOME ADVANTAGE=[  4.04]      [  4.01]       [  4.06]\n"
+            "   3  Ohio State           A  =  94.69    5   1   68.51(  45)    0   1  |    1   1  |   93.87    2 |   96.35    3 |\n"
+            "  12  Miami-Florida        A  =  88.10    5   1   70.00(  20)    0   1  |    1   1  |   87.50   12 |   88.00   10 |\n")
+    ratings, hfa = C.parse_sagarin(text.replace("\\\n", "\n"))
+    assert hfa == pytest.approx(4.01)
+    assert ratings[C.team_key("Ohio State")] == pytest.approx(93.87)
+    assert ratings[C.team_key("Miami")] == pytest.approx(87.50)      # alias: Miami-Florida = Miami
+
+
+def test_log_picks_replaces_same_day_and_skips_started(tmp_path):
+    from datetime import datetime, timedelta, timezone
+    soon = datetime.now(timezone.utc) + timedelta(hours=3)
+    past = datetime.now(timezone.utc) - timedelta(hours=1)
+    def result(tier, kick):
+        gm = {"event_id": "1", "kickoff": kick, "matchup": "A @ B", "home": "B", "away": "A", "margin": -1.0, "total": 50,
+              "ats": {"line": 3.0, "gap": 2.0, "pick": "B +3", "agree": 3, "n": 3, "tier": tier}, "ou": None}
+        return {"sport": "cfb", "games": [gm]}
+    path = str(tmp_path / "p.csv")
+    assert C.log_picks(result("Strong", soon), path) == 1
+    assert C.log_picks(result("Lean", soon), path) == 0         # same day: replaced, not added
+    import csv
+    rows = list(csv.DictReader(open(path)))
+    assert len(rows) == 1 and rows[0]["tier"] == "Lean"
+    assert C.log_picks({"sport": "cfb", "games": [{**result("Strong", past)["games"][0], "event_id": "2"}]}, path) == 0

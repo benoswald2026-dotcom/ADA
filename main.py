@@ -77,6 +77,57 @@ def cmd_scan(args):
     print(f"\nFLAGS: {len(flagged)}. Paper trades logged: {logged}. Not betting advice; this tool never places bets.")
 
 
+def cmd_picks(args):
+    """Consensus of outside forecasters (ESPN FPI, Dratings, Sagarin, + Hashmark) vs the lines."""
+    from zoneinfo import ZoneInfo
+    from tabulate import tabulate
+    import consensus as C
+    if args.grade:
+        g = C.grade()
+        if not g["rows"]:
+            print("No graded picks yet. Picks are logged when you run `picks`; they're graded once games are final.")
+            return
+        print(tabulate([[r["game_date"], r["matchup"], r["bet_type"], r["pick"], r["tier"], r["score"], r["result"]]
+                        for r in g["rows"]], headers=["Date", "Game", "Type", "Pick", "Tier", "Final (away-home)", "Result"]))
+        print()
+        for k, r in sorted(g["record"].items()):
+            n = r["W"] + r["L"]
+            print(f"{k:16s} {r['W']}-{r['L']}-{r['P']}  ({r['W'] / n:.1%})" if n else f"{k:16s} {r['W']}-{r['L']}-{r['P']}")
+        print("Break-even against -110 prices is 52.4%. Small samples swing a lot: judge after 100+ picks.")
+        return
+    r = C.build(args.sport, days=args.days)
+    et = ZoneInfo("America/New_York")
+    print(f"\nCONSENSUS PICKS — {args.sport.upper()}. Sources: ESPN FPI, Dratings, Sagarin"
+          + (", Hashmark model" if any("Hashmark model" in g["sources"] for g in r["games"]) else "")
+          + ". Lines: DraftKings (via ESPN). Kalshi for the winner.")
+    for n in r["notes"]:
+        print(f"NOTE: {n}")
+    fmt_line = lambda x: "-" if x is None else x
+    rows = []
+    for g in r["games"]:
+        ats, ou, ml = g["ats"], g["ou"], g["ml"]
+        rows.append([g["kickoff"].astimezone(et).strftime("%a %-I:%M%p"), g["matchup"],
+                     f"{g['winner']} {g['winner_p']:.0%} ({g['winner_agree']}/{g['n_sources']})",
+                     "-" if g["margin"] is None else f"{g['home']} {g['margin']:+.1f}",
+                     "-" if not ats else f"{ats['pick']} ({ats['gap']:+.1f}, {ats['agree']}/{ats['n']}){' *' + ats['tier'] if ats['tier'] else ''}",
+                     "-" if not ou else f"{ou['pick']} (proj {g['total']:.1f}){' *' + ou['tier'] if ou['tier'] else ''}",
+                     "-" if not ml or "kalshi_ask" not in ml else f"{ml['kalshi_ask'] * 100:.0f}c, edge {ml['kalshi_edge'] * 100:+.1f}"])
+    print(tabulate(rows, headers=["Kickoff (ET)", "Game", "Consensus winner", "Pred. margin", "Spread pick (gap, agree)",
+                                  "Total pick", "Kalshi winner"]))
+    best = C.best_bets(r)
+    print(f"\nBEST BETS (fixed rules: Strong = 3+ sources all agree and the line is off by "
+          f"{C.TIERS[args.sport]['strong_gap']:g}+ pts, spreads under {C.BLOWOUT_LINE:g}; Lean = 2/3 agree, {C.TIERS[args.sport]['lean_gap']:g}+ pts):")
+    if not best:
+        print("  None today.")
+    for p in best[:args.top]:
+        gm = p["game"]
+        print(f"  {p['tier']:6s} {p['type']:6s} {p['pick']:28s} {gm['matchup']:36s} line off by {abs(p['gap']):.1f} pts, "
+              f"{p['agree']}/{p['n']} sources agree")
+    logged = C.log_picks(r)
+    print(f"\nLogged {logged} new picks to data/consensus_picks.csv. Grade them later: python main.py picks --grade")
+    print("Not validated yet: these forecasters usually lose to the closing line on their own. The graded record decides.")
+
+
 def cmd_kalshi(args):
     """Check that Kalshi is reachable, fresh, and matched to this slate's games."""
     from datetime import datetime, timezone
@@ -299,6 +350,12 @@ def main():
     bp.set_defaults(func=cmd_bets)
     sub.add_parser("clv", help="score logged paper trades against the closing line").set_defaults(func=cmd_clv)
     sport_args(sub.add_parser("kalshi", help="check Kalshi is reachable, fresh, and matched to games")).set_defaults(func=cmd_kalshi)
+    pk = sub.add_parser("picks", help="consensus of outside forecasters vs the lines (spread, total, winner)")
+    pk.add_argument("--sport", choices=["cfb", "nfl"], default="cfb")
+    pk.add_argument("--days", type=int, default=0, help="today plus this many days (NFL: try 3)")
+    pk.add_argument("--top", type=int, default=15)
+    pk.add_argument("--grade", action="store_true", help="score logged picks against final scores")
+    pk.set_defaults(func=cmd_picks)
     sc = sub.add_parser("scan", help="Kalshi vs. sportsbook prices, no API keys needed")
     sc.add_argument("--sport", choices=["cfb", "nfl"], default="cfb")
     sc.add_argument("--days", type=int, default=1, help="today plus this many days (default 1)")

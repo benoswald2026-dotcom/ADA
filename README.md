@@ -130,6 +130,26 @@ Kalshi market. `week` and `bets` also print a note for any game with no match, a
 games that have already kicked off (in-game prices aren't pregame edges). College names
 are matched through a fixed alias table in `names.py` (e.g. "Appalachian St." = "App State").
 
+### Consensus picks (no API keys needed)
+
+```bash
+python main.py picks --sport cfb            # today's college games
+python main.py picks --sport nfl --days 3   # through Sunday
+python main.py picks --grade                # score logged picks against final scores
+```
+Pulls predictions from independent forecasters (ESPN FPI, Dratings, Sagarin, plus
+Hashmark's own model for the NFL, and for college once `CFBD_API_KEY` is set) and
+averages them: consensus winner and win %, predicted margin vs the DraftKings spread,
+projected total vs the over/under, how many sources agree, and the Kalshi price for
+the consensus winner. Fixed rules, set before any grading:
+- **Strong**: 3+ sources, all on the same side, line off by 3+ pts (NFL 2+), spread under 28
+- **Lean**: 2/3 of sources agree, line off by 1.5+ pts (NFL 1+); totals need 3+ pts (NFL 2+)
+
+Strong/Lean picks are logged to `data/consensus_picks.csv` before kickoff and graded with
+`--grade`. They are **not validated yet**: forecasters like these usually lose to the closing
+line on their own, so trust the graded record after 100+ picks, not the label. Massey and
+Sports-Reference block automated access, so they're left out.
+
 ### Kalshi scan (no API keys needed)
 
 ```bash

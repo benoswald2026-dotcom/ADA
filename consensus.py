@@ -1,0 +1,357 @@
+"""Consensus picks: what independent forecasters expect, next to the prices.
+
+Sources (all public, no API keys):
+  - ESPN FPI matchup predictor: home win %, predicted margin
+  - Dratings: win %, projected score (so a margin and a total)
+  - Sagarin "predictor" ratings: margin = home - away + home advantage
+  - Hashmark's own model: NFL always; college only with CFBD_API_KEY
+Markets for comparison: DraftKings (via ESPN) and Kalshi.
+
+For each game: consensus winner and win %, consensus margin vs the spread
+(against-the-spread pick), consensus total vs the over/under, how many
+sources agree, and the Kalshi edge if the consensus is right.
+
+Tiers are fixed rules written down before any grading (see TIERS). The
+consensus is NOT validated yet: every pick is logged to
+data/consensus_picks.csv and `python main.py picks --grade` scores them
+against final scores, so the record decides whether to trust it.
+Read-only: nothing here places a bet.
+"""
+import csv
+import math
+import os
+import re
+from datetime import datetime, timedelta, timezone
+
+import config
+import nfl_teams as T
+from cache import ApiError, cached_download, cached_get
+from kalshi import edge_after_fee
+from names import normalize, team_key
+from odds import remove_vig
+from strategy import normal_cdf
+
+HEADERS = {"User-Agent": "Mozilla/5.0 (Hashmark; personal, read-only)"}
+SPORTS = {
+    "cfb": {"espn": "college-football", "dratings": "https://www.dratings.com/predictor/ncaa-football-predictions/",
+            "sagarin": "http://sagarin.com/sports/cfsend.htm", "sigma": 16.0},
+    "nfl": {"espn": "nfl", "dratings": "https://www.dratings.com/predictor/nfl-football-predictions/",
+            "sagarin": "http://sagarin.com/sports/nflsend.htm", "sigma": 13.0},
+}
+# Fixed before grading. gap = consensus margin vs the line (or total vs the total), in points.
+TIERS = {
+    "cfb": {"strong_gap": 3.0, "lean_gap": 1.5, "total_strong": 5.0, "total_lean": 3.0},
+    "nfl": {"strong_gap": 2.0, "lean_gap": 1.0, "total_strong": 3.0, "total_lean": 2.0},
+}
+BLOWOUT_LINE = 28.0   # spreads this big can be at most "Lean" (fixed before grading)
+PICKS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "consensus_picks.csv")
+PICK_FIELDS = ["logged_at", "sport", "event_id", "game_date", "matchup", "home", "away", "bet_type", "pick",
+               "line", "consensus", "tier", "sources", "agree"]
+
+
+# ------------------------------------------------------------------ sources --
+
+def _html(url, source):
+    path, stamp = cached_download(url, ttl=config.TTL_ODDS, source=source, suffix=".html", headers=HEADERS)
+    with open(path, encoding="utf-8", errors="replace") as f:
+        return f.read(), stamp
+
+
+def parse_dratings(html):
+    """Dratings predictor table -> [{away, home, p_away, p_home, s_away, s_home, total}] (away listed first)."""
+    out = []
+    for row in re.findall(r"<tr>(.*?)</tr>", html, re.S):
+        names = re.findall(r'/teams/[^"]+">([^<]+)</a>', row)
+        pcts = re.findall(r'>([\d.]+)%<', row)
+        score = re.search(r'<td class="table-division">([\d.]+)<br\s*/?>([\d.]+)</td>\s*<td>([\d.]+)</td>', row)
+        if len(names) < 2 or len(pcts) < 2:
+            continue
+        g = {"away": names[0].strip(), "home": names[1].strip(),
+             "p_away": float(pcts[0]) / 100, "p_home": float(pcts[1]) / 100}
+        if score:
+            g.update(s_away=float(score.group(1)), s_home=float(score.group(2)), total=float(score.group(3)))
+        out.append(g)
+    return out
+
+
+def parse_sagarin(html):
+    """Sagarin ratings page -> ({team key: predictor rating}, predictor home advantage)."""
+    text = re.sub(r"<[^>]+>", "", html)
+    hfa = 0.0
+    m = re.search(r"HOME ADVANTAGE=\[\s*([\d.]+)\]\s*\[\s*([\d.]+)\]", text)
+    if m:
+        hfa = float(m.group(2))     # second bracket = PREDICTOR column
+    ratings = {}
+    line_re = re.compile(r"^\s*\d+\s+(.+?)\s+(?:A{1,2}\s+)?=\s+[\d.]+\s+\d+\s+\d+(?:\s+\d+)?\s+[\d.]+\(\s*\d+\)"
+                         r".*?\|.*?\|\s+([\d.]+)\s+\d+\s+\|", re.M)
+    for name, pred in line_re.findall(text):
+        k = team_key(name)
+        ratings.setdefault(k, float(pred))   # the page lists teams twice; keep the first
+    return ratings, hfa
+
+
+def espn_fpi(sport, event_id):
+    """(home win prob, predicted home margin) from ESPN's matchup predictor, or None."""
+    lg = SPORTS[sport]["espn"]
+    url = f"https://sports.core.api.espn.com/v2/sports/football/leagues/{lg}/events/{event_id}/competitions/{event_id}/predictor"
+    try:
+        d, _ = cached_get(url, ttl=config.TTL_ODDS, source="ESPN FPI")
+    except ApiError:
+        return None
+    st = {s["name"]: s.get("value") for s in (d.get("homeTeam") or {}).get("statistics", [])}
+    if st.get("gameProjection") is None or st.get("teamPredPtDiff") is None:
+        return None
+    return float(st["gameProjection"]) / 100, float(st["teamPredPtDiff"])
+
+
+def _names(team):
+    """Every key a source might use for an ESPN team: location and full display name."""
+    return {team_key(team["location"]), normalize(team.get("displayName", "")), team_key(team.get("displayName", ""))}
+
+
+def _model_rows(sport, days):
+    """Hashmark's own predictions: {(home key, away key): (p_home, margin, total)}. NFL only
+    unless CFBD_API_KEY is set (the college model needs CollegeFootballData)."""
+    out = {}
+    try:
+        if sport == "nfl":
+            from nfl import build_slate
+            _, rows = build_slate(days=days)
+            for r in rows:
+                p = r["pred"]
+                key = (normalize(T.full_name(r["game"]["home_code"])), normalize(T.full_name(r["game"]["away_code"])))
+                out[key] = (p["raw_home_prob"], p["margin"], p.get("total"))
+        elif os.environ.get("CFBD_API_KEY", "").strip():
+            from week import build_week
+            _, rows = build_week()
+            for r in rows:
+                p = r["pred"]
+                out[(team_key(r["game"]["home"]), team_key(r["game"]["away"]))] = (p["home_prob"], p["margin"], p.get("total"))
+    except Exception:   # the consensus still works from the outside sources
+        return {}
+    return out
+
+
+# ---------------------------------------------------------------- consensus --
+
+def tier_for(gap, n, agree, strong, lean):
+    """Fixed rule. Strong: 3+ sources, all agree, |gap| >= strong. Lean: 2+ sources,
+    at least 2/3 agree, |gap| >= lean. Otherwise no pick."""
+    if n >= 3 and agree == n and abs(gap) >= strong:
+        return "Strong"
+    if n >= 2 and agree >= math.ceil(2 * n / 3) and abs(gap) >= lean:
+        return "Lean"
+    return None
+
+
+def build(sport="cfb", days=0, now=None, with_model=True):
+    """Returns {"games": [...], "notes": [...], "stamps": {...}}."""
+    from scan import _match, espn_events, parse_event
+    from api_clients import kalshi_markets
+    cfg, tiers = SPORTS[sport], TIERS[sport]
+    now = now or datetime.now(timezone.utc)
+    notes, stamps = [], {}
+    try:
+        dr_html, stamps["dratings"] = _html(cfg["dratings"], "Dratings")
+        dratings = parse_dratings(dr_html)
+    except ApiError as e:
+        dratings = []
+        notes.append(f"Dratings unavailable ({e}).")
+    try:
+        sg_html, stamps["sagarin"] = _html(cfg["sagarin"], "Sagarin")
+        sagarin, sag_hfa = parse_sagarin(sg_html)
+    except ApiError as e:
+        sagarin, sag_hfa = {}, 0.0
+        notes.append(f"Sagarin unavailable ({e}).")
+    try:
+        markets, stamps["kalshi"] = kalshi_markets("KXNCAAFGAME" if sport == "cfb" else "KXNFLGAME")
+    except ApiError:
+        markets = []
+    model = _model_rows(sport, max(days, 0) + (3 if sport == "nfl" else 0)) if with_model else {}
+    if sport == "cfb" and not model:
+        notes.append("Hashmark's own college model is off (no CFBD_API_KEY); consensus uses ESPN FPI, Dratings and Sagarin.")
+
+    games, unmatched = [], {"Dratings": 0, "Sagarin": 0}
+    for d in range(days + 1):
+        events, stamps["espn"] = espn_events(sport, (now + timedelta(days=d)).strftime("%Y%m%d"))
+        for e in events:
+            g = parse_event(e)
+            if g["state"] != "pre" or g["kickoff"] <= now:
+                continue
+            h, a = g["home"], g["away"]
+            hk, ak = _names(h), _names(a)
+            src = {}
+            fpi = espn_fpi(sport, g["id"])
+            if fpi:
+                src["ESPN FPI"] = {"p": fpi[0], "margin": fpi[1]}
+            dr = next((x for x in dratings if (normalize(x["home"]) in hk or team_key(x["home"]) in hk)
+                       and (normalize(x["away"]) in ak or team_key(x["away"]) in ak)), None)
+            if dr:
+                s = {"p": dr["p_home"]}
+                if "s_home" in dr:
+                    s.update(margin=dr["s_home"] - dr["s_away"], total=dr["total"])
+                src["Dratings"] = s
+            elif dratings:
+                unmatched["Dratings"] += 1
+            rh = next((sagarin[k] for k in hk if k in sagarin), None)
+            ra = next((sagarin[k] for k in ak if k in sagarin), None)
+            if rh is not None and ra is not None:
+                neutral = bool((e["competitions"][0].get("neutralSite")))
+                m = rh - ra + (0.0 if neutral else sag_hfa)
+                src["Sagarin"] = {"p": normal_cdf(m / cfg["sigma"]), "margin": m}
+            elif sagarin:
+                unmatched["Sagarin"] += 1
+            mk = next((model[(x, y)] for x in hk for y in ak if (x, y) in model), None)
+            if mk:
+                src["Hashmark model"] = {"p": mk[0], "margin": mk[1], **({"total": mk[2]} if mk[2] else {})}
+            if not src:
+                continue
+            games.append(_summarize(sport, g, e, src, tiers, _match(sport, markets, g) if markets else None))
+    for name, n in unmatched.items():
+        if n:
+            notes.append(f"{name}: no prediction found for {n} games (team names or not covered).")
+    games.sort(key=lambda x: x["kickoff"])
+    return {"games": games, "notes": notes, "stamps": stamps, "sport": sport}
+
+
+def _summarize(sport, g, e, src, tiers, km):
+    h, a = g["home"]["location"], g["away"]["location"]
+    ps = [s["p"] for s in src.values()]
+    margins = {k: s["margin"] for k, s in src.items() if "margin" in s}
+    totals = {k: s["total"] for k, s in src.items() if "total" in s}
+    p_home = sum(ps) / len(ps)
+    margin = sum(margins.values()) / len(margins) if margins else None
+    total = sum(totals.values()) / len(totals) if totals else None
+    out = {"event_id": g["id"], "kickoff": g["kickoff"], "home": h, "away": a, "matchup": f"{a} @ {h}",
+           "sources": {k: {kk: round(v, 4) for kk, v in s.items()} for k, s in src.items()},
+           "n_sources": len(src), "p_home": p_home, "margin": margin, "total": total,
+           "winner": h if p_home >= 0.5 else a, "winner_p": max(p_home, 1 - p_home),
+           "winner_agree": sum((s["p"] >= 0.5) == (p_home >= 0.5) for s in src.values()),
+           "ats": None, "ou": None, "ml": None}
+    # Against the spread: home covers if margin + home line > 0.
+    if g["home_spread"] and margin is not None:
+        line = g["home_spread"][0]
+        gap = margin + line
+        side_home = gap > 0
+        agree = sum((m + line > 0) == side_home for m in margins.values())
+        pick = f"{h} {line:+g}" if side_home else f"{a} {-line:+g}"
+        tier = tier_for(gap, len(margins), agree, tiers["strong_gap"], tiers["lean_gap"])
+        if tier == "Strong" and abs(line) >= BLOWOUT_LINE:
+            tier = "Lean"   # rating systems are least reliable in huge mismatches
+        out["ats"] = {"line": line, "gap": gap, "pick": pick, "agree": agree, "n": len(margins), "tier": tier}
+    # Over/under.
+    if g["over"] and total is not None:
+        line = g["over"][0]
+        gap = total - line
+        agree = sum((t > line) == (gap > 0) for t in totals.values())
+        out["ou"] = {"line": line, "gap": gap, "pick": f"{'Over' if gap > 0 else 'Under'} {line:g}", "agree": agree,
+                     "n": len(totals), "tier": tier_for(gap, len(totals), agree, tiers["total_strong"], tiers["total_lean"])
+                     if len(totals) >= 2 else ("Lean" if abs(gap) >= tiers["total_strong"] else None)}
+    # Moneyline: consensus vs DraftKings fair and the Kalshi ask for the consensus winner.
+    if g["home_ml"] is not None and g["away_ml"] is not None:
+        dk_home = remove_vig(g["home_ml"], g["away_ml"])[0]
+        side = "home" if p_home >= 0.5 else "away"
+        p = p_home if side == "home" else 1 - p_home
+        ml = {"dk_fair": dk_home if side == "home" else 1 - dk_home, "p": p}
+        ask = km[side]["yes_ask"] if km and km.get(side) else None
+        if ask and 0 < ask < 1:
+            ml.update(kalshi_ask=ask, kalshi_edge=edge_after_fee(p, ask))
+        out["ml"] = ml
+    return out
+
+
+def best_bets(result):
+    """Strong and Lean spread / total picks, strongest first."""
+    rank = {"Strong": 0, "Lean": 1}
+    picks = []
+    for gm in result["games"]:
+        for kind in ("ats", "ou"):
+            x = gm[kind]
+            if x and x["tier"]:
+                picks.append({"game": gm, "type": "Spread" if kind == "ats" else "Total", **x})
+    picks.sort(key=lambda p: (rank[p["tier"]], -abs(p["gap"])))
+    return picks
+
+
+# ----------------------------------------------------------------- tracking --
+
+def log_picks(result, path=None):
+    """Record today's Strong/Lean picks for later grading. One row per game, type and
+    day; running again the same day replaces that day's row (latest pre-game view)."""
+    path = path or PICKS_FILE
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    now = datetime.now(timezone.utc)
+    today = now.strftime("%Y-%m-%d")
+    rows = []
+    if os.path.exists(path):
+        with open(path, newline="") as f:
+            rows = list(csv.DictReader(f))
+    index = {(r["logged_at"][:10], r["event_id"], r["bet_type"]): i for i, r in enumerate(rows)}
+    added = 0
+    for p in best_bets(result):
+        gm = p["game"]
+        if gm["kickoff"] <= now:
+            continue   # never log or change a pick once the game has started
+        row = {"logged_at": now.strftime("%Y-%m-%d %H:%MZ"), "sport": result["sport"],
+               "event_id": gm["event_id"], "game_date": gm["kickoff"].strftime("%Y%m%d"),
+               "matchup": gm["matchup"], "home": gm["home"], "away": gm["away"], "bet_type": p["type"],
+               "pick": p["pick"], "line": p["line"],
+               "consensus": round(gm["margin"] if p["type"] == "Spread" else gm["total"], 2),
+               "tier": p["tier"], "sources": p["n"], "agree": p["agree"]}
+        key = (today, gm["event_id"], p["type"])
+        if key in index:
+            rows[index[key]] = row
+        else:
+            index[key] = len(rows)
+            rows.append(row)
+            added += 1
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=PICK_FIELDS)
+        w.writeheader()
+        w.writerows(rows)
+    return added
+
+
+def grade_pick(p, home_pts, away_pts):
+    """'W', 'L' or 'P' for one logged pick given the final score."""
+    line = float(p["line"])
+    if p["bet_type"] == "Spread":
+        took_home = p["pick"].startswith(p["home"] + " ")
+        margin = (home_pts - away_pts) if took_home else (away_pts - home_pts)
+        my_line = line if took_home else -line
+        x = margin + my_line
+    else:
+        x = (home_pts + away_pts - line) * (1 if p["pick"].startswith("Over") else -1)
+    return "W" if x > 0 else ("P" if x == 0 else "L")
+
+
+def grade(path=None):
+    """Score every logged pick whose game is final. Returns {"rows": [...], "record": {...}}."""
+    from scan import espn_events
+    path = path or PICKS_FILE
+    if not os.path.exists(path):
+        return {"rows": [], "record": {}}
+    with open(path, newline="") as f:
+        picks = list(csv.DictReader(f))
+    finals = {}
+    for sport, day in sorted({(p["sport"], p["game_date"]) for p in picks}):
+        try:
+            events, _ = espn_events(sport, day)
+        except ApiError:
+            continue
+        for e in events:
+            c = e["competitions"][0]
+            if c["status"]["type"]["state"] != "post":
+                continue
+            sc = {t["homeAway"]: float(t.get("score") or 0) for t in c["competitors"]}
+            finals[e["id"]] = (sc["home"], sc["away"])
+    rows, record = [], {}
+    for p in picks:
+        if p["event_id"] not in finals:
+            continue
+        res = grade_pick(p, *finals[p["event_id"]])
+        rows.append({**p, "result": res, "score": "%g-%g" % (finals[p["event_id"]][1], finals[p["event_id"]][0])})
+        for key in ("all", f"{p['bet_type']} {p['tier']}"):
+            r = record.setdefault(key, {"W": 0, "L": 0, "P": 0})
+            r[res] += 1
+    return {"rows": rows, "record": record}

@@ -40,8 +40,13 @@ def odds_name_to_school(odds_name, teams):
 # whichever spelling a source uses. Keys and spellings are normalized forms.
 _ALIAS_GROUPS = {
     "app state": ["appalachian state", "app state"],
-    "miami": ["miami fl", "miami", "miami florida"],
-    "ul monroe": ["louisiana-monroe", "louisiana monroe", "ul monroe", "ulm"],
+    "miami": ["miami fl", "miami", "miami florida", "miami-florida"],
+    "miami oh": ["miami oh", "miami-ohio", "miami ohio"],
+    "usc": ["usc", "southern california"],
+    "ucf": ["ucf", "central florida", "central florida ucf"],
+    "louisiana": ["louisiana", "louisiana-lafayette", "ul lafayette"],
+    "southern university": ["southern university", "southern u", "southern u."],
+    "ul monroe": ["louisiana-monroe", "louisiana monroe", "ul monroe", "ulm", "louisianamonroe ulm"],
     "umass": ["umass", "massachusetts"],
     "uconn": ["uconn", "connecticut"],
     "southern miss": ["southern miss", "southern mississippi"],

@@ -5,3 +5,4 @@ __pycache__/
 .pytest_cache/
 data/paper_trades.csv
 data/nfl_price_snapshots.csv
+data/consensus_picks.csv
