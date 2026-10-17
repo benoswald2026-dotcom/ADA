@@ -143,7 +143,7 @@ def test_fit_weights_and_per_source_trust():
 
 def test_few_games_keep_defaults_close():
     w, trust, _, n = C._fit([({"A": 3.0, "B": -3.0}, 10.0, 0.0)])
-    assert n == 1 and 0.9 < w["A"] / w["B"] < 1.1 and all(0.85 <= t <= 1.2 for t in trust.values())
+    assert n == 1 and 0.9 < w["A"] / w["B"] < 1.1 and all(abs(t - C.TRUST_PRIOR) < 0.15 for t in trust.values())
 
 
 def test_untrusted_source_neither_moves_gap_nor_votes():

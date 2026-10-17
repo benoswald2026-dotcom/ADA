@@ -84,6 +84,12 @@ PRED_FIELDS = ["logged_at", "sport", "event_id", "game_date", "kickoff", "matchu
 # moves toward what the graded games say only as games pile up, like a 40-game prior.
 PRIOR_GAMES = 40
 MIN_TRUST = 0.25   # a source below this trust no longer votes on Strong/Lean
+# Where a source's trust starts before it has results. It was 1.0 (take every forecaster at
+# face value). Changed 2026-10-17: the only source tested against the line, ESPN FPI, came
+# out at 0 (513 college + 172 NFL games), and the first day at 1.0 went badly. A source now
+# has to show in graded games that its disagreements with the line come true before it
+# moves a pick or votes. A full college Saturday grades ~50 games.
+TRUST_PRIOR = 0.0
 PICK_FIELDS = ["logged_at", "sport", "event_id", "game_date", "matchup", "home", "away", "bet_type", "pick",
                "line", "consensus", "tier", "sources", "agree"]
 
@@ -543,8 +549,8 @@ def _summarize(sport, g, e, src, tiers, km, learned=None):
         gap_raw = margin + line
         # Learned: each source's disagreement with the line counts only as much as it
         # has shown up in results (its trust); untrusted sources neither move the gap nor vote.
-        gap = _wmean({k: trust.get(k, 1.0) * (m + line) for k, m in margins.items()}, mw)
-        voters = {k: m for k, m in margins.items() if trust.get(k, 1.0) >= MIN_TRUST}
+        gap = _wmean({k: trust.get(k, TRUST_PRIOR) * (m + line) for k, m in margins.items()}, mw)
+        voters = {k: m for k, m in margins.items() if trust.get(k, TRUST_PRIOR) >= MIN_TRUST}
         side_home = gap > 0
         agree = sum((m + line > 0) == side_home for m in voters.values())
         pick = f"{h} {line:+g}" if side_home else f"{a} {-line:+g}"
@@ -556,8 +562,8 @@ def _summarize(sport, g, e, src, tiers, km, learned=None):
     # Over/under.
     if g["over"] and total is not None:
         line = g["over"][0]
-        gap = _wmean({k: trust_t.get(k, 1.0) * (t - line) for k, t in totals.items()}, tw)
-        voters = {k: t for k, t in totals.items() if trust_t.get(k, 1.0) >= MIN_TRUST}
+        gap = _wmean({k: trust_t.get(k, TRUST_PRIOR) * (t - line) for k, t in totals.items()}, tw)
+        voters = {k: t for k, t in totals.items() if trust_t.get(k, TRUST_PRIOR) >= MIN_TRUST}
         agree = sum((t > line) == (gap > 0) for t in voters.values())
         out["ou"] = {"line": line, "gap": gap, "pick": f"{'Over' if gap > 0 else 'Under'} {line:g}", "agree": agree,
                      "n": len(voters), "tier": tier_for(gap, len(voters), agree, tiers["total_strong"], tiers["total_lean"])
@@ -800,7 +806,7 @@ def _fit(games):
     error with PRIOR_GAMES pseudo-games, scaled so the average weight is 1.
     Trust: least-squares slope of (actual - line) on (source - line), i.e. how much
     of the source's disagreement with the line actually showed up in results, shrunk
-    toward 1.0 (take it at face value) the same way and kept between 0 and 1.2. A
+    toward TRUST_PRIOR the same way and kept between 0 and 1.2. A
     source whose gaps don't predict anything ends up near 0 and stops creating picks."""
     errs, sxy, sxx = {}, {}, {}
     for src, act, line in games:
@@ -818,7 +824,7 @@ def _fit(games):
     for k, e in errs.items():
         n = len(e)
         slope = sxy[k] / sxx[k] if sxx[k] > 0 else 1.0
-        trust[k] = round(min(1.2, max(0.0, (n * slope + PRIOR_GAMES) / (n + PRIOR_GAMES))), 4)
+        trust[k] = round(min(1.2, max(0.0, (n * slope + PRIOR_GAMES * TRUST_PRIOR) / (n + PRIOR_GAMES))), 4)
     stats = {"mse": {k: round(sum(e) / len(e), 2) for k, e in errs.items()},
              "n": {k: len(e) for k, e in errs.items()},
              "slope": {k: round(sxy[k] / sxx[k], 3) if sxx[k] > 0 else None for k in errs}}

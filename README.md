@@ -161,8 +161,12 @@ source's prediction against the line. One lock per day is kept in `data/locks.cs
 - *trust* per source = how much of its disagreement with the line actually showed up in
   results (slope of result-vs-line on source-vs-line, 40-game prior, clipped to 0–1.2).
   Gaps are multiplied by trust, and a source under 0.25 stops voting.
-- New sources (Sonny Moore, TeamRankings, nfelo) start at weight 1 and trust 1 and
-  earn or lose influence the same way. Ratings-only sources (Sagarin, Sonny Moore,
+- **Every source starts at trust 0** (changed 2026-10-17; it was 1). The one source
+  tested against the line (FPI) came out at 0, and the first day at trust 1 went badly
+  (the lock, Maryland −5.5, was driven by untested rating systems while the
+  market-like sources sat on the line). A source now moves picks and votes only after
+  graded games show its disagreements with the line come true; a college Saturday
+  grades about 50 games, so this takes days, not months. Ratings-only sources (Sagarin, Sonny Moore,
   TeamRankings) get the starting-QB injury adjustment, since ratings can't see injuries.
 - ESPN FPI gets a head start from its own past predictions (`--backfill`, 2025–26): on 513
   college and 172 NFL games, its side covered 45.9% when it disagreed with the closing line

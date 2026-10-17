@@ -1,28 +1,62 @@
 {
  "cfb": {
-  "games": 513,
+  "games": 514,
   "margin_stats": {
    "mse": {
-    "ESPN FPI": 242.87
+    "Dimers": 27.46,
+    "Dratings": 12.25,
+    "ESPN FPI": 242.4,
+    "Sagarin": 12.11
    },
    "n": {
-    "ESPN FPI": 513
+    "Dimers": 1,
+    "Dratings": 1,
+    "ESPN FPI": 514,
+    "Sagarin": 1
    },
    "slope": {
-    "ESPN FPI": -0.179
+    "Dimers": 21.195,
+    "Dratings": 0.611,
+    "ESPN FPI": -0.177,
+    "Sagarin": 2.723
    }
   },
   "margin_w": {
-   "ESPN FPI": 1.0
+   "Dimers": 0.9328,
+   "Dratings": 1.1413,
+   "ESPN FPI": 0.7802,
+   "Sagarin": 1.1457
   },
-  "total_games": 0,
-  "total_stats": {},
-  "total_w": {},
+  "total_games": 1,
+  "total_stats": {
+   "mse": {
+    "Dimers": 305.57,
+    "Dratings": 44.89
+   },
+   "n": {
+    "Dimers": 1,
+    "Dratings": 1
+   },
+   "slope": {
+    "Dimers": -16.828,
+    "Dratings": 1.684
+   }
+  },
+  "total_w": {
+   "Dimers": 0.9606,
+   "Dratings": 1.0394
+  },
   "trust_src": {
-   "ESPN FPI": 0.0
+   "Dimers": 0.5169,
+   "Dratings": 0.0149,
+   "ESPN FPI": 0.0,
+   "Sagarin": 0.0664
   },
-  "trust_total_src": {},
-  "updated": "2026-10-17 16:07Z"
+  "trust_total_src": {
+   "Dimers": 0.0,
+   "Dratings": 0.0411
+  },
+  "updated": "2026-10-17 19:19Z"
  },
  "nfl": {
   "games": 172,
@@ -47,6 +81,6 @@
    "ESPN FPI": 0.0
   },
   "trust_total_src": {},
-  "updated": "2026-10-17 16:07Z"
+  "updated": "2026-10-17 19:19Z"
  }
 }

@@ -119,7 +119,7 @@ def lock_json(force=False):
     if not lock:
         return {"lock": None, "record": record, "candidates": len(cands)}
     trust = C.load_weights().get(lock["sport"], {}).get("trust_src", {})
-    votes = lambda k: trust.get(k, 1.0) >= C.MIN_TRUST
+    votes = lambda k: trust.get(k, C.TRUST_PRIOR) >= C.MIN_TRUST
     if lock["type"] == "Spread":
         home_side = lock["gap"] > 0     # consensus on the home side of the line
         need = -lock["line"] if home_side else lock["line"]
