@@ -137,18 +137,20 @@ python main.py picks --sport cfb            # today's college games
 python main.py picks --sport nfl --days 3   # through Sunday
 python main.py picks --grade                # score logged picks against final scores
 ```
-Pulls predictions from independent forecasters (ESPN FPI, Dratings, Sagarin, plus
+Pulls predictions from independent forecasters (ESPN FPI, Dratings, Sagarin, Dimers,
+OddsShark computer picks, plus
 Hashmark's own model for the NFL, and for college once `CFBD_API_KEY` is set) and
 averages them: consensus winner and win %, predicted margin vs the DraftKings spread,
 projected total vs the over/under, how many sources agree, and the Kalshi price for
 the consensus winner. Fixed rules, set before any grading:
-- **Strong**: 3+ sources, all on the same side, line off by 3+ pts (NFL 2+), spread under 28
+- **Strong**: 3+ sources on the same side (all of them; 80% when there are 5+), line off by 3+ pts (NFL 2+), spread under 28
 - **Lean**: 2/3 of sources agree, line off by 1.5+ pts (NFL 1+); totals need 3+ pts (NFL 2+)
 
 Strong/Lean picks are logged to `data/consensus_picks.csv` before kickoff and graded with
 `--grade`. They are **not validated yet**: forecasters like these usually lose to the closing
 line on their own, so trust the graded record after 100+ picks, not the label. Massey and
-Sports-Reference block automated access, so they're left out.
+Sports-Reference block automated access and OddsTrader's robots.txt blocks AI crawlers, so
+they're left out; Action Network picks are paywalled.
 
 ### Kalshi scan (no API keys needed)
 

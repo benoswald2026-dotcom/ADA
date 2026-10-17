@@ -59,3 +59,22 @@ def test_log_picks_replaces_same_day_and_skips_started(tmp_path):
     rows = list(csv.DictReader(open(path)))
     assert len(rows) == 1 and rows[0]["tier"] == "Lean"
     assert C.log_picks({"sport": "cfb", "games": [{**result("Strong", past)["games"][0], "event_id": "2"}]}, path) == 0
+
+
+def test_strong_with_many_sources_needs_80_percent():
+    assert C.tier_for(3.5, 5, 4, 3.0, 1.5) == "Strong"
+    assert C.tier_for(3.5, 6, 4, 3.0, 1.5) == "Lean"       # 4/6 < 80%
+    assert C.tier_for(3.5, 4, 3, 3.0, 1.5) == "Lean"       # under 5 sources: all must agree
+
+
+def test_parse_dimers_and_oddsshark():
+    dim = ('"AwayTeam":{"Abv":"OSU","DisplayName":"Ohio State"},"x":1,"HomeTeam":{"Abv":"IND","DisplayName":"Indiana"},'
+           '"y":2,"PreData":{"PredAwayScore":27.06,"PredHomeScore":24.01,"PythagHome":0.4018}')
+    g = C.parse_dimers(dim + dim)[0]                       # duplicates collapse
+    assert g["home"] == "Indiana" and g["p_home"] == pytest.approx(0.4018) and len(C.parse_dimers(dim + dim)) == 1
+    osk = ("class=\"game-prediction-card-matchup\"><a href='/sport/football/ncaaf/teams/main/cincinnati-bearcats' "
+           "class='team-anchor team-anchor-away'><img alt=\"CIN logo\"></a><span>x</span> 30.71 </span>"
+           "<a href='/sport/football/ncaaf/teams/main/west-virginia-mountaineers' class='team-anchor team-anchor-home'>"
+           "<img alt=\"WVU logo\"></a><span>y</span> 32.43 </span>")
+    o = C.parse_oddsshark("x" + osk)[0]
+    assert o["away"] == "cincinnati bearcats" and o["s_home"] == pytest.approx(32.43)

@@ -97,7 +97,7 @@ def cmd_picks(args):
         return
     r = C.build(args.sport, days=args.days)
     et = ZoneInfo("America/New_York")
-    print(f"\nCONSENSUS PICKS — {args.sport.upper()}. Sources: ESPN FPI, Dratings, Sagarin"
+    print(f"\nCONSENSUS PICKS — {args.sport.upper()}. Sources: ESPN FPI, Dratings, Sagarin, Dimers, OddsShark"
           + (", Hashmark model" if any("Hashmark model" in g["sources"] for g in r["games"]) else "")
           + ". Lines: DraftKings (via ESPN). Kalshi for the winner.")
     for n in r["notes"]:
@@ -116,7 +116,7 @@ def cmd_picks(args):
                                   "Total pick", "Kalshi winner"]))
     best = C.best_bets(r)
     print(f"\nBEST BETS (fixed rules: Strong = 3+ sources all agree and the line is off by "
-          f"{C.TIERS[args.sport]['strong_gap']:g}+ pts, spreads under {C.BLOWOUT_LINE:g}; Lean = 2/3 agree, {C.TIERS[args.sport]['lean_gap']:g}+ pts):")
+          f"{C.TIERS[args.sport]['strong_gap']:g}+ pts, spreads under {C.BLOWOUT_LINE:g} (5+ sources: 80% agree); Lean = 2/3 agree, {C.TIERS[args.sport]['lean_gap']:g}+ pts):")
     if not best:
         print("  None today.")
     for p in best[:args.top]:

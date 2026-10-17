@@ -1,9 +1,11 @@
 """Consensus picks: what independent forecasters expect, next to the prices.
 
-Sources (all public, no API keys):
+Sources (all public, no API keys; each site's robots.txt allows these pages):
   - ESPN FPI matchup predictor: home win %, predicted margin
   - Dratings: win %, projected score (so a margin and a total)
   - Sagarin "predictor" ratings: margin = home - away + home advantage
+  - Dimers: win %, projected score
+  - OddsShark computer picks: projected score
   - Hashmark's own model: NFL always; college only with CFBD_API_KEY
 Markets for comparison: DraftKings (via ESPN) and Kalshi.
 
@@ -34,9 +36,11 @@ from strategy import normal_cdf
 HEADERS = {"User-Agent": "Mozilla/5.0 (Hashmark; personal, read-only)"}
 SPORTS = {
     "cfb": {"espn": "college-football", "dratings": "https://www.dratings.com/predictor/ncaa-football-predictions/",
-            "sagarin": "http://sagarin.com/sports/cfsend.htm", "sigma": 16.0},
+            "sagarin": "http://sagarin.com/sports/cfsend.htm", "dimers": "https://www.dimers.com/cfb/predictions",
+            "oddsshark": "https://www.oddsshark.com/ncaaf/computer-picks", "sigma": 16.0},
     "nfl": {"espn": "nfl", "dratings": "https://www.dratings.com/predictor/nfl-football-predictions/",
-            "sagarin": "http://sagarin.com/sports/nflsend.htm", "sigma": 13.0},
+            "sagarin": "http://sagarin.com/sports/nflsend.htm", "dimers": "https://www.dimers.com/nfl/predictions",
+            "oddsshark": "https://www.oddsshark.com/nfl/computer-picks", "sigma": 13.0},
 }
 # Fixed before grading. gap = consensus margin vs the line (or total vs the total), in points.
 TIERS = {
@@ -90,6 +94,40 @@ def parse_sagarin(html):
     return ratings, hfa
 
 
+def parse_dimers(html):
+    """Dimers predictions page (embedded JSON) -> [{away, home, p_home, s_away, s_home}], one per game."""
+    out, seen = [], set()
+    pat = re.compile(r'"AwayTeam":\{[^}]*?"DisplayName":"([^"]+)".*?"HomeTeam":\{[^}]*?"DisplayName":"([^"]+)"'
+                     r'.*?"PreData":\{([^}]*)\}', re.S)
+    for away, home, pre in pat.findall(html):
+        if (away, home) in seen:
+            continue
+        num = lambda k: (m := re.search(rf'"{k}":(-?[\d.]+)', pre)) and float(m.group(1))
+        if num("PythagHome") is None or num("PredHomeScore") is None:
+            continue
+        seen.add((away, home))
+        out.append({"away": away, "home": home, "p_home": num("PythagHome"),
+                    "s_away": num("PredAwayScore"), "s_home": num("PredHomeScore")})
+    return out
+
+
+def parse_oddsshark(html):
+    """OddsShark computer picks -> [{away, home, away_abv, home_abv, s_away, s_home}] (names from team links)."""
+    out = []
+    for b in html.split('class="game-prediction-card-matchup"')[1:]:
+        b = b[:6000]
+        slugs = dict((side, slug) for slug, side in
+                     re.findall(r"href='[^']*/teams/main/([a-z0-9-]+)' class='team-anchor team-anchor-(away|home)'", b))
+        abv = re.findall(r'alt="([A-Za-z0-9&]+) logo"', b)
+        sc = re.findall(r'</span>\s*([\d.]+)\s*</span>', b)
+        if "away" not in slugs or "home" not in slugs or len(sc) < 2:
+            continue
+        out.append({"away": slugs["away"].replace("-", " "), "home": slugs["home"].replace("-", " "),
+                    "away_abv": abv[0] if abv else "", "home_abv": abv[1] if len(abv) > 1 else "",
+                    "s_away": float(sc[0]), "s_home": float(sc[1])})
+    return out
+
+
 def espn_fpi(sport, event_id):
     """(home win prob, predicted home margin) from ESPN's matchup predictor, or None."""
     lg = SPORTS[sport]["espn"]
@@ -105,8 +143,21 @@ def espn_fpi(sport, event_id):
 
 
 def _names(team):
-    """Every key a source might use for an ESPN team: location and full display name."""
-    return {team_key(team["location"]), normalize(team.get("displayName", "")), team_key(team.get("displayName", ""))}
+    """Every key a source might use for an ESPN team: location, full display name, abbreviation."""
+    out = {team_key(team["location"]), normalize(team.get("displayName", "")), team_key(team.get("displayName", ""))}
+    if team.get("abbreviation"):
+        out.add("abv:" + team["abbreviation"].lower())
+    return out
+
+
+def _find(rows, hk, ak, abv=False):
+    """The row whose home and away names match an ESPN game's teams (location or full name)."""
+    for x in rows:
+        h = {normalize(x["home"]), team_key(x["home"])} | ({"abv:" + x["home_abv"].lower()} if abv and x.get("home_abv") else set())
+        a = {normalize(x["away"]), team_key(x["away"])} | ({"abv:" + x["away_abv"].lower()} if abv and x.get("away_abv") else set())
+        if h & hk and a & ak:
+            return x
+    return None
 
 
 def _model_rows(sport, days):
@@ -135,9 +186,10 @@ def _model_rows(sport, days):
 # ---------------------------------------------------------------- consensus --
 
 def tier_for(gap, n, agree, strong, lean):
-    """Fixed rule. Strong: 3+ sources, all agree, |gap| >= strong. Lean: 2+ sources,
-    at least 2/3 agree, |gap| >= lean. Otherwise no pick."""
-    if n >= 3 and agree == n and abs(gap) >= strong:
+    """Fixed rule. Strong: 3+ sources, all agree (with 5+ sources, at least 80%),
+    |gap| >= strong. Lean: 2+ sources, at least 2/3 agree, |gap| >= lean."""
+    need = n if n < 5 else math.ceil(0.8 * n)
+    if n >= 3 and agree >= need and abs(gap) >= strong:
         return "Strong"
     if n >= 2 and agree >= math.ceil(2 * n / 3) and abs(gap) >= lean:
         return "Lean"
@@ -163,15 +215,23 @@ def build(sport="cfb", days=0, now=None, with_model=True):
     except ApiError as e:
         sagarin, sag_hfa = {}, 0.0
         notes.append(f"Sagarin unavailable ({e}).")
+    extra = {}
+    for name, parser in (("Dimers", parse_dimers), ("OddsShark", parse_oddsshark)):
+        try:
+            page, stamps[name.lower()] = _html(cfg[name.lower()], name)
+            extra[name] = parser(page)
+        except ApiError as e:
+            extra[name] = []
+            notes.append(f"{name} unavailable ({e}).")
     try:
         markets, stamps["kalshi"] = kalshi_markets("KXNCAAFGAME" if sport == "cfb" else "KXNFLGAME")
     except ApiError:
         markets = []
     model = _model_rows(sport, max(days, 0) + (3 if sport == "nfl" else 0)) if with_model else {}
     if sport == "cfb" and not model:
-        notes.append("Hashmark's own college model is off (no CFBD_API_KEY); consensus uses ESPN FPI, Dratings and Sagarin.")
+        notes.append("Hashmark's own college model is off (no CFBD_API_KEY); the consensus uses the outside forecasters only.")
 
-    games, unmatched = [], {"Dratings": 0, "Sagarin": 0}
+    games, unmatched = [], {"Dratings": 0, "Sagarin": 0, "Dimers": 0, "OddsShark": 0}
     for d in range(days + 1):
         events, stamps["espn"] = espn_events(sport, (now + timedelta(days=d)).strftime("%Y%m%d"))
         for e in events:
@@ -184,8 +244,7 @@ def build(sport="cfb", days=0, now=None, with_model=True):
             fpi = espn_fpi(sport, g["id"])
             if fpi:
                 src["ESPN FPI"] = {"p": fpi[0], "margin": fpi[1]}
-            dr = next((x for x in dratings if (normalize(x["home"]) in hk or team_key(x["home"]) in hk)
-                       and (normalize(x["away"]) in ak or team_key(x["away"]) in ak)), None)
+            dr = _find(dratings, hk, ak)
             if dr:
                 s = {"p": dr["p_home"]}
                 if "s_home" in dr:
@@ -201,6 +260,13 @@ def build(sport="cfb", days=0, now=None, with_model=True):
                 src["Sagarin"] = {"p": normal_cdf(m / cfg["sigma"]), "margin": m}
             elif sagarin:
                 unmatched["Sagarin"] += 1
+            for name, rows in extra.items():
+                x = _find(rows, hk, ak, abv=(name == "OddsShark"))
+                if x:
+                    src[name] = {"p": x["p_home"] if "p_home" in x else normal_cdf((x["s_home"] - x["s_away"]) / cfg["sigma"]),
+                                 "margin": x["s_home"] - x["s_away"], "total": x["s_home"] + x["s_away"]}
+                elif rows:
+                    unmatched[name] += 1
             mk = next((model[(x, y)] for x in hk for y in ak if (x, y) in model), None)
             if mk:
                 src["Hashmark model"] = {"p": mk[0], "margin": mk[1], **({"total": mk[2]} if mk[2] else {})}

@@ -559,7 +559,7 @@ function renderPicks() {
   const body = $("#picks-body");
   if (PICKS_ERR) { body.innerHTML = setupNotice(PICKS_ERR); return; }
   if (!PICKS || PICKS.sport !== SPORT) {
-    body.innerHTML = `<div class="panel"><p class="label">Collecting predictions from ESPN FPI, Dratings and Sagarin…</p><div class="progress"><span></span></div></div>`;
+    body.innerHTML = `<div class="panel"><p class="label">Collecting predictions from ESPN FPI, Dratings, Sagarin, Dimers and OddsShark…</p><div class="progress"><span></span></div></div>`;
     if (!picksLoading) loadPicks();
     return;
   }
