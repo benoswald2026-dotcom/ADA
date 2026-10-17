@@ -21,6 +21,7 @@ Read-only: nothing here places a bet.
 """
 import csv
 import html as _html_mod
+import json
 import math
 import os
 import re
@@ -50,6 +51,13 @@ TIERS = {
 }
 BLOWOUT_LINE = 28.0   # spreads this big can be at most "Lean" (fixed before grading)
 PICKS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "consensus_picks.csv")
+PRED_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "consensus_predictions.csv")
+WEIGHTS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "consensus_weights.json")
+PRED_FIELDS = ["logged_at", "sport", "event_id", "game_date", "kickoff", "matchup", "home", "away",
+               "home_line", "total_line", "src_margins", "src_totals"]
+# Learning (fixed before any results): every learned number starts at its default and
+# moves toward what the graded games say only as games pile up, like a 40-game prior.
+PRIOR_GAMES = 40
 PICK_FIELDS = ["logged_at", "sport", "event_id", "game_date", "matchup", "home", "away", "bet_type", "pick",
                "line", "consensus", "tier", "sources", "agree"]
 
@@ -245,6 +253,7 @@ def build(sport="cfb", days=0, now=None, with_model=True):
     if sport == "cfb" and not model:
         notes.append("Hashmark's own college model is off (no CFBD_API_KEY); the consensus uses the outside forecasters only.")
 
+    learned = load_weights().get(sport, {})
     games, unmatched = [], {"Dratings": 0, "Sagarin": 0, "Dimers": 0, "OddsShark": 0}
     for d in range(days + 1):
         events, stamps["espn"] = espn_events(sport, (now + timedelta(days=d)).strftime("%Y%m%d"))
@@ -286,22 +295,32 @@ def build(sport="cfb", days=0, now=None, with_model=True):
                 src["Hashmark model"] = {"p": mk[0], "margin": mk[1], **({"total": mk[2]} if mk[2] else {})}
             if not src:
                 continue
-            games.append(_summarize(sport, g, e, src, tiers, _match(sport, markets, g) if markets else None))
+            games.append(_summarize(sport, g, e, src, tiers, _match(sport, markets, g) if markets else None, learned))
     for name, n in unmatched.items():
         if n:
             notes.append(f"{name}: no prediction found for {n} games (team names or not covered).")
     games.sort(key=lambda x: x["kickoff"])
-    return {"games": games, "notes": notes, "stamps": stamps, "sport": sport}
+    return {"games": games, "notes": notes, "stamps": stamps, "sport": sport, "learned": learned}
 
 
-def _summarize(sport, g, e, src, tiers, km):
+def _wmean(values, weights):
+    """Weighted mean; sources without a learned weight count 1.0 (relative to the average)."""
+    if not values:
+        return None
+    w = {k: weights.get(k, 1.0) for k in values}
+    return sum(values[k] * w[k] for k in values) / sum(w.values())
+
+
+def _summarize(sport, g, e, src, tiers, km, learned=None):
+    learned = learned or {}
     h, a = g["home"]["location"], g["away"]["location"]
     ps = [s["p"] for s in src.values()]
     margins = {k: s["margin"] for k, s in src.items() if "margin" in s}
     totals = {k: s["total"] for k, s in src.items() if "total" in s}
     p_home = sum(ps) / len(ps)
-    margin = sum(margins.values()) / len(margins) if margins else None
-    total = sum(totals.values()) / len(totals) if totals else None
+    margin = _wmean(margins, learned.get("margin_w", {}))
+    total = _wmean(totals, learned.get("total_w", {}))
+    trust, trust_total = learned.get("trust", 1.0), learned.get("trust_total", 1.0)
     out = {"event_id": g["id"], "kickoff": g["kickoff"], "home": h, "away": a, "matchup": f"{a} @ {h}",
            "sources": {k: {kk: round(v, 4) for kk, v in s.items()} for k, s in src.items()},
            "n_sources": len(src), "p_home": p_home, "margin": margin, "total": total,
@@ -311,18 +330,20 @@ def _summarize(sport, g, e, src, tiers, km):
     # Against the spread: home covers if margin + home line > 0.
     if g["home_spread"] and margin is not None:
         line = g["home_spread"][0]
-        gap = margin + line
+        gap_raw = margin + line
+        gap = trust * gap_raw          # learned: how far to trust the consensus off the line
         side_home = gap > 0
         agree = sum((m + line > 0) == side_home for m in margins.values())
         pick = f"{h} {line:+g}" if side_home else f"{a} {-line:+g}"
         tier = tier_for(gap, len(margins), agree, tiers["strong_gap"], tiers["lean_gap"])
         if tier == "Strong" and abs(line) >= BLOWOUT_LINE:
             tier = "Lean"   # rating systems are least reliable in huge mismatches
-        out["ats"] = {"line": line, "gap": gap, "pick": pick, "agree": agree, "n": len(margins), "tier": tier}
+        out["ats"] = {"line": line, "gap": gap, "gap_raw": gap_raw, "pick": pick, "agree": agree,
+                      "n": len(margins), "tier": tier}
     # Over/under.
     if g["over"] and total is not None:
         line = g["over"][0]
-        gap = total - line
+        gap = trust_total * (total - line)
         agree = sum((t > line) == (gap > 0) for t in totals.values())
         out["ou"] = {"line": line, "gap": gap, "pick": f"{'Over' if gap > 0 else 'Under'} {line:g}", "agree": agree,
                      "n": len(totals), "tier": tier_for(gap, len(totals), agree, tiers["total_strong"], tiers["total_lean"])
@@ -405,16 +426,11 @@ def grade_pick(p, home_pts, away_pts):
     return "W" if x > 0 else ("P" if x == 0 else "L")
 
 
-def grade(path=None):
-    """Score every logged pick whose game is final. Returns {"rows": [...], "record": {...}}."""
+def _finals(pairs):
+    """{event_id: (home pts, away pts)} for finished games on the given (sport, YYYYMMDD) days."""
     from scan import espn_events
-    path = path or PICKS_FILE
-    if not os.path.exists(path):
-        return {"rows": [], "record": {}}
-    with open(path, newline="") as f:
-        picks = list(csv.DictReader(f))
     finals = {}
-    for sport, day in sorted({(p["sport"], p["game_date"]) for p in picks}):
+    for sport, day in sorted(pairs):
         try:
             events, _ = espn_events(sport, day)
         except ApiError:
@@ -425,6 +441,17 @@ def grade(path=None):
                 continue
             sc = {t["homeAway"]: float(t.get("score") or 0) for t in c["competitors"]}
             finals[e["id"]] = (sc["home"], sc["away"])
+    return finals
+
+
+def grade(path=None):
+    """Score every logged pick whose game is final. Returns {"rows": [...], "record": {...}}."""
+    path = path or PICKS_FILE
+    if not os.path.exists(path):
+        return {"rows": [], "record": {}}
+    with open(path, newline="") as f:
+        picks = list(csv.DictReader(f))
+    finals = _finals({(p["sport"], p["game_date"]) for p in picks})
     rows, record = [], {}
     for p in picks:
         if p["event_id"] not in finals:
@@ -435,3 +462,110 @@ def grade(path=None):
             r = record.setdefault(key, {"W": 0, "L": 0, "P": 0})
             r[res] += 1
     return {"rows": rows, "record": record}
+
+
+# ----------------------------------------------------------------- learning --
+
+def log_predictions(result, path=None):
+    """Save every game's per-source margins and totals plus the lines, before kickoff, so
+    results can later show which sources are accurate. One row per game: rerunning before
+    kickoff replaces it with the latest numbers; a started game is never changed."""
+    path = path or PRED_FILE
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    now = datetime.now(timezone.utc)
+    rows = []
+    if os.path.exists(path):
+        with open(path, newline="") as f:
+            rows = list(csv.DictReader(f))
+    index = {(r["sport"], r["event_id"]): i for i, r in enumerate(rows)}
+    for gm in result["games"]:
+        if gm["kickoff"] <= now:
+            continue
+        row = {"logged_at": now.strftime("%Y-%m-%d %H:%MZ"), "sport": result["sport"], "event_id": gm["event_id"],
+               "game_date": gm["kickoff"].strftime("%Y%m%d"), "kickoff": gm["kickoff"].isoformat(),
+               "matchup": gm["matchup"], "home": gm["home"], "away": gm["away"],
+               "home_line": "" if not gm["ats"] else gm["ats"]["line"],
+               "total_line": "" if not gm["ou"] else gm["ou"]["line"],
+               "src_margins": json.dumps({k: v["margin"] for k, v in gm["sources"].items() if "margin" in v}),
+               "src_totals": json.dumps({k: v["total"] for k, v in gm["sources"].items() if "total" in v})}
+        key = (result["sport"], gm["event_id"])
+        if key in index:
+            rows[index[key]] = row
+        else:
+            index[key] = len(rows)
+            rows.append(row)
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=PRED_FIELDS)
+        w.writeheader()
+        w.writerows(rows)
+
+
+def load_weights(path=None):
+    path = path or WEIGHTS_FILE
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def _fit(games):
+    """Learn source weights and the trust factor for one target (margin or total).
+
+    games: [(sources {name: prediction}, actual value, line value)].
+    Weight: 1 / (mean squared error), shrunk toward the pooled error with PRIOR_GAMES
+    pseudo-games, then scaled so the average weight is 1. Trust: least-squares slope of
+    (actual - line) on (consensus - line), shrunk toward 1.0 (= current behavior) the
+    same way and kept between 0 and 1.2."""
+    errs = {}
+    for src, act, _ in games:
+        for k, v in src.items():
+            errs.setdefault(k, []).append((act - v) ** 2)
+    if not errs:
+        return {}, 1.0, {}, 0
+    pooled = sum(sum(e) for e in errs.values()) / sum(len(e) for e in errs.values())
+    raw = {k: (len(e) / (sum(e) / len(e)) + PRIOR_GAMES / pooled) / (len(e) + PRIOR_GAMES) for k, e in errs.items()}
+    mean_w = sum(raw.values()) / len(raw)
+    weights = {k: round(v / mean_w, 4) for k, v in raw.items()}
+    mse = {k: round(sum(e) / len(e), 2) for k, e in errs.items()}
+    sxy = sxx = 0.0
+    for src, act, line in games:
+        cons = _wmean(src, weights)
+        d = cons - line
+        sxy += d * (act - line)
+        sxx += d * d
+    n = len(games)
+    slope = (sxy / sxx) if sxx > 0 else 1.0
+    trust = (n * slope + PRIOR_GAMES * 1.0) / (n + PRIOR_GAMES)
+    return weights, round(min(1.2, max(0.0, trust)), 4), {"mse": mse, "raw_slope": round(slope, 3)}, n
+
+
+def learn(pred_path=None, weights_path=None):
+    """Grade finished games and update each sport's source weights and trust factors.
+    Saves data/consensus_weights.json and returns it."""
+    pred_path, weights_path = pred_path or PRED_FILE, weights_path or WEIGHTS_FILE
+    if not os.path.exists(pred_path):
+        return load_weights(weights_path)
+    with open(pred_path, newline="") as f:
+        rows = list(csv.DictReader(f))
+    finals = _finals({(r["sport"], r["game_date"]) for r in rows})
+    out = load_weights(weights_path)
+    for sport in sorted({r["sport"] for r in rows}):
+        mg, tg = [], []
+        for r in rows:
+            if r["sport"] != sport or r["event_id"] not in finals:
+                continue
+            hp, ap = finals[r["event_id"]]
+            if r["home_line"] not in ("", None):
+                mg.append((json.loads(r["src_margins"]), hp - ap, -float(r["home_line"])))
+            if r["total_line"] not in ("", None) and json.loads(r["src_totals"]):
+                tg.append((json.loads(r["src_totals"]), hp + ap, float(r["total_line"])))
+        mw, trust, mstat, mn = _fit([g for g in mg if g[0]])
+        tw, trust_t, tstat, tn = _fit(tg)
+        out[sport] = {"margin_w": mw, "trust": trust, "margin_stats": mstat, "games": mn,
+                      "total_w": tw, "trust_total": trust_t, "total_stats": tstat, "total_games": tn,
+                      "updated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%MZ")}
+    os.makedirs(os.path.dirname(weights_path), exist_ok=True)
+    with open(weights_path, "w") as f:
+        json.dump(out, f, indent=1, sort_keys=True)
+    return out

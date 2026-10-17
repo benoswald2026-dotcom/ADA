@@ -82,6 +82,17 @@ def cmd_picks(args):
     from zoneinfo import ZoneInfo
     from tabulate import tabulate
     import consensus as C
+    learned = C.learn()   # grade finished games and update source weights / trust first
+    if args.learn:
+        if not learned:
+            print("Nothing learned yet: predictions are logged each time `picks` runs and graded after the games.")
+        for sp, L in learned.items():
+            print(f"\n{sp.upper()} — learned from {L['games']} finished games (spreads), {L['total_games']} (totals); updated {L['updated']}")
+            print(f"  Trust in the consensus off the line: spreads {L['trust']:.2f}, totals {L['trust_total']:.2f}"
+                  "  (1.00 = take it at face value; lower = results say shrink it toward the line)")
+            for k in sorted(L["margin_w"], key=lambda k: -L["margin_w"][k]):
+                print(f"  {k:15s} weight {L['margin_w'][k]:.2f}   avg sq. miss on the margin {L['margin_stats']['mse'][k]:.1f}")
+        return
     if args.grade:
         g = C.grade()
         if not g["rows"]:
@@ -123,8 +134,15 @@ def cmd_picks(args):
         gm = p["game"]
         print(f"  {p['tier']:6s} {p['type']:6s} {p['pick']:28s} {gm['matchup']:36s} line off by {abs(p['gap']):.1f} pts, "
               f"{p['agree']}/{p['n']} sources agree")
+    C.log_predictions(r)
     logged = C.log_picks(r)
     print(f"\nLogged {logged} new picks to data/consensus_picks.csv. Grade them later: python main.py picks --grade")
+    L = r.get("learned") or {}
+    if L.get("games"):
+        print(f"Learned from {L['games']} finished games: trust {L['trust']:.2f} (spreads), {L['trust_total']:.2f} (totals). "
+              "Details: python main.py picks --learn")
+    else:
+        print("Nothing learned yet: weights start equal and trust at 1.00; they adjust as logged games finish.")
     print("Not validated yet: these forecasters usually lose to the closing line on their own. The graded record decides.")
 
 
@@ -355,6 +373,7 @@ def main():
     pk.add_argument("--days", type=int, default=0, help="today plus this many days (NFL: try 3)")
     pk.add_argument("--top", type=int, default=15)
     pk.add_argument("--grade", action="store_true", help="score logged picks against final scores")
+    pk.add_argument("--learn", action="store_true", help="show what the model has learned from finished games")
     pk.set_defaults(func=cmd_picks)
     sc = sub.add_parser("scan", help="Kalshi vs. sportsbook prices, no API keys needed")
     sc.add_argument("--sport", choices=["cfb", "nfl"], default="cfb")

@@ -79,12 +79,14 @@ def picks_json(sport, force=False):
     from cache import fresh
     c = _picks_cache.get(sport)
     if force or c is None or time.time() - c["at"] > 600:
+        C.learn()
         days = 3 if sport == "nfl" else 0
         if force:
             with fresh():
                 r = C.build(sport, days=days)
         else:
             r = C.build(sport, days=days)
+        C.log_predictions(r)
         C.log_picks(r)
         best = [{"tier": p["tier"], "type": p["type"], "pick": p["pick"], "gap": p["gap"], "agree": p["agree"],
                  "n": p["n"], "matchup": p["game"]["matchup"]} for p in C.best_bets(r)]

@@ -93,3 +93,23 @@ def test_name_matching_handles_mascots_entities_and_long_names():
     assert d["home"] == "Louisiana Ragin' Cajuns"
     # both teams must match: a lone mascot-stripped hit never pairs the wrong game
     assert C._find([{"home": "Miami RedHawks", "away": "Akron Zips"}], {C.team_key("Miami")}, {C.team_key("Toledo")}) is None
+
+
+def test_fit_weights_favor_accurate_source_and_trust_shrinks_when_consensus_misleads():
+    import random
+    rnd = random.Random(4)
+    games = []
+    for _ in range(400):
+        line = rnd.uniform(-14, 14)
+        actual = line + rnd.gauss(0, 14)              # the line is unbiased; consensus gaps are noise
+        games.append(({"Good": actual + rnd.gauss(0, 8), "Noisy": line + rnd.gauss(0, 10)}, actual, line))
+    w, trust, stats, n = C._fit(games)
+    assert w["Good"] > w["Noisy"] and n == 400
+    lazy = [({"A": line + 5, "B": line + 6}, line + rnd.gauss(0, 14), line) for line in [rnd.uniform(-10, 10) for _ in range(400)]]
+    _, trust2, _, _ = C._fit(lazy)
+    assert trust2 < 0.3                                 # always-wrong gaps -> trust falls toward 0
+
+
+def test_few_games_keep_defaults_close():
+    w, trust, _, n = C._fit([({"A": 3.0, "B": -3.0}, 10.0, 0.0)])
+    assert n == 1 and 0.9 < w["A"] / w["B"] < 1.1 and 0.9 <= trust <= 1.2
