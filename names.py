@@ -51,7 +51,7 @@ _ALIAS_GROUPS = {
     "uconn": ["uconn", "connecticut"],
     "southern miss": ["southern miss", "southern mississippi"],
     "ole miss": ["ole miss", "mississippi"],
-    "fiu": ["fiu", "florida international"],
+    "fiu": ["fiu", "florida international", "florida intl"],
     "fau": ["fau", "florida atlantic"],
     "nc state": ["nc state", "north carolina state"],
     "sam houston": ["sam houston", "sam houston state"],
@@ -68,6 +68,23 @@ _ALIAS_GROUPS = {
     "lsu": ["lsu", "louisiana state"],
     "unlv": ["unlv", "nevada-las vegas", "nevada las vegas"],
     "utrgv": ["ut rio grande valley", "utrgv"],
+    # Sonny Moore and TeamRankings spellings
+    "central michigan": ["central michigan", "c michigan"],
+    "eastern michigan": ["eastern michigan", "e michigan"],
+    "western michigan": ["western michigan", "w michigan"],
+    "northern illinois": ["northern illinois", "n illinois"],
+    "western kentucky": ["western kentucky", "w kentucky"],
+    "east carolina": ["east carolina", "e carolina"],
+    "coastal carolina": ["coastal carolina", "coastal car"],
+    "georgia southern": ["georgia southern", "georgia so"],
+    "james madison": ["james madison", "j madison"],
+    "middle tennessee": ["middle tennessee", "middle tennessee state", "middle tenn"],
+    "north texas": ["north texas", "n texas"],
+    "south alabama": ["south alabama", "s alabama"],
+    "south florida": ["south florida", "s florida", "usf"],
+    "charlotte": ["charlotte", "north carolina charlotte"],
+    "ohio": ["ohio", "ohio university"],
+    "troy": ["troy", "troy state"],
 }
 _ALIASES = {spelling: key for key, spellings in _ALIAS_GROUPS.items() for spelling in spellings}
 

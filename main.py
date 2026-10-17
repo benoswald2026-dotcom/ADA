@@ -115,7 +115,7 @@ def cmd_picks(args):
         return
     r = C.build(args.sport, days=args.days)
     et = ZoneInfo("America/New_York")
-    print(f"\nCONSENSUS PICKS — {args.sport.upper()}. Sources: ESPN FPI, Dratings, Sagarin, Dimers, OddsShark"
+    print(f"\nCONSENSUS PICKS — {args.sport.upper()}. Sources: ESPN FPI, Dratings, Sagarin, Dimers, OddsShark, Sonny Moore, TeamRankings, nfelo (NFL)"
           + (", Hashmark model" if any("Hashmark model" in g["sources"] for g in r["games"]) else "")
           + ". Lines: DraftKings (via ESPN). Kalshi for the winner.")
     for n in r["notes"]:

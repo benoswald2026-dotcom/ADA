@@ -6,6 +6,9 @@ Sources (all public, no API keys; each site's robots.txt allows these pages):
   - Sagarin "predictor" ratings: margin = home - away + home advantage
   - Dimers: win %, projected score
   - OddsShark computer picks: projected score
+  - Sonny Moore power ratings: margin = home - away + the home advantage the page states
+  - TeamRankings predictive ratings: margin = home - away + Sagarin's home advantage
+  - nfelo (NFL only): the model's spread
   - Hashmark's own model: NFL always; college only with CFBD_API_KEY
 Markets for comparison: DraftKings (via ESPN) and Kalshi.
 
@@ -41,10 +44,15 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Hashmark; personal, read-only)"}
 SPORTS = {
     "cfb": {"espn": "college-football", "dratings": "https://www.dratings.com/predictor/ncaa-football-predictions/",
             "sagarin": "http://sagarin.com/sports/cfsend.htm", "dimers": "https://www.dimers.com/cfb/predictions",
-            "oddsshark": "https://www.oddsshark.com/ncaaf/computer-picks", "sigma": 16.0},
+            "oddsshark": "https://www.oddsshark.com/ncaaf/computer-picks",
+            "sonny": "https://sonnymoorepowerratings.com/col-foot.htm",
+            "teamrankings": "https://www.teamrankings.com/college-football/ranking/predictive-by-other", "sigma": 16.0},
     "nfl": {"espn": "nfl", "dratings": "https://www.dratings.com/predictor/nfl-football-predictions/",
             "sagarin": "http://sagarin.com/sports/nflsend.htm", "dimers": "https://www.dimers.com/nfl/predictions",
-            "oddsshark": "https://www.oddsshark.com/nfl/computer-picks", "sigma": 13.0},
+            "oddsshark": "https://www.oddsshark.com/nfl/computer-picks",
+            "sonny": "https://sonnymoorepowerratings.com/nfl-foot.htm",
+            "teamrankings": "https://www.teamrankings.com/nfl/ranking/predictive-by-other",
+            "nfelo": "https://www.nfeloapp.com/games/", "sigma": 13.0},
 }
 # Fixed before grading. gap = consensus margin vs the line (or total vs the total), in points.
 TIERS = {
@@ -57,7 +65,9 @@ PICKS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "c
 # injuries or weather; market-based sources and the betting line already do.
 QB_OUT_POINTS = {"cfb": 7.0, "nfl": 5.0}       # starting QB (season passing leader) fully out
 STATUS_WEIGHT = {"out": 1.0, "injured reserve": 1.0, "doubtful": 0.75, "questionable": 0.5}
-INJURY_ADJUSTED_SOURCES = {"Sagarin", "Dratings"}
+INJURY_ADJUSTED_SOURCES = {"Sagarin", "Dratings", "Sonny Moore", "TeamRankings"}
+# TeamRankings publishes no home-field number; it borrows Sagarin's current one, else these.
+DEFAULT_HFA = {"cfb": 2.8, "nfl": 1.8}
 WIND_PER_MPH = -0.35       # points of total per mph of sustained wind above 10 (fitted on the NFL)
 GUST_TO_WIND = 1.4         # ESPN gives gusts; sustained wind is roughly gust / 1.4
 # Checked 2026-10-17: in windy games (gusts 25+ mph) these sites' totals sat as close to
@@ -117,6 +127,48 @@ def parse_sagarin(html):
         k = team_key(name)
         ratings.setdefault(k, float(pred))   # the page lists teams twice; keep the first
     return ratings, hfa
+
+
+def parse_sonny_moore(html):
+    """Sonny Moore power ratings page -> ({team key: PR}, home advantage the page states)."""
+    text = re.sub(r"<[^>]+>", "", html)
+    m = re.search(r"add\s+([\d.]+):?\s+points? to the home team", text)
+    hfa = float(m.group(1)) if m else 0.0
+    ratings = {}
+    for name, pr in re.findall(r"^\s*\d+\s+(.+?)\s+\d+\s+\d+\s+\d+\s+[\d.]+\s+([\d.]+)\s*$", text, re.M):
+        ratings.setdefault(team_key(name), float(pr))   # ranked list first, then an A-Z repeat
+    return ratings, hfa
+
+
+def parse_teamrankings(html):
+    """TeamRankings predictive ratings -> {team key: points better than an average team,
+    neutral field}. The sort key holds the unrounded value plus 500."""
+    ratings = {}
+    for name, val in re.findall(r'<td class="nowrap" data-sort="([^"]+)">.*?</td>\s*'
+                                r'<td class="text-right" data-sort="(-?[\d.]+)">', html, re.S):
+        ratings.setdefault(team_key(_html_mod.unescape(name)), float(val) - 500)
+    return ratings
+
+
+def parse_nfelo(html):
+    """nfelo game cards -> [{away, home, margin}] with codes as the names. Each team's row
+    reads code, record, open line, price, current line, price, MODEL line, value."""
+    out = []
+    for card in re.split(r'aria-label="View game details for ', html)[1:]:
+        head = re.match(r"([A-Z]{2,3}) at ([A-Z]{2,3})\"", card)
+        if not head:
+            continue
+        away, home = head.groups()
+        tok = [t.strip() for t in re.findall(r">([^<]+)<", card.split("aria-label=")[0]) if t.strip()]
+        try:
+            ia, ih = tok.index(away), tok.index(home)
+            m_away, m_home = float(tok[ia + 6]), float(tok[ih + 6])
+        except (ValueError, IndexError):
+            continue
+        if "Model" not in tok or abs(m_away + m_home) > 0.01:
+            continue   # a finished game's card, or the rows don't mirror
+        out.append({"away": away, "home": home, "margin": m_away})   # away's line = home margin
+    return out
 
 
 def parse_dimers(html):
@@ -332,6 +384,26 @@ def build(sport="cfb", days=0, now=None, with_model=True):
     except ApiError as e:
         sagarin, sag_hfa = {}, 0.0
         notes.append(f"Sagarin unavailable ({e}).")
+    ratings = {"Sagarin": (sagarin, sag_hfa)}
+    try:
+        page, stamps["sonny moore"] = _html(cfg["sonny"], "Sonny Moore")
+        ratings["Sonny Moore"] = parse_sonny_moore(page)
+    except ApiError as e:
+        notes.append(f"Sonny Moore unavailable ({e}).")
+    try:
+        page, stamps["teamrankings"] = _html(cfg["teamrankings"], "TeamRankings")
+        ratings["TeamRankings"] = (parse_teamrankings(page), sag_hfa or DEFAULT_HFA[sport])
+    except ApiError as e:
+        notes.append(f"TeamRankings unavailable ({e}).")
+    if sport == "nfl":   # NFL ratings pages use city or full names; match on team codes
+        ratings = {n: ({T.code_for(k) or k: v for k, v in r.items()}, hfa) for n, (r, hfa) in ratings.items()}
+    nfelo = {}
+    if sport == "nfl":
+        try:
+            page, stamps["nfelo"] = _html(cfg["nfelo"], "nfelo")
+            nfelo = {(T.canon(x["home"]), T.canon(x["away"])): x["margin"] for x in parse_nfelo(page)}
+        except ApiError as e:
+            notes.append(f"nfelo unavailable ({e}).")
     extra = {}
     for name, parser in (("Dimers", parse_dimers), ("OddsShark", parse_oddsshark)):
         try:
@@ -367,7 +439,7 @@ def build(sport="cfb", days=0, now=None, with_model=True):
         notes.append("Hashmark's own college model is off (no CFBD_API_KEY); the consensus uses the outside forecasters only.")
 
     learned = load_weights().get(sport, {})
-    games, unmatched = [], {"Dratings": 0, "Sagarin": 0, "Dimers": 0, "OddsShark": 0}
+    games, unmatched = [], {"Dratings": 0, "Dimers": 0, "OddsShark": 0, "nfelo": 0, **{n: 0 for n in ratings}}
     for d in range(days + 1):
         events, stamps["espn"] = espn_events(sport, (now + timedelta(days=d)).strftime("%Y%m%d"))
         for e in events:
@@ -388,14 +460,23 @@ def build(sport="cfb", days=0, now=None, with_model=True):
                 src["Dratings"] = s
             elif dratings:
                 unmatched["Dratings"] += 1
-            rh = next((sagarin[k] for k in hk if k in sagarin), None)
-            ra = next((sagarin[k] for k in ak if k in sagarin), None)
-            if rh is not None and ra is not None:
-                neutral = bool((e["competitions"][0].get("neutralSite")))
-                m = rh - ra + (0.0 if neutral else sag_hfa)
-                src["Sagarin"] = {"p": normal_cdf(m / cfg["sigma"]), "margin": m}
-            elif sagarin:
-                unmatched["Sagarin"] += 1
+            neutral = bool((e["competitions"][0].get("neutralSite")))
+            if sport == "nfl":
+                hk, ak = hk | {T.code_for(h["displayName"])}, ak | {T.code_for(a["displayName"])}
+            for name, (table, hfa) in ratings.items():
+                rh = next((table[k] for k in hk if k in table), None)
+                ra = next((table[k] for k in ak if k in table), None)
+                if rh is not None and ra is not None:
+                    m = rh - ra + (0.0 if neutral else hfa)
+                    src[name] = {"p": normal_cdf(m / cfg["sigma"]), "margin": m}
+                elif table:
+                    unmatched[name] += 1
+            if nfelo:
+                m = nfelo.get((T.code_for(h["displayName"]), T.code_for(a["displayName"])))
+                if m is not None:
+                    src["nfelo"] = {"p": normal_cdf(m / cfg["sigma"]), "margin": m}
+                else:
+                    unmatched["nfelo"] += 1
             for name, rows in extra.items():
                 x = _find(rows, hk, ak, abv=(name == "OddsShark"))
                 if x:

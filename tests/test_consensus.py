@@ -44,6 +44,37 @@ def test_parse_sagarin_lines():
     assert ratings[C.team_key("Miami")] == pytest.approx(87.50)      # alias: Miami-Florida = Miami
 
 
+def test_parse_sonny_moore():
+    page = ("<p>teams PR and add 4 points to the home team for the average HFA</p>\n"
+            "<pre>  2 MIAMI FL.                    5    0    0   62.92   98.48\n"
+            "137 NORTH CAROLINA CHARLOTTE     0    6    0   62.04   37.65\n"
+            "  2 MIAMI FL.                    5    0    0   62.92   98.48\n</pre>")
+    ratings, hfa = C.parse_sonny_moore(page)
+    assert hfa == 4.0
+    assert ratings == {"miami": 98.48, "charlotte": 37.65}     # aliases; the A-Z repeat ignored
+    _, hfa = C.parse_sonny_moore("add 2.3: points to the home team")
+    assert hfa == 2.3
+
+
+def test_parse_teamrankings():
+    row = ('<td class="nowrap" data-sort="{}"><a href="x">{}</a> <small>(5-0)</small></td>\n'
+           '<td class="text-right" data-sort="{}">x</td>')
+    page = row.format("W Michigan", "W Michigan", "496.5") + row.format("Georgia", "Georgia", "532.2084")
+    r = C.parse_teamrankings(page)
+    assert r["western michigan"] == pytest.approx(-3.5)
+    assert r["georgia"] == pytest.approx(32.2084)
+
+
+def test_parse_nfelo_reads_model_column_and_skips_finished():
+    def card(away, home, toks):
+        return f'aria-label="View game details for {away} at {home}" href="/g/">' + "".join(f"<div>{t}</div>" for t in toks)
+    page = (card("HOU", "JAX", ["00:00 PM", "Open", "Current", "Model", "HOU", "1-4", "+2.5", "-105", "+2.5", "-105", "+1.0",
+                                "+9.2%", "JAX", "4-1", "-2.5", "-115", "-2.5", "-115", "-1.0", "-18%"])
+            + card("SEA", "DEN", ["00:00 PM", "Score", "Close", "Model", "SEA", "3-2", "14", "-2.5", "-117",
+                                  "DEN", "3-2", "17", "+2.5", "-103"]))
+    assert C.parse_nfelo(page) == [{"away": "HOU", "home": "JAX", "margin": 1.0}]   # JAX by 1
+
+
 def test_log_picks_replaces_same_day_and_skips_started(tmp_path):
     from datetime import datetime, timedelta, timezone
     soon = datetime.now(timezone.utc) + timedelta(hours=3)

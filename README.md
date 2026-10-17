@@ -138,7 +138,7 @@ python main.py picks --sport nfl --days 3   # through Sunday
 python main.py picks --grade                # score logged picks against final scores
 ```
 Pulls predictions from independent forecasters (ESPN FPI, Dratings, Sagarin, Dimers,
-OddsShark computer picks, plus
+OddsShark computer picks, Sonny Moore and TeamRankings power ratings, nfelo for the NFL, plus
 Hashmark's own model for the NFL, and for college once `CFBD_API_KEY` is set) and
 averages them: consensus winner and win %, predicted margin vs the DraftKings spread,
 projected total vs the over/under, how many sources agree, and the Kalshi price for
@@ -153,6 +153,9 @@ the consensus winner. Fixed rules, set before any grading:
 - *trust* per source = how much of its disagreement with the line actually showed up in
   results (slope of result-vs-line on source-vs-line, 40-game prior, clipped to 0–1.2).
   Gaps are multiplied by trust, and a source under 0.25 stops voting.
+- New sources (Sonny Moore, TeamRankings, nfelo) start at weight 1 and trust 1 and
+  earn or lose influence the same way. Ratings-only sources (Sagarin, Sonny Moore,
+  TeamRankings) get the starting-QB injury adjustment, since ratings can't see injuries.
 - ESPN FPI gets a head start from its own past predictions (`--backfill`, 2025–26): on 513
   college and 172 NFL games, its side covered 45.9% when it disagreed with the closing line
   by 3+ points (39.3% at 5+), and blending it with the line didn't beat the line alone.
