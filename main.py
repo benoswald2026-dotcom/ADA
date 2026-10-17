@@ -292,6 +292,17 @@ def cmd_props(args):
     if args.backtest:
         print(props.report(props.run_backtest()))
         return
+    learned = props.learn_props()          # grade finished props and update the trust factor first
+    if args.learn:
+        print(f"Props learned from {learned.get('graded', 0)} graded Kalshi props: trust {learned.get('trust', 1.0):.2f}"
+              f" (1.00 = take the model at face value; 0 = defer to Kalshi's price).")
+        rec = learned.get("flag_record") or {}
+        if rec.get("W", 0) + rec.get("L", 0):
+            print(f"FLAG record: {rec['W']}-{rec['L']} ({rec['W'] / (rec['W'] + rec['L']):.1%}).")
+        for g in (learned.get("rows") or [])[-25:]:
+            print(f"  {g['kickoff'][:10]} {g['player']:22s} {g['stat']:10s} {g['side']} {g['strike']}+ @ {g['ask']}  "
+                  f"actual {g['actual']:.0f}  {g['result']}{'  (FLAG)' if g['flag'] == '1' else ''}")
+        return
     _title, notes, rows = load_slate("nfl", args.days, fresh=args.fresh)
     if args.fresh:
         from cache import fresh
@@ -299,20 +310,36 @@ def cmd_props(args):
             r = props.build_props(rows, bankroll=args.bankroll)
     else:
         r = props.build_props(rows, bankroll=args.bankroll)
+    props.log_props(r)
     for n in notes + r["notes"]:
         print(f"NOTE: {n}")
     money = lambda x: f"${x:,.2f}" if x else "-"
-    print("\nPLAYER PROPS — NFL. Median = the model's middle outcome; fair line = where over and under are even.")
-    print("Prop edges are UNVALIDATED: there's no free history of prop lines to backtest against.\n")
-    print(tabulate([[x["matchup"][:30], x["player"], x["position"], x["label"], f"{x['median']:.1f}",
-                     f"{x['q25']:.0f}-{x['q75']:.0f}", x["fair_line"],
-                     "-" if not x["market"] else f"{x['market']['line']}",
-                     "-" if not x["market"] else f"{x['p_over']:.0%}",
-                     "-" if not x["market"] else f"{x['pick']} {x['ev']:+.3f}",
-                     money(x["stake"])] for x in r["rows"]],
-                   headers=["Game", "Player", "Pos", "Stat", "Median", "25-75%", "Fair line", "Book line",
-                            "P(over)", "Pick / EV", "Stake"]))
-    print(f"\nSource: {r['source']}. Not betting advice; this tool never places bets.")
+    print(f"\nPLAYER PROPS — NFL. Model median and middle-50% range vs Kalshi's own line (where its 'N+' prices"
+          f" cross 50c). {r['kalshi_players']} player-stats priced on Kalshi. Learned trust {r['trust']:.2f}.\n")
+
+    def call(x):
+        if x.get("flag"):
+            return "FLAG"
+        k = x.get("kalshi")
+        return "-" if not k else ("gap>10" if not k["gap_ok"] else "pass")
+    print(tabulate([[x["matchup"][:28], x["player"] + (f" ({x['injury']})" if x.get("injury") else ""), x["label"],
+                     f"{x['median']:.1f}", f"{x['q25']:.0f}-{x['q75']:.0f}",
+                     "-" if x.get("kalshi_median") is None else f"{x['kalshi_median']:.1f}",
+                     "-" if not x.get("kalshi") else f"{x['kalshi']['side']} {x['kalshi']['n']}+ @ {x['kalshi']['ask'] * 100:.0f}c",
+                     "-" if not x.get("kalshi") else f"{x['kalshi']['p_model']:.0%} vs {(x['kalshi']['mid'] if x['kalshi']['side'] == 'YES' else 1 - x['kalshi']['mid']):.0%}",
+                     "-" if not x.get("kalshi") else f"{x['kalshi']['edge'] * 100:+.1f}", call(x), money(x["stake"])]
+                    for x in r["rows"]],
+                   headers=["Game", "Player", "Stat", "Model median", "25-75%", "Kalshi line", "Best Kalshi contract",
+                            "Model vs Kalshi", "Edge pts", "Call", "Stake"]))
+    flags = [x for x in r["rows"] if x.get("flag")]
+    print(f"\nBEST PROP BETS (FLAG = edge after fee >= 3 pts, price 20-80c, model within 10 pts of Kalshi): {len(flags)}")
+    for x in sorted(flags, key=lambda x: -x["kalshi"]["edge"])[:args.top]:
+        k = x["kalshi"]
+        print(f"  {x['player']:22s} {x['label']:16s} buy {k['side']} '{k['contract']}' at {k['ask'] * 100:.0f}c"
+              f"  (model {k['p_model']:.0%}, Kalshi {(k['mid'] if k['side'] == 'YES' else 1 - k['mid']):.0%}, edge {k['edge'] * 100:+.1f})"
+              f"  stake {money(x['stake'])}")
+    print("\nLogged for grading (data/props_log.csv); results update the trust factor: python main.py props --learn")
+    print(f"Source: {r['source']}. Prop edges are not validated yet. Not betting advice; this tool never places bets.")
 
 
 def cmd_clv(_args):
@@ -408,11 +435,13 @@ def main():
     sc.add_argument("--all", action="store_true", help="show every side")
     sc.add_argument("--bankroll", type=float, default=1000.0)
     sc.set_defaults(func=cmd_scan)
-    pp = sub.add_parser("props", help="NFL player-prop projections (and edges when lines are available)")
+    pp = sub.add_parser("props", help="NFL player-prop projections vs Kalshi prop prices")
     pp.add_argument("--days", type=int, default=0)
     pp.add_argument("--bankroll", type=float, default=1000.0)
     pp.add_argument("--fresh", action="store_true", help="re-download all live data right now")
     pp.add_argument("--backtest", action="store_true", help="show the walk-forward validation instead")
+    pp.add_argument("--learn", action="store_true", help="grade logged props and show the learned trust and record")
+    pp.add_argument("--top", type=int, default=15)
     pp.set_defaults(func=cmd_props)
     p = sport_args(sub.add_parser("parlay", help="parlay fair price"))
     p.add_argument("legs", nargs="+", help="GAMEID:TEAM (2 or 3 legs)")

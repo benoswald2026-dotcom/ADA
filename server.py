@@ -162,12 +162,14 @@ def cached_props(bankroll=1000.0, force=False):
         c = _props_cache
         if force or c["value"] is None or time.time() - c["at"] > WEEK_CACHE_SECONDS or c["value"][0] != bankroll:
             _info, rows = cached_week("nfl", force=force)
+            props.learn_props()
             if force:
                 from cache import fresh
                 with fresh():
                     c["value"] = (bankroll, props.build_props(rows, bankroll=bankroll))
             else:
                 c["value"] = (bankroll, props.build_props(rows, bankroll=bankroll))
+            props.log_props(c["value"][1])
             c["at"] = time.time()
         return c["value"][1]
 

@@ -19,7 +19,11 @@ can't be backtested against the prop market. Prop edges are labelled
 
 Read-only: nothing here places a bet.
 """
+import csv
+import json
 import math
+import os
+import re
 from collections import defaultdict
 from datetime import datetime
 
@@ -289,6 +293,121 @@ def run_backtest():
     return {"stats": [evaluate(s, df, games, qb_gaps=qb_gaps) for s in STATS], "source": f"nflverse player stats + schedules @ {stamp}"}
 
 
+# ------------------------------------------------------------ kalshi --------
+
+KALSHI_PROP_SERIES = {"pass_yds": "KXNFLPASSYDS", "rush_yds": "KXNFLRSHYDS",
+                      "receptions": "KXNFLREC", "rec_yds": "KXNFLRECYDS"}
+PROPS_LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "props_log.csv")
+PROPS_WEIGHTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "props_weights.json")
+PROPS_LOG_FIELDS = ["logged_at", "season", "game_id", "kickoff", "player_id", "player", "team", "stat", "strike",
+                    "side", "ask", "mid", "p_model", "p_used", "edge", "flag"]
+PRIOR_PICKS = 40           # learned trust starts at 1.0 and moves only as graded props pile up
+_KALSHI_NAME = re.compile(r"^(.*):\s*(\d+)\+")
+
+
+def player_key(name):
+    """Comparable player name: lower case, no punctuation, no Jr./Sr./II/III."""
+    clean = (name or "").replace(".", "").replace("'", "").replace("\u2019", "")
+    words = [w for w in normalize(clean).split() if w not in {"jr", "sr", "ii", "iii", "iv", "v"}]
+    return " ".join(words)
+
+
+def kalshi_props():
+    """Kalshi NFL player-prop ladders: {(stat, player key): {"name", "event", "segment", "strikes": [...]}}.
+    Each strike is a 'Player: N+' contract (pays if the player gets N or more)."""
+    from api_clients import kalshi_markets
+    out = {}
+    for stat, series in KALSHI_PROP_SERIES.items():
+        try:
+            ms, _ = kalshi_markets(series)
+        except ApiError:
+            continue
+        for m in ms:
+            mm = _KALSHI_NAME.match(m.get("team") or "")
+            if not mm:
+                continue
+            name, n = mm.group(1).strip(), int(mm.group(2))
+            parts = (m.get("ticker") or "").split("-")
+            entry = out.setdefault((stat, player_key(name)), {"name": name, "event": m.get("event_ticker", ""),
+                                                              "segment": parts[2] if len(parts) > 2 else "", "strikes": []})
+            entry["strikes"].append({"n": n, "yes_ask": m.get("yes_ask"), "yes_bid": m.get("yes_bid"),
+                                     "no_ask": m.get("no_ask"), "ticker": m.get("ticker")})
+    for e in out.values():
+        e["strikes"].sort(key=lambda x: x["n"])
+    return out
+
+
+def _mid(k):
+    a, b = k.get("yes_ask"), k.get("yes_bid")
+    if a is None or not 0 < a < 1:
+        return None
+    return (a + b) / 2 if b is not None and 0 < b < a else a
+
+
+def kalshi_median(strikes):
+    """Where the ladder's midpoints cross 50%: Kalshi's own line for the player."""
+    pts = [(k["n"], m) for k in strikes if (m := _mid(k)) is not None]
+    for (x0, p0), (x1, p1) in zip(pts, pts[1:]):
+        if p0 >= 0.5 >= p1 and p0 != p1:
+            return x0 + (p0 - 0.5) * (x1 - x0) / (p0 - p1)
+    return None
+
+
+def load_props_trust(path=None):
+    try:
+        with open(path or PROPS_WEIGHTS) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def best_kalshi_prop(strikes, pj, sd, fitted, trust=1.0):
+    """Best Kalshi contract for one player-stat. For each 'N+' strike priced 20-80c,
+    P(YES) = P(stat >= N) from the model's calibrated distribution, shrunk toward
+    Kalshi's own price by the learned trust. Returns the best YES/NO side, or None."""
+    from kalshi import edge_after_fee
+    best = None
+    for k in strikes:
+        mid = _mid(k)
+        if mid is None:
+            continue
+        p_model = p_over(k["n"] - 0.5, pj, sd, fitted)          # N+ means at least N
+        p_used = mid + trust * (p_model - mid)
+        for side, p, pm, ask in (("YES", p_used, p_model, k.get("yes_ask")), ("NO", 1 - p_used, 1 - p_model, k.get("no_ask"))):
+            if ask is None or not 0.2 <= ask <= 0.8:
+                continue
+            edge = edge_after_fee(p, ask)
+            m_side = mid if side == "YES" else 1 - mid
+            cand = {"n": k["n"], "side": side, "ask": ask, "mid": mid, "p_model": pm, "p_used": p, "edge": edge,
+                    "gap_ok": abs(pm - m_side) <= config.MAX_MODEL_MARKET_GAP, "ticker": k.get("ticker")}
+            if best is None or edge > best["edge"]:
+                best = cand
+    return best
+
+
+def espn_injuries(rows):
+    """{team code: {player key: status}} from ESPN's game summaries for this slate."""
+    from scan import espn_events
+    out, days = {}, sorted({str(r["game"].get("start") or "")[:10].replace("-", "") for r in rows if r["game"].get("start")})
+    for day in days:
+        try:
+            events, _ = espn_events("nfl", day)
+        except ApiError:
+            continue
+        for e in events:
+            try:
+                sm, _ = cached_get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary",
+                                   params={"event": e["id"]}, ttl=config.TTL_ODDS, source="ESPN summary")
+            except ApiError:
+                continue
+            for t in sm.get("injuries", []):
+                code = T.code_for(t.get("team", {}).get("displayName", ""))
+                if code:
+                    out.setdefault(code, {}).update({player_key(x.get("athlete", {}).get("displayName", "")):
+                                                     str(x.get("status", "")).lower() for x in t.get("injuries", [])})
+    return out
+
+
 # ------------------------------------------------------------ live --------
 
 def _prop_odds(event_id, markets):
@@ -363,6 +482,33 @@ def build_props(rows, bankroll=1000.0):
                               for stat in STATS}
     fits = _FIT_CACHE[season]
 
+    # Kalshi prop ladders (no key needed), ESPN injury reports, and the learned trust.
+    try:
+        kal = kalshi_props()
+    except Exception as e:      # a Kalshi outage must not sink the projections
+        kal = {}
+        notes.append(f"Kalshi props unavailable ({e}).")
+    if not kal:
+        notes.append("No Kalshi player-prop markets found right now; projections only.")
+    try:
+        inj = espn_injuries(rows)
+    except Exception:
+        inj = {}
+    trust = load_props_trust().get("trust", 1.0)
+    latest = df.sort_values(["season", "week"]).groupby("player_id").tail(1)
+    team_of = {player_key(n): t for n, t in zip(latest["player_display_name"], latest["team"])}
+
+    def kalshi_qb(team, game_codes):
+        """The QB Kalshi lists passing-yard props for on this team (the market's starter)."""
+        names = set()
+        for (st, _), e in kal.items():
+            if st != "pass_yds" or not all(c in e["event"] for c in game_codes):
+                continue
+            t = team_of.get(player_key(e["name"]))
+            if t == team or (t is None and e["segment"].startswith(team)):
+                names.add(e["name"])
+        return names.pop() if len(names) == 1 else None
+
     # Live odds for props: one request per event (costs Odds API credits).
     event_ids, prop_lines = {}, {}
     try:
@@ -398,7 +544,26 @@ def build_props(rows, bankroll=1000.0):
                 pool = recent[(recent["team"] == team) & (recent["position"].isin(s["pos"]))]
                 usage = pool.groupby(["player_id", "player_display_name", "position"])[s["usage"]].mean()
                 usage = usage[usage >= s["min_usage"]].sort_values(ascending=False).head(s["per_team"])
-                usage = _starting_qb_only(usage, (r.get("env") or {}).get(f"{side}_qb"), team, df)
+                listed = (r.get("env") or {}).get(f"{side}_qb")
+                market_qb = kalshi_qb(team, (g["home_code"], g["away_code"])) if s["pos"] & {"QB"} else None
+                if market_qb and listed and player_key(market_qb) != player_key(listed):
+                    # Follow Kalshi's QB only when ESPN says the scheduled starter won't play;
+                    # otherwise the two disagree with no injury news, so keep the schedule and say so.
+                    starter_status = inj.get(team, {}).get(player_key(listed), "")
+                    if starter_status in ("out", "injured reserve", "doubtful"):
+                        if stat == "pass_yds":
+                            notes.append(f"{team}: {listed} is {starter_status} (ESPN); using {market_qb}, the QB Kalshi lists.")
+                        listed = market_qb
+                    elif stat == "pass_yds":
+                        notes.append(f"{team}: schedule lists {listed} at QB but Kalshi has props for {market_qb} "
+                                     "(no injury listed). Check the news before betting this team's props.")
+                usage = _starting_qb_only(usage, listed, team, df)
+                out_now = {k for k, st in inj.get(team, {}).items() if st in ("out", "injured reserve")}
+                dropped = [k[1] for k in usage.index if player_key(k[1]) in out_now]
+                if dropped:
+                    usage = usage.loc[[k for k in usage.index if player_key(k[1]) not in out_now]]
+                    if stat == "rec_yds" or stat == "pass_yds" or stat == "rush_yds":
+                        notes.append(f"{team}: left out (ESPN lists Out): {', '.join(dropped)}.")
                 tp = implied_team_points(m.get("total"), m.get("home_spread"), side == "home")
                 for (pid, name, pos), u in usage.items():
                     base, n_eff, _ = h.baseline(pid, team)
@@ -411,9 +576,24 @@ def build_props(rows, bankroll=1000.0):
                            "projection": pj, "sd": sd, "q25": max(0.0, quantile(0.25, pj, sd, f)),
                            "median": quantile(0.5, pj, sd, f), "q75": quantile(0.75, pj, sd, f),
                            "fair_line": math.floor(quantile(0.5, pj, sd, f)) + 0.5,
-                           "team_points": tp, "opp_factor": 1 + e["opp_x"], "market": None, "stake": 0.0}
+                           "team_points": tp, "opp_factor": 1 + e["opp_x"], "market": None, "stake": 0.0,
+                           "player_id": pid, "season": season,
+                           "injury": inj.get(team, {}).get(player_key(name))}
+                    kq = kal.get((stat, player_key(name)))
+                    if kq:
+                        bk = best_kalshi_prop(kq["strikes"], pj, sd, f, trust)
+                        row["kalshi_median"] = kalshi_median(kq["strikes"])
+                        if bk:
+                            from strategy import kelly_fraction_kalshi
+                            from kalshi import kalshi_fee
+                            label = f"{kq['name']}: {bk['n']}+"
+                            row.update({"kalshi": {**bk, "contract": label}, "pick": f"{bk['side']} {label}",
+                                        "model": bk["p_used"], "ev": bk["edge"] / (bk["ask"] + kalshi_fee(bk["ask"])),
+                                        "decimal": 1 / (bk["ask"] + kalshi_fee(bk["ask"])), "gap_ok": bk["gap_ok"],
+                                        "flag": bk["edge"] >= config.MIN_EDGE and bk["gap_ok"],
+                                        "kelly": kelly_fraction_kalshi(bk["p_used"], bk["ask"]), "venue": "kalshi"})
                     q = book.get(normalize(name))
-                    if q:
+                    if q and not row.get("kalshi"):
                         po = p_over(q["line"], pj, sd, f)
                         ev_o, ev_u = po * q["dec_over"] - 1, (1 - po) * q["dec_under"] - 1
                         pick = "Over" if ev_o >= ev_u else "Under"
@@ -431,8 +611,94 @@ def build_props(rows, bankroll=1000.0):
     size_bets(staked, bankroll)
     out.sort(key=lambda x: (-(x.get("ev") or -9), x["matchup"], x["stat"], -x["projection"]))
     fit_summary = {k: {"terms": v["terms"], "games": v["games"], "seasons": v["seasons"]} for k, v in fits.items()}
+    notes = list(dict.fromkeys(notes))     # the same note can come from several stats
     return {"rows": out, "notes": notes, "fits": fit_summary, "source": f"nflverse player stats @ {stamp}",
-            "validated": False, "total_stake": round(sum(x["stake"] for x in staked), 2)}
+            "validated": False, "total_stake": round(sum(x["stake"] for x in staked), 2), "trust": trust,
+            "kalshi_players": sum(1 for x in out if x.get("kalshi"))}
+
+
+def log_props(result, path=None):
+    """Save each Kalshi-priced player-stat (its best contract, flagged or not) before kickoff,
+    so results can be graded and the trust factor learned. Reruns before kickoff replace the row."""
+    path = path or PROPS_LOG
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    now = datetime.now().astimezone()
+    rows = []
+    if os.path.exists(path):
+        with open(path, newline="") as f:
+            rows = list(csv.DictReader(f))
+    index = {(r["game_id"], r["player_id"], r["stat"]): i for i, r in enumerate(rows)}
+    for x in result["rows"]:
+        k = x.get("kalshi")
+        if not k or not x.get("start"):
+            continue
+        kick = datetime.fromisoformat(str(x["start"]))
+        if kick <= now:
+            continue
+        row = {"logged_at": now.strftime("%Y-%m-%d %H:%M%z"), "season": x["season"], "game_id": x["game_id"],
+               "kickoff": x["start"], "player_id": x["player_id"], "player": x["player"], "team": x["team"],
+               "stat": x["stat"], "strike": k["n"], "side": k["side"], "ask": k["ask"], "mid": round(k["mid"], 4),
+               "p_model": round(k["p_model"], 4), "p_used": round(k["p_used"], 4), "edge": round(k["edge"], 4),
+               "flag": int(bool(x.get("flag")))}
+        key = (str(x["game_id"]), str(x["player_id"]), x["stat"])
+        if key in index:
+            rows[index[key]] = row
+        else:
+            index[key] = len(rows)
+            rows.append(row)
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=PROPS_LOG_FIELDS)
+        w.writeheader()
+        w.writerows(rows)
+
+
+def learn_props(path=None, weights_path=None):
+    """Grade logged props against nflverse box scores and learn the trust factor:
+    the slope of (result - Kalshi price) on (model - Kalshi price), shrunk toward 1.0
+    with PRIOR_PICKS and kept in [0, 1.2]. Also keeps the FLAG record. Saves and returns it."""
+    path, weights_path = path or PROPS_LOG, weights_path or PROPS_WEIGHTS
+    out = load_props_trust(weights_path) or {"trust": 1.0, "graded": 0}
+    if not os.path.exists(path):
+        return out
+    with open(path, newline="") as f:
+        logged = list(csv.DictReader(f))
+    if not logged:
+        return out
+    seasons = sorted({int(r["season"]) for r in logged})
+    try:
+        df = load_player_weeks(seasons[-1], seasons[-1])
+    except ApiError:
+        return out
+    actual = {}
+    for stat, sdef in STATS.items():
+        for gid, pid, v in zip(df["game_id"], df["player_id"], df[sdef["col"]]):
+            actual[(str(gid), str(pid), stat)] = float(v)
+    sxy = sxx = 0.0
+    n, rec = 0, {"W": 0, "L": 0}
+    graded = []
+    for r in logged:
+        v = actual.get((r["game_id"], r["player_id"], r["stat"]))
+        if v is None:
+            continue
+        y_yes = 1.0 if v >= float(r["strike"]) else 0.0
+        mid = float(r["mid"])
+        p_yes = float(r["p_model"]) if r["side"] == "YES" else 1 - float(r["p_model"])
+        sxy += (p_yes - mid) * (y_yes - mid)
+        sxx += (p_yes - mid) ** 2
+        n += 1
+        won = (y_yes == 1.0) == (r["side"] == "YES")
+        graded.append({**r, "actual": v, "result": "W" if won else "L"})
+        if r["flag"] == "1":
+            rec["W" if won else "L"] += 1
+    slope = sxy / sxx if sxx > 0 else 1.0
+    trust = (n * slope + PRIOR_PICKS) / (n + PRIOR_PICKS)
+    out = {"trust": round(min(1.2, max(0.0, trust)), 4), "graded": n, "raw_slope": round(slope, 3),
+           "flag_record": rec, "updated": datetime.now().astimezone().strftime("%Y-%m-%d %H:%M%z")}
+    os.makedirs(os.path.dirname(weights_path), exist_ok=True)
+    with open(weights_path, "w") as f:
+        json.dump(out, f, indent=1)
+    out["rows"] = graded
+    return out
 
 
 def report(r):

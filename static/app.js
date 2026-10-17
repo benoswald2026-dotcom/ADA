@@ -680,26 +680,39 @@ function renderProps() {
   const rows = PROPS.rows.filter(r => (PROPS_FILTER.stat === "all" || r.stat === PROPS_FILTER.stat)
     && (PROPS_FILTER.game === "all" || r.matchup === PROPS_FILTER.game) && (!q || r.player.toLowerCase().includes(q)));
   const hasLines = PROPS.rows.some(r => r.market);
-  const notes = notesBox(PROPS.notes);
-  const warn = `<div class="notice"><p><b>Unvalidated edges.</b> The projections are tested: on 2023–2025 their 25/50/75% points held about 24/50/75% of the time (see Backtest). But there's no free history of prop <i>lines</i>, so the model can't be tested for profit against books. Any prop edge is logged as a paper trade so you can see whether it beats the closing line.</p></div>`;
+  const hasKalshi = PROPS.rows.some(r => r.kalshi);
+  const notes = PROPS.notes.length ? `<div class="notice"><ul class="notes-box-list">${PROPS.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
+  const warn = `<div class="notice"><p><b>Unvalidated edges.</b> The projections are tested: on 2023–2025 their 25/50/75% points held about 24/50/75% of the time (see Backtest). Kalshi's prop prices have no free history, so edges against them are logged and graded after each game; the learned trust (now ${(PROPS.trust ?? 1).toFixed(2)}) shrinks the model toward Kalshi's price if they keep missing.</p></div>`;
+  const flagged = PROPS.rows.filter(r => r.flag && r.kalshi).sort((a, b) => b.kalshi.edge - a.kalshi.edge);
+  const kc = r => r.kalshi ? `${r.kalshi.side} “${esc(r.kalshi.contract)}” @ ${cents(r.kalshi.ask)}` : "–";
+  const kvs = r => r.kalshi ? `${pct(r.kalshi.p_model, 0)} vs ${pct(r.kalshi.side === "YES" ? r.kalshi.mid : 1 - r.kalshi.mid, 0)}` : "–";
+  const best = hasKalshi ? `<section class="bets-section"><h2>Best prop bets</h2><p class="lede">FLAG = edge after Kalshi's fee of 3+ points, price 20–80¢, and the model within 10 points of Kalshi.</p>
+    ${flagged.length ? `<div class="table-wrap"><table><thead><tr><th>Player</th><th class="l">Game</th><th>Stat</th><th class="l">Buy on Kalshi</th><th>Model vs Kalshi</th><th>Edge (pts)</th><th>Stake</th></tr></thead><tbody>
+    ${flagged.slice(0, 20).map(r => `<tr class="is-flag"><td class="player-td"><b>${esc(r.player)}</b></td><td class="player-td">${esc(r.matchup)}</td><td>${esc(r.label)}</td><td class="player-td">${kc(r)}</td><td>${kvs(r)}</td><td class="ev-pos">${pts(r.kalshi.edge)}</td><td>${money(r.stake)}</td></tr>`).join("")}
+    </tbody></table></div>` : `<div class="panel empty">No prop clears the bar right now.</div>`}</section>` : "";
   const filters = `<div class="panel" style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
       <label class="field"><span class="label">Stat</span><select id="pf-stat"><option value="all">All stats</option>${stats.map(([k, l]) => `<option value="${k}" ${PROPS_FILTER.stat === k ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
       <label class="field" style="flex:1;min-width:200px"><span class="label">Game</span><select id="pf-game"><option value="all">All games</option>${games.map(g => `<option ${PROPS_FILTER.game === g ? "selected" : ""}>${esc(g)}</option>`).join("")}</select></label>
       <label class="field"><span class="label">Player</span><input id="pf-q" type="text" placeholder="Search" value="${esc(PROPS_FILTER.q)}"></label>
     </div>`;
-  const head = `<tr><th>Player</th><th>Stat</th><th>Median</th><th style="text-align:left">Middle 50%${hasLines ? " · book line" : ""}</th><th>Fair line</th>${hasLines ? "<th>Book line</th><th>P(over)</th><th>Pick</th><th>EV / $1</th><th>Stake</th>" : ""}</tr>`;
+  const head = `<tr><th>Player</th><th>Stat</th><th>Median</th><th style="text-align:left">Middle 50%${hasKalshi ? " · Kalshi line" : hasLines ? " · book line" : ""}</th>${hasKalshi ? "<th>Kalshi line</th><th class=\"l\">Best Kalshi contract</th><th>Model vs Kalshi</th><th>Edge (pts)</th><th>Stake</th>" : `<th>Fair line</th>${hasLines ? "<th>Book line</th><th>P(over)</th><th>Pick</th><th>EV / $1</th><th>Stake</th>" : ""}`}</tr>`;
   // Range bars share one scale per stat so players can be compared at a glance.
   const scale = {};
-  PROPS.rows.forEach(r => { scale[r.stat] = Math.max(scale[r.stat] || 1, r.q75 * 1.15, r.market ? r.market.line * 1.15 : 0); });
+  PROPS.rows.forEach(r => { scale[r.stat] = Math.max(scale[r.stat] || 1, r.q75 * 1.15, r.market ? r.market.line * 1.15 : 0, isNum(r.kalshi_median) ? r.kalshi_median * 1.15 : 0); });
+  const lineOf = r => isNum(r.kalshi_median) ? r.kalshi_median : (r.market ? r.market.line : null);
   const rbar = r => {
     const X = v => Math.max(0, Math.min(100, v / scale[r.stat] * 100)).toFixed(1);
-    return `<div class="rbar" data-tip="${esc(`${r.player} · ${r.label}<br>Middle 50%: ${r.q25.toFixed(0)}–${r.q75.toFixed(0)}<br>Median: ${r.median.toFixed(1)}${r.market ? `<br>Book line: ${r.market.line}` : ""}`)}">
+    const L = lineOf(r);
+    return `<div class="rbar" data-tip="${esc(`${r.player} · ${r.label}<br>Middle 50%: ${r.q25.toFixed(0)}–${r.q75.toFixed(0)}<br>Median: ${r.median.toFixed(1)}${L !== null ? `<br>${isNum(r.kalshi_median) ? "Kalshi" : "Book"} line: ${L.toFixed(1)}` : ""}`)}">
       <div class="rt"></div><div class="rb" style="left:${X(r.q25)}%;width:${(X(r.q75) - X(r.q25)).toFixed(1)}%"></div>
-      <div class="rm" style="left:${X(r.median)}%"></div>${r.market ? `<div class="rl" style="left:${X(r.market.line)}%"></div>` : ""}</div>`;
+      <div class="rm" style="left:${X(r.median)}%"></div>${L !== null ? `<div class="rl" style="left:${X(L)}%"></div>` : ""}</div>`;
   };
-  const tr = r => `<tr><td class="player-td"><div class="player-cell">${teamBadge(r.team, r.team, true)}<div><b>${esc(r.player)}</b> <span class="src">${esc(r.position)}</span></div></div></td><td>${esc(r.label)}</td><td>${r.median.toFixed(1)}</td><td style="min-width:160px">${rbar(r)}<span class="src">${r.q25.toFixed(0)}–${r.q75.toFixed(0)}</span></td><td>${r.fair_line}</td>${hasLines ? (r.market ? `<td>${r.market.line}</td><td>${pct(r.p_over)}</td><td>${esc(r.pick)}${r.flag ? " ★" : ""}</td><td class="${r.ev >= 0 ? "ev-pos" : "ev-neg"}">${signed(r.ev, 3)}</td><td>${money(r.stake)}</td>` : `<td colspan="5" class="src">no line</td>`) : ""}</tr>`;
-  body.innerHTML = `<div class="notes">${notes}${warn}</div>${filters}
-    <p class="label" style="margin:12px 0 8px;text-transform:none;letter-spacing:0">${rows.length} projections · ${esc(PROPS.source)}${hasLines ? " · ★ = edge ≥ 3% and within 10 pts of the market" : ""}</p>
+  const kcells = r => r.kalshi
+    ? `<td>${isNum(r.kalshi_median) ? r.kalshi_median.toFixed(1) : "–"}</td><td class="player-td">${kc(r)}${r.flag ? " ★" : ""}</td><td>${kvs(r)}</td><td class="${r.kalshi.edge >= 0 ? "ev-pos" : "ev-neg"}">${pts(r.kalshi.edge)}</td><td>${money(r.stake)}</td>`
+    : `<td colspan="5" class="src">not on Kalshi</td>`;
+  const tr = r => `<tr class="${r.flag ? "is-flag" : ""}"><td class="player-td"><div class="player-cell">${teamBadge(r.team, r.team, true)}<div><b>${esc(r.player)}</b> <span class="src">${esc(r.position)}${r.injury ? " · " + esc(r.injury) : ""}</span></div></div></td><td>${esc(r.label)}</td><td>${r.median.toFixed(1)}</td><td style="min-width:160px">${rbar(r)}<span class="src">${r.q25.toFixed(0)}–${r.q75.toFixed(0)}</span></td>${hasKalshi ? kcells(r) : `<td>${r.fair_line}</td>${hasLines ? (r.market ? `<td>${r.market.line}</td><td>${pct(r.p_over)}</td><td>${esc(r.pick)}${r.flag ? " ★" : ""}</td><td class="${r.ev >= 0 ? "ev-pos" : "ev-neg"}">${signed(r.ev, 3)}</td><td>${money(r.stake)}</td>` : `<td colspan="5" class="src">no line</td>`) : ""}`}</tr>`;
+  body.innerHTML = `<div class="notes">${notes}${warn}</div>${best}<section class="bets-section"><h2>Every projection</h2></section>${filters}
+    <p class="label" style="margin:12px 0 8px;text-transform:none;letter-spacing:0">${rows.length} projections · ${esc(PROPS.source)}${hasKalshi || hasLines ? " · ★ = FLAG (3+ pt edge, within 10 pts of the market)" : ""}</p>
     ${rows.length ? `<div class="table-wrap"><table><thead>${head}</thead><tbody>${rows.map(tr).join("")}</tbody></table></div>` : `<div class="panel empty">No players match those filters.</div>`}`;
 }
 $("#props-body").addEventListener("change", e => {

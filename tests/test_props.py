@@ -103,3 +103,38 @@ def test_qb_props_follow_the_listed_starter():
     names = [k[1] for k in out.index]
     assert "Caleb Williams" not in names and "Tyson Bagent" in names and "D'Andre Swift" in names
     assert props._starting_qb_only(usage, None, "CHI", df).equals(usage)
+
+
+def test_kalshi_prop_ladder_median_and_best_contract():
+    strikes = [{"n": 50, "yes_ask": 0.62, "yes_bid": 0.60, "no_ask": 0.40},
+               {"n": 60, "yes_ask": 0.51, "yes_bid": 0.49, "no_ask": 0.51},
+               {"n": 70, "yes_ask": 0.40, "yes_bid": 0.38, "no_ask": 0.62}]
+    assert props.kalshi_median(strikes) == pytest.approx(60.0)
+    f = _fitted()
+    best = props.best_kalshi_prop(strikes, 45.0, props.sd_for(45.0, f), f, trust=1.0)   # model expects fewer yards
+    assert best["side"] == "NO" and best["edge"] > 0
+    # trust 0 means defer to Kalshi's price entirely: no contract has a positive edge after the fee
+    none = props.best_kalshi_prop(strikes, 45.0, props.sd_for(45.0, f), f, trust=0.0)
+    assert none["edge"] < 0
+
+
+def test_player_key_ignores_suffixes_and_punctuation():
+    assert props.player_key("Luther Burden III") == props.player_key("Luther Burden")
+    assert props.player_key("C.J. Stroud") == props.player_key("CJ Stroud")
+
+
+def test_learn_props_trust_falls_when_model_gaps_fail(tmp_path, monkeypatch):
+    import csv, pandas as pd
+    log = tmp_path / "log.csv"
+    rows = []
+    for i in range(200):   # model always says 70% for 'N+', Kalshi says 50%, but it hits half the time
+        rows.append({"logged_at": "x", "season": 2026, "game_id": f"G{i}", "kickoff": "2026-10-18T13:00:00-04:00",
+                     "player_id": f"P{i}", "player": "X", "team": "KC", "stat": "rec_yds", "strike": 60, "side": "YES",
+                     "ask": 0.5, "mid": 0.5, "p_model": 0.7, "p_used": 0.7, "edge": 0.18, "flag": 1})
+    with open(log, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=props.PROPS_LOG_FIELDS); w.writeheader(); w.writerows(rows)
+    df = pd.DataFrame([{"game_id": f"G{i}", "player_id": f"P{i}", "receiving_yards": 80 if i % 2 else 20,
+                        "passing_yards": 0, "rushing_yards": 0, "receptions": 0} for i in range(200)])
+    monkeypatch.setattr(props, "load_player_weeks", lambda a, b: df)
+    out = props.learn_props(str(log), str(tmp_path / "w.json"))
+    assert out["graded"] == 200 and out["trust"] < 0.3 and out["flag_record"] == {"W": 100, "L": 100}

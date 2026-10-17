@@ -255,6 +255,26 @@ Stats: passing yards, rushing yards, receptions, and receiving yards (`props.py`
    prices after removing the vig and compares P(over) with them. The same rules
    apply (EV ≥ 3%, within 10 pts of the market, capped Kelly stakes), and each
    pick is logged as a paper trade.
+5. **Kalshi prop ladders (no key needed):** Kalshi lists "Player: N+" contracts
+   for passing yards, rushing yards, receptions, and receiving yards. For each
+   player the tool:
+   - finds the **Kalshi line** (where the ladder's mid prices cross 50%)
+   - prices every rung with the model's P(N or more) after paying the fee
+   - picks the best YES or NO contract between 20¢ and 80¢
+   - marks it **★ FLAG** only when the edge is real *and* the model is within
+     10 pts of Kalshi's price
+6. **QBs and injuries:**
+   - Players ESPN lists as Out or IR are dropped.
+   - If ESPN lists the scheduled starting QB as out or doubtful, the QB Kalshi
+     prices is used instead (e.g. Lamar out → Tyler Huntley).
+   - If Kalshi prices a different QB with **no** injury news, the tool keeps
+     the schedule's QB and prints a warning instead of guessing.
+7. **Learning:** every priced prop is saved before kickoff in
+   `data/props_log.csv`. `python main.py props --learn` (and every app refresh)
+   grades finished games from nflverse box scores and fits a **trust** number:
+   - trust 0 = use Kalshi's price; trust 1 = use the model's price
+   - it starts at 1.0 and moves only as graded results build up (prior of 40)
+   - it is saved in `data/props_weights.json` with the flag win/loss record
 
 **Validation (2023–2025, walk-forward):**
 - Predicted 25% / 50% / 75% points held about 24–25% / 48–51% / 75–76% of the time.
