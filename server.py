@@ -89,7 +89,7 @@ def picks_json(sport, force=False):
         C.log_predictions(r)
         C.log_picks(r)
         best = [{"tier": p["tier"], "type": p["type"], "pick": p["pick"], "gap": p["gap"], "agree": p["agree"],
-                 "n": p["n"], "matchup": p["game"]["matchup"],
+                 "n": p["n"], "matchup": p["game"]["matchup"], "event_id": p["game"]["event_id"], "line": p["line"],
                  "kalshi_bet": ((p["game"].get("kalshi") or {}).get("spread_bet" if p["type"] == "Spread" else "total_bet"))}
                 for p in C.best_bets(r)]
         games = [{**g, "kickoff": g["kickoff"].isoformat()} for g in r["games"]]
@@ -97,6 +97,42 @@ def picks_json(sport, force=False):
         c = _picks_cache[sport] = {"at": time.time(), "value": {"games": games, "best": best, "notes": r["notes"],
                                                                 "record": g["record"], "sport": sport}}
     return c["value"]
+
+
+def lock_json(force=False):
+    """Lock of the day: the best Strong pick across college and NFL (consensus.lock_of_day),
+    with each source's number in the pick's own terms so the page can draw them."""
+    import consensus as C
+    cands, games, picks_record = [], {}, {}
+    for sport in ("cfb", "nfl"):
+        v = picks_json(sport, force)
+        picks_record = v["record"]          # the picks log covers both sports
+        games.update({(sport, g["event_id"]): g for g in v["games"]})
+        cands += [{**b, "sport": sport, "kickoff": datetime.fromisoformat(games[(sport, b["event_id"])]["kickoff"])}
+                  for b in v["best"] if (sport, b["event_id"]) in games]
+    lock = C.lock_of_day(cands)
+    if lock:
+        g = games[(lock["sport"], lock["event_id"])]
+        C.log_lock({**lock, "home": g["home"], "away": g["away"]})
+    record = {"locks": C.grade(C.LOCKS_FILE)["record"].get("all") if os.path.exists(C.LOCKS_FILE) else None,
+              "strong": {k: picks_record[k] for k in ("Spread Strong", "Total Strong") if k in picks_record}}
+    if not lock:
+        return {"lock": None, "record": record, "candidates": len(cands)}
+    trust = C.load_weights().get(lock["sport"], {}).get("trust_src", {})
+    votes = lambda k: trust.get(k, 1.0) >= C.MIN_TRUST
+    if lock["type"] == "Spread":
+        home_side = lock["gap"] > 0     # consensus on the home side of the line
+        need = -lock["line"] if home_side else lock["line"]
+        axis = f"{g['home'] if home_side else g['away']} margin"
+        bars = [{"name": k, "value": s["margin"] if home_side else -s["margin"], "votes": votes(k)}
+                for k, s in g["sources"].items() if "margin" in s]
+        over = True
+    else:
+        need, over, axis = lock["line"], lock["pick"].startswith("Over"), "Total points"
+        bars = [{"name": k, "value": s["total"], "votes": votes(k)} for k, s in g["sources"].items() if "total" in s]
+    return {"lock": {**lock, "kickoff": g["kickoff"], "home": g["home"], "away": g["away"], "need": need,
+                     "over": over, "axis": axis, "bars": bars, "context": g.get("context")},
+            "record": record, "candidates": len(cands)}
 
 
 _scan_cache = {}
@@ -275,6 +311,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, cached_props(bankroll, force="refresh=1" in self.path))
             if path == "/api/picks":
                 return self._send(200, picks_json(_sport(self.path), force="refresh=1" in self.path))
+            if path == "/api/lock":
+                return self._send(200, lock_json(force="refresh=1" in self.path))
             if path == "/api/scan":
                 from urllib.parse import parse_qs, urlparse
                 q = parse_qs(urlparse(self.path).query)

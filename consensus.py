@@ -604,6 +604,59 @@ def best_bets(result):
     return picks
 
 
+LOCK_WINDOW_HOURS = 36   # the lock comes from games kicking off within this window
+
+
+def lock_of_day(cands, now=None, window_hours=LOCK_WINDOW_HOURS):
+    """The single best Strong pick across sports, or None. Each candidate needs tier, gap,
+    agree, n, sport and kickoff (aware datetime). Gaps are compared as multiples of that
+    sport's Strong bar (a 4-pt college gap = a 2.7-pt NFL gap), then by agreement."""
+    now = now or datetime.now(timezone.utc)
+    end = now + timedelta(hours=window_hours)
+    ok = [c for c in cands if c["tier"] == "Strong" and now < c["kickoff"] <= end]
+    if not ok:
+        return None
+    bar = lambda c: TIERS[c["sport"]]["strong_gap" if c["type"] == "Spread" else "total_strong"]
+    return max(ok, key=lambda c: (abs(c["gap"]) / bar(c), c["agree"] / max(c["n"], 1), -c["kickoff"].timestamp()))
+
+
+LOCKS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "locks.csv")
+
+
+def log_lock(lock, path=None, now=None):
+    """Keep one lock per Eastern day in data/locks.csv (same columns as the picks log, so
+    grade() scores it). Before that day's lock kicks off, a newer choice replaces it."""
+    from zoneinfo import ZoneInfo
+    path = path or LOCKS_FILE
+    now = now or datetime.now(timezone.utc)
+    day = now.astimezone(ZoneInfo("America/New_York")).strftime("%Y-%m-%d")
+    rows = []
+    if os.path.exists(path):
+        with open(path, newline="") as f:
+            rows = list(csv.DictReader(f))
+    mine = [i for i, r in enumerate(rows) if r["logged_at"][:10] == day]
+    if mine:
+        r = rows[mine[0]]
+        kick = datetime.strptime(r["game_date"] + r["kickoff_utc"], "%Y%m%d%H:%M").replace(tzinfo=timezone.utc)
+        if kick <= now:
+            return False   # today's lock has kicked off: it stays
+    row = {"logged_at": day, "sport": lock["sport"], "event_id": lock["event_id"],
+           "game_date": lock["kickoff"].strftime("%Y%m%d"), "kickoff_utc": lock["kickoff"].strftime("%H:%M"),
+           "matchup": lock["matchup"], "home": lock["home"], "away": lock["away"], "bet_type": lock["type"],
+           "pick": lock["pick"], "line": lock["line"], "consensus": round(lock["gap"], 2), "tier": "Lock",
+           "sources": lock["n"], "agree": lock["agree"]}
+    if mine:
+        rows[mine[0]] = row
+    else:
+        rows.append(row)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=PICK_FIELDS + ["kickoff_utc"])
+        w.writeheader()
+        w.writerows(rows)
+    return True
+
+
 # ----------------------------------------------------------------- tracking --
 
 def log_picks(result, path=None):

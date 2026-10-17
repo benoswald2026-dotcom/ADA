@@ -904,8 +904,240 @@ $("#ex-form").addEventListener("input", () => { clearTimeout(exTimer); exTimer =
 $("#ex-form").addEventListener("submit", e => e.preventDefault());
 $("#ex-reset").addEventListener("click", () => { if (EX_DEFAULT) { buildExForm(EX_DEFAULT); runExplain(); } });
 
+// ---------------------------------------------------------------- lock of the day
+// The best Strong consensus pick, hidden behind a field goal. Two taps: aim (the wind
+// pushes the ball), then power (stop it in the green). Miss three and the kick moves up
+// 10 yards (closer posts look wider); miss five and it's an extra point with no wind.
+let LOCK = null, LOCK_ERR = null, lockLoading = false;
+const FG = { phase: "aim", t0: 0, aim: 0, power: 0, wind: 0, attempt: 1, raf: 0, busy: false };
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const etDay = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+const lockId = L => `${etDay()}|${L.event_id}|${L.type}`;
+
+async function loadLock(force = false) {
+  if (lockLoading) return;
+  lockLoading = true; LOCK_ERR = null;
+  if (force) LOCK = null;
+  renderLock();
+  try { LOCK = await api(`/api/lock${force ? "?refresh=1" : ""}`); }
+  catch (e) { LOCK_ERR = e.message; }
+  lockLoading = false; renderLock();
+}
+
+function fgSetup() {
+  const n = FG.attempt;
+  const dist = n >= 6 ? 15 : n >= 4 ? 23 : 33;
+  // Posts' half-gap in aim units: wider when the kick is closer.
+  FG.gap = n >= 6 ? 0.62 : n >= 4 ? 0.45 : 0.3;
+  FG.wind = n >= 6 ? 0 : (Math.random() * 2 - 1);
+  FG.phase = "aim"; FG.t0 = performance.now(); FG.busy = false;
+  const mph = Math.round(Math.abs(FG.wind) * 14);
+  $("#fg-wind").textContent = mph ? `${FG.wind < 0 ? "←" : "→"} ${mph}` : "calm";
+  $("#fg-dist").textContent = dist === 15 ? "PAT" : `${dist} yd`;
+  $("#fg-try").textContent = String(n);
+  $("#fg-call").textContent = ""; $("#fg-call").className = "fg-call";
+  const hw = FG.gap * 133;
+  $("#fg-posts").innerHTML = `<path class="post" d="M180 104V86M${180 - hw} 86H${180 + hw}"/>
+    <path class="post post-thin" d="M${180 - hw} 86V${12 + (0.62 - FG.gap) * 10}M${180 + hw} 86V${12 + (0.62 - FG.gap) * 10}"/>`;
+  fgBall(180, 262, 1, 0);
+  $("#fg-aim").classList.remove("is-done", "is-idle");
+  $("#fg-pow").classList.remove("is-done"); $("#fg-pow").classList.add("is-idle");
+  $("#fg-pow-zone").style.cssText = "left:60%;right:0";
+  $("#fg-aim-zone").style.cssText = `left:${50 - FG.gap * 50}%;right:${50 - FG.gap * 50}%`;
+  $("#fg-kick").textContent = "Set aim";
+  $("#fg-msg").textContent = n === 4 ? "Coach moved the kick up 10 yards. The posts look wider from here."
+    : n === 6 ? "Fine. Extra point, no wind. Holder's got it." : "Tap the field or press the button to stop the aim.";
+  cancelAnimationFrame(FG.raf); FG.raf = requestAnimationFrame(fgTick);
+}
+
+function fgBall(x, y, scale, spin) {
+  $("#fg-ball").setAttribute("transform", `translate(${x} ${y}) scale(${scale}) rotate(${spin})`);
+}
+
+function fgTick(now) {
+  if (!$("#fg-svg")) return;   // tab changed
+  const t = (now - FG.t0) / 1000;
+  if (FG.phase === "aim") {
+    FG.aim = Math.sin(t * 2.6);
+    $("#fg-aim-mark").style.left = `${50 + FG.aim * 50}%`;
+    const x = 180 + (FG.aim + FG.wind * 0.18) * 133;
+    $("#fg-aimline").setAttribute("x2", x.toFixed(1));
+  } else if (FG.phase === "power") {
+    FG.power = (1 - Math.cos(t * 3.4)) / 2;
+    $("#fg-pow-fill").style.width = `${FG.power * 100}%`;
+  }
+  if (FG.phase === "aim" || FG.phase === "power") FG.raf = requestAnimationFrame(fgTick);
+}
+
+function fgPress() {
+  if (FG.busy) return;
+  if (FG.phase === "aim") {
+    FG.phase = "power"; FG.t0 = performance.now();
+    $("#fg-aim").classList.add("is-done"); $("#fg-pow").classList.remove("is-idle");
+    $("#fg-kick").textContent = "Kick";
+    $("#fg-msg").textContent = "Now the power. Stop it in the green.";
+    return;
+  }
+  if (FG.phase === "power") { FG.phase = "flight"; FG.busy = true; fgFly(); }
+}
+
+function fgFly() {
+  $("#fg-pow").classList.add("is-done");
+  const final = FG.aim + FG.wind * 0.18, short = FG.power < 0.6;
+  const px = 180 + final * 133;
+  const py = short ? 86 + (0.6 - FG.power) * 60 : 60 - (FG.power - 0.6) * 80;
+  const good = !short && Math.abs(final) < FG.gap;
+  const doink = !short && !good && Math.abs(final) < FG.gap + 0.05;
+  const cx = 180 + (px - 180) * 0.45, cy = Math.min(py, 262) - (short ? 90 : 150);
+  const end = () => fgResult(good, short, doink, final);
+  if (reduceMotion()) { fgBall(px, py, 0.35, 0); return end(); }
+  const t0 = performance.now(), dur = 1050;
+  const step = now => {
+    const u = Math.min(1, (now - t0) / dur), v = 1 - u;
+    const x = v * v * 180 + 2 * v * u * cx + u * u * px, y = v * v * 262 + 2 * v * u * cy + u * u * py;
+    fgBall(x, y, 1 - 0.65 * u, u * 900);
+    if (u < 1) requestAnimationFrame(step); else end();
+  };
+  requestAnimationFrame(step);
+}
+
+function fgResult(good, short, doink, final) {
+  const call = $("#fg-call");
+  if (good) {
+    call.textContent = "It's good!";
+    $("#fg-msg").textContent = "Lock unlocked.";
+    store.set("lock-unlocked", lockId(LOCK.lock));
+    setTimeout(() => { if ($("#fg-svg")) renderLock(true); }, reduceMotion() ? 200 : 1100);
+    return;
+  }
+  call.className = "fg-call miss";
+  call.textContent = short ? "Short!" : doink ? "Doink!" : final < 0 ? "Wide left" : "Wide right";
+  $("#fg-msg").textContent = short ? "Not enough leg. Stop the power meter in the green."
+    : doink ? "Off the upright. So close." : `Wind ${FG.wind < 0 ? "pushed it left" : FG.wind > 0 ? "pushed it right" : "wasn't the problem"}. Aim ${FG.wind < 0 ? "a bit right" : "a bit left"} of center to correct.`;
+  FG.attempt += 1;
+  setTimeout(() => { if ($("#fg-svg")) fgSetup(); }, 1500);
+}
+
+function fgHtml() {
+  const yards = [[104, 0.30], [128, 0.45], [162, 0.62], [210, 0.82], [272, 1.05]]
+    .map(([y, w]) => `<line class="yard" x1="${180 - 180 * w * 1.6}" y1="${y}" x2="${180 + 180 * w * 1.6}" y2="${y}"/>
+      <line class="hashm" x1="${180 - 26 * w * 1.6}" y1="${y}" x2="${180 - 26 * w * 1.6}" y2="${y + 6 * w}"/>
+      <line class="hashm" x1="${180 + 26 * w * 1.6}" y1="${y}" x2="${180 + 26 * w * 1.6}" y2="${y + 6 * w}"/>`).join("");
+  return `<div class="fg">
+    <div class="fg-stage">
+      <svg class="fg-field" id="fg-svg" viewBox="0 0 360 300" role="img" aria-label="Field goal: the ball on the hold, the uprights ahead">
+        <rect class="turf" width="360" height="300"/><rect class="turf-band" width="360" height="104"/>
+        ${yards}
+        <line class="aimline" id="fg-aimline" x1="180" y1="256" x2="180" y2="86"/>
+        <g id="fg-posts"></g>
+        <ellipse class="shadow" cx="180" cy="276" rx="14" ry="4"/>
+        <g id="fg-ball"><ellipse class="ball" rx="9" ry="14"/><path class="laces" d="M0 -6V6M-3 -3H3M-3 0H3M-3 3H3"/></g>
+      </svg>
+      <div class="fg-call" id="fg-call" aria-live="assertive"></div>
+    </div>
+    <div class="fg-side">
+      <div class="fg-hud">
+        <div><span class="label">Wind mph</span><b id="fg-wind">–</b></div>
+        <div><span class="label">Kick</span><b id="fg-dist">–</b></div>
+        <div><span class="label">Attempt</span><b id="fg-try">1</b></div>
+      </div>
+      <div class="meter" id="fg-aim"><span class="label">1 · Aim</span>
+        <div class="meter-track"><span class="meter-zone" id="fg-aim-zone"></span><span class="meter-mark" id="fg-aim-mark"></span></div></div>
+      <div class="meter" id="fg-pow"><span class="label">2 · Power</span>
+        <div class="meter-track"><span class="meter-zone" id="fg-pow-zone"></span><span class="meter-fill" id="fg-pow-fill"></span></div></div>
+      <button type="button" class="btn btn-primary fg-kick" id="fg-kick">Set aim</button>
+      <p class="fg-msg" id="fg-msg" aria-live="polite"></p>
+    </div>
+  </div>`;
+}
+
+function lockChart(L, W) {
+  const rows = [...L.bars].sort((a, b) => b.value - a.value);
+  const vals = rows.map(r => r.value).concat(L.need);
+  const lo = Math.floor(Math.min(...vals, L.type === "Spread" ? 0 : Infinity) - 2), hi = Math.ceil(Math.max(...vals) + 2);
+  const left = W < 480 ? 96 : 118, right = 96, top = 30, rh = 28, H = top + rows.length * rh + 26;
+  const x = v => left + (v - lo) / (hi - lo) * (W - left - right);
+  const step = hi - lo > 40 ? 10 : 5;
+  const ticks = [];
+  for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) ticks.push(v);
+  const wins = v => L.over ? v > L.need : v < L.need;
+  const dots = rows.map((r, i) => {
+    const y = top + i * rh + rh / 2, cls = !r.votes ? "dot-off" : wins(r.value) ? "dot-yes" : "dot-no";
+    return `<text class="lbl" x="${left - 10}" y="${y + 4}" text-anchor="end">${esc(r.name)}</text>
+      <line class="stem" x1="${x(L.need)}" y1="${y}" x2="${x(r.value)}" y2="${y}"/>
+      <circle class="${cls}" cx="${x(r.value)}" cy="${y}" r="6.5"/>
+      <text x="${Math.max(x(r.value), x(L.need)) + 11}" y="${y + 4}">${L.type === "Spread" ? signed(r.value) : r.value.toFixed(1)}${r.votes ? "" : " · no vote"}</text>`;
+  }).join("");
+  return `<svg class="lock-chart" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Each source's prediction against the line">
+    ${ticks.map(v => `<line class="grid" x1="${x(v)}" y1="${top - 6}" x2="${x(v)}" y2="${H - 22}"/><text x="${x(v)}" y="${H - 6}" text-anchor="middle">${v}</text>`).join("")}
+    <line class="need" x1="${x(L.need)}" y1="${top - 10}" x2="${x(L.need)}" y2="${H - 22}"/>
+    <text class="lbl" x="${x(L.need)}" y="${top - 14}" text-anchor="middle">line ${L.type === "Spread" ? signed(L.need) : L.need}</text>
+    ${dots}</svg>`;
+}
+
+function lockCard(d) {
+  const L = d.lock, rec = d.record || {};
+  const k = L.kalshi_bet;
+  const kal = k ? `${esc(k.side)} “${esc(k.contract)}” @ ${cents(k.ask)}` : "No matching Kalshi contract";
+  const c = L.context || {}, ctx = [];
+  for (const side of ["home", "away"]) { const q = (c.qb || {})[side]; if (q && q.status) ctx.push(`${esc(L[side])} QB ${esc(q.name)}: ${esc(q.status)}`); }
+  const w = c.weather || {};
+  if (w.indoor) ctx.push("Indoors"); else if (isNum(w.gust)) ctx.push(`Gusts ${Math.round(w.gust)} mph`);
+  const wl = r => r ? `${r.W}-${r.L}${r.P ? "-" + r.P : ""}` : null;
+  const lockRec = wl(rec.locks), strongRec = wl((rec.strong || {})[`${L.type} Strong`]);
+  return `<article class="lock-card reveal">
+    <div class="lock-top"><span class="label">Lock of the day · ${L.sport === "cfb" ? "College" : "NFL"} · ${esc(L.type)}</span><span class="label">${kickoff(L.kickoff)}</span></div>
+    <div><div class="lock-pick">${esc(L.pick).replace(/ -(?=\d)/, " −")}</div><div class="lock-game">${esc(L.matchup)}</div></div>
+    <div class="lock-facts">
+      <div><div class="label">Line off by</div><div class="big">${Math.abs(L.gap).toFixed(1)} pts</div></div>
+      <div><div class="label">Sources agree</div><div class="big">${L.agree}/${L.n}</div></div>
+      <div><div class="label">Lock record</div><div class="big">${lockRec || "0-0"}</div><div class="small">${lockRec ? "" : "first lock: nothing graded yet"}</div></div>
+      <div><div class="label">On Kalshi</div><div class="small" style="margin-top:6px">${kal}</div></div>
+    </div>
+    <div><div class="label" style="margin-bottom:6px">${esc(L.axis)}: every source's prediction vs. the line</div>${lockChart(L, Math.min(760, $("#lock-body").clientWidth || 640))}
+      <p class="small" style="color:var(--muted)">Green = past the line on the pick's side. Red = disagrees. Hollow = source doesn't vote (results showed its disagreements with the line don't hold up).</p></div>
+    ${ctx.length ? `<div class="notice"><p>${ctx.join(" · ")}. Ratings-only sources already include the QB adjustment.</p></div>` : ""}
+    <div class="notice warn"><p><b>Not actually a lock.</b> It's the strongest pick by Hashmark's fixed rules, but those rules have no graded track record yet${strongRec ? ` (${esc(L.type)} Strong so far: ${strongRec})` : ""}. Bet small or not at all. Not betting advice.</p></div>
+    <div class="lock-actions"><button type="button" class="btn" id="lock-again">Kick it again</button><button type="button" class="btn" data-goto="picks">All picks</button></div>
+  </article>`;
+}
+
+function renderLock(reveal = false) {
+  const body = $("#lock-body");
+  cancelAnimationFrame(FG.raf);
+  if (LOCK_ERR) { body.innerHTML = setupNotice(LOCK_ERR); return; }
+  if (!LOCK) {
+    body.innerHTML = `<div class="panel"><p class="label">Lining up the kick: collecting college and NFL forecasts (the first load can take a minute)…</p><div class="progress"><span></span></div></div>`;
+    if (!lockLoading) loadLock();
+    return;
+  }
+  if (!LOCK.lock) {
+    body.innerHTML = `<div class="panel empty">No lock today. No Strong pick kicks off in the next 36 hours (${LOCK.candidates} Strong/Lean picks checked), and a lock is never forced.</div>`;
+    return;
+  }
+  if (reveal || store.get("lock-unlocked") === lockId(LOCK.lock)) {
+    body.innerHTML = lockCard(LOCK);
+    if (!reveal) body.querySelector(".lock-card").classList.remove("reveal");
+    return;
+  }
+  body.innerHTML = fgHtml();
+  FG.attempt = 1;
+  fgSetup();
+}
+
+$("#lock-body").addEventListener("click", e => {
+  if (e.target.closest("#fg-kick") || e.target.closest("#fg-svg")) fgPress();
+  if (e.target.closest("#lock-again")) { store.set("lock-unlocked", ""); renderLock(); }
+});
+$("#lock-refresh").addEventListener("click", () => loadLock(true));
+let lockResize = 0;
+addEventListener("resize", () => {   // the chart is drawn at the page's real width, so redraw it
+  clearTimeout(lockResize);
+  lockResize = setTimeout(() => { if ($("#lock-body .lock-card")) renderLock(); }, 200);
+});
+
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "picks", "bets", "scan", "props", "backtest", "parlay", "ask", "research", "explain"];
+const TABS = ["week", "lock", "picks", "bets", "scan", "props", "backtest", "parlay", "ask", "research", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -924,6 +1156,7 @@ function setTab(name) {
   if (name === "props") renderProps();
   if (name === "scan") renderScan();
   if (name === "picks") renderPicks();
+  if (name === "lock") renderLock(); else cancelAnimationFrame(FG.raf);
 }
 $(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) setTab(b.dataset.tab); });
 $(".tabs").addEventListener("keydown", e => {

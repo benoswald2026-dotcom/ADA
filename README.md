@@ -146,6 +146,14 @@ the consensus winner. Fixed rules, set before any grading:
 - **Strong**: 3+ sources on the same side (all of them; 80% when there are 5+), line off by 3+ pts (NFL 2+), spread under 28
 - **Lean**: 2/3 of sources agree, line off by 1.5+ pts (NFL 1+); totals need 3+ pts (NFL 2+)
 
+**Lock of the day (website, Lock tab):** the single best Strong pick kicking off in the
+next 36 hours, college or NFL, ranked by how far past the Strong bar its gap is (so 4.5
+college points = 3 NFL points), then by agreement. You have to make a field goal to see
+it: tap to set the aim (the wind pushes the ball), tap to set the power. Miss three and
+the kick moves 10 yards closer; miss five and it's an extra point. The card shows every
+source's prediction against the line. One lock per day is kept in `data/locks.csv`
+(frozen at kickoff) and graded like the other picks, so the lock gets its own record.
+
 **It learns from results.** Each run logs every game's per-source predictions
 (`data/consensus_predictions.csv`), then grades finished games and updates
 `data/consensus_weights.json` (`python main.py picks --learn` shows it):

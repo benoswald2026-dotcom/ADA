@@ -155,3 +155,30 @@ def test_untrusted_source_neither_moves_gap_nor_votes():
     out = C._summarize("cfb", g, {}, src, C.TIERS["cfb"], None, learned)
     assert out["ats"]["n"] == 2                               # FPI no longer votes
     assert out["ats"]["gap"] < out["ats"]["gap_raw"]          # and its big gap is ignored
+
+
+def test_lock_of_day_scales_gap_by_sport_and_skips_started():
+    from datetime import datetime, timedelta, timezone
+    now = datetime(2026, 10, 17, 12, tzinfo=timezone.utc)
+    c = lambda sport, gap, agree=5, n=5, hours=3, tier="Strong", kind="Spread": {
+        "sport": sport, "gap": gap, "agree": agree, "n": n, "tier": tier, "type": kind,
+        "kickoff": now + timedelta(hours=hours)}
+    # 3.5 college pts = 1.17x its 3-pt bar; 2.5 NFL pts = 1.25x its 2-pt bar -> NFL wins
+    assert C.lock_of_day([c("cfb", 3.5), c("nfl", -2.5)], now)["sport"] == "nfl"
+    assert C.lock_of_day([c("cfb", 9.0, hours=-1), c("cfb", 9.0, tier="Lean")], now) is None
+    assert C.lock_of_day([c("cfb", 9.0, hours=48)], now) is None          # outside the window
+
+
+def test_log_lock_one_per_day_and_frozen_after_kickoff(tmp_path):
+    import csv
+    from datetime import datetime, timedelta, timezone
+    now = datetime(2026, 10, 17, 14, tzinfo=timezone.utc)
+    lock = lambda eid, hours: {"sport": "cfb", "event_id": eid, "kickoff": now + timedelta(hours=hours),
+                               "matchup": "A @ B", "home": "B", "away": "A", "type": "Spread", "pick": "B -3",
+                               "line": -3.0, "gap": 4.0, "n": 5, "agree": 5}
+    path = str(tmp_path / "locks.csv")
+    assert C.log_lock(lock("1", 2), path, now)
+    assert C.log_lock(lock("2", 3), path, now)                          # replaced before kickoff
+    assert not C.log_lock(lock("3", 4), path, now + timedelta(hours=3.5))   # "2" kicked off: frozen
+    rows = list(csv.DictReader(open(path)))
+    assert [r["event_id"] for r in rows] == ["2"]

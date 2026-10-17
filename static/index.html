@@ -42,6 +42,7 @@
   </div>
   <nav class="wrap tabs" role="tablist" aria-label="Sections">
     <button role="tab" id="tab-week" data-tab="week" aria-selected="true">This week</button>
+    <button role="tab" id="tab-lock" data-tab="lock" aria-selected="false">Lock</button>
     <button role="tab" id="tab-picks" data-tab="picks" aria-selected="false">Picks</button>
     <button role="tab" id="tab-bets" data-tab="bets" aria-selected="false">Best bets</button>
     <button role="tab" id="tab-scan" data-tab="scan" aria-selected="false">Kalshi scan</button>
@@ -69,6 +70,18 @@
       </div>
     </div>
     <div id="week-body"></div>
+  </section>
+
+  <!-- LOCK OF THE DAY -->
+  <section id="view-lock" class="view" role="tabpanel" aria-labelledby="tab-lock" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Lock of the day</h1>
+        <p class="lede">The single strongest consensus pick kicking off in the next 36 hours, college or NFL. It's behind the uprights: make the field goal to see it. Tap once to set your aim (mind the wind), once more to set your power.</p>
+      </div>
+      <div class="view-actions"><button class="btn" id="lock-refresh">Refresh</button></div>
+    </div>
+    <div id="lock-body"></div>
   </section>
 
   <!-- BEST BETS -->
