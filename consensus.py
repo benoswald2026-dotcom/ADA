@@ -94,6 +94,13 @@ PICK_FIELDS = ["logged_at", "sport", "event_id", "game_date", "matchup", "home",
                "line", "consensus", "tier", "sources", "agree"]
 
 
+def _game_date(dt):
+    """ESPN's scoreboard day for a kickoff: the Eastern date (YYYYMMDD). A 10:15 PM ET
+    Saturday game is Sunday in UTC, but ESPN lists it under Saturday."""
+    from zoneinfo import ZoneInfo
+    return dt.astimezone(ZoneInfo("America/New_York")).strftime("%Y%m%d")
+
+
 # ------------------------------------------------------------------ sources --
 
 def _html(url, source):
@@ -447,7 +454,7 @@ def build(sport="cfb", days=0, now=None, with_model=True):
     learned = load_weights().get(sport, {})
     games, unmatched = [], {"Dratings": 0, "Dimers": 0, "OddsShark": 0, "nfelo": 0, **{n: 0 for n in ratings}}
     for d in range(days + 1):
-        events, stamps["espn"] = espn_events(sport, (now + timedelta(days=d)).strftime("%Y%m%d"))
+        events, stamps["espn"] = espn_events(sport, _game_date(now + timedelta(days=d)))
         for e in events:
             g = parse_event(e)
             if g["state"] != "pre" or g["kickoff"] <= now:
@@ -643,11 +650,14 @@ def log_lock(lock, path=None, now=None):
     mine = [i for i, r in enumerate(rows) if r["logged_at"][:10] == day]
     if mine:
         r = rows[mine[0]]
-        kick = datetime.strptime(r["game_date"] + r["kickoff_utc"], "%Y%m%d%H:%M").replace(tzinfo=timezone.utc)
+        stamp = r["kickoff_utc"]   # older rows: HH:MM on the UTC game_date; now a full UTC time
+        kick = (datetime.strptime(stamp, "%Y-%m-%dT%H:%MZ") if "T" in stamp else
+                datetime.strptime(r["game_date"] + stamp, "%Y%m%d%H:%M")).replace(tzinfo=timezone.utc)
         if kick <= now:
             return False   # today's lock has kicked off: it stays
     row = {"logged_at": day, "sport": lock["sport"], "event_id": lock["event_id"],
-           "game_date": lock["kickoff"].strftime("%Y%m%d"), "kickoff_utc": lock["kickoff"].strftime("%H:%M"),
+           "game_date": _game_date(lock["kickoff"]),
+           "kickoff_utc": lock["kickoff"].astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
            "matchup": lock["matchup"], "home": lock["home"], "away": lock["away"], "bet_type": lock["type"],
            "pick": lock["pick"], "line": lock["line"], "consensus": round(lock["gap"], 2), "tier": "Lock",
            "sources": lock["n"], "agree": lock["agree"]}
@@ -683,7 +693,7 @@ def log_picks(result, path=None):
         if gm["kickoff"] <= now:
             continue   # never log or change a pick once the game has started
         row = {"logged_at": now.strftime("%Y-%m-%d %H:%MZ"), "sport": result["sport"],
-               "event_id": gm["event_id"], "game_date": gm["kickoff"].strftime("%Y%m%d"),
+               "event_id": gm["event_id"], "game_date": _game_date(gm["kickoff"]),
                "matchup": gm["matchup"], "home": gm["home"], "away": gm["away"], "bet_type": p["type"],
                "pick": p["pick"], "line": p["line"],
                "consensus": round(gm["margin"] if p["type"] == "Spread" else gm["total"], 2),
@@ -706,7 +716,9 @@ def grade_pick(p, home_pts, away_pts):
     """'W', 'L' or 'P' for one logged pick given the final score."""
     line = float(p["line"])
     if p["bet_type"] == "Spread":
-        took_home = p["pick"].startswith(p["home"] + " ")
+        # Picks read '<home> <home line>' or '<away> <-home line>'. Compare the whole text:
+        # a name prefix fails for 'Texas Tech' @ 'Texas' and for two 'New York' teams.
+        took_home = p["pick"] == f"{p['home']} {line:+g}"
         margin = (home_pts - away_pts) if took_home else (away_pts - home_pts)
         my_line = line if took_home else -line
         x = margin + my_line
@@ -716,12 +728,15 @@ def grade_pick(p, home_pts, away_pts):
 
 
 def _finals(pairs):
-    """{event_id: (home pts, away pts)} for finished games on the given (sport, YYYYMMDD) days."""
-    from scan import espn_events
+    """{event_id: (home pts, away pts)} for finished games on the given (sport, YYYYMMDD) days.
+    Each day's eve is checked too: rows logged before game_date became the Eastern date
+    carry the UTC date, one day after ESPN's for night games."""
+    import scan
     finals = {}
-    for sport, day in sorted(pairs):
+    days = set(pairs) | {(sp, (datetime.strptime(d, "%Y%m%d") - timedelta(days=1)).strftime("%Y%m%d")) for sp, d in pairs}
+    for sport, day in sorted(days):
         try:
-            events, _ = espn_events(sport, day)
+            events, _ = scan.espn_events(sport, day)
         except ApiError:
             continue
         for e in events:
@@ -771,7 +786,7 @@ def log_predictions(result, path=None):
         if gm["kickoff"] <= now:
             continue
         row = {"logged_at": now.strftime("%Y-%m-%d %H:%MZ"), "sport": result["sport"], "event_id": gm["event_id"],
-               "game_date": gm["kickoff"].strftime("%Y%m%d"), "kickoff": gm["kickoff"].isoformat(),
+               "game_date": _game_date(gm["kickoff"]), "kickoff": gm["kickoff"].isoformat(),
                "matchup": gm["matchup"], "home": gm["home"], "away": gm["away"],
                "home_line": "" if not gm["ats"] else gm["ats"]["line"],
                "total_line": "" if not gm["ou"] else gm["ou"]["line"],
