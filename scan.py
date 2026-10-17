@@ -17,6 +17,7 @@ Read-only: nothing here places a bet.
 """
 import re
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import config
 import nfl_teams as T
@@ -28,6 +29,7 @@ from odds import remove_vig
 from strategy import LONGSHOT_MIN_PRICE, kelly_fraction_kalshi, normal_cdf, size_bets
 
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/football/{league}/scoreboard"
+ET = ZoneInfo("America/New_York")   # ESPN's scoreboard days are Eastern dates
 SPORTS = {
     "cfb": {"league": "college-football", "series": "KXNCAAFGAME", "spread": "KXNCAAFSPREAD",
             "total": "KXNCAAFTOTAL", "params": {"groups": 80, "limit": 300}},
@@ -178,7 +180,7 @@ def scan(sport="cfb", days=1, now=None, bankroll=1000.0):
     rows, notes, started, nomatch, noodds, estamp = [], [], [], [], [], None
     missed_lines = 0
     for d in range(days + 1):
-        events, estamp = espn_events(sport, (now + timedelta(days=d)).strftime("%Y%m%d"))
+        events, estamp = espn_events(sport, (now + timedelta(days=d)).astimezone(ET).strftime("%Y%m%d"))
         for e in events:
             g = parse_event(e)
             name = f"{g['away']['location']} @ {g['home']['location']}"

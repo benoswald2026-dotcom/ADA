@@ -182,3 +182,50 @@ def test_log_lock_one_per_day_and_frozen_after_kickoff(tmp_path):
     assert not C.log_lock(lock("3", 4), path, now + timedelta(hours=3.5))   # "2" kicked off: frozen
     rows = list(csv.DictReader(open(path)))
     assert [r["event_id"] for r in rows] == ["2"]
+
+
+def test_grade_pick_away_team_whose_name_starts_with_home_name():
+    # 'Texas Tech -3' must not be read as a Texas (home) pick
+    p = {"bet_type": "Spread", "pick": "Texas Tech -3", "home": "Texas", "line": "3.0"}
+    assert C.grade_pick(p, 20, 30) == "W"        # Texas Tech won by 10, covers -3
+    assert C.grade_pick(p, 30, 20) == "L"
+
+
+def test_grade_pick_teams_sharing_a_location():
+    # NFL: Jets @ Giants are both "New York"; the signed line tells the side
+    home = {"bet_type": "Spread", "pick": "New York +1.5", "home": "New York", "line": "1.5"}
+    away = {"bet_type": "Spread", "pick": "New York -1.5", "home": "New York", "line": "1.5"}
+    assert C.grade_pick(home, 20, 21) == "W"     # home lost by 1, +1.5 covers
+    assert C.grade_pick(away, 20, 21) == "L"     # away won by 1, -1.5 doesn't
+
+
+def test_late_kickoff_logged_and_graded_on_eastern_date(monkeypatch):
+    from datetime import datetime, timezone
+    import scan
+    late = datetime(2026, 10, 18, 2, 15, tzinfo=timezone.utc)      # Sat 10:15 PM ET
+    assert C._game_date(late) == "20261017"
+    asked = []
+
+    def fake(sport, day):
+        asked.append(day)
+        if day != "20261017":
+            return [], None
+        c = {"status": {"type": {"state": "post"}},
+             "competitors": [{"homeAway": "home", "score": "24"}, {"homeAway": "away", "score": "17"}]}
+        return [{"id": "9", "competitions": [c]}], None
+    monkeypatch.setattr(scan, "espn_events", fake)
+    # a row logged before this fix carries the UTC date; it must still be found
+    assert C._finals({("cfb", "20261018")}) == {"9": (24.0, 17.0)}
+    assert "20261017" in asked
+
+
+def test_log_lock_late_kickoff_not_frozen_early(tmp_path):
+    from datetime import datetime, timedelta, timezone
+    now = datetime(2026, 10, 17, 20, tzinfo=timezone.utc)          # 4 PM ET
+    lock = lambda eid, kick: {"sport": "cfb", "event_id": eid, "kickoff": kick, "matchup": "A @ B",
+                              "home": "B", "away": "A", "type": "Spread", "pick": "B -3", "line": -3.0,
+                              "gap": 4.0, "n": 5, "agree": 5}
+    path = str(tmp_path / "locks.csv")
+    assert C.log_lock(lock("1", datetime(2026, 10, 18, 2, 15, tzinfo=timezone.utc)), path, now)
+    # the 10:15 PM ET kickoff hasn't happened at 5 PM ET: a better lock may still replace it
+    assert C.log_lock(lock("2", now + timedelta(hours=3)), path, now + timedelta(hours=1))
