@@ -89,7 +89,9 @@ def picks_json(sport, force=False):
         C.log_predictions(r)
         C.log_picks(r)
         best = [{"tier": p["tier"], "type": p["type"], "pick": p["pick"], "gap": p["gap"], "agree": p["agree"],
-                 "n": p["n"], "matchup": p["game"]["matchup"]} for p in C.best_bets(r)]
+                 "n": p["n"], "matchup": p["game"]["matchup"],
+                 "kalshi_bet": ((p["game"].get("kalshi") or {}).get("spread_bet" if p["type"] == "Spread" else "total_bet"))}
+                for p in C.best_bets(r)]
         games = [{**g, "kickoff": g["kickoff"].isoformat()} for g in r["games"]]
         g = C.grade()
         c = _picks_cache[sport] = {"at": time.time(), "value": {"games": games, "best": best, "notes": r["notes"],

@@ -567,16 +567,27 @@ function renderPicks() {
   const recLine = k => { const r = rec[k]; if (!r) return "–"; const n = r.W + r.L; return `${r.W}-${r.L}-${r.P}${n ? ` · ${(100 * r.W / n).toFixed(1)}%` : ""}`; };
   const strong = PICKS.best.filter(b => b.tier === "Strong");
   const notes = PICKS.notes.length ? `<div class="notice"><ul class="notes-box-list">${PICKS.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
+  const kbet = k => !k ? "–" : `${k.side} “${esc(k.contract)}” @ ${cents(k.ask)}${k.line_gain > 0 ? ` <span class="tag">+${k.line_gain.toFixed(1)} vs DK</span>` : k.line_gain < 0 ? ` <span class="tag">${k.line_gain.toFixed(1)} vs DK</span>` : ""}`;
   const bestRows = PICKS.best.map(b => `<tr class="${b.tier === "Strong" ? "is-flag" : ""}"><td class="player-td"><b>${esc(b.pick)}</b></td>
       <td class="player-td">${esc(b.matchup)}</td><td>${esc(b.type)}</td><td>${b.tier === "Strong" ? chip(true).replace("Flag", "Strong") : `<span class="chip chip-pass">Lean</span>`}</td>
-      <td>${Math.abs(b.gap).toFixed(1)} pts</td><td>${b.agree}/${b.n}</td></tr>`).join("");
+      <td>${Math.abs(b.gap).toFixed(1)} pts</td><td>${b.agree}/${b.n}</td><td class="player-td">${kbet(b.kalshi_bet)}</td></tr>`).join("");
+  const ctxNote = g => {
+    const c = g.context || {}, out = [];
+    for (const side of ["home", "away"]) { const q = (c.qb || {})[side]; if (q && q.status) out.push(`${esc(g[side])} QB ${esc(q.name)}: ${esc(q.status)}`); }
+    const w = c.weather || {};
+    if (w.indoor) out.push("indoors"); else if (isNum(w.gust)) out.push(`gusts ${Math.round(w.gust)} mph`);
+    return out.join("<br>") || "–";
+  };
+  const kLine = (dk, k, fmt) => `${fmt(dk)}${isNum(k) ? ` <span class="tag">K ${fmt(k)}</span>` : ""}`;
   const srcCell = g => Object.entries(g.sources).map(([k, v]) => `${esc(k)}: ${isNum(v.margin) ? esc(g.home) + " " + signed(v.margin) : pct(v.p)}`).join("<br>");
   const gameRows = PICKS.games.map(g => `<tr><td>${kickoff(g.kickoff)}</td><td class="player-td">${esc(g.matchup)}</td>
       <td class="player-td">${esc(g.winner)} ${pct(g.winner_p, 0)} <span class="tag">${g.winner_agree}/${g.n_sources}</span></td>
       <td>${isNum(g.margin) ? esc(g.home) + " " + signed(g.margin) : "–"}</td>
+      <td>${g.ats ? kLine(g.ats.line, (g.kalshi || {}).home_line, x => signed(x, 1)) : "–"}</td>
       <td class="player-td">${g.ats ? `${esc(g.ats.pick)} <span class="tag">${signed(g.ats.gap)} · ${g.ats.agree}/${g.ats.n}</span>` : "–"}</td>
+      <td>${g.ou ? kLine(g.ou.line, (g.kalshi || {}).total, x => x.toFixed(1)) : "–"}</td>
       <td class="player-td">${g.ou ? `${esc(g.ou.pick)} <span class="tag">proj ${g.total.toFixed(1)}</span>` : "–"}</td>
-      <td>${g.ml && isNum(g.ml.kalshi_ask) ? `${cents(g.ml.kalshi_ask)} · ${pts(g.ml.kalshi_edge)}` : "–"}</td>
+      <td class="player-td" style="font-size:.72rem">${ctxNote(g)}</td>
       <td class="player-td" style="font-size:.72rem;color:var(--muted)">${srcCell(g)}</td></tr>`).join("");
   body.innerHTML = `<div class="notes">${notes}</div>
     <div class="summary">
@@ -586,9 +597,9 @@ function renderPicks() {
       <div><div class="label">Games</div><div class="big">${PICKS.games.length}</div><div class="small">with 1+ forecast</div></div>
     </div>
     <section class="bets-section"><h2>Best bets</h2><p class="lede">Picks where the forecasters agree and the line is off. Not validated yet: judge them by the graded record after 100+ picks.</p>
-      ${bestRows ? `<div class="table-wrap"><table><thead><tr><th>Pick</th><th class="l">Game</th><th>Type</th><th>Tier</th><th>Line off by</th><th>Agree</th></tr></thead><tbody>${bestRows}</tbody></table></div>` : `<div class="panel empty">No Strong or Lean picks right now.</div>`}</section>
-    <section class="bets-section"><h2>Every game</h2><p class="lede">Consensus winner, predicted margin (home team's view), spread and total picks, the Kalshi price for the consensus winner, and each source's number.</p>
-      <div class="table-wrap"><table><thead><tr><th>Kickoff</th><th class="l">Game</th><th class="l">Winner</th><th>Margin</th><th class="l">Spread pick</th><th class="l">Total pick</th><th>Kalshi</th><th class="l">Sources</th></tr></thead><tbody>${gameRows}</tbody></table></div></section>`;
+      ${bestRows ? `<div class="table-wrap"><table><thead><tr><th>Pick</th><th class="l">Game</th><th>Type</th><th>Tier</th><th>Line off by</th><th>Agree</th><th class="l">On Kalshi</th></tr></thead><tbody>${bestRows}</tbody></table></div>` : `<div class="panel empty">No Strong or Lean picks right now.</div>`}</section>
+    <section class="bets-section"><h2>Every game</h2><p class="lede">Consensus winner, predicted margin (home team's view), DraftKings' line next to Kalshi's own line (K, where its contract prices cross 50¢), spread and total picks, starting-QB injuries and weather, and each source's number.</p>
+      <div class="table-wrap"><table><thead><tr><th>Kickoff</th><th class="l">Game</th><th class="l">Winner</th><th>Margin</th><th>Home line (DK · K)</th><th class="l">Spread pick</th><th>Total (DK · K)</th><th class="l">Total pick</th><th class="l">QB / weather</th><th class="l">Sources</th></tr></thead><tbody>${gameRows}</tbody></table></div></section>`;
 }
 $("#picks-refresh").addEventListener("click", () => loadPicks(true));
 

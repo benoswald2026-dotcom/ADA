@@ -160,6 +160,22 @@ the consensus winner. Fixed rules, set before any grading:
 - A scheduled routine runs `picks` (both sports), `--learn` and `--grade` at 10:52 AM and
   2:52 AM Eastern and commits the data files, so the model updates after every game day.
 
+**Kalshi lines.** DraftKings posts one line; Kalshi posts a ladder of contracts
+("Alabama wins by over 4.5 / 5.5 / … points", "Over 47.5 / 48.5 / … points"). The tool reads the
+whole ladder and finds where its prices cross 50¢: that's Kalshi's own line, shown next to
+DraftKings' (DK · K). Each pick names the Kalshi contract that is the same bet at the strike
+closest to DraftKings' line, and says whether that's a better or worse number. Ladders are
+matched to games by the team names in the contracts, because Kalshi's tickers for one game can
+carry different dates in different series (e.g. 26OCT16 for the winner, 26OCT17 for the spread).
+
+**Injuries and weather.** Starting QB = the team's season passing leader (ESPN). If he's listed
+Out / Doubtful / Questionable (ESPN for the NFL, Covers for college), Sagarin's and Dratings'
+margins (pure ratings that can't know) move 7 points in college, 5 in the NFL, times 1 / 0.75 /
+0.5. Weather comes from ESPN's game summary (gusts, temperature, indoor/outdoor) and is shown
+for every game. It is not added to the forecasters' totals: on 2026-10-17 their totals sat as
+close to DraftKings' in windy games as in calm ones, so they (or the line) already reflect it.
+Hashmark's own NFL model uses forecast wind itself.
+
 Strong/Lean picks are logged to `data/consensus_picks.csv` before kickoff and graded with
 `--grade`. They are **not validated yet**: forecasters like these usually lose to the closing
 line on their own, so trust the graded record after 100+ picks, not the label. Massey and

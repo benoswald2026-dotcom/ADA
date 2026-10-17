@@ -120,18 +120,31 @@ def cmd_picks(args):
           + ". Lines: DraftKings (via ESPN). Kalshi for the winner.")
     for n in r["notes"]:
         print(f"NOTE: {n}")
-    fmt_line = lambda x: "-" if x is None else x
     rows = []
     for g in r["games"]:
-        ats, ou, ml = g["ats"], g["ou"], g["ml"]
+        ats, ou, k, ctx = g["ats"], g["ou"], g.get("kalshi") or {}, g.get("context") or {}
+        lines = "-" if not ats else f"DK {ats['line']:+g}"
+        if k.get("home_line") is not None:
+            lines += f" / K {k['home_line']:+.1f}"
+        tot = "-" if not ou else f"DK {ou['line']:g}" + (f" / K {k['total']:.1f}" if k.get("total") is not None else "")
+        notes_ = []
+        for side in ("home", "away"):
+            q = (ctx.get("qb") or {}).get(side)
+            if q and q.get("status"):
+                notes_.append(f"{g[side]} QB {q['name']} {q['status']}")
+        w = ctx.get("weather") or {}
+        if w.get("indoor"):
+            notes_.append("indoors")
+        elif w.get("gust") is not None:
+            notes_.append(f"gusts {w['gust']:.0f} mph" + (" (windy)" if ctx.get("wind_adj") else ""))
         rows.append([g["kickoff"].astimezone(et).strftime("%a %-I:%M%p"), g["matchup"],
-                     f"{g['winner']} {g['winner_p']:.0%} ({g['winner_agree']}/{g['n_sources']})",
-                     "-" if g["margin"] is None else f"{g['home']} {g['margin']:+.1f}",
-                     "-" if not ats else f"{ats['pick']} ({ats['gap']:+.1f}, {ats['agree']}/{ats['n']}){' *' + ats['tier'] if ats['tier'] else ''}",
-                     "-" if not ou else f"{ou['pick']} (proj {g['total']:.1f}){' *' + ou['tier'] if ou['tier'] else ''}",
-                     "-" if not ml or "kalshi_ask" not in ml else f"{ml['kalshi_ask'] * 100:.0f}c, edge {ml['kalshi_edge'] * 100:+.1f}"])
-    print(tabulate(rows, headers=["Kickoff (ET)", "Game", "Consensus winner", "Pred. margin", "Spread pick (gap, agree)",
-                                  "Total pick", "Kalshi winner"]))
+                     f"{g['winner']} {g['winner_p']:.0%}",
+                     "-" if g["margin"] is None else f"{g['home']} {g['margin']:+.1f}", lines,
+                     "-" if not ats else f"{ats['pick']}{' *' + ats['tier'] if ats['tier'] else ''}",
+                     tot, "-" if not ou else f"{ou['pick']} (proj {g['total']:.1f}){' *' + ou['tier'] if ou['tier'] else ''}",
+                     "; ".join(notes_)])
+    print(tabulate(rows, headers=["Kickoff (ET)", "Game", "Winner", "Pred. margin", "Home line (DK / Kalshi)",
+                                  "Spread pick", "Total (DK / Kalshi)", "Total pick", "Injuries / weather"]))
     best = C.best_bets(r)
     print(f"\nBEST BETS (fixed rules: Strong = 3+ sources all agree and the line is off by "
           f"{C.TIERS[args.sport]['strong_gap']:g}+ pts, spreads under {C.BLOWOUT_LINE:g} (5+ sources: 80% agree); Lean = 2/3 agree, {C.TIERS[args.sport]['lean_gap']:g}+ pts):")
@@ -141,6 +154,11 @@ def cmd_picks(args):
         gm = p["game"]
         print(f"  {p['tier']:6s} {p['type']:6s} {p['pick']:28s} {gm['matchup']:36s} line off by {abs(p['gap']):.1f} pts, "
               f"{p['agree']}/{p['n']} sources agree")
+        kb = (gm.get("kalshi") or {}).get("spread_bet" if p["type"] == "Spread" else "total_bet")
+        if kb:
+            better = (f", {kb['line_gain']:.1f} pts better than DraftKings' line" if kb["line_gain"] > 0 else
+                      f", {-kb['line_gain']:.1f} pts worse than DraftKings' line" if kb["line_gain"] < 0 else ", same number as DraftKings")
+            print(f"         On Kalshi: buy {kb['side']} on '{kb['contract']}' at {kb['ask'] * 100:.0f}c{better}")
     C.log_predictions(r)
     logged = C.log_picks(r)
     print(f"\nLogged {logged} new picks to data/consensus_picks.csv. Grade them later: python main.py picks --grade")

@@ -25,7 +25,7 @@ from cache import cached_get
 from kalshi import edge_after_fee, kalshi_fee, match_market
 from names import team_key
 from odds import remove_vig
-from strategy import LONGSHOT_MIN_PRICE, kelly_fraction_kalshi, size_bets
+from strategy import LONGSHOT_MIN_PRICE, kelly_fraction_kalshi, normal_cdf, size_bets
 
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/football/{league}/scoreboard"
 SPORTS = {
@@ -83,6 +83,30 @@ def _match(sport, markets, g):
     from nfl import _match_kalshi
     h, a = T.code_for(g["home"]["displayName"]), T.code_for(g["away"]["displayName"])
     return _match_kalshi(markets, h, a) if h and a else None
+
+
+def ladder_key(spread_by_key, home, away, kickoff=None, keyfn=team_key):
+    """The Kalshi game key whose spread contracts name both teams.
+
+    Kalshi's tickers can't be joined across series by key: the same game can be
+    KXNCAAFGAME-26OCT16MSSTLSU (winner) but KXNCAAFSPREAD-26OCT17MSSTLSU (spread).
+    So match on the team names inside the contracts; if two keys qualify (a rematch),
+    take the one dated closest to kickoff."""
+    hk, ak = keyfn(home), keyfn(away)
+    hits = []
+    for k, ms in spread_by_key.items():
+        teams = {keyfn(mm.group(1)) for m in ms if (mm := SPREAD_RE.match(m.get("team") or ""))}
+        if hk in teams and ak in teams:
+            hits.append(k)
+    if len(hits) <= 1 or kickoff is None:
+        return hits[0] if hits else None
+
+    def days_off(k):
+        try:
+            return abs((datetime.strptime(k[:7], "%y%b%d").date() - kickoff.date()).days)
+        except ValueError:
+            return 99
+    return min(hits, key=days_off)
 
 
 def _game_key(event_ticker):
@@ -150,6 +174,7 @@ def scan(sport="cfb", days=1, now=None, bankroll=1000.0):
             ms = []
         for m in ms:
             by_game.setdefault((kind, _game_key(m["event_ticker"])), []).append(m)
+    spread_by_key = {k: ms for (kind, k), ms in by_game.items() if kind == "spread"}
     rows, notes, started, nomatch, noodds, estamp = [], [], [], [], [], None
     missed_lines = 0
     for d in range(days + 1):
@@ -165,7 +190,8 @@ def scan(sport="cfb", days=1, now=None, bankroll=1000.0):
             if not km:
                 nomatch.append(name)
                 continue
-            gk = _game_key(km["home"]["event_ticker"])
+            gk = (ladder_key(spread_by_key, g["home"]["location"], g["away"]["location"], g["kickoff"]) if sport == "cfb"
+                  else ladder_key(spread_by_key, g["home"]["displayName"], g["away"]["displayName"], g["kickoff"], T.code_for))
             lr, missed = line_rows(g, name, by_game.get(("spread", gk), []), by_game.get(("total", gk), []),
                                    f"espn_{g['id']}")
             rows += lr
@@ -205,3 +231,85 @@ def scan(sport="cfb", days=1, now=None, bankroll=1000.0):
         notes.append(f"No sportsbook odds on ESPN for {len(noodds)} games: " + "; ".join(noodds))
     return {"rows": rows, "notes": notes, "kalshi_stamp": kstamp, "espn_stamp": estamp,
             "games": len({r["matchup"] for r in rows})}
+
+
+def _mid(m):
+    """Contract midpoint: (bid + ask) / 2 when both exist, else the ask."""
+    a, b = m.get("yes_ask"), m.get("yes_bid")
+    if a is None or not 0 < a < 1:
+        return None
+    return (a + b) / 2 if b is not None and 0 < b < a else a
+
+
+def _median_from_ladder(points):
+    """points: [(x, P(value > x))]. Returns x where the probability crosses 50%
+    (linear interpolation), or None if the ladder never crosses it."""
+    pts = sorted(points)
+    for (x0, p0), (x1, p1) in zip(pts, pts[1:]):
+        if p0 >= 0.5 >= p1 and p0 != p1:
+            return x0 + (p0 - 0.5) * (x1 - x0) / (p0 - p1)
+    return None
+
+
+def kalshi_lines(home, away, spread_mkts, total_mkts, keyfn=team_key):
+    """Kalshi's own line for a game, read off its contract ladders.
+
+    Kalshi has no single spread: it lists 'X wins by over s' contracts at many s.
+    Each midpoint is P(margin > s); the margin where that crosses 50% is Kalshi's
+    line. Same for totals ('Over s'). Returns {"home_line", "total", "spread", "totals"}
+    where spread/totals are the parsed contracts (team, strike, home_side, market)."""
+    hk, ak = keyfn(home), keyfn(away)
+    spread_pts, contracts = [], []
+    for m in spread_mkts:
+        mm = SPREAD_RE.match(m.get("team") or "")
+        p = _mid(m)
+        if not mm or p is None:
+            continue
+        k, strike = keyfn(mm.group(1)), float(mm.group(2))
+        if k == hk:
+            spread_pts.append((strike, p))
+            contracts.append({"home_side": True, "strike": strike, "m": m})
+        elif k == ak:
+            spread_pts.append((-strike, 1 - p))
+            contracts.append({"home_side": False, "strike": strike, "m": m})
+    total_pts, totals = [], []
+    for m in total_mkts:
+        mm = TOTAL_RE.match(m.get("team") or "")
+        p = _mid(m)
+        if mm and p is not None:
+            total_pts.append((float(mm.group(1)), p))
+            totals.append({"strike": float(mm.group(1)), "m": m})
+    med = _median_from_ladder(spread_pts)
+    return {"home_line": None if med is None else -med, "total": _median_from_ladder(total_pts),
+            "spread": contracts, "totals": totals}
+
+
+def matching_contract(contracts, kind, pick_over, line):
+    """The Kalshi contract that is the same bet as a pick, at the strike closest to the
+    sportsbook line.
+
+    Spread: pick_over=True means 'home margin above the line' (home covers); line is the
+    home margin the book needs (e.g. 3.5 for home -3.5, -3.5 for home +3.5). Kalshi's
+    'home wins by over s' YES and 'away wins by over s' NO both pay when the home
+    margin is high; the mirror images pay when it is low. Total: pick_over=True is Over.
+    Returns {"contract", "side", "ask", "strike", "line_gain"} or None. line_gain > 0
+    means the Kalshi contract is a better number than the book's line."""
+    best = None
+    for c in contracts:
+        m = c["m"]
+        if kind == "spread":
+            x = c["strike"] if c["home_side"] else -c["strike"]     # threshold on the home margin
+            yes_is_high = c["home_side"]
+            name = re.sub(r" points?$", "", m["team"])
+        else:
+            x, yes_is_high, name = c["strike"], True, f"Over {c['strike']:g}"
+        side = "YES" if yes_is_high == pick_over else "NO"
+        ask = m.get("yes_ask") if side == "YES" else m.get("no_ask")
+        if ask is None or not 0 < ask < 1:
+            continue
+        gain = (line - x) if pick_over else (x - line)      # better than the book: lower bar when betting high
+        cand = {"contract": name, "side": side, "ask": ask, "strike": x, "line_gain": gain, "ticker": m.get("ticker")}
+        if best is None or abs(x - line) < abs(best["strike"] - line) or (
+                abs(x - line) == abs(best["strike"] - line) and ask < best["ask"]):
+            best = cand
+    return best

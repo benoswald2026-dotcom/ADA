@@ -54,3 +54,37 @@ def test_line_rows_compare_only_exact_lines_on_both_sides():
     assert yes["edge"] == pytest.approx(0.5 - 0.44 - 0.07 * 0.44 * 0.56) and yes["flag"]
     no = next(r for r in rows if r["side"] == "no")
     assert no["team"] == "UNLV +1.5" and not no["flag"]
+
+
+def test_ladder_key_matches_by_team_names_not_ticker_date():
+    ladders = {"26OCT17MSSTLSU": [{"team": "LSU wins by over 17.5 points"}, {"team": "Mississippi St. wins by over 1.5 points"}],
+               "26OCT17FLATEX": [{"team": "Texas wins by over 8.5 points"}]}
+    assert scan.ladder_key(ladders, "LSU", "Mississippi State") == "26OCT17MSSTLSU"
+    assert scan.ladder_key(ladders, "Texas", "Florida") is None          # Florida never named
+    rematch = {"26SEP05AB": [{"team": "Alpha wins by over 3.5 points"}, {"team": "Beta wins by over 1.5 points"}],
+               "26DEC05AB": [{"team": "Alpha wins by over 2.5 points"}, {"team": "Beta wins by over 1.5 points"}]}
+    kick = datetime(2026, 12, 5, 20, tzinfo=timezone.utc)
+    assert scan.ladder_key(rematch, "Alpha", "Beta", kick) == "26DEC05AB"
+
+
+def test_kalshi_line_from_ladder():
+    lad = [{"team": "LSU wins by over 16.5 points", "yes_ask": 0.55, "yes_bid": 0.54},
+           {"team": "LSU wins by over 17.5 points", "yes_ask": 0.50, "yes_bid": 0.49},
+           {"team": "LSU wins by over 20.5 points", "yes_ask": 0.43, "yes_bid": 0.42}]
+    out = scan.kalshi_lines("LSU", "Mississippi State", lad, [])
+    assert out["home_line"] == pytest.approx(-17.4, abs=0.05)
+
+
+def test_matching_contract_is_the_same_bet():
+    lad = [{"home_side": True, "strike": 2.5, "m": {"team": "Duke wins by over 2.5 points", "yes_ask": 0.55, "no_ask": 0.47}},
+           {"home_side": True, "strike": 3.5, "m": {"team": "Duke wins by over 3.5 points", "yes_ask": 0.46, "no_ask": 0.56}},
+           {"home_side": False, "strike": 1.5, "m": {"team": "UNC wins by over 1.5 points", "yes_ask": 0.30, "no_ask": 0.72}}]
+    # Home Duke -3 at the book: home covers if margin > 3. Closest Kalshi strikes are 2.5 and 3.5.
+    c = scan.matching_contract(lad, "spread", True, 3.0)
+    assert c["side"] == "YES" and c["contract"].startswith("Duke") and c["strike"] in (2.5, 3.5)
+    # Betting UNC +3 (home margin below 3): Duke YES is wrong, Duke NO is right.
+    c2 = scan.matching_contract(lad, "spread", False, 3.0)
+    assert c2["side"] == "NO" and c2["contract"].startswith("Duke")
+    tot = [{"strike": 54.5, "m": {"team": "Over 54.5 points", "yes_ask": 0.52, "no_ask": 0.50}}]
+    u = scan.matching_contract(tot, "total", False, 55.5)
+    assert u["side"] == "NO" and u["line_gain"] == pytest.approx(-1.0)   # Under 54.5 is a worse number than Under 55.5

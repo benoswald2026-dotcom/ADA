@@ -33,6 +33,8 @@ from cache import ApiError, cached_download, cached_get
 from kalshi import edge_after_fee
 from names import normalize, team_key
 from odds import remove_vig
+from statistics import NormalDist
+
 from strategy import normal_cdf
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Hashmark; personal, read-only)"}
@@ -51,6 +53,18 @@ TIERS = {
 }
 BLOWOUT_LINE = 28.0   # spreads this big can be at most "Lean" (fixed before grading)
 PICKS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "consensus_picks.csv")
+# Injuries and weather (fixed before testing). Pure rating systems can't know about
+# injuries or weather; market-based sources and the betting line already do.
+QB_OUT_POINTS = {"cfb": 7.0, "nfl": 5.0}       # starting QB (season passing leader) fully out
+STATUS_WEIGHT = {"out": 1.0, "injured reserve": 1.0, "doubtful": 0.75, "questionable": 0.5}
+INJURY_ADJUSTED_SOURCES = {"Sagarin", "Dratings"}
+WIND_PER_MPH = -0.35       # points of total per mph of sustained wind above 10 (fitted on the NFL)
+GUST_TO_WIND = 1.4         # ESPN gives gusts; sustained wind is roughly gust / 1.4
+# Checked 2026-10-17: in windy games (gusts 25+ mph) these sites' totals sat as close to
+# DraftKings' total as in calm games, so they (or the line) already reflect the weather.
+# Adjusting them would double-count; weather is shown, and Hashmark's NFL model uses it itself.
+WEATHER_ADJUSTED_SOURCES = set()
+COVERS_CFB_INJURIES = "https://www.covers.com/sport/football/ncaaf/injuries"
 PRED_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "consensus_predictions.csv")
 WEIGHTS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "consensus_weights.json")
 HISTORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "history_fpi_{sport}.csv")
@@ -153,6 +167,85 @@ def espn_fpi(sport, event_id):
     return float(st["gameProjection"]) / 100, float(st["teamPredPtDiff"])
 
 
+def parse_covers_injuries(html):
+    """Covers college injury report -> {team key: [(player, position, status)]}.
+    Player names are abbreviated ('L. Szarka'); status is the part before ' - '."""
+    out = {}
+    for chunk in html.split('<a id="')[1:]:
+        team = _html_mod.unescape(chunk.split('"', 1)[0])
+        rows = re.findall(r"<span class='player-link'>\s*(.*?)\s*</span>.*?<td>([A-Z]+)</td>\s*<td><b>([^<]+)</b>",
+                          chunk, re.S)
+        if rows:
+            out[team_key(team)] = [(re.sub(r"\s+", " ", n).strip(), pos, st.split(" - ")[0].strip().lower())
+                                   for n, pos, st in rows]
+    return out
+
+
+def _same_player(full, short):
+    """'Luke Szarka' vs 'L. Szarka' (or the full name)."""
+    f, s_ = normalize(full).split(), normalize(short).replace(".", "").split()
+    if not f or not s_:
+        return False
+    return f[-1] == s_[-1] and f[0][0] == s_[0][0]
+
+
+def game_context(sport, g, covers):
+    """Weather and starting-QB injury status for one game, from ESPN's game summary
+    (weather, season passing leaders, NFL injuries) and Covers (college injuries)."""
+    lg = SPORTS[sport]["espn"]
+    ctx = {"weather": None, "wind_adj": 0.0, "qb": {"home": None, "away": None}, "qb_pts": {"home": 0.0, "away": 0.0}}
+    try:
+        sm, _ = cached_get(f"https://site.api.espn.com/apis/site/v2/sports/football/{lg}/summary",
+                           params={"event": g["id"]}, ttl=config.TTL_ODDS, source="ESPN summary")
+    except ApiError:
+        return ctx
+    indoor = bool(((sm.get("gameInfo") or {}).get("venue") or {}).get("indoor")) or g.get("indoor", False)
+    w = (sm.get("gameInfo") or {}).get("weather")
+    if w and not indoor:
+        gust = w.get("gust")
+        wind = None if gust is None else gust / GUST_TO_WIND
+        ctx["weather"] = {"temp": w.get("temperature"), "gust": gust, "wind": wind, "precip": w.get("precipitation")}
+        if wind is not None:
+            ctx["wind_adj"] = WIND_PER_MPH * max(0.0, wind - config.WIND_THRESHOLD_MPH)
+    elif indoor:
+        ctx["weather"] = {"indoor": True}
+    leaders = {}
+    for t in sm.get("leaders", []):
+        side = "home" if str(t.get("team", {}).get("id")) == str(g["home"].get("id")) else "away"
+        for cat in t.get("leaders", []):
+            if cat.get("name") == "passingYards" and cat.get("leaders"):
+                leaders[side] = cat["leaders"][0].get("athlete", {}).get("displayName")
+    if sport == "nfl":
+        inj = {("home" if str(t.get("team", {}).get("id")) == str(g["home"].get("id")) else "away"):
+               [(x.get("athlete", {}).get("displayName", ""), x.get("athlete", {}).get("position", {}).get("abbreviation", ""),
+                 str(x.get("status", "")).lower()) for x in t.get("injuries", [])]
+               for t in sm.get("injuries", [])}
+    else:
+        inj = {side: next((covers[k] for k in _names(g[side]) if k in covers), []) for side in ("home", "away")}
+    for side in ("home", "away"):
+        qb = leaders.get(side)
+        if not qb:
+            continue
+        hit = next((st for n, pos, st in inj.get(side, []) if pos == "QB" and _same_player(qb, n)), None)
+        ctx["qb"][side] = {"name": qb, "status": hit}
+        if hit in STATUS_WEIGHT:
+            ctx["qb_pts"][side] = QB_OUT_POINTS[sport] * STATUS_WEIGHT[hit]
+    return ctx
+
+
+def _apply_context(src, ctx, sigma):
+    """Adjust rating-only sources for a starting QB out, and totals for wind."""
+    shift = ctx["qb_pts"]["away"] - ctx["qb_pts"]["home"]     # home margin rises if the away QB is out
+    for name, s in src.items():
+        if shift and name in INJURY_ADJUSTED_SOURCES and "margin" in s:
+            s["margin"] += shift
+            p = min(max(s["p"], 1e-4), 1 - 1e-4)
+            s["p"] = NormalDist().cdf(NormalDist().inv_cdf(p) + shift / sigma)
+        if ctx["wind_adj"] and name in WEATHER_ADJUSTED_SOURCES and "total" in s:
+            s["total"] += ctx["wind_adj"]
+    return src
+
+
 def _names(team):
     """Every key a source might use for an ESPN team: location, full display name, abbreviation."""
     out = {team_key(team["location"]), normalize(team.get("displayName", "")), team_key(team.get("displayName", ""))}
@@ -222,7 +315,7 @@ def tier_for(gap, n, agree, strong, lean):
 
 def build(sport="cfb", days=0, now=None, with_model=True):
     """Returns {"games": [...], "notes": [...], "stamps": {...}}."""
-    from scan import _match, espn_events, parse_event
+    from scan import _match, espn_events, kalshi_lines, parse_event
     from api_clients import kalshi_markets
     cfg, tiers = SPORTS[sport], TIERS[sport]
     now = now or datetime.now(timezone.utc)
@@ -247,6 +340,24 @@ def build(sport="cfb", days=0, now=None, with_model=True):
         except ApiError as e:
             extra[name] = []
             notes.append(f"{name} unavailable ({e}).")
+    covers = {}
+    if sport == "cfb":
+        try:
+            page, stamps["covers"] = _html(COVERS_CFB_INJURIES, "Covers injuries")
+            covers = parse_covers_injuries(page)
+        except ApiError as e:
+            notes.append(f"College injury report (Covers) unavailable ({e}); no QB injury adjustments.")
+    ladders = {}
+    for kind, series in (("spread", "KXNCAAFSPREAD" if sport == "cfb" else "KXNFLSPREAD"),
+                         ("total", "KXNCAAFTOTAL" if sport == "cfb" else "KXNFLTOTAL")):
+        try:
+            ms, _ = kalshi_markets(series)
+        except ApiError:
+            ms = []
+        for m in ms:
+            ladders.setdefault((kind, m["event_ticker"].split("-", 1)[-1]), []).append(m)
+    from scan import ladder_key
+    spread_by_key = {gk: ms for (kind, gk), ms in ladders.items() if kind == "spread"}
     try:
         markets, stamps["kalshi"] = kalshi_markets("KXNCAAFGAME" if sport == "cfb" else "KXNFLGAME")
     except ApiError:
@@ -297,7 +408,22 @@ def build(sport="cfb", days=0, now=None, with_model=True):
                 src["Hashmark model"] = {"p": mk[0], "margin": mk[1], **({"total": mk[2]} if mk[2] else {})}
             if not src:
                 continue
-            games.append(_summarize(sport, g, e, src, tiers, _match(sport, markets, g) if markets else None, learned))
+            g["indoor"] = bool((e["competitions"][0].get("venue") or {}).get("indoor"))
+            ctx = game_context(sport, g, covers)
+            src = _apply_context(src, ctx, cfg["sigma"])
+            km = _match(sport, markets, g) if markets else None
+            lad = None
+            if sport == "cfb":
+                names, keyfn = (h["location"], a["location"]), team_key
+            else:
+                names, keyfn = (h["displayName"], a["displayName"]), T.code_for
+            gk = ladder_key(spread_by_key, *names, g["kickoff"], keyfn)
+            if gk:
+                lad = kalshi_lines(*names, ladders.get(("spread", gk), []), ladders.get(("total", gk), []), keyfn)
+            gm = _summarize(sport, g, e, src, tiers, km, learned)
+            gm["context"] = ctx
+            _add_kalshi(gm, lad, cfg["sigma"], sport)
+            games.append(gm)
     for name, n in unmatched.items():
         if n:
             notes.append(f"{name}: no prediction found for {n} games (team names or not covered).")
@@ -366,6 +492,22 @@ def _summarize(sport, g, e, src, tiers, km, learned=None):
             ml.update(kalshi_ask=ask, kalshi_edge=edge_after_fee(p, ask))
         out["ml"] = ml
     return out
+
+
+def _add_kalshi(gm, lad, sigma, sport):
+    """Kalshi's own spread and total (read off its ladders) and, for the consensus spread
+    and total picks, the Kalshi contract that is the same bet at the closest strike."""
+    from scan import matching_contract
+    gm["kalshi"] = None
+    if not lad:
+        return
+    k = {"home_line": lad["home_line"], "total": lad["total"], "spread_bet": None, "total_bet": None}
+    ats, ou = gm["ats"], gm["ou"]
+    if ats and lad["spread"]:
+        k["spread_bet"] = matching_contract(lad["spread"], "spread", ats["gap"] > 0, -ats["line"])
+    if ou and lad["totals"]:
+        k["total_bet"] = matching_contract(lad["totals"], "total", ou["gap"] > 0, ou["line"])
+    gm["kalshi"] = k
 
 
 def best_bets(result):
