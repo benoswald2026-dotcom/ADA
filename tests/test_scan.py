@@ -88,3 +88,14 @@ def test_matching_contract_is_the_same_bet():
     tot = [{"strike": 54.5, "m": {"team": "Over 54.5 points", "yes_ask": 0.52, "no_ask": 0.50}}]
     u = scan.matching_contract(tot, "total", False, 55.5)
     assert u["side"] == "NO" and u["line_gain"] == pytest.approx(-1.0)   # Under 54.5 is a worse number than Under 55.5
+
+
+def test_pickem_ladder_uses_winner_price_at_zero():
+    """Rungs at -1.5 and +1.5 only: without the winner price the 50% crossing lands near 0
+    by straight-line interpolation. With it (no ties: P(margin > 0) = P(win)) it doesn't."""
+    from scan import _median_from_ladder, prob_at
+    pts = [(-1.5, 0.525), (1.5, 0.46)]
+    assert abs(_median_from_ladder(pts)) < 0.5
+    anchored = pts + [(-0.5, 0.49), (0.5, 0.49)]
+    assert _median_from_ladder(anchored) < -0.5        # home a slight underdog: line about +1
+    assert prob_at(anchored, -1.5) == 0.525 and abs(prob_at(pts, 0.0) - 0.4925) < 1e-9

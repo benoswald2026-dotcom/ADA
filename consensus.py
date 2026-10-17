@@ -515,7 +515,11 @@ def build(sport="cfb", days=0, now=None, with_model=True):
                 names, keyfn = (h["displayName"], a["displayName"]), T.code_for
             gk = ladder_key(spread_by_key, *names, g["kickoff"], keyfn)
             if gk:
-                lad = kalshi_lines(*names, ladders.get(("spread", gk), []), ladders.get(("total", gk), []), keyfn)
+                # Kalshi's own winner price anchors the ladder at 0 (no ties: P(margin > 0) = P(win)).
+                from scan import _mid
+                p_win = _mid(km["home"]) if km and km.get("home") else None
+                lad = kalshi_lines(*names, ladders.get(("spread", gk), []), ladders.get(("total", gk), []), keyfn,
+                                   p_home_win=p_win)
             gm = _summarize(sport, g, e, src, tiers, km, learned)
             gm["context"] = ctx
             _add_kalshi(gm, lad, cfg["sigma"], sport)

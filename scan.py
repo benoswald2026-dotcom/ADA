@@ -253,7 +253,21 @@ def _median_from_ladder(points):
     return None
 
 
-def kalshi_lines(home, away, spread_mkts, total_mkts, keyfn=team_key):
+def prob_at(points, x):
+    """P(value > x) read off a ladder [(strike, P)]: exact strike if Kalshi lists it,
+    else interpolated between the two neighbouring strikes; None outside the ladder."""
+    pts = sorted(points)
+    for s, p in pts:
+        if abs(s - x) < 1e-9:
+            return p
+    for (x0, p0), (x1, p1) in zip(pts, pts[1:]):
+        if x0 < x < x1:
+            return p0 + (p1 - p0) * (x - x0) / (x1 - x0)
+    return None
+
+
+def kalshi_lines(home, away, spread_mkts, total_mkts, keyfn=team_key, p_home_win=None,
+                 book_home_line=None, book_total=None):
     """Kalshi's own line for a game, read off its contract ladders.
 
     Kalshi has no single spread: it lists 'X wins by over s' contracts at many s.
@@ -281,9 +295,19 @@ def kalshi_lines(home, away, spread_mkts, total_mkts, keyfn=team_key):
         if mm and p is not None:
             total_pts.append((float(mm.group(1)), p))
             totals.append({"strike": float(mm.group(1)), "m": m})
+    # Football has no ties, so P(home margin > -0.5) = P(home margin > +0.5) = P(home wins).
+    # Without these rungs a near pick'em ladder jumps from -1.5 to +1.5 and the 50% crossing
+    # lands near 0 by straight-line interpolation (Chicago @ Atlanta read 0.25 while Kalshi's
+    # own -1.5 rung, 52.5%, matched DraftKings' +1.5 at 52.2%).
+    if p_home_win is not None and spread_pts:
+        spread_pts += [(-0.5, p_home_win), (0.5, p_home_win)]
     med = _median_from_ladder(spread_pts)
     return {"home_line": None if med is None else -med, "total": _median_from_ladder(total_pts),
-            "spread": contracts, "totals": totals}
+            "spread": contracts, "totals": totals,
+            # Compare with a sportsbook in probability at ITS line, not line vs line:
+            # Kalshi's P(home covers the book's spread) and P(over the book's total).
+            "cover_prob": None if book_home_line is None else prob_at(spread_pts, -book_home_line),
+            "over_prob": None if book_total is None else prob_at(total_pts, book_total)}
 
 
 def matching_contract(contracts, kind, pick_over, line):
