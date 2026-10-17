@@ -82,16 +82,23 @@ def cmd_picks(args):
     from zoneinfo import ZoneInfo
     from tabulate import tabulate
     import consensus as C
+    if args.backfill:
+        for sp in ("cfb", "nfl"):
+            seen, kept = C.backfill_fpi(sp)
+            print(f"{sp}: {seen} finished games, {kept} with an ESPN FPI prediction and a closing line -> "
+                  f"{C.HISTORY_FILE.format(sport=sp)}")
     learned = C.learn()   # grade finished games and update source weights / trust first
     if args.learn:
         if not learned:
             print("Nothing learned yet: predictions are logged each time `picks` runs and graded after the games.")
         for sp, L in learned.items():
             print(f"\n{sp.upper()} — learned from {L['games']} finished games (spreads), {L['total_games']} (totals); updated {L['updated']}")
-            print(f"  Trust in the consensus off the line: spreads {L['trust']:.2f}, totals {L['trust_total']:.2f}"
-                  "  (1.00 = take it at face value; lower = results say shrink it toward the line)")
-            for k in sorted(L["margin_w"], key=lambda k: -L["margin_w"][k]):
-                print(f"  {k:15s} weight {L['margin_w'][k]:.2f}   avg sq. miss on the margin {L['margin_stats']['mse'][k]:.1f}")
+            print("  Trust = how much of a source's disagreement with the line has shown up in results"
+                  " (1.00 = face value, 0 = none; below 0.25 it stops voting).")
+            for k in sorted(L["margin_w"], key=lambda k: -L["trust_src"].get(k, 0)):
+                st_ = L["margin_stats"]
+                print(f"  {k:15s} trust {L['trust_src'][k]:.2f}  weight {L['margin_w'][k]:.2f}  games {st_['n'][k]:4d}"
+                      f"  avg sq. miss {st_['mse'][k]:.1f}")
         return
     if args.grade:
         g = C.grade()
@@ -139,8 +146,8 @@ def cmd_picks(args):
     print(f"\nLogged {logged} new picks to data/consensus_picks.csv. Grade them later: python main.py picks --grade")
     L = r.get("learned") or {}
     if L.get("games"):
-        print(f"Learned from {L['games']} finished games: trust {L['trust']:.2f} (spreads), {L['trust_total']:.2f} (totals). "
-              "Details: python main.py picks --learn")
+        tr = ", ".join(f"{k} {v:.2f}" for k, v in sorted(L.get("trust_src", {}).items()))
+        print(f"Learned from {L['games']} graded games. Source trust: {tr}. Details: python main.py picks --learn")
     else:
         print("Nothing learned yet: weights start equal and trust at 1.00; they adjust as logged games finish.")
     print("Not validated yet: these forecasters usually lose to the closing line on their own. The graded record decides.")
@@ -374,6 +381,7 @@ def main():
     pk.add_argument("--top", type=int, default=15)
     pk.add_argument("--grade", action="store_true", help="score logged picks against final scores")
     pk.add_argument("--learn", action="store_true", help="show what the model has learned from finished games")
+    pk.add_argument("--backfill", action="store_true", help="rebuild ESPN FPI's past predictions (2025-26) as a head start")
     pk.set_defaults(func=cmd_picks)
     sc = sub.add_parser("scan", help="Kalshi vs. sportsbook prices, no API keys needed")
     sc.add_argument("--sport", choices=["cfb", "nfl"], default="cfb")

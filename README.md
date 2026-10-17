@@ -146,6 +146,20 @@ the consensus winner. Fixed rules, set before any grading:
 - **Strong**: 3+ sources on the same side (all of them; 80% when there are 5+), line off by 3+ pts (NFL 2+), spread under 28
 - **Lean**: 2/3 of sources agree, line off by 1.5+ pts (NFL 1+); totals need 3+ pts (NFL 2+)
 
+**It learns from results.** Each run logs every game's per-source predictions
+(`data/consensus_predictions.csv`), then grades finished games and updates
+`data/consensus_weights.json` (`python main.py picks --learn` shows it):
+- *weight* per source = 1 / its average squared miss on the final margin (40-game prior);
+- *trust* per source = how much of its disagreement with the line actually showed up in
+  results (slope of result-vs-line on source-vs-line, 40-game prior, clipped to 0–1.2).
+  Gaps are multiplied by trust, and a source under 0.25 stops voting.
+- ESPN FPI gets a head start from its own past predictions (`--backfill`, 2025–26): on 513
+  college and 172 NFL games, its side covered 45.9% when it disagreed with the closing line
+  by 3+ points (39.3% at 5+), and blending it with the line didn't beat the line alone.
+  Its trust is therefore 0: FPI's disagreements no longer create picks.
+- A scheduled routine runs `picks` (both sports), `--learn` and `--grade` at 10:52 AM and
+  2:52 AM Eastern and commits the data files, so the model updates after every game day.
+
 Strong/Lean picks are logged to `data/consensus_picks.csv` before kickoff and graded with
 `--grade`. They are **not validated yet**: forecasters like these usually lose to the closing
 line on their own, so trust the graded record after 100+ picks, not the label. Massey and

@@ -1,18 +1,18 @@
 logged_at,sport,event_id,game_date,matchup,home,away,bet_type,pick,line,consensus,tier,sources,agree
-2026-10-17 11:02Z,cfb,401858262,20261017,Elon @ Stanford,Stanford,Elon,Spread,Elon +35.5,-35.5,26.36,Lean,4,4
-2026-10-17 11:02Z,cfb,401856720,20261017,Mississippi State @ LSU,LSU,Mississippi State,Spread,Mississippi State +17.5,-17.5,13.92,Strong,5,4
-2026-10-17 11:02Z,cfb,401858261,20261017,Charleston Southern @ Clemson,Clemson,Charleston Southern,Spread,Charleston Southern +43.5,-43.5,38.96,Lean,4,4
-2026-10-17 11:02Z,cfb,401856828,20261017,Arizona State @ Texas Tech,Texas Tech,Arizona State,Spread,Texas Tech -15.5,-15.5,18.88,Strong,5,5
+2026-10-17 11:06Z,cfb,401858262,20261017,Elon @ Stanford,Stanford,Elon,Spread,Elon +35.5,-35.5,26.31,Lean,3,3
+2026-10-17 11:06Z,cfb,401856720,20261017,Mississippi State @ LSU,LSU,Mississippi State,Spread,Mississippi State +17.5,-17.5,13.92,Lean,4,3
+2026-10-17 11:06Z,cfb,401858261,20261017,Charleston Southern @ Clemson,Clemson,Charleston Southern,Spread,Charleston Southern +43.5,-43.5,38.93,Lean,3,3
+2026-10-17 11:06Z,cfb,401856828,20261017,Arizona State @ Texas Tech,Texas Tech,Arizona State,Spread,Texas Tech -15.5,-15.5,18.88,Lean,4,4
 2026-10-17 11:02Z,cfb,401858267,20261017,Pittsburgh @ Boston College,Boston College,Pittsburgh,Spread,Pittsburgh -6.5,6.5,-9.16,Lean,5,4
 2026-10-17 11:02Z,cfb,401858490,20261017,Penn State @ Michigan,Michigan,Penn State,Spread,Penn State +6.5,-6.5,4.75,Lean,5,4
-2026-10-17 11:02Z,cfb,401858261,20261017,Charleston Southern @ Clemson,Clemson,Charleston Southern,Total,Under 57.5,57.5,51.1,Lean,2,2
-2026-10-17 11:02Z,cfb,401858262,20261017,Elon @ Stanford,Stanford,Elon,Total,Under 56.5,56.5,52.64,Lean,2,2
+2026-10-17 11:06Z,cfb,401858261,20261017,Charleston Southern @ Clemson,Clemson,Charleston Southern,Total,Under 57.5,57.5,50.45,Lean,2,2
+2026-10-17 11:06Z,cfb,401858262,20261017,Elon @ Stanford,Stanford,Elon,Total,Under 56.5,56.5,51.44,Lean,2,2
 2026-10-17 11:02Z,cfb,401856725,20261017,The Citadel @ Texas A&M,Texas A&M,The Citadel,Spread,Texas A&M -45.5,-45.5,47.53,Lean,3,2
 2026-10-17 10:39Z,cfb,401864523,20261018,San José State @ UTEP,UTEP,San José State,Total,Over 45.5,45.5,50.5,Lean,1,1
 2026-10-17 10:39Z,cfb,401858265,20261017,Louisville @ Syracuse,Syracuse,Louisville,Spread,Syracuse +14.5,14.5,-10.53,Lean,3,2
 2026-10-17 11:02Z,cfb,401856831,20261017,Oklahoma State @ Houston,Houston,Oklahoma State,Spread,Houston -4.5,-4.5,6.44,Lean,5,4
 2026-10-17 10:39Z,cfb,401869934,20261017,Arkansas State @ Southern Miss,Southern Miss,Arkansas State,Spread,Southern Miss +6.5,6.5,-3.73,Lean,3,2
-2026-10-17 11:02Z,cfb,401862803,20261017,Charlotte @ Temple,Temple,Charlotte,Spread,Temple -19.5,-19.5,21.55,Lean,5,5
+2026-10-17 11:06Z,cfb,401862803,20261017,Charlotte @ Temple,Temple,Charlotte,Spread,Temple -19.5,-19.5,21.55,Lean,4,4
 2026-10-17 11:02Z,cfb,401862802,20261017,Florida Atlantic @ Army,Army,Florida Atlantic,Spread,Army -2.5,-2.5,4.41,Lean,5,4
 2026-10-17 11:02Z,cfb,401858268,20261017,Virginia @ SMU,SMU,Virginia,Spread,Virginia +9.5,-9.5,7.75,Lean,5,4
 2026-10-17 10:39Z,cfb,401860903,20261017,Washington State @ Oregon State,Oregon State,Washington State,Spread,Washington State +18.5,-18.5,15.96,Lean,3,3
@@ -20,7 +20,7 @@ logged_at,sport,event_id,game_date,matchup,home,away,bet_type,pick,line,consensu
 2026-10-17 10:39Z,cfb,401856726,20261017,Arkansas @ Vanderbilt,Vanderbilt,Arkansas,Spread,Arkansas +6,-6.0,3.65,Lean,3,3
 2026-10-17 11:02Z,cfb,401858488,20261017,Ohio State @ Indiana,Indiana,Ohio State,Spread,Indiana +3,3.0,-1.49,Lean,5,4
 2026-10-17 10:39Z,cfb,401864521,20261018,New Mexico @ Hawai'i,Hawai'i,New Mexico,Spread,New Mexico -14.5,14.5,-16.75,Lean,2,2
-2026-10-17 11:02Z,cfb,401856723,20261017,Alabama @ Tennessee,Tennessee,Alabama,Spread,Tennessee +7.5,7.5,-5.89,Lean,5,4
+2026-10-17 11:06Z,cfb,401856723,20261017,Alabama @ Tennessee,Tennessee,Alabama,Spread,Tennessee +7.5,7.5,-5.89,Lean,4,4
 2026-10-17 10:39Z,cfb,401869957,20261017,Georgia State @ James Madison,James Madison,Georgia State,Spread,James Madison -9.5,-9.5,11.5,Lean,3,3
 2026-10-17 10:39Z,cfb,401866478,20261017,Akron @ Miami (OH),Miami (OH),Akron,Spread,Miami (OH) -10,-10.0,11.8,Lean,3,2
 2026-10-17 10:39Z,cfb,401864520,20261017,Nevada @ North Dakota State,North Dakota State,Nevada,Spread,Nevada +14.5,-14.5,12.73,Lean,3,2
@@ -30,15 +30,15 @@ logged_at,sport,event_id,game_date,matchup,home,away,bet_type,pick,line,consensu
 2026-10-17 10:39Z,cfb,401856719,20261017,Auburn @ Georgia,Georgia,Auburn,Spread,Auburn +19.5,-19.5,17.92,Lean,3,3
 2026-10-17 10:39Z,cfb,401864522,20261017,Northern Illinois @ Wyoming,Wyoming,Northern Illinois,Spread,Northern Illinois +7.5,-7.5,5.98,Lean,3,3
 2026-10-17 10:39Z,cfb,401858492,20261018,Nebraska @ Oregon,Oregon,Nebraska,Spread,Oregon -7,-7.0,8.5,Lean,3,2
-2026-10-17 11:02Z,nfl,401873000,20261018,New Orleans @ New York,New York,New Orleans,Spread,New York +1.5,1.5,1.44,Strong,5,5
-2026-10-17 11:02Z,nfl,401872998,20261018,Carolina @ Philadelphia,Philadelphia,Carolina,Spread,Philadelphia +3,3.0,-1.51,Lean,6,5
-2026-10-17 11:02Z,nfl,401873005,20261018,Buffalo @ Las Vegas,Las Vegas,Buffalo,Spread,Buffalo -4.5,4.5,-6.39,Lean,6,6
-2026-10-17 11:02Z,nfl,401872998,20261018,Carolina @ Philadelphia,Philadelphia,Carolina,Total,Over 39.5,39.5,43.03,Lean,4,3
-2026-10-17 11:02Z,nfl,401872999,20261018,Chicago @ Atlanta,Atlanta,Chicago,Total,Under 52.5,52.5,49.7,Lean,4,4
-2026-10-17 11:02Z,nfl,401872997,20261018,Baltimore @ Cleveland,Cleveland,Baltimore,Total,Over 39.5,39.5,41.86,Lean,4,3
+2026-10-17 11:06Z,nfl,401873000,20261018,New Orleans @ New York,New York,New Orleans,Spread,New York +1.5,1.5,1.48,Strong,4,4
+2026-10-17 11:06Z,nfl,401872998,20261018,Carolina @ Philadelphia,Philadelphia,Carolina,Spread,Philadelphia +3,3.0,-1.51,Lean,5,4
+2026-10-17 11:06Z,nfl,401873005,20261018,Buffalo @ Las Vegas,Las Vegas,Buffalo,Spread,Buffalo -4.5,4.5,-6.39,Lean,5,5
+2026-10-17 11:06Z,nfl,401872998,20261018,Carolina @ Philadelphia,Philadelphia,Carolina,Total,Over 39.5,39.5,43.03,Lean,4,3
+2026-10-17 11:06Z,nfl,401872999,20261018,Chicago @ Atlanta,Atlanta,Chicago,Total,Under 52.5,52.5,49.7,Lean,4,4
+2026-10-17 11:06Z,nfl,401872997,20261018,Baltimore @ Cleveland,Cleveland,Baltimore,Total,Over 39.5,39.5,41.86,Lean,4,3
 2026-10-17 11:02Z,nfl,401873008,20261020,Washington @ San Francisco,San Francisco,Washington,Spread,San Francisco -7.5,-7.5,9.18,Lean,4,3
-2026-10-17 11:02Z,nfl,401873007,20261019,Dallas @ Green Bay,Green Bay,Dallas,Total,Under 53.5,53.5,51.2,Lean,4,3
+2026-10-17 11:06Z,nfl,401873007,20261019,Dallas @ Green Bay,Green Bay,Dallas,Total,Under 53.5,53.5,51.2,Lean,4,3
 2026-10-17 10:37Z,nfl,401873002,20261018,Pittsburgh @ Tampa Bay,Tampa Bay,Pittsburgh,Total,Over 38.5,38.5,41.55,Lean,2,2
-2026-10-17 11:02Z,nfl,401873006,20261018,Los Angeles @ Kansas City,Kansas City,Los Angeles,Total,Over 41.5,41.5,43.69,Lean,3,3
-2026-10-17 11:02Z,nfl,401873001,20261018,New York @ New England,New England,New York,Spread,New England -7.5,-7.5,9.15,Lean,5,5
-2026-10-17 11:02Z,cfb,401856725,20261017,The Citadel @ Texas A&M,Texas A&M,The Citadel,Total,Under 57.5,57.5,48.6,Lean,1,1
+2026-10-17 11:06Z,nfl,401873006,20261018,Los Angeles @ Kansas City,Kansas City,Los Angeles,Total,Over 41.5,41.5,43.69,Lean,3,3
+2026-10-17 11:06Z,nfl,401873001,20261018,New York @ New England,New England,New York,Spread,New England -7.5,-7.5,9.15,Lean,4,4
+2026-10-17 11:06Z,cfb,401856725,20261017,The Citadel @ Texas A&M,Texas A&M,The Citadel,Total,Under 57.5,57.5,49.3,Lean,1,1

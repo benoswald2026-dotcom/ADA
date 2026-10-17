@@ -1,13 +1,52 @@
 {
  "cfb": {
-  "games": 0,
-  "margin_stats": {},
-  "margin_w": {},
+  "games": 513,
+  "margin_stats": {
+   "mse": {
+    "ESPN FPI": 242.87
+   },
+   "n": {
+    "ESPN FPI": 513
+   },
+   "slope": {
+    "ESPN FPI": -0.179
+   }
+  },
+  "margin_w": {
+   "ESPN FPI": 1.0
+  },
   "total_games": 0,
   "total_stats": {},
   "total_w": {},
-  "trust": 1.0,
-  "trust_total": 1.0,
-  "updated": "2026-10-17 11:02Z"
+  "trust_src": {
+   "ESPN FPI": 0.0
+  },
+  "trust_total_src": {},
+  "updated": "2026-10-17 11:06Z"
+ },
+ "nfl": {
+  "games": 172,
+  "margin_stats": {
+   "mse": {
+    "ESPN FPI": 166.57
+   },
+   "n": {
+    "ESPN FPI": 172
+   },
+   "slope": {
+    "ESPN FPI": -0.296
+   }
+  },
+  "margin_w": {
+   "ESPN FPI": 1.0
+  },
+  "total_games": 0,
+  "total_stats": {},
+  "total_w": {},
+  "trust_src": {
+   "ESPN FPI": 0.0
+  },
+  "trust_total_src": {},
+  "updated": "2026-10-17 11:06Z"
  }
 }

@@ -95,21 +95,32 @@ def test_name_matching_handles_mascots_entities_and_long_names():
     assert C._find([{"home": "Miami RedHawks", "away": "Akron Zips"}], {C.team_key("Miami")}, {C.team_key("Toledo")}) is None
 
 
-def test_fit_weights_favor_accurate_source_and_trust_shrinks_when_consensus_misleads():
+def test_fit_weights_and_per_source_trust():
     import random
     rnd = random.Random(4)
     games = []
     for _ in range(400):
         line = rnd.uniform(-14, 14)
-        actual = line + rnd.gauss(0, 14)              # the line is unbiased; consensus gaps are noise
-        games.append(({"Good": actual + rnd.gauss(0, 8), "Noisy": line + rnd.gauss(0, 10)}, actual, line))
+        actual = line + rnd.gauss(0, 14)
+        sharp = actual + rnd.gauss(0, 8)            # its gaps carry real information
+        noise = line + rnd.gauss(0, 6)               # its gaps are pure noise
+        games.append(({"Sharp": sharp, "Noise": noise}, actual, line))
     w, trust, stats, n = C._fit(games)
-    assert w["Good"] > w["Noisy"] and n == 400
-    lazy = [({"A": line + 5, "B": line + 6}, line + rnd.gauss(0, 14), line) for line in [rnd.uniform(-10, 10) for _ in range(400)]]
-    _, trust2, _, _ = C._fit(lazy)
-    assert trust2 < 0.3                                 # always-wrong gaps -> trust falls toward 0
+    assert w["Sharp"] > w["Noise"] and n == 400
+    assert trust["Sharp"] > 0.6 and trust["Noise"] < 0.25
 
 
 def test_few_games_keep_defaults_close():
     w, trust, _, n = C._fit([({"A": 3.0, "B": -3.0}, 10.0, 0.0)])
-    assert n == 1 and 0.9 < w["A"] / w["B"] < 1.1 and 0.9 <= trust <= 1.2
+    assert n == 1 and 0.9 < w["A"] / w["B"] < 1.1 and all(0.85 <= t <= 1.2 for t in trust.values())
+
+
+def test_untrusted_source_neither_moves_gap_nor_votes():
+    g = {"id": "1", "kickoff": None, "home": {"location": "B"}, "away": {"location": "A"},
+         "home_spread": (-3.0, -110), "away_spread": (3.0, -110), "over": None, "under": None,
+         "home_ml": None, "away_ml": None}
+    src = {"FPI": {"p": 0.8, "margin": 12.0}, "X": {"p": 0.6, "margin": 4.0}, "Y": {"p": 0.6, "margin": 4.5}}
+    learned = {"trust_src": {"FPI": 0.0, "X": 1.0, "Y": 1.0}}
+    out = C._summarize("cfb", g, {}, src, C.TIERS["cfb"], None, learned)
+    assert out["ats"]["n"] == 2                               # FPI no longer votes
+    assert out["ats"]["gap"] < out["ats"]["gap_raw"]          # and its big gap is ignored
