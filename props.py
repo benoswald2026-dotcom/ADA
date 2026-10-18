@@ -452,11 +452,12 @@ def parse_prop_market(event, market_key):
 _FIT_CACHE = {}
 
 
-def _starting_qb_only(usage, starter, team, df):
+def _starting_qb_only(usage, starter, team, df, positions=frozenset({"QB"})):
     """QB rows follow the listed starter (nflverse schedule): drop other QBs, and
     add the starter if his recent usage was too low to qualify (a backup getting
-    the start). Non-QB rows are untouched. No listed starter -> unchanged."""
-    if not starter:
+    the start). Non-QB rows are untouched. No listed starter, or a stat QBs aren't
+    projected for (receptions, receiving yards) -> unchanged."""
+    if not starter or "QB" not in positions:
         return usage
     keep = [k for k in usage.index if k[2] != "QB" or k[1] == starter]
     usage = usage.loc[keep] if keep else usage.iloc[0:0]
@@ -560,7 +561,7 @@ def build_props(rows, bankroll=1000.0):
                     elif stat == "pass_yds":
                         notes.append(f"{team}: schedule lists {listed} at QB but Kalshi has props for {market_qb} "
                                      "(no injury listed). Check the news before betting this team's props.")
-                usage = _starting_qb_only(usage, listed, team, df)
+                usage = _starting_qb_only(usage, listed, team, df, s["pos"])
                 out_now = {k for k, st in inj.get(team, {}).items() if st in ("out", "injured reserve")}
                 dropped = [k[1] for k in usage.index if player_key(k[1]) in out_now]
                 if dropped:

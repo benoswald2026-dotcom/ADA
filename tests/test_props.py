@@ -138,3 +138,15 @@ def test_learn_props_trust_falls_when_model_gaps_fail(tmp_path, monkeypatch):
     monkeypatch.setattr(props, "load_player_weeks", lambda a, b: df)
     out = props.learn_props(str(log), str(tmp_path / "w.json"))
     assert out["graded"] == 200 and out["trust"] < 0.3 and out["flag_record"] == {"W": 100, "L": 100}
+
+
+def test_starter_qb_not_added_to_receiving_stats():
+    """The starter is added only for stats QBs are projected for; before this fix every
+    starting QB showed up with ~3 receptions and ~35 receiving yards."""
+    import pandas as pd
+    idx = pd.MultiIndex.from_tuples([("w1", "DJ Moore", "WR")], names=["player_id", "player_display_name", "position"])
+    usage = pd.Series([8.0], index=idx)
+    df = pd.DataFrame([{"player_id": "b1", "player_display_name": "Tyson Bagent", "position": "QB", "team": "CHI"}])
+    out = props._starting_qb_only(usage, "Tyson Bagent", "CHI", df, props.STATS["receptions"]["pos"])
+    assert [k[1] for k in out.index] == ["DJ Moore"]
+    assert "Tyson Bagent" in [k[1] for k in props._starting_qb_only(usage, "Tyson Bagent", "CHI", df).index]
