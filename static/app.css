@@ -397,6 +397,12 @@ tr.total td { font-weight: 500; background: var(--paper-2); }
 @keyframes lock-in { from { transform: perspective(900px) rotateX(-70deg); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes call-pop { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
 
+/* ---------- live ---------- */
+.live-bar .lb-track { stroke: var(--rule); stroke-width: 6; stroke-linecap: round; }
+.live-bar .lb-mid { stroke: var(--muted); stroke-width: 1; }
+.live-bar .lb-kalshi { stroke: var(--kalshi); stroke-width: 3; }
+.live-bar .lb-model { fill: var(--model); }
+
 /* ---------- narrow screens ---------- */
 @media (max-width: 900px) {
   .game { grid-template-columns: minmax(0, 1fr) auto; }

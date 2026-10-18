@@ -43,6 +43,7 @@
   <nav class="wrap tabs" role="tablist" aria-label="Sections">
     <button role="tab" id="tab-week" data-tab="week" aria-selected="true">This week</button>
     <button role="tab" id="tab-lock" data-tab="lock" aria-selected="false">Lock</button>
+    <button role="tab" id="tab-live" data-tab="live" aria-selected="false">Live</button>
     <button role="tab" id="tab-picks" data-tab="picks" aria-selected="false">Picks</button>
     <button role="tab" id="tab-bets" data-tab="bets" aria-selected="false">Best bets</button>
     <button role="tab" id="tab-scan" data-tab="scan" aria-selected="false">Kalshi scan</button>
@@ -82,6 +83,18 @@
       <div class="view-actions"><button class="btn" id="lock-refresh">Refresh</button></div>
     </div>
     <div id="lock-body"></div>
+  </section>
+
+  <!-- LIVE -->
+  <section id="view-live" class="view" role="tabpanel" aria-labelledby="tab-live" hidden>
+    <div class="view-head">
+      <div>
+        <h1>Live</h1>
+        <p class="lede">Every NFL game in progress: Hashmark's live win probability (trained on 400,000 plays, 2014–2022; as accurate as nflfastR's on 2023–2025) next to ESPN's and Kalshi's live price. Refreshes every 30 seconds. ESPN's feed runs 10–30 seconds behind TV, and Kalshi traders watch TV, so a big gap is usually ESPN catching up, not an edge.</p>
+      </div>
+      <div class="view-actions"><button class="btn" id="live-refresh">Refresh</button></div>
+    </div>
+    <div id="live-body"></div>
   </section>
 
   <!-- BEST BETS -->

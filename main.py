@@ -6,6 +6,7 @@
     python main.py clv                                score paper trades against the closing line
     python main.py props [--backtest]                 NFL player props: projections, fair lines, edges
     python main.py parlay ID:TEAM ID:TEAM [--sport nfl]   parlay fair price (2 or 3 legs)
+    python main.py live [--train] [--record MIN]      live NFL win % vs Kalshi's live prices
     python main.py serve                              local web app at http://127.0.0.1:8000
 
 Read-only: this program never places trades, bets, or orders.
@@ -395,6 +396,41 @@ def cmd_parlay(args):
     print("\nSources: model = CFBD; market & book odds = The Odds API. Independence assumed. Not betting advice.")
 
 
+def cmd_live(args):
+    import live
+    if args.train:
+        m = live.train()
+        print(f"Trained on {m['plays_train']:,} plays ({m['train'][0]}-{m['train'][-1]}); tested on {m['plays_test']:,} "
+              f"({m['test'][0]}-{m['test'][-1]}).")
+        print(f"Brier {m['brier']} vs nflfastR {m['brier_nflfastr']}; log loss {m['logloss']} vs {m['logloss_nflfastr']}.")
+        print(tabulate([(f"{b['bin']:.0%}-{b['bin'] + 0.1:.0%}", b["n"], f"{b['pred']:.1%}", f"{b['actual']:.1%}")
+                        for b in m["calibration"]], headers=["Model said", "Plays", "Avg predicted", "Home won"]))
+        return
+    if args.record:
+        print(f"Recording every live NFL game each minute for {args.record} minutes to data/live_snapshots.csv ...")
+        live.record(minutes=args.record)
+        return
+    if not live.load_model():
+        print("No live model yet: run  python main.py live --train  first (downloads 2014-2025 play-by-play).")
+        return
+    rows, stamp = live.board()
+    if not rows:
+        print("No NFL games in progress right now.")
+        return
+    pct = lambda x: "-" if x is None else f"{x:.0%}"
+    table = [(f"{r['away']} {r['away_score']:.0f} @ {r['home']} {r['home_score']:.0f}", r["detail"],
+              f"{r['home']} {pct(r['model_wp'])}", f"{pct(r['espn_wp'])}", pct(r["kalshi_mid"]),
+              "-" if r["gap"] is None else f"{r['gap'] * 100:+.1f}",
+              "-" if not r["best"] else f"{r['best']['team']} YES @ {r['best']['ask'] * 100:.0f}c ({r['best']['edge'] * 100:+.1f})",
+              r["call"]) for r in rows]
+    print(f"LIVE NFL — ESPN state @ {stamp}, Kalshi fresh. Home win %: model vs ESPN vs Kalshi mid.")
+    print(tabulate(table, headers=["Game", "Clock", "Model (home)", "ESPN", "Kalshi", "Model-Kalshi",
+                                   "Best side (edge after fee)", "Call"]))
+    print(f"WATCH = {live.LIVE_MIN_EDGE * 100:.0f}+ pts edge after fee at 10-90c. stale? = gap over "
+          f"{live.LIVE_STALE_GAP * 100:.0f} pts, usually ESPN behind the broadcast. Unvalidated; ESPN runs "
+          "10-30 s behind TV. Not betting advice.")
+
+
 def cmd_serve(args):
     import os
     from server import serve
@@ -447,6 +483,10 @@ def main():
     p.add_argument("legs", nargs="+", help="GAMEID:TEAM (2 or 3 legs)")
     p.add_argument("--offered", type=float, help="your book's parlay price in American odds, e.g. 450")
     p.set_defaults(func=cmd_parlay)
+    lv = sub.add_parser("live", help="live NFL win probability vs Kalshi's live prices")
+    lv.add_argument("--train", action="store_true", help="fit the model on 2014-2022 plays, test on 2023-2025")
+    lv.add_argument("--record", type=int, metavar="MINUTES", help="log every live game each minute")
+    lv.set_defaults(func=cmd_live)
     s = sub.add_parser("serve", help="open the local web app")
     s.add_argument("--port", type=int, default=8000)
     s.set_defaults(func=cmd_serve)

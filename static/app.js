@@ -1136,8 +1136,53 @@ addEventListener("resize", () => {   // the chart is drawn at the page's real wi
   lockResize = setTimeout(() => { if ($("#lock-body .lock-card")) renderLock(); }, 200);
 });
 
+// ---------------------------------------------------------------- live
+let LIVE = null, LIVE_ERR = null, liveLoading = false, liveTimer = 0;
+
+async function loadLive() {
+  if (liveLoading) return;
+  liveLoading = true; LIVE_ERR = null;
+  try { LIVE = await api("/api/live"); } catch (e) { LIVE_ERR = e.message; }
+  liveLoading = false; renderLive();
+  clearTimeout(liveTimer);
+  if (!$("#view-live").hidden) liveTimer = setTimeout(loadLive, 30000);
+}
+
+// One 0-100% track per game: model (green dot) and Kalshi (raspberry tick), home team's chance.
+function liveBar(model, kalshi) {
+  const x = p => 4 + p * 192;
+  return `<svg viewBox="0 0 200 18" width="200" height="18" aria-hidden="true" class="live-bar">
+    <line x1="4" y1="9" x2="196" y2="9" class="lb-track"/><line x1="100" y1="3" x2="100" y2="15" class="lb-mid"/>
+    ${isNum(kalshi) ? `<line x1="${x(kalshi)}" y1="2" x2="${x(kalshi)}" y2="16" class="lb-kalshi"/>` : ""}
+    ${isNum(model) ? `<circle cx="${x(model)}" cy="9" r="5" class="lb-model"/>` : ""}</svg>`;
+}
+
+function renderLive() {
+  const body = $("#live-body");
+  if (LIVE_ERR) { body.innerHTML = setupNotice(LIVE_ERR); return; }
+  if (!LIVE) { body.innerHTML = `<div class="panel"><p class="label">Reading the live games…</p><div class="progress"><span></span></div></div>`; if (!liveLoading) loadLive(); return; }
+  if (LIVE.error) { body.innerHTML = `<div class="notice warn"><p>${esc(LIVE.error)}</p></div>`; return; }
+  if (!LIVE.rows.length) { body.innerHTML = `<div class="panel empty">No NFL games in progress right now. This page refreshes every 30 seconds.</div>`; return; }
+  const callChip = c => c === "WATCH" ? `<span class="chip chip-flag">Watch</span>` : c === "stale?" ? `<span class="chip chip-pass">ESPN behind?</span>` : `<span class="chip chip-pass">Pass</span>`;
+  const rows = LIVE.rows.map(r => {
+    const b = r.best;
+    return `<tr class="${r.call === "WATCH" ? "is-flag" : ""}">
+      <td class="player-td"><b>${esc(r.away)} ${r.away_score} @ ${esc(r.home)} ${r.home_score}</b><br><span class="tag">${esc(r.detail || "")}</span></td>
+      <td>${esc(r.home)} ${pct(r.model_wp, 0)}</td><td>${pct(r.espn_wp, 0)}</td><td>${pct(r.kalshi_mid, 0)}</td>
+      <td>${liveBar(r.model_wp, r.kalshi_mid)}</td>
+      <td>${isNum(r.gap) ? signed(r.gap * 100) : "–"}</td>
+      <td class="player-td">${b ? `${esc(b.team)} YES @ ${cents(b.ask)} <span class="tag">${pts(b.edge)}</span>` : "–"}</td>
+      <td>${callChip(r.call)}</td></tr>`;
+  }).join("");
+  body.innerHTML = `<div class="table-wrap"><table><thead><tr><th class="l">Game</th><th>Model (home)</th><th>ESPN</th><th>Kalshi</th>
+      <th class="l">Home win % <span class="tag">● model · | Kalshi</span></th><th>Model − Kalshi</th><th class="l">Best side (edge after fee)</th><th>Call</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <p class="small" style="color:var(--muted);margin-top:10px">Watch = ${Math.round(LIVE.min_edge * 100)}+ points of edge after Kalshi's fee at 10–90¢. "ESPN behind?" = the model and Kalshi differ by more than ${Math.round(LIVE.stale_gap * 100)} points, which almost always means ESPN hasn't posted the latest play. Updated ${esc(LIVE.stamp || "")}. Unvalidated: every minute of every game is recorded so the record can decide. Not betting advice.</p>`;
+}
+$("#live-refresh").addEventListener("click", () => { LIVE = null; renderLive(); loadLive(); });
+
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "lock", "picks", "bets", "scan", "props", "backtest", "parlay", "ask", "research", "explain"];
+const TABS = ["week", "lock", "live", "picks", "bets", "scan", "props", "backtest", "parlay", "ask", "research", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -1157,6 +1202,7 @@ function setTab(name) {
   if (name === "scan") renderScan();
   if (name === "picks") renderPicks();
   if (name === "lock") renderLock(); else cancelAnimationFrame(FG.raf);
+  if (name === "live") { renderLive(); loadLive(); } else clearTimeout(liveTimer);
 }
 $(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) setTab(b.dataset.tab); });
 $(".tabs").addEventListener("keydown", e => {

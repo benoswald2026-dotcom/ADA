@@ -305,6 +305,25 @@ Stats: passing yards, rushing yards, receptions, and receiving yards (`props.py`
 - There is **no free history of prop lines**, so prop edges are labelled
   *unvalidated* until paper trades build a record.
 
+## 2b-1b. Live NFL win probability
+
+```bash
+python main.py live --train          # fit on 2014-2022 plays, test on 2023-2025 (once)
+python main.py live                  # every game in progress: model vs ESPN vs Kalshi
+python main.py live --record 240     # log every live game each minute for 4 hours
+```
+- **Model** (`live.py`): logistic regression on ~400,000 plays. Inputs: home lead, time
+  left, pregame spread, who has the ball, field position, yards to go, timeouts (Stern's
+  idea: the lead and the spread count in proportion to the time left).
+- **Test, 2023-2025 (139k plays):** Brier 0.1481 vs nflfastR's 0.1474. Calibration matches
+  nflfastR's bin by bin, including both models being ~2-3 pts low on 15% underdogs in those seasons.
+- **Live feed:** ESPN scoreboard (score, clock, ball, down, distance, timeouts, ESPN's own win %)
+  and Kalshi's live winner prices, fetched fresh every time.
+- **Calls (fixed before any results):** Watch = 5+ pts edge after fee at 10-90c; a gap over
+  15 pts is labelled "ESPN behind?" because ESPN runs 10-30 s behind TV.
+- **Unvalidated.** `data/live_snapshots.csv` records every minute of every game so the record
+  can show whether the gaps ever pay. The website's **Live** tab refreshes every 30 seconds.
+
 ## 2b-2. Ask Hashmark (chat)
 
 The **Ask** tab answers questions in plain English. It runs offline on your

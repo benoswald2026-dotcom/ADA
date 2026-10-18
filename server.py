@@ -311,6 +311,13 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, cached_props(bankroll, force="refresh=1" in self.path))
             if path == "/api/picks":
                 return self._send(200, picks_json(_sport(self.path), force="refresh=1" in self.path))
+            if path == "/api/live":
+                import live
+                if not live.load_model():
+                    return self._send(200, {"rows": [], "error": "No live model yet: run  python main.py live --train"})
+                rows, stamp = live.board()
+                return self._send(200, {"rows": rows, "stamp": stamp, "min_edge": live.LIVE_MIN_EDGE,
+                                        "stale_gap": live.LIVE_STALE_GAP})
             if path == "/api/lock":
                 return self._send(200, lock_json(force="refresh=1" in self.path))
             if path == "/api/scan":
