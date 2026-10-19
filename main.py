@@ -7,6 +7,8 @@
     python main.py props [--backtest]                 NFL player props: projections, fair lines, edges
     python main.py parlay ID:TEAM ID:TEAM [--sport nfl]   parlay fair price (2 or 3 legs)
     python main.py live [--train] [--record MIN]      live NFL win % vs Kalshi's live prices
+    python main.py lines [--record]                   closing line value of logged picks
+    python main.py shop [--sport cfb] [--days N]      line shopping + Kalshi limit-order prices
     python main.py serve                              local web app at http://127.0.0.1:8000
 
 Read-only: this program never places trades, bets, or orders.
@@ -431,6 +433,54 @@ def cmd_live(args):
           "10-30 s behind TV. Not betting advice.")
 
 
+def cmd_lines(args):
+    import lines
+    if args.record:
+        n = lines.record_lines(args.sport, args.days)
+        print(f"Recorded {n} Kalshi/DraftKings prices to data/line_history.csv.")
+    r = lines.picks_clv()
+    if not r["rows"]:
+        print("No finished consensus picks with a closing line yet.")
+        return
+    print(f"\nCLOSING LINE VALUE — {len(r['rows'])} consensus picks vs DraftKings' closing line (ESPN).")
+    print(tabulate([(x["game_date"], x["matchup"], x["pick"], x["tier"],
+                     f"{x['close'][0]:+g}" if x["bet_type"] == "Spread" and x["close"][0] is not None else
+                     (f"{x['close'][1]:g}" if x["close"][1] is not None else "-"), f"{x['clv']:+.1f}")
+                    for x in r["rows"][-args.top:]],
+                   headers=["Date", "Game", "Pick", "Tier", "Close (home line / total)", "CLV (pts)"]))
+    print(f"\nAverage CLV {r['avg']:+.2f} pts. Beat the close {r['beat']:.0%}, matched it {r['same']:.0%}, "
+          f"worse {1 - r['beat'] - r['same']:.0%}. Pros judge skill by this, not by wins: a steady +0.5 pts or more "
+          "is a real edge; around 0 is the market.")
+
+
+def cmd_shop(args):
+    import lines
+    from config import MissingKeyError
+    print(f"LINE SHOPPING — every book vs Pinnacle's no-vig price (bet when EV >= {lines.SHOP_MIN_EV:.0%}).")
+    try:
+        rows, stamp = lines.shop(args.sport)
+        good = [r for r in rows if r["flag"]]
+        print(f"Odds API @ {stamp}. {len(good)} of {len(rows)} book prices beat the sharp price.")
+        if good:
+            print(tabulate([(r["matchup"], r["bet"], r["book"], f"{r['price']:+d}", f"{r['fair']:.1%}", f"{r['ev']:+.1%}")
+                            for r in good[:args.top]], headers=["Game", "Bet", "Book", "Price", "Fair", "EV"]))
+    except MissingKeyError:
+        print("Needs ODDS_API_KEY (Pinnacle + 8 US books). Skipped; the Kalshi part below needs no key.")
+    q, _ = lines.maker_quotes(args.sport, args.days)
+    print(f"\nKALSHI LIMIT ORDERS — post a bid instead of paying the ask. Shown when a fill is worth "
+          f"+{lines.MAKER_MIN_EDGE * 100:.1f} pts after the maker fee (fair = DraftKings, power-method no-vig; never under "
+          f"{lines.MAKER_MIN_PRICE * 100:.0f}c).")
+    if not q:
+        print("None right now: Kalshi's bids already sit close to fair value.")
+        return
+    print(tabulate([(x["matchup"], f"{x['team']} ({x['market_type']})", f"{x['fair']:.1%}", f"{x['bid'] * 100:.0f}c",
+                     f"{x['price'] * 100:.0f}c", f"YES bid {x['post'] * 100:.0f}c", f"{x['edge_if_filled'] * 100:+.1f}",
+                     f"{x['taker_edge'] * 100:+.1f}") for x in q[:args.top]],
+                   headers=["Game", "Contract", "Fair", "Bid", "Ask", "Post", "Edge if filled", "Edge buying now"]))
+    print("A resting bid fills mostly when the price is moving against you (faster traders pick off stale "
+          "quotes), so cancel before news and kickoff. Track the fills; not betting advice.")
+
+
 def cmd_serve(args):
     import os
     from server import serve
@@ -483,6 +533,13 @@ def main():
     p.add_argument("legs", nargs="+", help="GAMEID:TEAM (2 or 3 legs)")
     p.add_argument("--offered", type=float, help="your book's parlay price in American odds, e.g. 450")
     p.set_defaults(func=cmd_parlay)
+    ln = sport_args(sub.add_parser("lines", help="closing line value of logged picks; --record saves current prices"))
+    ln.add_argument("--record", action="store_true", help="append every current Kalshi/DraftKings price to data/line_history.csv")
+    ln.add_argument("--top", type=int, default=40)
+    ln.set_defaults(func=cmd_lines)
+    sh = sport_args(sub.add_parser("shop", help="line shopping vs Pinnacle and Kalshi limit-order prices"))
+    sh.add_argument("--top", type=int, default=20)
+    sh.set_defaults(func=cmd_shop)
     lv = sub.add_parser("live", help="live NFL win probability vs Kalshi's live prices")
     lv.add_argument("--train", action="store_true", help="fit the model on 2014-2022 plays, test on 2023-2025")
     lv.add_argument("--record", type=int, metavar="MINUTES", help="log every live game each minute")

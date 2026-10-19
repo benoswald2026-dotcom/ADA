@@ -330,6 +330,26 @@ python main.py live --record 240     # log every live game each minute for 4 hou
 - **Unvalidated.** `data/live_snapshots.csv` records every minute of every game so the record
   can show whether the gaps ever pay. The website's **Live** tab refreshes every 30 seconds.
 
+## 2b-1c. Closing line value, line shopping, Kalshi limit orders (`lines.py`)
+
+What documented winners actually do (Benter, Walters, Kaunitz et al.; Bürgi, Deng & Whelan
+on Kalshi): judge every bet by whether it beat the **closing** price, shop many books against a
+sharp book's no-vig price, and on exchanges post orders (maker fees are ~¼ of taker fees).
+
+```bash
+python main.py lines [--record]              # CLV of every logged pick; --record saves current prices
+python main.py shop --sport cfb --days 6     # books vs Pinnacle (ODDS_API_KEY) + Kalshi bid prices
+```
+- **CLV** uses DraftKings' closing line from ESPN's game summary. First 55 picks: +0.24 pts
+  on average (35% beat the close, 49% matched, 16% worse). A steady +0.5 or more would be a real edge.
+- **Line shopping** (needs `ODDS_API_KEY`): any book whose price beats Pinnacle's no-vig price
+  by 2%+ EV, comparing only the same bet at the same number.
+- **Kalshi limit orders:** the highest bid (joining or improving the current bid, under the ask)
+  that is still +1.5 pts after the maker fee, never under 15¢ (longshots lose most). Moneyline
+  fair value uses the power method, which removes more vig from the longshot; the plain method
+  made underdogs look cheap. A resting bid mostly fills when the price moves against you, so
+  cancel before news and kickoff.
+
 ## 2b-2. Ask Hashmark (chat)
 
 The **Ask** tab answers questions in plain English. It runs offline on your
