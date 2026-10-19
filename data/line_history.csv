@@ -1,0 +1,7 @@
+at,sport,game_id,matchup,kickoff,market_type,bet,side,ticker,book_line,book_fair,kalshi_bid,kalshi_ask
+2026-10-19T22:17:49Z,nfl,espn_401873008,Washington @ San Francisco,2026-10-20T00:15:00+00:00,moneyline,Washington,away,KXNFLGAME-26OCT19WASSF-WAS,,0.2341,0.22,0.23
+2026-10-19T22:17:49Z,nfl,espn_401873008,Washington @ San Francisco,2026-10-20T00:15:00+00:00,total,Over 52.5,yes,KXNFLTOTAL-26OCT19WASSF-53,52.5,0.4892,0.47,0.48
+2026-10-19T22:17:49Z,nfl,espn_401873008,Washington @ San Francisco,2026-10-20T00:15:00+00:00,spread,San Francisco -7.5,yes,KXNFLSPREAD-26OCT19WASSF-SF8,-7.5,0.4826,0.47,0.48
+2026-10-19T22:17:49Z,nfl,espn_401873008,Washington @ San Francisco,2026-10-20T00:15:00+00:00,moneyline,San Francisco,home,KXNFLGAME-26OCT19WASSF-SF,,0.7659,0.77,0.78
+2026-10-19T22:17:49Z,nfl,espn_401873008,Washington @ San Francisco,2026-10-20T00:15:00+00:00,spread,Washington +7.5,no,KXNFLSPREAD-26OCT19WASSF-SF8,-7.5,0.5174,,0.53
+2026-10-19T22:17:49Z,nfl,espn_401873008,Washington @ San Francisco,2026-10-20T00:15:00+00:00,total,Under 52.5,no,KXNFLTOTAL-26OCT19WASSF-53,52.5,0.5108,,0.53

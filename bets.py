@@ -14,7 +14,7 @@ from itertools import combinations
 
 import config
 from kalshi import edge_after_fee, kalshi_fee
-from strategy import (LONGSHOT_MIN_PRICE, cover_prob, kelly_fraction_decimal,
+from strategy import (LONGSHOT_MIN_PRICE, cover_push_prob, kelly_fraction_decimal, kelly_with_push,
                       kelly_fraction_kalshi, log_recommendations, size_bets)
 
 
@@ -83,12 +83,13 @@ def find_bets(rows, top=10, bankroll=1000.0, log_sport=None):
             if sigma and line is not None and sdec and m.get("home_prob") is not None:
                 # Center on the market line; shift only by the bet prob's disagreement with the market.
                 m_bet = -line + _prob_to_margin(p_home) - _prob_to_margin(m["home_prob"])
-                pc = cover_prob(m_bet, line, sigma)
-                pc = pc if side == "home" else 1 - pc
-                ev = pc * sdec - 1
-                spreads.append({**base, "venue": "book", "market_type": "spread", "model": pc,
+                # Key-number margin distribution: pushes on whole-number lines refund the stake.
+                pc, pp = cover_push_prob(m_bet, line, sigma, r.get("key_weights"))
+                pc = pc if side == "home" else 1 - pc - pp
+                ev = pc * sdec + pp - 1
+                spreads.append({**base, "venue": "book", "market_type": "spread", "model": pc, "push": pp,
                                 "line": line if side == "home" else -line, "decimal": sdec, "ev": ev,
-                                "kelly": kelly_fraction_decimal(pc, sdec)})
+                                "kelly": kelly_with_push(pc, pp, sdec)})
         if best_leg:
             legs.append(best_leg)  # at most one leg per game
 

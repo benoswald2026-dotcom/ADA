@@ -77,6 +77,60 @@ def cover_prob(pred_margin, home_line, sigma):
     return normal_cdf((pred_margin + home_line) / sigma)
 
 
+KEY_RANGE = 21      # key-number weights are learned for margins -21..21; 1.0 beyond
+MARGIN_SPAN = 80    # the discrete distribution covers margins -80..80
+
+
+def _discrete_normal(ks, center, sigma):
+    z = lambda x: 0.5 * (1 + np.vectorize(math.erf)(x / math.sqrt(2)))
+    return z((ks + 0.5 - center) / sigma) - z((ks - 0.5 - center) / sigma)
+
+
+def margin_dist(mu, sigma, key_weights=None):
+    """P(final margin = k) for integers k (stern-1991 normal, made discrete),
+    times a learned weight per margin so 3, 7, 10, ... get their real share.
+    key_weights: {k: w}; missing k -> 1. Returns (ks, probs) as numpy arrays.
+
+    mu is the MEDIAN margin, the way a point spread works: at its own line a
+    side wins as often as it loses. The weights pile mass onto 3 and 7, which
+    would otherwise drag the median toward 0 and hand every underdog a fake
+    edge, so the curve is shifted until P(margin > mu) = P(margin < mu)."""
+    ks = np.arange(-MARGIN_SPAN, MARGIN_SPAN + 1)
+    if not key_weights:
+        p = _discrete_normal(ks, mu, sigma)
+        return ks, p / p.sum()
+    w = np.array([key_weights.get(int(k), 1.0) for k in ks])
+
+    def dist(center):
+        p = _discrete_normal(ks, center, sigma) * w
+        return p / p.sum()
+
+    lo, hi = mu - 4.0, mu + 4.0          # balance(center) rises with center
+    for _ in range(40):
+        mid = (lo + hi) / 2
+        p = dist(mid)
+        if p[ks > mu + 1e-9].sum() - p[ks < mu - 1e-9].sum() < 0:
+            lo = mid
+        else:
+            hi = mid
+    return ks, dist((lo + hi) / 2)
+
+
+def cover_push_prob(pred_margin, home_line, sigma, key_weights=None):
+    """(P(home covers), P(push)) with a discrete margin distribution.
+    Home covers if margin + home_line > 0; push if exactly 0 (whole-number lines)."""
+    ks, p = margin_dist(pred_margin, sigma, key_weights)
+    x = ks + home_line
+    return float(p[x > 1e-9].sum()), float(p[np.abs(x) <= 1e-9].sum())
+
+
+def kelly_with_push(p_win, p_push, decimal_odds):
+    """Full-Kelly fraction when a push refunds the stake: (p_win*b - p_loss)/b."""
+    b = decimal_odds - 1
+    p_loss = 1 - p_win - p_push
+    return max(0.0, (p_win * b - p_loss) / b) if b > 0 else 0.0
+
+
 # --------------------------------------------------------- evaluation -----
 
 def bootstrap_ci(returns, n=2000, seed=7, level=0.95):

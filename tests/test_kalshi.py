@@ -42,3 +42,21 @@ def test_match_market_requires_both_teams():
     m = match_market(markets, "Ohio State", "Michigan")
     assert m["home"]["yes_ask"] == 0.7 and m["away"]["yes_ask"] == 0.32
     assert match_market(markets, "Texas", "Oklahoma") is None
+
+
+def test_match_market_handles_kalshi_cfb_spellings():
+    from kalshi import match_market
+    markets = [{"event_ticker": "E1", "team": "Appalachian St."}, {"event_ticker": "E1", "team": "Louisiana-Monroe"},
+               {"event_ticker": "E2", "team": "Miami (FL)"}, {"event_ticker": "E2", "team": "Florida St."}]
+    assert match_market(markets, "App State", "UL Monroe")["home"]["team"] == "Appalachian St."
+    assert match_market(markets, "Miami", "Florida State")["away"]["team"] == "Florida St."
+    assert match_market(markets, "Miami (OH)", "Florida State") is None   # never confuse the two Miamis
+
+
+def test_cfb_started_games_are_detected():
+    from datetime import datetime, timezone
+    from week import _started
+    now = datetime(2026, 10, 17, 20, 0, tzinfo=timezone.utc)
+    assert _started({"start": "2026-10-17T19:30:00.000Z"}, now)
+    assert not _started({"start": "2026-10-17T23:30:00.000Z"}, now)
+    assert not _started({"start": None}, now)

@@ -33,3 +33,63 @@ def odds_name_to_school(odds_name, teams):
             if best is None or len(school) > len(normalize(best)):
                 best = t["school"]
     return best
+
+
+# Schools that Kalshi, CFBD and The Odds API spell differently even after
+# normalize(). Every spelling in a group maps to one key, so matching works
+# whichever spelling a source uses. Keys and spellings are normalized forms.
+_ALIAS_GROUPS = {
+    "app state": ["appalachian state", "app state"],
+    "miami": ["miami fl", "miami", "miami florida", "miami-florida"],
+    "miami oh": ["miami oh", "miami-ohio", "miami ohio"],
+    "usc": ["usc", "southern california"],
+    "ucf": ["ucf", "central florida", "central florida ucf"],
+    "louisiana": ["louisiana", "louisiana-lafayette", "ul lafayette"],
+    "southern university": ["southern university", "southern u", "southern u."],
+    "ul monroe": ["louisiana-monroe", "louisiana monroe", "ul monroe", "ulm", "louisianamonroe ulm"],
+    "umass": ["umass", "massachusetts"],
+    "uconn": ["uconn", "connecticut"],
+    "southern miss": ["southern miss", "southern mississippi"],
+    "ole miss": ["ole miss", "mississippi"],
+    "fiu": ["fiu", "florida international", "florida intl"],
+    "fau": ["fau", "florida atlantic"],
+    "nc state": ["nc state", "north carolina state"],
+    "sam houston": ["sam houston", "sam houston state"],
+    "hawaii": ["hawai i", "hawaii"],
+    "ut martin": ["tennessee-martin", "ut martin"],
+    "albany": ["university at albany", "albany"],
+    "smu": ["smu", "southern methodist"],
+    "byu": ["byu", "brigham young"],
+    "utep": ["utep", "texas-el paso", "texas el paso"],
+    "utsa": ["utsa", "texas-san antonio", "texas san antonio", "ut san antonio"],
+    "uab": ["uab", "alabama-birmingham", "alabama birmingham"],
+    "army": ["army", "army west point"],
+    "tcu": ["tcu", "texas christian"],
+    "lsu": ["lsu", "louisiana state"],
+    "unlv": ["unlv", "nevada-las vegas", "nevada las vegas"],
+    "utrgv": ["ut rio grande valley", "utrgv"],
+    # Sonny Moore and TeamRankings spellings
+    "central michigan": ["central michigan", "c michigan"],
+    "eastern michigan": ["eastern michigan", "e michigan"],
+    "western michigan": ["western michigan", "w michigan"],
+    "northern illinois": ["northern illinois", "n illinois"],
+    "western kentucky": ["western kentucky", "w kentucky"],
+    "east carolina": ["east carolina", "e carolina"],
+    "coastal carolina": ["coastal carolina", "coastal car"],
+    "georgia southern": ["georgia southern", "georgia so"],
+    "james madison": ["james madison", "j madison"],
+    "middle tennessee": ["middle tennessee", "middle tennessee state", "middle tenn"],
+    "north texas": ["north texas", "n texas"],
+    "south alabama": ["south alabama", "s alabama"],
+    "south florida": ["south florida", "s florida", "usf"],
+    "charlotte": ["charlotte", "north carolina charlotte"],
+    "ohio": ["ohio", "ohio university"],
+    "troy": ["troy", "troy state"],
+}
+_ALIASES = {spelling: key for key, spellings in _ALIAS_GROUPS.items() for spelling in spellings}
+
+
+def team_key(name):
+    """normalize() plus the alias table: 'Appalachian St.' and 'App State' -> 'app state'."""
+    n = normalize(name)
+    return _ALIASES.get(n, n)

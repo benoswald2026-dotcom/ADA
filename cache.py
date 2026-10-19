@@ -88,7 +88,7 @@ def cached_get(url, params=None, headers=None, ttl=None, source="unknown"):
     raise ApiError(f"{source} request failed twice ({last_error}). Stopping.")
 
 
-def cached_download(url, ttl=None, source="unknown", suffix=".csv"):
+def cached_download(url, ttl=None, source="unknown", suffix=".csv", headers=None):
     """Download a file (e.g. a CSV) into the cache. Returns (local path, fetched_at).
     Same two-tries-then-stop rule as cached_get."""
     base = _cache_path(url, None)[:-5]
@@ -102,7 +102,7 @@ def cached_download(url, ttl=None, source="unknown", suffix=".csv"):
     last_error = None
     for _attempt in range(2):
         try:
-            resp = requests.get(url, timeout=60)
+            resp = requests.get(url, headers=headers, timeout=60)
             if resp.status_code == 200:
                 now = datetime.now(timezone.utc)
                 os.makedirs(config.CACHE_DIR, exist_ok=True)

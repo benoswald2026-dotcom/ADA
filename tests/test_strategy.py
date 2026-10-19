@@ -56,3 +56,48 @@ def test_fresh_mode_bypasses_ttl_but_keeps_history():
         assert cache._still_valid(300, 10) is False     # Refresh: re-download live data
         assert cache._still_valid(None, 10**9) is True  # finished seasons never re-download
     assert cache._still_valid(300, 10) is True
+
+
+def test_paired_brier_diff_sign_and_ci():
+    from backtest import paired_brier_diff
+    y = [1, 0] * 200
+    good = [0.8, 0.2] * 200
+    bad = [0.6, 0.4] * 200
+    d = paired_brier_diff(good, bad, y)
+    assert d["diff"] == pytest.approx(0.04 - 0.16)
+    assert d["ci95"][1] < 0
+
+
+def test_margin_dist_sums_to_one_and_key_weight_moves_mass_to_3():
+    ks, p = S.margin_dist(-2.5, 13.0)
+    assert p.sum() == pytest.approx(1.0)
+    _, pk = S.margin_dist(-2.5, 13.0, {3: 2.5, -3: 2.5})
+    assert pk[ks == -3][0] > 2 * p[ks == -3][0]
+    assert pk.sum() == pytest.approx(1.0)
+
+
+def test_cover_push_prob_whole_and_half_point_lines():
+    w, push = S.cover_push_prob(3.0, -3.0, 13.0, {3: 2.6, -3: 2.6})
+    assert push > 0.06                       # landing exactly on 3 is common (normal curve alone: ~3%)
+    assert w + push < 1
+    w_half, push_half = S.cover_push_prob(3.0, -2.5, 13.0, {3: 2.6, -3: 2.6})
+    assert push_half == 0.0
+    assert w_half == pytest.approx(w + push)  # -2.5 wins whenever -3 wins or pushes
+    # with no key weights it matches the old continuous normal closely at a half-point line
+    assert S.cover_push_prob(3.0, -2.5, 13.0)[0] == pytest.approx(S.cover_prob(3.0, -2.5, 13.0), abs=0.002)
+
+
+def test_kelly_with_push_matches_plain_kelly_when_no_push():
+    assert S.kelly_with_push(0.55, 0.0, 1.91) == pytest.approx(S.kelly_fraction_decimal(0.55, 1.91))
+    assert S.kelly_with_push(0.50, 0.10, 1.91) > S.kelly_fraction_decimal(0.50, 1.91)
+
+
+def test_key_weights_keep_the_line_a_coin_flip():
+    w = {k: v for k, v in {0: 0.06, 1: 0.8, 3: 2.64, 7: 1.72, 10: 1.1, 14: 1.5}.items()}
+    w.update({-k: v for k, v in w.items()})
+    for mu in (2.5, 3.0, 7.5, -10.5):
+        ks, p = S.margin_dist(mu, 12.8, w)
+        assert p[ks > mu + 1e-9].sum() == pytest.approx(p[ks < mu - 1e-9].sum(), abs=1e-6)
+    # crossing the 3 is worth more than crossing the 5
+    ks, p = S.margin_dist(3.0, 12.8, w)
+    assert p[ks == 3][0] > 2 * p[ks == 5][0]

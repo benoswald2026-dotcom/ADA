@@ -69,6 +69,94 @@ _week_lock = threading.Lock()
 WEEK_CACHE_SECONDS = 5 * 60
 
 
+_picks_cache = {}
+
+
+def picks_json(sport, force=False):
+    """Consensus picks; reused for 10 minutes (the sources update a few times a day)."""
+    import time
+    import consensus as C
+    from cache import fresh
+    c = _picks_cache.get(sport)
+    if force or c is None or time.time() - c["at"] > 600:
+        C.learn()
+        days = 3 if sport == "nfl" else 0
+        if force:
+            with fresh():
+                r = C.build(sport, days=days)
+        else:
+            r = C.build(sport, days=days)
+        C.log_predictions(r)
+        C.log_picks(r)
+        best = [{"tier": p["tier"], "type": p["type"], "pick": p["pick"], "gap": p["gap"], "agree": p["agree"],
+                 "n": p["n"], "matchup": p["game"]["matchup"], "event_id": p["game"]["event_id"], "line": p["line"],
+                 "kalshi_bet": ((p["game"].get("kalshi") or {}).get("spread_bet" if p["type"] == "Spread" else "total_bet"))}
+                for p in C.best_bets(r)]
+        games = [{**g, "kickoff": g["kickoff"].isoformat()} for g in r["games"]]
+        g = C.grade()
+        c = _picks_cache[sport] = {"at": time.time(), "value": {"games": games, "best": best, "notes": r["notes"],
+                                                                "record": g["record"], "sport": sport}}
+    return c["value"]
+
+
+def lock_json(force=False):
+    """Lock of the day: the best Strong pick across college and NFL (consensus.lock_of_day),
+    with each source's number in the pick's own terms so the page can draw them."""
+    import consensus as C
+    cands, games, picks_record = [], {}, {}
+    for sport in ("cfb", "nfl"):
+        v = picks_json(sport, force)
+        picks_record = v["record"]          # the picks log covers both sports
+        games.update({(sport, g["event_id"]): g for g in v["games"]})
+        cands += [{**b, "sport": sport, "kickoff": datetime.fromisoformat(games[(sport, b["event_id"])]["kickoff"])}
+                  for b in v["best"] if (sport, b["event_id"]) in games]
+    lock = C.lock_of_day(cands)
+    if lock:
+        g = games[(lock["sport"], lock["event_id"])]
+        C.log_lock({**lock, "home": g["home"], "away": g["away"]})
+    record = {"locks": C.grade(C.LOCKS_FILE)["record"].get("all") if os.path.exists(C.LOCKS_FILE) else None,
+              "strong": {k: picks_record[k] for k in ("Spread Strong", "Total Strong") if k in picks_record}}
+    if not lock:
+        return {"lock": None, "record": record, "candidates": len(cands)}
+    trust = C.load_weights().get(lock["sport"], {}).get("trust_src", {})
+    votes = lambda k: trust.get(k, C.TRUST_PRIOR) >= C.MIN_TRUST
+    if lock["type"] == "Spread":
+        home_side = lock["gap"] > 0     # consensus on the home side of the line
+        need = -lock["line"] if home_side else lock["line"]
+        axis = f"{g['home'] if home_side else g['away']} margin"
+        bars = [{"name": k, "value": s["margin"] if home_side else -s["margin"], "votes": votes(k)}
+                for k, s in g["sources"].items() if "margin" in s]
+        over = True
+    else:
+        need, over, axis = lock["line"], lock["pick"].startswith("Over"), "Total points"
+        bars = [{"name": k, "value": s["total"], "votes": votes(k)} for k, s in g["sources"].items() if "total" in s]
+    return {"lock": {**lock, "kickoff": g["kickoff"], "home": g["home"], "away": g["away"], "need": need,
+                     "over": over, "axis": axis, "bars": bars, "context": g.get("context")},
+            "record": record, "candidates": len(cands)}
+
+
+_scan_cache = {}
+SCAN_CACHE_SECONDS = 60
+
+
+def scan_json(sport, days=1, force=False):
+    """Kalshi vs. sportsbook scan (no API keys). Reused for a minute; Refresh re-downloads."""
+    import time
+    from cache import fresh
+    from scan import scan
+    key = (sport, days)
+    c = _scan_cache.get(key)
+    if force or c is None or time.time() - c["at"] > SCAN_CACHE_SECONDS:
+        if force:
+            with fresh():
+                r = scan(sport, days=days)
+        else:
+            r = scan(sport, days=days)
+        rows = [{**x, "kickoff": x["kickoff"].isoformat()} for x in r["rows"]]
+        c = _scan_cache[key] = {"at": time.time(), "value": {**r, "rows": rows, "sport": sport, "days": days}}
+    return c["value"]
+
+
 def cached_week(sport="cfb", force=False):
     """force=True (the Refresh button) rebuilds AND re-downloads every live source."""
     if force:
@@ -87,11 +175,11 @@ def _cached_week(sport="cfb", force=False):
         if force or c["value"] is None or time.time() - c["at"] > WEEK_CACHE_SECONDS:
             if sport == "nfl":
                 import nfl
-                c["value"] = nfl.build_slate()
+                c["value"] = nfl.build_slate(days=6)   # the coming week, not just today
             else:
                 from week import build_week
                 week, rows = build_week()
-                c["value"] = ({"sport": "cfb", "notes": [],
+                c["value"] = ({"sport": "cfb", "notes": week.get("notes", []),
                                "label": f"Week {week['week']}" + (" · Postseason" if week["season_type"] == "postseason" else ""),
                                "week": week}, rows)
             c["at"] = time.time()
@@ -110,12 +198,14 @@ def cached_props(bankroll=1000.0, force=False):
         c = _props_cache
         if force or c["value"] is None or time.time() - c["at"] > WEEK_CACHE_SECONDS or c["value"][0] != bankroll:
             _info, rows = cached_week("nfl", force=force)
+            props.learn_props()
             if force:
                 from cache import fresh
                 with fresh():
                     c["value"] = (bankroll, props.build_props(rows, bankroll=bankroll))
             else:
                 c["value"] = (bankroll, props.build_props(rows, bankroll=bankroll))
+            props.log_props(c["value"][1])
             c["at"] = time.time()
         return c["value"][1]
 
@@ -219,6 +309,25 @@ class Handler(BaseHTTPRequestHandler):
                 except ValueError:
                     bankroll = 1000.0
                 return self._send(200, cached_props(bankroll, force="refresh=1" in self.path))
+            if path == "/api/picks":
+                return self._send(200, picks_json(_sport(self.path), force="refresh=1" in self.path))
+            if path == "/api/live":
+                import live
+                if not live.load_model():
+                    return self._send(200, {"rows": [], "error": "No live model yet: run  python main.py live --train"})
+                rows, stamp = live.board()
+                return self._send(200, {"rows": rows, "stamp": stamp, "min_edge": live.LIVE_MIN_EDGE,
+                                        "stale_gap": live.LIVE_STALE_GAP})
+            if path == "/api/lock":
+                return self._send(200, lock_json(force="refresh=1" in self.path))
+            if path == "/api/scan":
+                from urllib.parse import parse_qs, urlparse
+                q = parse_qs(urlparse(self.path).query)
+                try:
+                    days = min(7, max(0, int(q.get("days", ["1"])[0])))
+                except ValueError:
+                    days = 1
+                return self._send(200, scan_json(_sport(self.path), days, force="refresh=1" in self.path))
             if path == "/api/research":
                 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "research.json")) as f:
                     return self._send(200, json.load(f))
