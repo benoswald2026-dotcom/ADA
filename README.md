@@ -299,6 +299,12 @@ Stats: passing yards, rushing yards, receptions, and receiving yards (`props.py`
    - it starts at 0 (use Kalshi's price) and moves only as graded results build up (prior of 40)
    - it is saved in `data/props_weights.json` with the flag win/loss record
 
+**Recalibration (2026-10-19):** rushing-yard and reception projections were too bunched:
+top backs were under-projected (77 → 91 yards) and low-volume backs over-projected. A straight-line
+recalibration fitted on earlier seasons only (actual ≈ a + b × projection) cut the
+out-of-sample miss for those two stats (rushing 24.37 → 23.96 yards, receptions 1.69 → 1.67).
+It did not help passing or receiving yards, so they don't use it.
+
 **Validation (2023–2025, walk-forward):**
 - Predicted 25% / 50% / 75% points held about 24–25% / 48–51% / 75–76% of the time.
 - Projections miss by 1–3% less than the plain recent average.

@@ -204,8 +204,17 @@ def build_examples(stat, df, games, qb_gaps=None):
     return out
 
 
-def fit(examples, seasons):
-    """Fit the adjustments (t >= 3 gate) and the outcome spread on `seasons`."""
+# Walk-forward test 2023-2025 (2026-10-19): projections for rushing yards and receptions
+# were too bunched (actual ~ 1.4 x projection: top backs under-projected, e.g. 77 -> 91
+# yards). A straight-line recalibration fitted on earlier seasons cut out-of-sample error
+# for these two (rush MAE 24.37 -> 23.96, receptions 1.69 -> 1.67) and not for passing or
+# receiving yards, so only these two use it.
+CALIBRATE_STATS = {"rush_yds", "receptions"}
+
+
+def fit(examples, seasons, calibrate=False):
+    """Fit the adjustments (t >= 3 gate) and the outcome spread on `seasons`.
+    calibrate: also fit actual ~ a + b * projection on the same seasons."""
     ex = [e for e in examples if e["season"] in seasons and e["base"] > 0]
     y = np.array([e["actual"] / e["base"] - 1.0 for e in ex])
     X = np.column_stack([np.ones(len(ex))] + [[e.get(key, 0.0) for e in ex] for _, key in TERMS[1:]])
@@ -218,8 +227,11 @@ def fit(examples, seasons):
                  "accepted": bool(abs(b / e) >= T_STAT_BAR) if e > 0 else False}
              for n, b, e in zip(names, beta, se)}
     fitted = {"terms": terms, "games": len(ex), "seasons": [min(seasons), max(seasons)]}
-    proj = np.array([project(e, fitted) for e in ex])
     act = np.array([e["actual"] for e in ex])
+    if calibrate:
+        b, a = np.polyfit(np.array([project(e, fitted) for e in ex]), act, 1)
+        fitted["calib"] = [float(a), float(b)]
+    proj = np.array([project(e, fitted) for e in ex])
     # sd ~ s0 + s1 * projection, from mean absolute error (MAD * sqrt(pi/2) = sd for a normal)
     A = np.column_stack([np.ones(len(ex)), proj])
     s, *_ = np.linalg.lstsq(A, np.abs(act - proj) * math.sqrt(math.pi / 2), rcond=None)
@@ -237,7 +249,11 @@ def project(e, fitted):
     for name, key in TERMS:
         if name in t and t[name]["accepted"]:
             mult += t[name]["coef"] * (1.0 if key is None else e.get(key, 0.0))
-    return max(0.0, e["base"] * mult)
+    val = e["base"] * mult
+    if "calib" in fitted:
+        a, b = fitted["calib"]
+        val = a + b * val
+    return max(0.0, val)
 
 
 def sd_for(proj, fitted):
@@ -265,7 +281,7 @@ def evaluate(stat, df, games, test_seasons=None, qb_gaps=None):
     ex = build_examples(stat, df, games, qb_gaps)
     rows, fits, fits_by = [], [], {}
     for S in test_seasons:
-        f = fit(ex, list(range(FIT_START, S)))
+        f = fit(ex, list(range(FIT_START, S)), calibrate=stat in CALIBRATE_STATS)
         fits_by[S] = f
         fits.append({"season": S, **{k: v for k, v in f.items() if k != "zq"}})
         for e in (e for e in ex if e["season"] == S):
@@ -482,7 +498,8 @@ def build_props(rows, bankroll=1000.0):
     if season not in _FIT_CACHE:   # the fit takes ~30 s; do it once per run
         from nfl import qb_gap_table
         qb_gaps = qb_gap_table(games, season)
-        _FIT_CACHE[season] = {stat: fit(build_examples(stat, df, games, qb_gaps), list(range(FIT_START, season)))
+        _FIT_CACHE[season] = {stat: fit(build_examples(stat, df, games, qb_gaps), list(range(FIT_START, season)),
+                                        calibrate=stat in CALIBRATE_STATS)
                               for stat in STATS}
     fits = _FIT_CACHE[season]
 

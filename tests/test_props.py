@@ -150,3 +150,13 @@ def test_starter_qb_not_added_to_receiving_stats():
     out = props._starting_qb_only(usage, "Tyson Bagent", "CHI", df, props.STATS["receptions"]["pos"])
     assert [k[1] for k in out.index] == ["DJ Moore"]
     assert "Tyson Bagent" in [k[1] for k in props._starting_qb_only(usage, "Tyson Bagent", "CHI", df).index]
+
+
+def test_calibration_spreads_bunched_projections():
+    """If actual results run 1.5x the projection, calibration learns it."""
+    ex = [{"season": 2020, "base": b, "actual": 1.5 * b - 5, "opp_x": 0.0, "team_x": 0.0, "qb_x": 0.0}
+          for b in [10.0, 20.0, 30.0, 40.0, 50.0, 60.0] * 20]
+    f = props.fit(ex, [2020], calibrate=True)
+    for base in (10.0, 40.0, 60.0):   # projections now land on the actual results
+        assert abs(props.project({"base": base, "opp_x": 0.0, "team_x": 0.0, "qb_x": 0.0}, f) - (1.5 * base - 5)) < 1.0
+    assert "calib" not in props.fit(ex, [2020])

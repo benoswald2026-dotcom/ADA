@@ -229,7 +229,12 @@ def train(save=True):
         if m.sum():
             bins.append({"bin": round(float(lo), 1), "n": int(m.sum()), "pred": round(float(p[m].mean()), 3),
                          "actual": round(float(y[m].mean()), 3)})
-    model = {"weights": dict(zip(FEATURES, map(float, w))), "train": TRAIN_SEASONS, "test": TEST_SEASONS,
+    # The test above is honest (2023-2025 unseen). The model used live is then refit on every
+    # season, 2014-2025, so it learns from the most recent football too.
+    every = pd.concat([tr, te])
+    w_all = fit_logistic(_frame_features(every), (every["result"] > 0).to_numpy(float))
+    model = {"weights": dict(zip(FEATURES, map(float, w_all))), "test_weights": dict(zip(FEATURES, map(float, w))),
+             "train": TRAIN_SEASONS, "test": TEST_SEASONS, "final_fit": TRAIN_SEASONS + TEST_SEASONS,
              "plays_train": int(len(tr)), "plays_test": int(ok.sum()),
              "brier": round(brier(p), 4), "brier_nflfastr": round(brier(ref), 4),
              "logloss": round(ll(p), 4), "logloss_nflfastr": round(ll(ref), 4), "calibration": bins,
