@@ -76,100 +76,100 @@
    "Dratings": 0.2834,
    "OddsShark": 0.0
   },
-  "updated": "2026-10-19 22:09Z"
+  "updated": "2026-10-24 22:26Z"
  },
  "nfl": {
-  "games": 3920,
+  "games": 3921,
   "margin_stats": {
    "mse": {
-    "Dimers": 57.09,
-    "Dratings": 162.37,
-    "ESPN FPI": 159.84,
-    "Hashmark model": 70.24,
-    "OddsShark": 83.59,
-    "Sagarin": 72.43,
-    "Sonny Moore": 67.4,
-    "TeamRankings": 165.96,
-    "nfelo": 162.78
+    "Dimers": 51.35,
+    "Dratings": 162.3,
+    "ESPN FPI": 159.13,
+    "Hashmark model": 67.44,
+    "OddsShark": 77.22,
+    "Sagarin": 67.25,
+    "Sonny Moore": 70.23,
+    "TeamRankings": 165.75,
+    "nfelo": 162.65
    },
    "n": {
-    "Dimers": 8,
-    "Dratings": 1791,
-    "ESPN FPI": 184,
-    "Hashmark model": 12,
-    "OddsShark": 12,
-    "Sagarin": 12,
-    "Sonny Moore": 12,
-    "TeamRankings": 662,
-    "nfelo": 1319
+    "Dimers": 9,
+    "Dratings": 1792,
+    "ESPN FPI": 185,
+    "Hashmark model": 13,
+    "OddsShark": 13,
+    "Sagarin": 13,
+    "Sonny Moore": 13,
+    "TeamRankings": 663,
+    "nfelo": 1320
    },
    "slope": {
-    "Dimers": -3.206,
-    "Dratings": 0.276,
-    "ESPN FPI": -0.273,
-    "Hashmark model": -0.008,
-    "OddsShark": -1.427,
-    "Sagarin": -0.851,
-    "Sonny Moore": 0.462,
-    "TeamRankings": -0.103,
+    "Dimers": -2.872,
+    "Dratings": 0.275,
+    "ESPN FPI": -0.274,
+    "Hashmark model": -0.105,
+    "OddsShark": -1.233,
+    "Sagarin": -0.874,
+    "Sonny Moore": 0.271,
+    "TeamRankings": -0.104,
     "nfelo": 0.368
    }
   },
   "margin_w": {
-   "Dimers": 1.1292,
-   "Dratings": 0.8616,
-   "ESPN FPI": 0.8734,
-   "Hashmark model": 1.125,
-   "OddsShark": 1.0516,
-   "Sagarin": 1.1111,
-   "Sonny Moore": 1.1444,
-   "TeamRankings": 0.8441,
-   "nfelo": 0.8595
+   "Dimers": 1.1789,
+   "Dratings": 0.8414,
+   "ESPN FPI": 0.8559,
+   "Hashmark model": 1.1351,
+   "OddsShark": 1.0722,
+   "Sagarin": 1.1365,
+   "Sonny Moore": 1.1153,
+   "TeamRankings": 0.8251,
+   "nfelo": 0.8396
   },
-  "total_games": 12,
+  "total_games": 13,
   "total_stats": {
    "mse": {
-    "Dimers": 137.27,
-    "Dratings": 173.83,
-    "Hashmark model": 193.32,
-    "OddsShark": 168.0
+    "Dimers": 135.06,
+    "Dratings": 169.27,
+    "Hashmark model": 187.32,
+    "OddsShark": 161.1
    },
    "n": {
-    "Dimers": 8,
-    "Dratings": 12,
-    "Hashmark model": 12,
-    "OddsShark": 12
+    "Dimers": 9,
+    "Dratings": 13,
+    "Hashmark model": 13,
+    "OddsShark": 13
    },
    "slope": {
-    "Dimers": 6.33,
-    "Dratings": -0.474,
-    "Hashmark model": -0.121,
-    "OddsShark": -0.159
+    "Dimers": 6.519,
+    "Dratings": -0.094,
+    "Hashmark model": -0.043,
+    "OddsShark": 0.815
    }
   },
   "total_w": {
-   "Dimers": 1.0372,
-   "Dratings": 0.9926,
-   "Hashmark model": 0.9698,
-   "OddsShark": 1.0004
+   "Dimers": 1.0377,
+   "Dratings": 0.9911,
+   "Hashmark model": 0.968,
+   "OddsShark": 1.0032
   },
   "trust_src": {
    "Dimers": 0.0,
-   "Dratings": 0.2697,
+   "Dratings": 0.2687,
    "ESPN FPI": 0.0,
    "Hashmark model": 0.0,
    "OddsShark": 0.0,
    "Sagarin": 0.0,
-   "Sonny Moore": 0.1065,
+   "Sonny Moore": 0.0666,
    "TeamRankings": 0.0,
    "nfelo": 0.3573
   },
   "trust_total_src": {
-   "Dimers": 1.055,
+   "Dimers": 1.1973,
    "Dratings": 0.0,
    "Hashmark model": 0.0,
-   "OddsShark": 0.0
+   "OddsShark": 0.1999
   },
-  "updated": "2026-10-19 22:09Z"
+  "updated": "2026-10-24 22:27Z"
  }
 }
