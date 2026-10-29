@@ -1,10 +1,10 @@
 {
- "trust": 0.079,
- "graded": 220,
- "raw_slope": 0.093,
+ "trust": 0.0399,
+ "graded": 237,
+ "raw_slope": 0.047,
  "flag_record": {
   "W": 0,
   "L": 0
  },
- "updated": "2026-10-19 22:09+0000"
+ "updated": "2026-10-29 15:50+0000"
 }
