@@ -63,6 +63,9 @@ def full_name(code):
     return f"{city} {nick}"
 
 
+OLD_NAMES = {"WAS": ("Washington Redskins", "Washington Football Team")}   # some sites never updated
+
+
 def aliases(code):
     """Every way an API might write this team, normalized."""
     city, nick = TEAMS[canon(code)][:2]
@@ -72,6 +75,7 @@ def aliases(code):
         out.add(normalize(f"{'NY' if city == 'New York' else 'LA'} {nick}"))
     else:
         out.add(normalize(city))
+    out |= {normalize(n) for n in OLD_NAMES.get(canon(code), ())}
     return out
 
 

@@ -260,7 +260,8 @@ function envChips(r) {
   else if (fx) chips.push(`Kickoff <b>${Math.round(fx.temp)}°F, wind ${Math.round(fx.wind)} mph${isNum(fx.gusts) ? ` (gusts ${Math.round(fx.gusts)})` : ""}, rain ${isNum(fx.precip_prob) ? fx.precip_prob + "%" : "n/a"}</b>`);
   else if (g.neutral) chips.push("Neutral site");
   else chips.push("Weather <b>forecast unavailable</b>");
-  if (p.env_margin) chips.push(`Rest/travel <b>${signed(p.env_margin)} pts</b> to ${esc(g.home)}`);
+  if (e.home_qb && e.away_qb) chips.push(`QBs <b>${esc(e.away_qb)} @ ${esc(e.home_qb)}</b>${e.qb_pts ? `: <b>${signed(e.qb_pts)} pts</b> to ${esc(g.home)}` : ""}`);
+  if (p.env_margin) chips.push(`Rest/travel/QB <b>${signed(p.env_margin)} pts</b> to ${esc(g.home)}`);
   if (p.env_total) chips.push(`Weather <b>${signed(p.env_total)} pts</b> to total`);
   if (p.injury_adj) chips.push(`Injuries <b>${signed(p.injury_adj)} pts</b>`);
   return `<div class="env">${chips.map(c => `<span class="chip-env">${c}</span>`).join("")}</div>`;
@@ -529,7 +530,7 @@ function renderBets() {
       ${kRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>YES ask</th><th>Fee</th><th>Edge (pts)</th><th>Call</th><th>Stake</th></tr></thead><tbody>${kRows}</tbody></table></div>` : empty("No Kalshi prices right now. Kalshi may have no markets for these games, or this computer can't reach it.")}</section>
     <section class="bets-section"><h2>Moneylines</h2><p class="lede">Sides where the bet probability beats the average book price. EV is expected profit per $1.</p>
       ${bookRows ? `<div class="table-wrap"><table><thead><tr><th>Team</th><th>Game</th><th>Bet %</th><th>Market %</th><th>Decimal</th><th>EV / $1</th><th>Stake</th></tr></thead><tbody>${bookRows}</tbody></table></div>` : empty("None. The bet probabilities don't beat any book price after the vig, which is expected when the bet probability is the market.")}</section>
-    <section class="bets-section"><h2>Spreads</h2><p class="lede">Cover chance from a normal spread of margins around the line (Stern), with σ fitted on our own data.</p>
+    <section class="bets-section"><h2>Spreads</h2><p class="lede">Cover chance from the NFL's real margin shape: a bell curve (σ fitted on our data) with extra weight on 3, 7, 10 and 14. Pushes on whole-number lines refund the stake.</p>
       ${spRows ? `<div class="table-wrap"><table><thead><tr><th>Side</th><th>Game</th><th>Cover %</th><th>Decimal</th><th>EV / $1</th><th>Stake</th></tr></thead><tbody>${spRows}</tbody></table></div>` : empty("None.")}</section>
     <section class="bets-section"><h2>Parlays</h2><p class="lede">2–3 legs from different games, each leg already a positive-EV side. Not staked: the house margin compounds and the variance is large.</p>
       ${parRows ? `<div class="table-wrap"><table><thead><tr><th>Legs</th><th>Hit %</th><th>Market hit %</th><th>Payout</th><th>EV / $1</th></tr></thead><tbody>${parRows}</tbody></table></div>` : empty("None. A parlay needs at least two positive-EV legs from different games.")}</section>
@@ -539,6 +540,117 @@ $("#bets-refresh").addEventListener("click", () => { BETS = null; renderBets(); 
 $("#bets-body").addEventListener("change", e => {
   if (e.target.id === "bankroll") { store.set("bankroll", String(Number(e.target.value) || 1000)); BETS = null; renderBets(); loadBets(); }
 });
+
+// ---------------------------------------------------------------- consensus picks
+let PICKS = null, PICKS_ERR = null, picksLoading = false;
+
+async function loadPicks(force = false) {
+  if (picksLoading) return;
+  picksLoading = true; PICKS_ERR = null;
+  if (force) PICKS = null;
+  renderPicks();
+  const sport = SPORT;
+  try { const d = await api(withSport(`/api/picks${force ? "?refresh=1" : ""}`)); if (sport === SPORT) PICKS = d; }
+  catch (e) { if (sport === SPORT) PICKS_ERR = e.message; }
+  picksLoading = false; renderPicks();
+}
+
+function renderPicks() {
+  const body = $("#picks-body");
+  if (PICKS_ERR) { body.innerHTML = setupNotice(PICKS_ERR); return; }
+  if (!PICKS || PICKS.sport !== SPORT) {
+    body.innerHTML = `<div class="panel"><p class="label">Collecting predictions from ESPN FPI, Dratings, Sagarin, Dimers, OddsShark, Sonny Moore, TeamRankings and nfelo…</p><div class="progress"><span></span></div></div>`;
+    if (!picksLoading) loadPicks();
+    return;
+  }
+  const rec = PICKS.record || {};
+  const recLine = k => { const r = rec[k]; if (!r) return "–"; const n = r.W + r.L; return `${r.W}-${r.L}-${r.P}${n ? ` · ${(100 * r.W / n).toFixed(1)}%` : ""}`; };
+  const strong = PICKS.best.filter(b => b.tier === "Strong");
+  const notes = PICKS.notes.length ? `<div class="notice"><ul class="notes-box-list">${PICKS.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
+  const kbet = k => !k ? "–" : `${k.side} “${esc(k.contract)}” @ ${cents(k.ask)}${k.line_gain > 0 ? ` <span class="tag">+${k.line_gain.toFixed(1)} vs DK</span>` : k.line_gain < 0 ? ` <span class="tag">${k.line_gain.toFixed(1)} vs DK</span>` : ""}`;
+  const bestRows = PICKS.best.map(b => `<tr class="${b.tier === "Strong" ? "is-flag" : ""}"><td class="player-td"><b>${esc(b.pick)}</b></td>
+      <td class="player-td">${esc(b.matchup)}</td><td>${esc(b.type)}</td><td>${b.tier === "Strong" ? chip(true).replace("Flag", "Strong") : `<span class="chip chip-pass">Lean</span>`}</td>
+      <td>${Math.abs(b.gap).toFixed(1)} pts</td><td>${b.agree}/${b.n}</td><td class="player-td">${kbet(b.kalshi_bet)}</td></tr>`).join("");
+  const ctxNote = g => {
+    const c = g.context || {}, out = [];
+    for (const side of ["home", "away"]) { const q = (c.qb || {})[side]; if (q && q.status) out.push(`${esc(g[side])} QB ${esc(q.name)}: ${esc(q.status)}`); }
+    const w = c.weather || {};
+    if (w.indoor) out.push("indoors"); else if (isNum(w.gust)) out.push(`gusts ${Math.round(w.gust)} mph`);
+    return out.join("<br>") || "–";
+  };
+  const kLine = (dk, k, fmt) => `${fmt(dk)}${isNum(k) ? ` <span class="tag">K ${fmt(k)}</span>` : ""}`;
+  const srcCell = g => Object.entries(g.sources).map(([k, v]) => `${esc(k)}: ${isNum(v.margin) ? esc(g.home) + " " + signed(v.margin) : pct(v.p)}`).join("<br>");
+  const gameRows = PICKS.games.map(g => `<tr><td>${kickoff(g.kickoff)}</td><td class="player-td">${esc(g.matchup)}</td>
+      <td class="player-td">${esc(g.winner)} ${pct(g.winner_p, 0)} <span class="tag">${g.winner_agree}/${g.n_sources}</span></td>
+      <td>${isNum(g.margin) ? esc(g.home) + " " + signed(g.margin) : "–"}</td>
+      <td>${g.ats ? kLine(g.ats.line, (g.kalshi || {}).home_line, x => signed(x, 1)) : "–"}</td>
+      <td class="player-td">${g.ats ? `${esc(g.ats.pick)} <span class="tag">${signed(g.ats.gap)} · ${g.ats.agree}/${g.ats.n}</span>` : "–"}</td>
+      <td>${g.ou ? kLine(g.ou.line, (g.kalshi || {}).total, x => x.toFixed(1)) : "–"}</td>
+      <td class="player-td">${g.ou ? `${esc(g.ou.pick)} <span class="tag">proj ${g.total.toFixed(1)}</span>` : "–"}</td>
+      <td class="player-td" style="font-size:.72rem">${ctxNote(g)}</td>
+      <td class="player-td" style="font-size:.72rem;color:var(--muted)">${srcCell(g)}</td></tr>`).join("");
+  body.innerHTML = `<div class="notes">${notes}</div>
+    <div class="summary">
+      <div><div class="label">Strong picks</div><div class="big flag-count">${strong.length}</div><div class="small">all sources agree, line off 3+</div></div>
+      <div><div class="label">Lean picks</div><div class="big">${PICKS.best.length - strong.length}</div><div class="small">2/3 agree</div></div>
+      <div><div class="label">Graded record</div><div class="big">${recLine("all").split(" · ")[0]}</div><div class="small">${recLine("all").includes("·") ? recLine("all").split(" · ")[1] + " · need 52.4% at −110" : "no finished picks yet"}</div></div>
+      <div><div class="label">Games</div><div class="big">${PICKS.games.length}</div><div class="small">with 1+ forecast</div></div>
+    </div>
+    <section class="bets-section"><h2>Best bets</h2><p class="lede">Picks where the forecasters agree and the line is off. Not validated yet: judge them by the graded record after 100+ picks.</p>
+      ${bestRows ? `<div class="table-wrap"><table><thead><tr><th>Pick</th><th class="l">Game</th><th>Type</th><th>Tier</th><th>Line off by</th><th>Agree</th><th class="l">On Kalshi</th></tr></thead><tbody>${bestRows}</tbody></table></div>` : `<div class="panel empty">No Strong or Lean picks right now.</div>`}</section>
+    <section class="bets-section"><h2>Every game</h2><p class="lede">Consensus winner, predicted margin (home team's view), DraftKings' line next to Kalshi's own line (K, where its contract prices cross 50¢), spread and total picks, starting-QB injuries and weather, and each source's number.</p>
+      <div class="table-wrap"><table><thead><tr><th>Kickoff</th><th class="l">Game</th><th class="l">Winner</th><th>Margin</th><th>Home line (DK · K)</th><th class="l">Spread pick</th><th>Total (DK · K)</th><th class="l">Total pick</th><th class="l">QB / weather</th><th class="l">Sources</th></tr></thead><tbody>${gameRows}</tbody></table></div></section>`;
+}
+$("#picks-refresh").addEventListener("click", () => loadPicks(true));
+
+// ---------------------------------------------------------------- kalshi scan
+let SCAN = null, SCAN_ERR = null, scanLoading = false;
+
+async function loadScan(force = false) {
+  if (scanLoading) return;
+  scanLoading = true; SCAN_ERR = null;
+  if (force) SCAN = null;
+  renderScan();
+  const sport = SPORT;
+  const days = SPORT === "nfl" ? 3 : 1;   // NFL games are mostly Sunday; college Friday-Saturday
+  try { const d = await api(withSport(`/api/scan?days=${days}${force ? "&refresh=1" : ""}`)); if (sport === SPORT) SCAN = d; }
+  catch (e) { if (sport === SPORT) SCAN_ERR = e.message; }
+  scanLoading = false; renderScan();
+}
+
+function renderScan() {
+  const body = $("#scan-body");
+  if (SCAN_ERR) { body.innerHTML = setupNotice(SCAN_ERR); return; }
+  if (!SCAN || SCAN.sport !== SPORT) {
+    body.innerHTML = `<div class="panel"><p class="label">Fetching Kalshi and sportsbook prices…</p><div class="progress"><span></span></div></div>`;
+    if (!scanLoading) loadScan();
+    return;
+  }
+  const all = $("#scan-all").checked;
+  const flags = SCAN.rows.filter(r => r.flag);
+  const rows = all ? SCAN.rows : SCAN.rows.slice(0, 15);
+  const money = x => x ? `$${x.toFixed(2)}` : "–";
+  const call = r => r.flag ? chip(true) : (r.longshot && r.edge >= 0.03
+    ? `<span class="chip chip-pass" title="Kalshi contracts under 20¢ lose far more than their price implies">Long shot</span>` : chip(false));
+  const bet = r => r.market_type === "moneyline" ? `${esc(r.team)} to win` : `${esc(r.team)} <span class="tag">${r.side.toUpperCase()}</span>`;
+  const book = r => r.market_type === "moneyline" ? american(r.book_ml) : (r.market_type === "total" ? "O/U " : "") + signed(r.book_line, 1).replace("+", r.market_type === "total" ? "" : "+");
+  const tr = r => `<tr class="${r.flag ? "is-flag" : ""}"><td class="player-td">${bet(r)}</td><td class="player-td">${esc(r.matchup)}</td>
+      <td>${kickoff(r.kickoff)}</td><td>${book(r)}</td><td>${pct(r.market)}</td><td>${cents(r.price)}</td>
+      <td>${isNum(r.bid) ? cents(r.bid) : "–"}</td><td class="${r.edge >= 0 ? "ev-pos" : "ev-neg"}">${pts(r.edge)}</td><td>${call(r)}</td><td>${money(r.stake)}</td></tr>`;
+  const scanNotes = SCAN.notes.length ? `<div class="notice"><ul class="notes-box-list">${SCAN.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
+  body.innerHTML = `<div class="notes">${scanNotes}</div>
+    <div class="summary">
+      <div><div class="label">Flags</div><div class="big flag-count">${flags.length}</div><div class="small">edge ≥ 3 pts after fee</div></div>
+      <div><div class="label">Games compared</div><div class="big">${SCAN.games}</div><div class="small">Kalshi × ${esc(SCAN.rows[0]?.book || "sportsbook")}</div></div>
+      <div><div class="label">Best edge</div><div class="big">${SCAN.rows.length ? pts(SCAN.rows[0].edge) : "–"}</div><div class="small">${SCAN.rows.length ? esc(SCAN.rows[0].team) : ""}</div></div>
+      <div><div class="label">Prices as of</div><div class="big clock-big">${esc((SCAN.kalshi_stamp || "").slice(11, 16))}<span>Z</span></div><div class="small">Kalshi ${esc(SCAN.kalshi_stamp || "")}</div></div>
+    </div>
+    ${SCAN.rows.length ? `<div class="table-wrap"><table><thead><tr><th>Bet</th><th class="l">Game</th><th>Kickoff</th><th>Book line</th><th>Book fair</th><th>YES ask</th><th>YES bid</th><th>Edge (pts)</th><th>Call</th><th>Stake</th></tr></thead>
+      <tbody>${rows.map(tr).join("")}</tbody></table></div>` : `<div class="panel empty">No upcoming games with both a Kalshi market and sportsbook odds.</div>`}
+    <p class="lede foot-note">Bet probability here is the sportsbook's price, not the model. DraftKings is one recreational book; with an Odds API key, Best bets uses Pinnacle instead. Prices move: recheck before kickoff.</p>`;
+}
+$("#scan-refresh").addEventListener("click", () => loadScan(true));
+$("#scan-all").addEventListener("change", renderScan);
 
 // ---------------------------------------------------------------- props
 let PROPS = null, PROPS_ERR = null, propsLoading = false;
@@ -568,26 +680,39 @@ function renderProps() {
   const rows = PROPS.rows.filter(r => (PROPS_FILTER.stat === "all" || r.stat === PROPS_FILTER.stat)
     && (PROPS_FILTER.game === "all" || r.matchup === PROPS_FILTER.game) && (!q || r.player.toLowerCase().includes(q)));
   const hasLines = PROPS.rows.some(r => r.market);
-  const notes = notesBox(PROPS.notes);
-  const warn = `<div class="notice"><p><b>Unvalidated edges.</b> The projections are tested: on 2023–2025 their 25/50/75% points held about 24/50/75% of the time (see Backtest). But there's no free history of prop <i>lines</i>, so the model can't be tested for profit against books. Any prop edge is logged as a paper trade so you can see whether it beats the closing line.</p></div>`;
+  const hasKalshi = PROPS.rows.some(r => r.kalshi);
+  const notes = PROPS.notes.length ? `<div class="notice"><ul class="notes-box-list">${PROPS.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
+  const warn = `<div class="notice"><p><b>Unvalidated edges.</b> The projections are tested: on 2023–2025 their 25/50/75% points held about 24/50/75% of the time (see Backtest). Kalshi's prop prices have no free history, so edges against them are logged and graded after each game; the learned trust (now ${(PROPS.trust ?? 1).toFixed(2)}) shrinks the model toward Kalshi's price if they keep missing.</p></div>`;
+  const flagged = PROPS.rows.filter(r => r.flag && r.kalshi).sort((a, b) => b.kalshi.edge - a.kalshi.edge);
+  const kc = r => r.kalshi ? `${r.kalshi.side} “${esc(r.kalshi.contract)}” @ ${cents(r.kalshi.ask)}` : "–";
+  const kvs = r => r.kalshi ? `${pct(r.kalshi.p_model, 0)} vs ${pct(r.kalshi.side === "YES" ? r.kalshi.mid : 1 - r.kalshi.mid, 0)}` : "–";
+  const best = hasKalshi ? `<section class="bets-section"><h2>Best prop bets</h2><p class="lede">FLAG = edge after Kalshi's fee of 3+ points, price 20–80¢, and the model within 10 points of Kalshi.</p>
+    ${flagged.length ? `<div class="table-wrap"><table><thead><tr><th>Player</th><th class="l">Game</th><th>Stat</th><th class="l">Buy on Kalshi</th><th>Model vs Kalshi</th><th>Edge (pts)</th><th>Stake</th></tr></thead><tbody>
+    ${flagged.slice(0, 20).map(r => `<tr class="is-flag"><td class="player-td"><b>${esc(r.player)}</b></td><td class="player-td">${esc(r.matchup)}</td><td>${esc(r.label)}</td><td class="player-td">${kc(r)}</td><td>${kvs(r)}</td><td class="ev-pos">${pts(r.kalshi.edge)}</td><td>${money(r.stake)}</td></tr>`).join("")}
+    </tbody></table></div>` : `<div class="panel empty">No prop clears the bar right now.</div>`}</section>` : "";
   const filters = `<div class="panel" style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
       <label class="field"><span class="label">Stat</span><select id="pf-stat"><option value="all">All stats</option>${stats.map(([k, l]) => `<option value="${k}" ${PROPS_FILTER.stat === k ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
       <label class="field" style="flex:1;min-width:200px"><span class="label">Game</span><select id="pf-game"><option value="all">All games</option>${games.map(g => `<option ${PROPS_FILTER.game === g ? "selected" : ""}>${esc(g)}</option>`).join("")}</select></label>
       <label class="field"><span class="label">Player</span><input id="pf-q" type="text" placeholder="Search" value="${esc(PROPS_FILTER.q)}"></label>
     </div>`;
-  const head = `<tr><th>Player</th><th>Stat</th><th>Median</th><th style="text-align:left">Middle 50%${hasLines ? " · book line" : ""}</th><th>Fair line</th>${hasLines ? "<th>Book line</th><th>P(over)</th><th>Pick</th><th>EV / $1</th><th>Stake</th>" : ""}</tr>`;
+  const head = `<tr><th>Player</th><th>Stat</th><th>Median</th><th style="text-align:left">Middle 50%${hasKalshi ? " · Kalshi line" : hasLines ? " · book line" : ""}</th>${hasKalshi ? "<th>Kalshi line</th><th class=\"l\">Best Kalshi contract</th><th>Model vs Kalshi</th><th>Edge (pts)</th><th>Stake</th>" : `<th>Fair line</th>${hasLines ? "<th>Book line</th><th>P(over)</th><th>Pick</th><th>EV / $1</th><th>Stake</th>" : ""}`}</tr>`;
   // Range bars share one scale per stat so players can be compared at a glance.
   const scale = {};
-  PROPS.rows.forEach(r => { scale[r.stat] = Math.max(scale[r.stat] || 1, r.q75 * 1.15, r.market ? r.market.line * 1.15 : 0); });
+  PROPS.rows.forEach(r => { scale[r.stat] = Math.max(scale[r.stat] || 1, r.q75 * 1.15, r.market ? r.market.line * 1.15 : 0, isNum(r.kalshi_median) ? r.kalshi_median * 1.15 : 0); });
+  const lineOf = r => isNum(r.kalshi_median) ? r.kalshi_median : (r.market ? r.market.line : null);
   const rbar = r => {
     const X = v => Math.max(0, Math.min(100, v / scale[r.stat] * 100)).toFixed(1);
-    return `<div class="rbar" data-tip="${esc(`${r.player} · ${r.label}<br>Middle 50%: ${r.q25.toFixed(0)}–${r.q75.toFixed(0)}<br>Median: ${r.median.toFixed(1)}${r.market ? `<br>Book line: ${r.market.line}` : ""}`)}">
+    const L = lineOf(r);
+    return `<div class="rbar" data-tip="${esc(`${r.player} · ${r.label}<br>Middle 50%: ${r.q25.toFixed(0)}–${r.q75.toFixed(0)}<br>Median: ${r.median.toFixed(1)}${L !== null ? `<br>${isNum(r.kalshi_median) ? "Kalshi" : "Book"} line: ${L.toFixed(1)}` : ""}`)}">
       <div class="rt"></div><div class="rb" style="left:${X(r.q25)}%;width:${(X(r.q75) - X(r.q25)).toFixed(1)}%"></div>
-      <div class="rm" style="left:${X(r.median)}%"></div>${r.market ? `<div class="rl" style="left:${X(r.market.line)}%"></div>` : ""}</div>`;
+      <div class="rm" style="left:${X(r.median)}%"></div>${L !== null ? `<div class="rl" style="left:${X(L)}%"></div>` : ""}</div>`;
   };
-  const tr = r => `<tr><td class="player-td"><div class="player-cell">${teamBadge(r.team, r.team, true)}<div><b>${esc(r.player)}</b> <span class="src">${esc(r.position)}</span></div></div></td><td>${esc(r.label)}</td><td>${r.median.toFixed(1)}</td><td style="min-width:160px">${rbar(r)}<span class="src">${r.q25.toFixed(0)}–${r.q75.toFixed(0)}</span></td><td>${r.fair_line}</td>${hasLines ? (r.market ? `<td>${r.market.line}</td><td>${pct(r.p_over)}</td><td>${esc(r.pick)}${r.flag ? " ★" : ""}</td><td class="${r.ev >= 0 ? "ev-pos" : "ev-neg"}">${signed(r.ev, 3)}</td><td>${money(r.stake)}</td>` : `<td colspan="5" class="src">no line</td>`) : ""}</tr>`;
-  body.innerHTML = `<div class="notes">${notes}${warn}</div>${filters}
-    <p class="label" style="margin:12px 0 8px;text-transform:none;letter-spacing:0">${rows.length} projections · ${esc(PROPS.source)}${hasLines ? " · ★ = edge ≥ 3% and within 10 pts of the market" : ""}</p>
+  const kcells = r => r.kalshi
+    ? `<td>${isNum(r.kalshi_median) ? r.kalshi_median.toFixed(1) : "–"}</td><td class="player-td">${kc(r)}${r.flag ? " ★" : ""}</td><td>${kvs(r)}</td><td class="${r.kalshi.edge >= 0 ? "ev-pos" : "ev-neg"}">${pts(r.kalshi.edge)}</td><td>${money(r.stake)}</td>`
+    : `<td colspan="5" class="src">not on Kalshi</td>`;
+  const tr = r => `<tr class="${r.flag ? "is-flag" : ""}"><td class="player-td"><div class="player-cell">${teamBadge(r.team, r.team, true)}<div><b>${esc(r.player)}</b> <span class="src">${esc(r.position)}${r.injury ? " · " + esc(r.injury) : ""}</span></div></div></td><td>${esc(r.label)}</td><td>${r.median.toFixed(1)}</td><td style="min-width:160px">${rbar(r)}<span class="src">${r.q25.toFixed(0)}–${r.q75.toFixed(0)}</span></td>${hasKalshi ? kcells(r) : `<td>${r.fair_line}</td>${hasLines ? (r.market ? `<td>${r.market.line}</td><td>${pct(r.p_over)}</td><td>${esc(r.pick)}${r.flag ? " ★" : ""}</td><td class="${r.ev >= 0 ? "ev-pos" : "ev-neg"}">${signed(r.ev, 3)}</td><td>${money(r.stake)}</td>` : `<td colspan="5" class="src">no line</td>`) : ""}`}</tr>`;
+  body.innerHTML = `<div class="notes">${notes}${warn}</div>${best}<section class="bets-section"><h2>Every projection</h2></section>${filters}
+    <p class="label" style="margin:12px 0 8px;text-transform:none;letter-spacing:0">${rows.length} projections · ${esc(PROPS.source)}${hasKalshi || hasLines ? " · ★ = FLAG (3+ pt edge, within 10 pts of the market)" : ""}</p>
     ${rows.length ? `<div class="table-wrap"><table><thead>${head}</thead><tbody>${rows.map(tr).join("")}</tbody></table></div>` : `<div class="panel empty">No players match those filters.</div>`}`;
 }
 $("#props-body").addEventListener("change", e => {
@@ -779,8 +904,285 @@ $("#ex-form").addEventListener("input", () => { clearTimeout(exTimer); exTimer =
 $("#ex-form").addEventListener("submit", e => e.preventDefault());
 $("#ex-reset").addEventListener("click", () => { if (EX_DEFAULT) { buildExForm(EX_DEFAULT); runExplain(); } });
 
+// ---------------------------------------------------------------- lock of the day
+// The best Strong consensus pick, hidden behind a field goal. Two taps: aim (the wind
+// pushes the ball), then power (stop it in the green). Miss three and the kick moves up
+// 10 yards (closer posts look wider); miss five and it's an extra point with no wind.
+let LOCK = null, LOCK_ERR = null, lockLoading = false;
+const FG = { phase: "aim", t0: 0, aim: 0, power: 0, wind: 0, attempt: 1, raf: 0, busy: false };
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const etDay = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+const lockId = L => `${etDay()}|${L.event_id}|${L.type}`;
+
+async function loadLock(force = false) {
+  if (lockLoading) return;
+  lockLoading = true; LOCK_ERR = null;
+  if (force) LOCK = null;
+  renderLock();
+  try { LOCK = await api(`/api/lock${force ? "?refresh=1" : ""}`); }
+  catch (e) { LOCK_ERR = e.message; }
+  lockLoading = false; renderLock();
+}
+
+function fgSetup() {
+  const n = FG.attempt;
+  const dist = n >= 6 ? 15 : n >= 4 ? 23 : 33;
+  // Posts' half-gap in aim units: wider when the kick is closer.
+  FG.gap = n >= 6 ? 0.62 : n >= 4 ? 0.45 : 0.3;
+  FG.wind = n >= 6 ? 0 : (Math.random() * 2 - 1);
+  FG.phase = "aim"; FG.t0 = performance.now(); FG.busy = false;
+  const mph = Math.round(Math.abs(FG.wind) * 14);
+  $("#fg-wind").textContent = mph ? `${FG.wind < 0 ? "←" : "→"} ${mph}` : "calm";
+  $("#fg-dist").textContent = dist === 15 ? "PAT" : `${dist} yd`;
+  $("#fg-try").textContent = String(n);
+  $("#fg-call").textContent = ""; $("#fg-call").className = "fg-call";
+  const hw = FG.gap * 133;
+  $("#fg-posts").innerHTML = `<path class="post" d="M180 104V86M${180 - hw} 86H${180 + hw}"/>
+    <path class="post post-thin" d="M${180 - hw} 86V${12 + (0.62 - FG.gap) * 10}M${180 + hw} 86V${12 + (0.62 - FG.gap) * 10}"/>`;
+  fgBall(180, 262, 1, 0);
+  $("#fg-aim").classList.remove("is-done", "is-idle");
+  $("#fg-pow").classList.remove("is-done"); $("#fg-pow").classList.add("is-idle");
+  $("#fg-pow-zone").style.cssText = "left:60%;right:0";
+  $("#fg-aim-zone").style.cssText = `left:${50 - FG.gap * 50}%;right:${50 - FG.gap * 50}%`;
+  $("#fg-kick").textContent = "Set aim";
+  $("#fg-msg").textContent = n === 4 ? "Coach moved the kick up 10 yards. The posts look wider from here."
+    : n === 6 ? "Fine. Extra point, no wind. Holder's got it." : "Tap the field or press the button to stop the aim.";
+  cancelAnimationFrame(FG.raf); FG.raf = requestAnimationFrame(fgTick);
+}
+
+function fgBall(x, y, scale, spin) {
+  $("#fg-ball").setAttribute("transform", `translate(${x} ${y}) scale(${scale}) rotate(${spin})`);
+}
+
+function fgTick(now) {
+  if (!$("#fg-svg")) return;   // tab changed
+  const t = (now - FG.t0) / 1000;
+  if (FG.phase === "aim") {
+    FG.aim = Math.sin(t * 2.6);
+    $("#fg-aim-mark").style.left = `${50 + FG.aim * 50}%`;
+    const x = 180 + (FG.aim + FG.wind * 0.18) * 133;
+    $("#fg-aimline").setAttribute("x2", x.toFixed(1));
+  } else if (FG.phase === "power") {
+    FG.power = (1 - Math.cos(t * 3.4)) / 2;
+    $("#fg-pow-fill").style.width = `${FG.power * 100}%`;
+  }
+  if (FG.phase === "aim" || FG.phase === "power") FG.raf = requestAnimationFrame(fgTick);
+}
+
+function fgPress() {
+  if (FG.busy) return;
+  if (FG.phase === "aim") {
+    FG.phase = "power"; FG.t0 = performance.now();
+    $("#fg-aim").classList.add("is-done"); $("#fg-pow").classList.remove("is-idle");
+    $("#fg-kick").textContent = "Kick";
+    $("#fg-msg").textContent = "Now the power. Stop it in the green.";
+    return;
+  }
+  if (FG.phase === "power") { FG.phase = "flight"; FG.busy = true; fgFly(); }
+}
+
+function fgFly() {
+  $("#fg-pow").classList.add("is-done");
+  const final = FG.aim + FG.wind * 0.18, short = FG.power < 0.6;
+  const px = 180 + final * 133;
+  const py = short ? 86 + (0.6 - FG.power) * 60 : 60 - (FG.power - 0.6) * 80;
+  const good = !short && Math.abs(final) < FG.gap;
+  const doink = !short && !good && Math.abs(final) < FG.gap + 0.05;
+  const cx = 180 + (px - 180) * 0.45, cy = Math.min(py, 262) - (short ? 90 : 150);
+  const end = () => fgResult(good, short, doink, final);
+  if (reduceMotion()) { fgBall(px, py, 0.35, 0); return end(); }
+  const t0 = performance.now(), dur = 1050;
+  const step = now => {
+    const u = Math.min(1, (now - t0) / dur), v = 1 - u;
+    const x = v * v * 180 + 2 * v * u * cx + u * u * px, y = v * v * 262 + 2 * v * u * cy + u * u * py;
+    fgBall(x, y, 1 - 0.65 * u, u * 900);
+    if (u < 1) requestAnimationFrame(step); else end();
+  };
+  requestAnimationFrame(step);
+}
+
+function fgResult(good, short, doink, final) {
+  const call = $("#fg-call");
+  if (good) {
+    call.textContent = "It's good!";
+    $("#fg-msg").textContent = "Lock unlocked.";
+    store.set("lock-unlocked", lockId(LOCK.lock));
+    setTimeout(() => { if ($("#fg-svg")) renderLock(true); }, reduceMotion() ? 200 : 1100);
+    return;
+  }
+  call.className = "fg-call miss";
+  call.textContent = short ? "Short!" : doink ? "Doink!" : final < 0 ? "Wide left" : "Wide right";
+  $("#fg-msg").textContent = short ? "Not enough leg. Stop the power meter in the green."
+    : doink ? "Off the upright. So close." : `Wind ${FG.wind < 0 ? "pushed it left" : FG.wind > 0 ? "pushed it right" : "wasn't the problem"}. Aim ${FG.wind < 0 ? "a bit right" : "a bit left"} of center to correct.`;
+  FG.attempt += 1;
+  setTimeout(() => { if ($("#fg-svg")) fgSetup(); }, 1500);
+}
+
+function fgHtml() {
+  const yards = [[104, 0.30], [128, 0.45], [162, 0.62], [210, 0.82], [272, 1.05]]
+    .map(([y, w]) => `<line class="yard" x1="${180 - 180 * w * 1.6}" y1="${y}" x2="${180 + 180 * w * 1.6}" y2="${y}"/>
+      <line class="hashm" x1="${180 - 26 * w * 1.6}" y1="${y}" x2="${180 - 26 * w * 1.6}" y2="${y + 6 * w}"/>
+      <line class="hashm" x1="${180 + 26 * w * 1.6}" y1="${y}" x2="${180 + 26 * w * 1.6}" y2="${y + 6 * w}"/>`).join("");
+  return `<div class="fg">
+    <div class="fg-stage">
+      <svg class="fg-field" id="fg-svg" viewBox="0 0 360 300" role="img" aria-label="Field goal: the ball on the hold, the uprights ahead">
+        <rect class="turf" width="360" height="300"/><rect class="turf-band" width="360" height="104"/>
+        ${yards}
+        <line class="aimline" id="fg-aimline" x1="180" y1="256" x2="180" y2="86"/>
+        <g id="fg-posts"></g>
+        <ellipse class="shadow" cx="180" cy="276" rx="14" ry="4"/>
+        <g id="fg-ball"><ellipse class="ball" rx="9" ry="14"/><path class="laces" d="M0 -6V6M-3 -3H3M-3 0H3M-3 3H3"/></g>
+      </svg>
+      <div class="fg-call" id="fg-call" aria-live="assertive"></div>
+    </div>
+    <div class="fg-side">
+      <div class="fg-hud">
+        <div><span class="label">Wind mph</span><b id="fg-wind">–</b></div>
+        <div><span class="label">Kick</span><b id="fg-dist">–</b></div>
+        <div><span class="label">Attempt</span><b id="fg-try">1</b></div>
+      </div>
+      <div class="meter" id="fg-aim"><span class="label">1 · Aim</span>
+        <div class="meter-track"><span class="meter-zone" id="fg-aim-zone"></span><span class="meter-mark" id="fg-aim-mark"></span></div></div>
+      <div class="meter" id="fg-pow"><span class="label">2 · Power</span>
+        <div class="meter-track"><span class="meter-zone" id="fg-pow-zone"></span><span class="meter-fill" id="fg-pow-fill"></span></div></div>
+      <button type="button" class="btn btn-primary fg-kick" id="fg-kick">Set aim</button>
+      <p class="fg-msg" id="fg-msg" aria-live="polite"></p>
+    </div>
+  </div>`;
+}
+
+function lockChart(L, W) {
+  const rows = [...L.bars].sort((a, b) => b.value - a.value);
+  const vals = rows.map(r => r.value).concat(L.need);
+  const lo = Math.floor(Math.min(...vals, L.type === "Spread" ? 0 : Infinity) - 2), hi = Math.ceil(Math.max(...vals) + 2);
+  const left = W < 480 ? 96 : 118, right = 96, top = 30, rh = 28, H = top + rows.length * rh + 26;
+  const x = v => left + (v - lo) / (hi - lo) * (W - left - right);
+  const step = hi - lo > 40 ? 10 : 5;
+  const ticks = [];
+  for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) ticks.push(v);
+  const wins = v => L.over ? v > L.need : v < L.need;
+  const dots = rows.map((r, i) => {
+    const y = top + i * rh + rh / 2, cls = !r.votes ? "dot-off" : wins(r.value) ? "dot-yes" : "dot-no";
+    return `<text class="lbl" x="${left - 10}" y="${y + 4}" text-anchor="end">${esc(r.name)}</text>
+      <line class="stem" x1="${x(L.need)}" y1="${y}" x2="${x(r.value)}" y2="${y}"/>
+      <circle class="${cls}" cx="${x(r.value)}" cy="${y}" r="6.5"/>
+      <text x="${Math.max(x(r.value), x(L.need)) + 11}" y="${y + 4}">${L.type === "Spread" ? signed(r.value) : r.value.toFixed(1)}${r.votes ? "" : " · no vote"}</text>`;
+  }).join("");
+  return `<svg class="lock-chart" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Each source's prediction against the line">
+    ${ticks.map(v => `<line class="grid" x1="${x(v)}" y1="${top - 6}" x2="${x(v)}" y2="${H - 22}"/><text x="${x(v)}" y="${H - 6}" text-anchor="middle">${v}</text>`).join("")}
+    <line class="need" x1="${x(L.need)}" y1="${top - 10}" x2="${x(L.need)}" y2="${H - 22}"/>
+    <text class="lbl" x="${x(L.need)}" y="${top - 14}" text-anchor="middle">line ${L.type === "Spread" ? signed(L.need) : L.need}</text>
+    ${dots}</svg>`;
+}
+
+function lockCard(d) {
+  const L = d.lock, rec = d.record || {};
+  const k = L.kalshi_bet;
+  const kal = k ? `${esc(k.side)} “${esc(k.contract)}” @ ${cents(k.ask)}` : "No matching Kalshi contract";
+  const c = L.context || {}, ctx = [];
+  for (const side of ["home", "away"]) { const q = (c.qb || {})[side]; if (q && q.status) ctx.push(`${esc(L[side])} QB ${esc(q.name)}: ${esc(q.status)}`); }
+  const w = c.weather || {};
+  if (w.indoor) ctx.push("Indoors"); else if (isNum(w.gust)) ctx.push(`Gusts ${Math.round(w.gust)} mph`);
+  const wl = r => r ? `${r.W}-${r.L}${r.P ? "-" + r.P : ""}` : null;
+  const lockRec = wl(rec.locks), strongRec = wl((rec.strong || {})[`${L.type} Strong`]);
+  return `<article class="lock-card reveal">
+    <div class="lock-top"><span class="label">Lock of the day · ${L.sport === "cfb" ? "College" : "NFL"} · ${esc(L.type)}</span><span class="label">${kickoff(L.kickoff)}</span></div>
+    <div><div class="lock-pick">${esc(L.pick).replace(/ -(?=\d)/, " −")}</div><div class="lock-game">${esc(L.matchup)}</div></div>
+    <div class="lock-facts">
+      <div><div class="label">Line off by</div><div class="big">${Math.abs(L.gap).toFixed(1)} pts</div></div>
+      <div><div class="label">Sources agree</div><div class="big">${L.agree}/${L.n}</div></div>
+      <div><div class="label">Lock record</div><div class="big">${lockRec || "0-0"}</div><div class="small">${lockRec ? "" : "first lock: nothing graded yet"}</div></div>
+      <div><div class="label">On Kalshi</div><div class="small" style="margin-top:6px">${kal}</div></div>
+    </div>
+    <div><div class="label" style="margin-bottom:6px">${esc(L.axis)}: every source's prediction vs. the line</div>${lockChart(L, Math.min(760, $("#lock-body").clientWidth || 640))}
+      <p class="small" style="color:var(--muted)">Green = past the line on the pick's side. Red = disagrees. Hollow = source doesn't vote (results showed its disagreements with the line don't hold up).</p></div>
+    ${ctx.length ? `<div class="notice"><p>${ctx.join(" · ")}. Ratings-only sources already include the QB adjustment.</p></div>` : ""}
+    <div class="notice warn"><p><b>Not actually a lock.</b> It's the strongest pick by Hashmark's fixed rules, but those rules have no graded track record yet${strongRec ? ` (${esc(L.type)} Strong so far: ${strongRec})` : ""}. Bet small or not at all. Not betting advice.</p></div>
+    <div class="lock-actions"><button type="button" class="btn" id="lock-again">Kick it again</button><button type="button" class="btn" data-goto="picks">All picks</button></div>
+  </article>`;
+}
+
+function renderLock(reveal = false) {
+  const body = $("#lock-body");
+  cancelAnimationFrame(FG.raf);
+  if (LOCK_ERR) { body.innerHTML = setupNotice(LOCK_ERR); return; }
+  if (!LOCK) {
+    body.innerHTML = `<div class="panel"><p class="label">Lining up the kick: collecting college and NFL forecasts (the first load can take a minute)…</p><div class="progress"><span></span></div></div>`;
+    if (!lockLoading) loadLock();
+    return;
+  }
+  if (!LOCK.lock) {
+    body.innerHTML = `<div class="panel empty">No lock today. No Strong pick kicks off in the next 36 hours (${LOCK.candidates} Strong/Lean picks checked), and a lock is never forced.</div>`;
+    return;
+  }
+  if (reveal || store.get("lock-unlocked") === lockId(LOCK.lock)) {
+    body.innerHTML = lockCard(LOCK);
+    if (!reveal) body.querySelector(".lock-card").classList.remove("reveal");
+    return;
+  }
+  body.innerHTML = fgHtml();
+  FG.attempt = 1;
+  fgSetup();
+}
+
+$("#lock-body").addEventListener("click", e => {
+  if (e.target.closest("#fg-kick") || e.target.closest("#fg-svg")) fgPress();
+  if (e.target.closest("#lock-again")) { store.set("lock-unlocked", ""); renderLock(); }
+});
+$("#lock-refresh").addEventListener("click", () => loadLock(true));
+let lockResize = 0;
+addEventListener("resize", () => {   // the chart is drawn at the page's real width, so redraw it
+  clearTimeout(lockResize);
+  lockResize = setTimeout(() => { if ($("#lock-body .lock-card")) renderLock(); }, 200);
+});
+
+// ---------------------------------------------------------------- live
+let LIVE = null, LIVE_ERR = null, liveLoading = false, liveTimer = 0;
+
+async function loadLive() {
+  if (liveLoading) return;
+  liveLoading = true; LIVE_ERR = null;
+  try { LIVE = await api("/api/live"); } catch (e) { LIVE_ERR = e.message; }
+  liveLoading = false; renderLive();
+  clearTimeout(liveTimer);
+  if (!$("#view-live").hidden) liveTimer = setTimeout(loadLive, 30000);
+}
+
+// One 0-100% track per game: model (green dot) and Kalshi (raspberry tick), home team's chance.
+function liveBar(model, kalshi) {
+  const x = p => 4 + p * 192;
+  return `<svg viewBox="0 0 200 18" width="200" height="18" aria-hidden="true" class="live-bar">
+    <line x1="4" y1="9" x2="196" y2="9" class="lb-track"/><line x1="100" y1="3" x2="100" y2="15" class="lb-mid"/>
+    ${isNum(kalshi) ? `<line x1="${x(kalshi)}" y1="2" x2="${x(kalshi)}" y2="16" class="lb-kalshi"/>` : ""}
+    ${isNum(model) ? `<circle cx="${x(model)}" cy="9" r="5" class="lb-model"/>` : ""}</svg>`;
+}
+
+function renderLive() {
+  const body = $("#live-body");
+  if (LIVE_ERR) { body.innerHTML = setupNotice(LIVE_ERR); return; }
+  if (!LIVE) { body.innerHTML = `<div class="panel"><p class="label">Reading the live games…</p><div class="progress"><span></span></div></div>`; if (!liveLoading) loadLive(); return; }
+  if (LIVE.error) { body.innerHTML = `<div class="notice warn"><p>${esc(LIVE.error)}</p></div>`; return; }
+  if (!LIVE.rows.length) { body.innerHTML = `<div class="panel empty">No NFL games in progress right now. This page refreshes every 30 seconds.</div>`; return; }
+  const callChip = c => c === "WATCH" ? `<span class="chip chip-flag">Watch</span>` : c === "stale?" ? `<span class="chip chip-pass">ESPN behind?</span>` : `<span class="chip chip-pass">Pass</span>`;
+  const rows = LIVE.rows.map(r => {
+    const b = r.best;
+    return `<tr class="${r.call === "WATCH" ? "is-flag" : ""}">
+      <td class="player-td"><b>${esc(r.away)} ${r.away_score} @ ${esc(r.home)} ${r.home_score}</b><br><span class="tag">${esc(r.detail || "")}</span></td>
+      <td>${esc(r.home)} ${pct(r.model_wp, 0)}</td><td>${pct(r.espn_wp, 0)}</td><td>${pct(r.kalshi_mid, 0)}</td>
+      <td>${liveBar(r.model_wp, r.kalshi_mid)}</td>
+      <td>${isNum(r.gap) ? signed(r.gap * 100) : "–"}</td>
+      <td class="player-td">${b ? `${esc(b.team)} YES @ ${cents(b.ask)} <span class="tag">${pts(b.edge)}</span>` : "–"}</td>
+      <td>${callChip(r.call)}</td></tr>`;
+  }).join("");
+  body.innerHTML = `<div class="table-wrap"><table><thead><tr><th class="l">Game</th><th>Model (home)</th><th>ESPN</th><th>Kalshi</th>
+      <th class="l">Home win % <span class="tag">● model · | Kalshi</span></th><th>Model − Kalshi</th><th class="l">Best side (edge after fee)</th><th>Call</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <p class="small" style="color:var(--muted);margin-top:10px">Watch = ${Math.round(LIVE.min_edge * 100)}+ points of edge after Kalshi's fee at 10–90¢. "ESPN behind?" = the model and Kalshi differ by more than ${Math.round(LIVE.stale_gap * 100)} points, which almost always means ESPN hasn't posted the latest play. Updated ${esc(LIVE.stamp || "")}. Unvalidated: every minute of every game is recorded so the record can decide. Not betting advice.</p>`;
+}
+$("#live-refresh").addEventListener("click", () => { LIVE = null; renderLive(); loadLive(); });
+
 // ---------------------------------------------------------------- tabs
-const TABS = ["week", "bets", "props", "backtest", "parlay", "ask", "research", "explain"];
+const TABS = ["week", "lock", "live", "picks", "bets", "scan", "props", "backtest", "parlay", "ask", "research", "explain"];
 function setTab(name) {
   if (!TABS.includes(name)) name = "week";
   for (const t of TABS) {
@@ -797,6 +1199,10 @@ function setTab(name) {
   if (name === "research") renderResearch();
   if (name === "ask") renderChat();
   if (name === "props") renderProps();
+  if (name === "scan") renderScan();
+  if (name === "picks") renderPicks();
+  if (name === "lock") renderLock(); else cancelAnimationFrame(FG.raf);
+  if (name === "live") { renderLive(); loadLive(); } else clearTimeout(liveTimer);
 }
 $(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) setTab(b.dataset.tab); });
 $(".tabs").addEventListener("keydown", e => {
@@ -814,15 +1220,20 @@ function tickClock() {
   if (el) el.textContent = new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" }) + " ET";
 }
 tickClock(); setInterval(tickClock, 15000);
+// Hash marks on the field ribbon: one tick per yard-line gap, two rows like a real field.
+$("#hash").innerHTML = Array.from({ length: 99 }, (_, i) => (i + 1) * 10).filter(x => x % 100)
+  .map(x => `<line x1="${x}" y1="8" x2="${x}" y2="12"/><line x1="${x}" y1="22" x2="${x}" y2="26"/>`).join("");
 const SUN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
 const MOON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
+const isDark = () => document.documentElement.dataset.theme === "dark" ||
+  (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
 function paintThemeBtn() {
-  const dark = document.documentElement.dataset.theme !== "light";
+  const dark = isDark();
   $("#theme-btn").innerHTML = dark ? SUN : MOON;
-  $("#theme-btn").title = dark ? "Day game (light)" : "Night game (dark)";
+  $("#theme-btn").title = dark ? "Light" : "Dark";
 }
 $("#theme-btn").addEventListener("click", () => {
-  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  const next = isDark() ? "light" : "dark";
   document.documentElement.dataset.theme = next;
   store.set("theme", next);
   paintThemeBtn();
@@ -834,11 +1245,11 @@ function setSport(sp) {
   store.set("sport", SPORT);
   $$(".sport-seg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.sport === SPORT)));
   $("#week-lede").textContent = SPORT === "nfl"
-    ? "Today's NFL games: model vs. sportsbook consensus vs. Kalshi, with weather, rest, and travel. Percentages are for the home team."
+    ? "This week's NFL games: model vs. sportsbook consensus vs. Kalshi, with QB, weather, rest, and travel. Percentages are for the home team."
     : "Model vs. sportsbook consensus vs. Kalshi, for every game this week. Percentages are for the home team.";
   $("#bt-title").textContent = SPORT === "nfl" ? "NFL backtest, 2023–2025" : "College backtest, 2023–2025";
   weekPromise = null; WEEK = null; WEEK_ERR = null; BETS = null; BETS_ERR = null; LEGS = null; PARLAY_RESULT = null; PARLAY_ERR = null;
-  PROPS_ERR = null;
+  PROPS_ERR = null; SCAN = null; SCAN_ERR = null; PICKS = null; PICKS_ERR = null;
   clearTimeout(btTimer);
   loadStatus();
   setTab(store.get("tab") || "week");

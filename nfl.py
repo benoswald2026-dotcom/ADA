@@ -10,6 +10,8 @@ No lookahead: games are replayed week by week. Each prediction uses only
 earlier games. The rest/travel/weather effects are fitted on 2015-2022 ONLY
 and then applied unchanged to the 2023-2025 test seasons and to live games.
 """
+import csv
+import os
 from datetime import datetime, timedelta
 from itertools import groupby
 from zoneinfo import ZoneInfo
@@ -20,8 +22,8 @@ import pandas as pd
 import config
 import injuries as inj
 import nfl_teams as T
-from backtest import ats_record, brier, calibration_bins, log_loss, summarize, verdict
-from cache import ApiError, cached_download, cached_get
+from backtest import ats_record, brier, calibration_bins, log_loss, paired_brier_diff, summarize, verdict
+from cache import ApiError, _still_valid, cached_download, cached_get
 from kalshi import edge_after_fee, should_flag
 from odds import american_to_decimal, parse_odds_event, remove_vig
 from ratings import RatingSystem, margin_to_prob
@@ -70,6 +72,109 @@ def load_team_epa(season, current_season):
     return by_game, stamp
 
 
+PBP_URL = NFLVERSE + "/pbp/play_by_play_{season}.csv.gz"
+PBP_COLS = ["game_id", "posteam", "defteam", "epa", "wp", "pass", "rush"]
+# Pre-registered before any test (no tuning on 2023-2025):
+PBP_WP_RANGE = (0.10, 0.90)   # drop garbage time: offense's win prob outside this range
+PBP_EPA_CLIP = 4.0            # cap single-play EPA so one fluke play can't define a game
+
+
+def pbp_game_rows(pbp):
+    """Play-by-play DataFrame -> {game_id: [team-game EPA rows]}, the same shape
+    as load_team_epa. Keeps pass and rush plays (sacks and scrambles count as
+    passes in nflverse) with the offense's win prob inside PBP_WP_RANGE, and
+    clips each play's EPA to +/-PBP_EPA_CLIP."""
+    p = pbp[((pbp["pass"] == 1) | (pbp["rush"] == 1)) & pbp["epa"].notna() & pbp["posteam"].notna()
+            & pbp["wp"].between(*PBP_WP_RANGE)].copy()
+    p["epa"] = p["epa"].clip(-PBP_EPA_CLIP, PBP_EPA_CLIP)
+    off = p.groupby(["game_id", "posteam", "defteam"])["epa"].mean().reset_index()
+    by_game = {}
+    for gid, grp in off.groupby("game_id"):
+        if len(grp) != 2:
+            continue
+        a, b = grp.iloc[0], grp.iloc[1]
+        by_game[gid] = [{"team": T.canon(me["posteam"]), "opponent": T.canon(opp["posteam"]),
+                         "off_epa": float(me["epa"]), "def_epa": float(opp["epa"])}
+                        for me, opp in ((a, b), (b, a))]
+    return by_game
+
+
+QB_COLS = ["game_id", "posteam", "id", "qb_dropback", "qb_epa"]
+
+
+def pbp_qb_rows(pbp):
+    """Play-by-play -> one row per QB per game: dropbacks and summed qb_epa
+    (EPA credited to the QB: passes, sacks and scrambles), each play clipped
+    to +/-PBP_EPA_CLIP. All dropbacks count; no garbage-time filter."""
+    p = pbp[(pbp["qb_dropback"] == 1) & pbp["qb_epa"].notna() & pbp["id"].notna()].copy()
+    p["qb_epa"] = p["qb_epa"].clip(-PBP_EPA_CLIP, PBP_EPA_CLIP)
+    g = p.groupby(["game_id", "posteam", "id"])["qb_epa"].agg(["count", "sum"]).reset_index()
+    return [{"game_id": r["game_id"], "team": T.canon(r["posteam"]), "qb_id": r["id"],
+             "dropbacks": int(r["count"]), "epa": float(r["sum"])} for _, r in g.iterrows()]
+
+
+def _load_pbp(season, current_season):
+    """Download one season of nflverse play-by-play once and reduce it to two
+    small cached CSVs: team-game EPA (pbp_game_rows) and QB-game EPA
+    (pbp_qb_rows). The ~20 MB raw file is then deleted. Finished seasons are
+    kept forever; the current season refreshes hourly. Returns (agg paths, stamp)."""
+    ttl = 3600 if season >= current_season else None
+    team_csv = os.path.join(config.CACHE_DIR, f"pbp_epa_{season}.csv")
+    qb_csv = os.path.join(config.CACHE_DIR, f"pbp_qb_{season}.csv")
+    meta = os.path.join(config.CACHE_DIR, f"pbp_{season}.stamp")
+    if all(os.path.exists(x) for x in (team_csv, qb_csv, meta)):
+        stamp, epoch = open(meta).read().split("|")
+        if _still_valid(ttl, datetime.now().timestamp() - float(epoch)):
+            return (team_csv, qb_csv), stamp
+    try:
+        path, stamp = cached_download(PBP_URL.format(season=season), ttl=0, source="nflverse play-by-play",
+                                      suffix=".csv.gz")
+    except ApiError:
+        if season >= current_season:
+            return None, None   # no games yet this season
+        raise
+    pbp = pd.read_csv(path, usecols=sorted(set(PBP_COLS) | set(QB_COLS)), low_memory=False)
+    os.remove(path)
+    os.makedirs(config.CACHE_DIR, exist_ok=True)
+    by_game = pbp_game_rows(pbp)
+    pd.DataFrame([{"game_id": g, **r} for g, rows in by_game.items() for r in rows],
+                 columns=["game_id", "team", "opponent", "off_epa", "def_epa"]).to_csv(team_csv, index=False)
+    pd.DataFrame(pbp_qb_rows(pbp), columns=["game_id", "team", "qb_id", "dropbacks", "epa"]).to_csv(qb_csv, index=False)
+    with open(meta, "w") as f:
+        f.write(f"{stamp}|{datetime.now().timestamp()}")
+    return (team_csv, qb_csv), stamp
+
+
+def load_pbp_epa(season, current_season):
+    """Garbage-time-filtered EPA per team-game, same shape as load_team_epa."""
+    paths, stamp = _load_pbp(season, current_season)
+    if paths is None:
+        return {}, None
+    by_game = {}
+    for r in pd.read_csv(paths[0]).to_dict("records"):
+        by_game.setdefault(r["game_id"], []).append(
+            {"team": r["team"], "opponent": r["opponent"], "off_epa": r["off_epa"], "def_epa": r["def_epa"]})
+    return by_game, stamp
+
+
+def load_qb_games(season, current_season):
+    """{game_id: [QB-game rows]} for one season (see pbp_qb_rows)."""
+    paths, _ = _load_pbp(season, current_season)
+    if paths is None:
+        return {}
+    out = {}
+    for r in pd.read_csv(paths[1]).to_dict("records"):
+        out.setdefault(r["game_id"], []).append(r)
+    return out
+
+
+def season_epa(season, current_season):
+    """EPA rows for one season from the configured source (config.NFL_EPA_SOURCE)."""
+    if config.NFL_EPA_SOURCE == "pbp":
+        return load_pbp_epa(season, current_season)
+    return load_team_epa(season, current_season)
+
+
 def _num(x):
     return None if pd.isna(x) else float(x)
 
@@ -93,6 +198,10 @@ def game_record(r):
         "home_ml": _num(r.get("home_moneyline")), "away_ml": _num(r.get("away_moneyline")),
         "home_spread_odds": _num(r.get("home_spread_odds")), "away_spread_odds": _num(r.get("away_spread_odds")),
         "stadium": None if pd.isna(r.get("stadium")) else str(r["stadium"]),
+        "home_qb_id": None if pd.isna(r.get("home_qb_id")) else str(r["home_qb_id"]),
+        "away_qb_id": None if pd.isna(r.get("away_qb_id")) else str(r["away_qb_id"]),
+        "home_qb": None if pd.isna(r.get("home_qb_name")) else str(r["home_qb_name"]),
+        "away_qb": None if pd.isna(r.get("away_qb_name")) else str(r["away_qb_name"]),
     }
 
 
@@ -119,6 +228,24 @@ def features(g, wind=None, temp=None):
     return {"rest": rest, "tz": tz, "wind_x": wind_x, "cold": cold}
 
 
+# Forecast error, fixed before testing: a 1-2 day kickoff forecast misses
+# 10 m wind by roughly 4 mph and temperature by roughly 3 F (typical errors).
+WIND_FORECAST_SD = 4.0
+TEMP_FORECAST_SD = 3.0
+
+
+def forecast_like(g):
+    """Recorded wind/temperature plus a fixed random forecast error (seeded by
+    game id, so every run gets the same draw). The backtest fits and scores
+    weather on these, because live picks only ever see a forecast."""
+    import zlib
+    rng = np.random.default_rng(zlib.crc32(str(g["id"]).encode()))
+    e_w, e_t = rng.normal(0, WIND_FORECAST_SD), rng.normal(0, TEMP_FORECAST_SD)
+    wind = None if g["wind"] is None else max(0.0, g["wind"] + e_w)
+    temp = None if g["temp"] is None else g["temp"] + e_t
+    return wind, temp
+
+
 def _ols(X, y):
     """Least squares with standard errors. Returns (coefs, std errors)."""
     X, y = np.asarray(X, float), np.asarray(y, float)
@@ -136,6 +263,7 @@ MARGIN_FEATURES = {
     "rest": "pts of margin per day of rest advantage",
     "tz": "pts of margin per hour the away team traveled east",
     "form": "pts of margin per point of recent form gap (last 3 games vs expectation)",
+    "qb": "pts of margin per point of starting-QB gap (QBTracker)",
 }
 TOTAL_FEATURES = {
     "wind_x": f"pts of total per mph above {config.WIND_THRESHOLD_MPH}",
@@ -274,16 +402,101 @@ def fit_sigma(records, seasons):
     return float(np.std(res, ddof=1))
 
 
+KEY_SMOOTH = 5.0   # pseudo-games added to observed and expected counts (shrinks weights to 1)
+SPREAD_THRESHOLDS = [t + 0.5 for t in range(-11, 11)]   # -10.5 .. 10.5, for the distribution test
+
+
+def fit_key_weights(records, seasons, sigma):
+    """Key-number weights (stern-1991 plus the NFL's scoring lumps), fitted on `seasons`.
+
+    For each margin k in 1..KEY_RANGE (and 0), compare how often games ended at
+    +/-k with how often the discrete normal centered on the closing line said
+    they would: w_k = (observed + KEY_SMOOTH) / (expected + KEY_SMOOTH).
+    +k and -k share one weight. Then renormalized by margin_dist."""
+    from strategy import KEY_RANGE, margin_dist
+    fit = [r for r in records if r["season"] in seasons and r["close_spread"] is not None]
+    obs, exp = np.zeros(KEY_RANGE + 1), np.zeros(KEY_RANGE + 1)
+    for r in fit:
+        ks, p = margin_dist(-r["close_spread"], sigma)
+        a = np.abs(ks)
+        for k in range(KEY_RANGE + 1):
+            exp[k] += p[a == k].sum()
+        m = abs(int(r["margin_actual"]))
+        if m <= KEY_RANGE:
+            obs[m] += 1
+    w = (obs + KEY_SMOOTH) / (exp + KEY_SMOOTH)
+    weights = {}
+    for k in range(KEY_RANGE + 1):
+        weights[k] = weights[-k] = float(w[k])
+    return weights
+
+
+def spread_dist_score(test, key_weights_by_season):
+    """Pre-registered test of the margin distribution: mean Brier score of
+    P(home margin > t) for t in SPREAD_THRESHOLDS, centered on the closing line.
+    Lower is better. The CI resamples whole GAMES (a game's thresholds are
+    correlated), so each game contributes its mean squared-error difference."""
+    from strategy import bootstrap_ci, margin_dist, t_stat
+    key_err, norm_err = [], []
+    for r in test:
+        if r["close_spread"] is None:
+            continue
+        mu = -r["close_spread"]
+        ks, pn = margin_dist(mu, r["sigma"])
+        _, pk = margin_dist(mu, r["sigma"], key_weights_by_season[r["season"]])
+        y = np.array([1.0 if r["margin_actual"] > t else 0.0 for t in SPREAD_THRESHOLDS])
+        key_err.append(float(np.mean((np.array([pk[ks > t].sum() for t in SPREAD_THRESHOLDS]) - y) ** 2)))
+        norm_err.append(float(np.mean((np.array([pn[ks > t].sum() for t in SPREAD_THRESHOLDS]) - y) ** 2)))
+    d = [k - n for k, n in zip(key_err, norm_err)]
+    lo, hi = bootstrap_ci(d)
+    return {"key": float(np.mean(key_err)), "normal": float(np.mean(norm_err)), "n": len(d),
+            "key_minus_normal": {"diff": float(np.mean(d)), "ci95": [lo, hi], "t": t_stat(d)}}
+
+
 def prob_to_margin(p):
     """Inverse of margin_to_prob: home win probability -> implied margin in points."""
     p = min(max(p, 1e-6), 1 - 1e-6)
     return 400 / config.NFL.ELO_PER_POINT * np.log10(p / (1 - p))
 
 
+def fit_epa_weight(records, seasons):
+    """How much of the margin should come from EPA instead of Elo, fitted on `seasons`.
+
+        margin_actual - elo = w * ramp * (epa - elo)      (least squares, no intercept)
+
+    ramp grows from 0 to 1 over the first EPA_FULL_WEIGHT_GAMES games, as in
+    RatingSystem.predict. The pre-set config.NFL.EPA_WEIGHT_MAX is the prior;
+    the fitted w replaces it only if it differs from the prior by |t| >= 3
+    (the same bar as every other fitted number)."""
+    from strategy import T_STAT_BAR
+    fit = [r for r in records if r["season"] in seasons and r["epa_margin"] is not None and r["epa_ramp"] > 0]
+    x = np.array([r["epa_ramp"] * (r["epa_margin"] - r["elo_margin"]) for r in fit])
+    y = np.array([r["margin_actual"] - r["elo_margin"] for r in fit])
+    b, se = _ols(x[:, None], y)
+    prior = config.NFL.EPA_WEIGHT_MAX
+    t = float((b[0] - prior) / se[0]) if se[0] > 0 else 0.0
+    accepted = abs(t) >= T_STAT_BAR
+    w = float(np.clip(b[0], 0.0, 1.0)) if accepted else prior
+    return {"games": len(fit), "fitted": float(b[0]), "se": float(se[0]), "t": t,
+            "accepted": accepted, "w": w, "prior": config.NFL.EPA_WEIGHT_MAX}
+
+
+def set_base_margins(records, w):
+    """Recompute each record's pre-game margin with EPA weight w (no other change)."""
+    for r in records:
+        r["base_margin"] = r["elo_margin"] if r["epa_margin"] is None else \
+            r["elo_margin"] + w * r["epa_ramp"] * (r["epa_margin"] - r["elo_margin"])
+
+
 def fit_all(records, seasons):
-    """Everything that is learned from data, fitted on `seasons` only."""
+    """Everything that is learned from data, fitted on `seasons` only.
+    The EPA weight goes first because the other fits work on top of the margin it sets."""
+    epa_w = fit_epa_weight(records, seasons)
+    set_base_margins(records, epa_w["w"])
     env = fit_environment(records, seasons)
-    return {"env": env, "combo": fit_combo(records, env, seasons), "sigma": fit_sigma(records, seasons)}
+    sigma = fit_sigma(records, seasons)
+    return {"epa_w": epa_w, "env": env, "combo": fit_combo(records, env, seasons),
+            "sigma": sigma, "key_weights": fit_key_weights(records, seasons, sigma)}
 
 
 # ----------------------------------------------------------- replay -------
@@ -299,7 +512,7 @@ def replay(games_df, current_season, on_game=None):
     seasons = range(config.NFL_START_SEASON, current_season + 1)
     df = games_df[games_df["season"].isin(seasons)].sort_values(["season", "week", "gameday"])
     for season, sgames in groupby((game_record(r) for _, r in df.iterrows()), key=lambda g: g["season"]):
-        epa, _ = load_team_epa(season, current_season)
+        epa, _ = season_epa(season, current_season)
         rs.start_season()
         for _week, wgames in groupby(sgames, key=lambda g: g["week"]):
             wgames = list(wgames)
@@ -330,14 +543,111 @@ class FormTracker:
         self.res.setdefault(g["away"], []).append(-resid)
 
 
+# QB model constants, fixed before any test (538-style QB adjustment, adapted):
+QB_DECAY = 0.97            # each new game a QB plays shrinks his older games' weight by 3%
+QB_PRIOR_DROPBACKS = 150   # pseudo-dropbacks of the prior mixed into every QB's average
+QB_REPLACEMENT = -0.10     # prior = league EPA/dropback minus this (an unknown QB is a backup)
+TEAM_QB_DECAY = 0.85       # how fast a team's "QB baseline" follows who actually plays
+DROPBACKS_PER_GAME = 38    # converts EPA/dropback into points per game
+
+
+class QBTracker:
+    """Starting-QB adjustment. Elo and EPA learn a team's strength with the QBs
+    who have been playing. When the listed starter is better or worse than that
+    recent baseline, the gap is news the ratings haven't absorbed yet:
+
+        qb feature = 38 * [(V_home_starter - home_baseline) - (V_away_starter - away_baseline)]
+
+    V = a QB's decayed, shrunk EPA per dropback. baseline = each QB's share of
+    the team's recent (decayed) dropbacks times his CURRENT V, so the usual
+    starter starting again gives a gap of exactly 0. Only games already
+    played feed V and baselines. The feature's size is fitted like every other
+    feature (|t| >= 3 or it is not used)."""
+
+    def __init__(self, current_season):
+        self.current, self.season, self.games = current_season, None, {}
+        self.S, self.N = {}, {}                 # qb -> decayed EPA sum, decayed dropbacks
+        self.share = {}                         # team -> {qb: decayed dropbacks}
+        self.lsum, self.ln = 0.0, 0             # league totals for the prior
+
+    def _prior(self):
+        return (self.lsum / self.ln if self.ln else 0.0) + QB_REPLACEMENT
+
+    def value(self, qb):
+        k = QB_PRIOR_DROPBACKS
+        return (self.S.get(qb, 0.0) + k * self._prior()) / (self.N.get(qb, 0.0) + k)
+
+    def _season(self, g):
+        if g["season"] != self.season:
+            self.season = g["season"]
+            self.games = load_qb_games(g["season"], self.current)
+
+    def baseline(self, team):
+        sh = self.share.get(team)
+        if not sh:
+            return None
+        return sum(n * self.value(q) for q, n in sh.items()) / sum(sh.values())
+
+    def team_gap(self, team, qb):
+        base = self.baseline(team)
+        if not isinstance(qb, str) or base is None:
+            return 0.0
+        return self.value(qb) - base
+
+    def gap(self, g):
+        """Feature value in points for game g (home view), from games before it."""
+        self._season(g)
+        return DROPBACKS_PER_GAME * (self.team_gap(g["home"], g.get("home_qb_id"))
+                                     - self.team_gap(g["away"], g.get("away_qb_id")))
+
+    def record(self, g):
+        """Learn from a finished game: update each QB who dropped back, then each team's baseline."""
+        self._season(g)
+        rows = self.games.get(g["id"], [])
+        for team in {r["team"] for r in rows}:
+            sh = self.share.setdefault(team, {})
+            for q in sh:
+                sh[q] *= TEAM_QB_DECAY
+            for r in rows:
+                if r["team"] == team:
+                    sh[r["qb_id"]] = sh.get(r["qb_id"], 0.0) + r["dropbacks"]
+            for q in [q for q, n in sh.items() if n < 1.0]:
+                del sh[q]   # long-gone QBs drop out
+        for r in rows:
+            q = r["qb_id"]
+            self.S[q] = QB_DECAY * self.S.get(q, 0.0) + r["epa"]
+            self.N[q] = QB_DECAY * self.N.get(q, 0.0) + r["dropbacks"]
+            self.lsum += r["epa"]
+            self.ln += r["dropbacks"]
+
+
+def qb_gap_table(games_df, current_season):
+    """{(game_id, team): starter V minus team baseline, in EPA per dropback},
+    each computed before that game, for every game (finished or not) from
+    NFL_START_SEASON on. Used by props; the game model gets the same numbers
+    through collect_records / build_slate."""
+    qbt, out = QBTracker(current_season), {}
+    df = games_df[games_df["season"].between(config.NFL_START_SEASON, current_season)]
+    for _, row in df.sort_values(["season", "week", "gameday"]).iterrows():
+        g = game_record(row)
+        qbt._season(g)
+        out[(g["id"], g["home"])] = qbt.team_gap(g["home"], g["home_qb_id"])
+        out[(g["id"], g["away"])] = qbt.team_gap(g["away"], g["away_qb_id"])
+        if g["completed"]:
+            qbt.record(g)
+    return out
+
+
 def collect_records(games_df, current_season):
     """Base (Elo+EPA) prediction for every completed game, made before it was played."""
-    records, form = [], FormTracker()
+    records, form, qbt = [], FormTracker(), QBTracker(current_season)
 
     def on_game(g, rs):
         gap = form.gap(g)
+        qb = qbt.gap(g)
         if not g["completed"]:
             return
+        qbt.record(g)  # this game's QB play only feeds LATER games
         p = rs.predict(g["home"], g["away"], g["neutral"])
         form.record(g, p["margin"])  # this game's result only feeds LATER games
         if g["home_pts"] == g["away_pts"]:
@@ -346,8 +656,11 @@ def collect_records(games_df, current_season):
         if g["home_ml"] is not None and g["away_ml"] is not None:
             mkt = remove_vig(g["home_ml"], g["away_ml"])[0]
         records.append({
-            "season": g["season"], "id": g["id"], "f": {**features(g), "form": gap},
+            "season": g["season"], "id": g["id"],
+            "f": {**features(g, *forecast_like(g)), "form": gap, "qb": qb},
             "base_margin": p["margin"], "base_total": p["total"],
+            "elo_margin": p["elo_margin"], "epa_margin": p["epa_margin"],
+            "epa_ramp": p["epa_weight"] / config.NFL.EPA_WEIGHT_MAX,
             "margin_actual": g["home_pts"] - g["away_pts"],
             "total_actual": g["home_pts"] + g["away_pts"],
             "y": 1 if g["home_pts"] > g["away_pts"] else 0,
@@ -373,8 +686,8 @@ def simulate_bets(test, prob_key, kind="moneyline", min_ev=config.MIN_EDGE):
     market (the project's rules). Reports flat-stake ROI with a bootstrap 95%
     CI and t-stat, plus a quarter-Kelly bankroll curve.
     """
-    from strategy import (KELLY_FRACTION, MAX_BET_FRACTION, bootstrap_ci, cover_prob,
-                          kelly_fraction_decimal, max_drawdown, t_stat)
+    from strategy import (KELLY_FRACTION, MAX_BET_FRACTION, bootstrap_ci, cover_push_prob,
+                          kelly_with_push, max_drawdown, t_stat)
     flat, bankroll, equity, hits = [], 1.0, [1.0], 0
     for r in test:
         if r["market_p"] is None:
@@ -386,27 +699,28 @@ def simulate_bets(test, prob_key, kind="moneyline", min_ev=config.MIN_EDGE):
             for side, p, raw, mkt, ml in (("home", p_home, raw_home, r["market_p"], r["home_ml"]),
                                           ("away", 1 - p_home, 1 - raw_home, 1 - r["market_p"], r["away_ml"])):
                 won = (r["y"] == 1) if side == "home" else (r["y"] == 0)
-                options.append((p, raw, mkt, american_to_decimal(ml), won, False))
+                options.append((p, 0.0, raw, mkt, american_to_decimal(ml), won, False))
         else:
             if r["close_spread"] is None:
                 continue
             # Center on the market's own line and shift only by how much the bet
             # probability disagrees with the market (no moneyline-vs-spread artifacts).
             m_bet = -r["close_spread"] + prob_to_margin(p_home) - prob_to_margin(r["market_p"])
-            pc = cover_prob(m_bet, r["close_spread"], r["sigma"])
+            pc, pp = cover_push_prob(m_bet, r["close_spread"], r["sigma"], r["key_weights"])
             cover = r["margin_actual"] + r["close_spread"]
-            for side, p, ml in (("home", pc, r["home_spread_odds"]), ("away", 1 - pc, r["away_spread_odds"])):
+            for side, p, ml in (("home", pc, r["home_spread_odds"]), ("away", 1 - pc - pp, r["away_spread_odds"])):
                 dec = american_to_decimal(ml if ml is not None else -110)
                 won = cover > 0 if side == "home" else cover < 0
-                options.append((p, raw_home if side == "home" else 1 - raw_home,
+                options.append((p, pp, raw_home if side == "home" else 1 - raw_home,
                                 r["market_p"] if side == "home" else 1 - r["market_p"], dec, won, cover == 0))
-        for p, raw, mkt, dec, won, push in options:
-            if p * dec - 1 < min_ev or abs(raw - mkt) > config.MAX_MODEL_MARKET_GAP:
+        for p, pp, raw, mkt, dec, won, push in options:
+            # A push refunds the stake, so EV = P(win) * odds + P(push) - 1.
+            if p * dec + pp - 1 < min_ev or abs(raw - mkt) > config.MAX_MODEL_MARKET_GAP:
                 continue
             ret = 0.0 if push else (dec - 1 if won else -1.0)
             flat.append(ret)
             hits += 1 if (won and not push) else 0
-            f = min(kelly_fraction_decimal(p, dec) * KELLY_FRACTION, MAX_BET_FRACTION)
+            f = min(kelly_with_push(p, pp, dec) * KELLY_FRACTION, MAX_BET_FRACTION)
             bankroll *= 1 + f * ret
             equity.append(bankroll)
     lo, hi = bootstrap_ci(flat)
@@ -434,6 +748,7 @@ def run_backtest(now=None):
             r["margin_pred"] = prob_to_margin(r["p"])
             r["total_pred"] = r["base_total"] + dt
             r["sigma"] = fitted["sigma"]
+            r["key_weights"] = fitted["key_weights"]
             test.append(r)
 
     s = summarize(test)
@@ -448,10 +763,14 @@ def run_backtest(now=None):
     y = [r["y"] for r in test]
     raw = [r["raw_p"] for r in test]
     s["raw_model"] = {"brier": brier(raw, y), "log_loss": log_loss(raw, y),
+                      "vs_market": paired_brier_diff(raw, [r["market_p"] for r in test], y)
+                      if all(r["market_p"] is not None for r in test) else None,
                       "ats": ats_record([{**r, "margin_pred": prob_to_margin(r["raw_p"])} for r in test])}
 
     # Betting simulation at closing prices. 4 variants are run and ALL are
     # reported (bailey-lopezdeprado-2014: no picking the best afterwards).
+    s["spread_dist"] = spread_dist_score(test, {w["season"]: w["key_weights"] for w in per_season})
+    s["key_weights"] = per_season[-1]["key_weights"]
     s["betting"] = {
         "raw_moneyline": simulate_bets(test, "raw_p", "moneyline"),
         "combo_moneyline": simulate_bets(test, "p", "moneyline"),
@@ -505,8 +824,61 @@ def _forecast(g):
             "temp": pick("temperature_2m"), "precip_prob": pick("precipitation_probability")}, stamp
 
 
+SNAPSHOTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "nfl_price_snapshots.csv")
+SNAPSHOT_FIELDS = ["logged_at", "odds_stamp", "kalshi_stamp", "game_id", "kickoff", "home", "away",
+                   "market_prob", "prob_source", "sharp_prob", "consensus_prob", "home_spread", "total",
+                   "kalshi_home_ask", "kalshi_away_ask"]
+
+
+def log_snapshot(rows, odds_stamp, kalshi_stamp, path=None):
+    """Append one row per game with the live prices just fetched. Over time this
+    becomes the line-movement history nflverse doesn't have (it keeps only the
+    close), which a Kalshi backtest and line-movement features need. A cached
+    response that was already logged is not logged again."""
+    path = path or SNAPSHOTS
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    seen = set()
+    if os.path.exists(path):
+        with open(path, newline="") as f:
+            seen = {(r["game_id"], r["odds_stamp"], r["kalshi_stamp"]) for r in csv.DictReader(f)}
+    new = []
+    for r in rows:
+        key = (r["game"]["id"], odds_stamp or "", kalshi_stamp or "")
+        if key in seen:
+            continue
+        seen.add(key)
+        m, k = r["market"] or {}, r["kalshi"] or {}
+        rnd = lambda x: "" if x is None else round(x, 4)
+        new.append({"logged_at": datetime.now(ZoneInfo("UTC")).strftime("%Y-%m-%d %H:%M:%SZ"),
+                    "odds_stamp": odds_stamp or "", "kalshi_stamp": kalshi_stamp or "",
+                    "game_id": r["game"]["id"], "kickoff": r["game"]["start"] or "",
+                    "home": r["game"]["home_code"], "away": r["game"]["away_code"],
+                    "market_prob": rnd(m.get("home_prob")), "prob_source": m.get("prob_source", "nflverse"),
+                    "sharp_prob": rnd(m.get("sharp_prob")), "consensus_prob": rnd(m.get("consensus_prob")),
+                    "home_spread": rnd(m.get("home_spread")), "total": rnd(m.get("total")),
+                    "kalshi_home_ask": rnd(k.get("home", {}).get("yes_ask")),
+                    "kalshi_away_ask": rnd(k.get("away", {}).get("yes_ask"))})
+    if new:
+        write_header = not os.path.exists(path)
+        with open(path, "a", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=SNAPSHOT_FIELDS)
+            if write_header:
+                w.writeheader()
+            w.writerows(new)
+    return len(new)
+
+
+def _kickoff(g):
+    """Kickoff as an aware ET datetime, or None if the schedule has no time."""
+    if not g.get("gametime"):
+        return None
+    return datetime.strptime(f"{g['gameday']} {g['gametime']}", "%Y-%m-%d %H:%M").replace(tzinfo=ET)
+
+
 def _odds_events():
-    params = {"apiKey": config.get_key("ODDS_API_KEY"), "regions": "us",
+    # Naming up to 10 books costs the same credits as one region, and lets us
+    # add Pinnacle (an EU book) as the sharp reference next to the US books.
+    params = {"apiKey": config.get_key("ODDS_API_KEY"), "bookmakers": ",".join(config.NFL_ODDS_BOOKS),
               "markets": "h2h,spreads,totals", "oddsFormat": "american", "dateFormat": "iso"}
     return cached_get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds",
                       params=params, ttl=config.TTL_ODDS, source="The Odds API")
@@ -544,13 +916,18 @@ def build_slate(now=None, days=0):
     env, combo, sigma = fitted["env"], fitted["combo"], fitted["sigma"]
 
     form, form_gap = FormTracker(), {}
+    qbt, qb_gap, team_qb_gap = QBTracker(season), {}, {}
 
     def track_form(g, rs_):
-        gap = form.gap(g)
+        gap, qb = form.gap(g), qbt.gap(g)
         if g["completed"]:
             form.record(g, rs_.predict(g["home"], g["away"], g["neutral"])["margin"])
+            qbt.record(g)
         elif g["season"] == season:
             form_gap[g["id"]] = gap
+            qb_gap[g["id"]] = qb
+            team_qb_gap[g["id"]] = (qbt.team_gap(g["home"], g["home_qb_id"]),
+                                    qbt.team_gap(g["away"], g["away_qb_id"]))
 
     rs = replay(games_df, season, track_form)
     first, last = now.date(), now.date() + timedelta(days=days)
@@ -560,6 +937,13 @@ def build_slate(now=None, days=0):
     slate.sort(key=lambda g: (g["gameday"], g["gametime"] or ""))
 
     notes = []
+    # A game with no final score yet may already be under way (nflverse fills
+    # scores in later). In-game prices are not pregame edges, so drop it.
+    started = [g for g in slate if _kickoff(g) is not None and _kickoff(g) <= now]
+    if started:
+        slate = [g for g in slate if g not in started]
+        notes.append("Skipped (already kicked off): " +
+                     "; ".join(f"{T.full_name(g['away'])} @ {T.full_name(g['home'])}" for g in started))
     try:
         events, odds_stamp = _odds_events()
     except (config.MissingKeyError, ApiError) as e:
@@ -570,7 +954,13 @@ def build_slate(now=None, days=0):
     except ApiError as e:
         markets, kalshi_stamp = None, None
         notes.append(f"Kalshi unavailable ({e}).")
-    injury_pts = inj.load_injuries()
+    injury_pts, inj_expired, inj_undated = inj.injury_report(now=now)
+    if inj_expired:
+        notes.append(f"Ignored {len(inj_expired)} injuries.csv row(s) older than {inj.MAX_AGE_HOURS} h "
+                     "(the market has priced them by now): " + ", ".join(p for _, p in inj_expired))
+    if inj_undated:
+        notes.append(f"{len(inj_undated)} injuries.csv row(s) have no 'entered' date, so they never expire. "
+                     "Add one to avoid counting old news twice.")
     weather_failed = False
 
     rows = []
@@ -583,14 +973,14 @@ def build_slate(now=None, days=0):
                 weather_failed = True
                 notes.append(f"Weather forecast unavailable ({e}). No wind/cold adjustment applied.")
         f = {**features(g, wind=wx["wind"] if wx else None, temp=wx["temp"] if wx else None),
-             "form": form_gap.get(g["id"], 0.0)}
+             "form": form_gap.get(g["id"], 0.0), "qb": qb_gap.get(g["id"], 0.0)}
         if wx is None:  # no forecast: no wind/cold adjustment
             f["wind_x"], f["cold"] = 0.0, 0.0
         dm, dt = apply_environment(env, f)
         home_name, away_name = T.full_name(g["home"]), T.full_name(g["away"])
         injury_adj = sum(injury_pts.get(a, 0.0) for a in T.aliases(g["away"])) - \
             sum(injury_pts.get(a, 0.0) for a in T.aliases(g["home"]))
-        p = rs.predict(g["home"], g["away"], g["neutral"], injury_adj=dm)
+        p = rs.predict(g["home"], g["away"], g["neutral"], injury_adj=dm, epa_weight_max=fitted["epa_w"]["w"])
         p["total"] += dt
         p["env_margin"], p["env_total"], p["injury_adj"] = dm, dt, injury_adj
         p["raw_home_prob"] = p["home_prob"]
@@ -603,7 +993,8 @@ def build_slate(now=None, days=0):
                 if (h, a) in ((g["home"], g["away"]), (g["away"], g["home"])):
                     oh, oa = (e["home_team"], e["away_team"]) if h == g["home"] else (e["away_team"], e["home_team"])
                     mkt = parse_odds_event(e, oh, oa)
-                    mkt_source = f"The Odds API, {mkt['ml_books']} book{'s' if mkt['ml_books'] != 1 else ''}, book update {mkt['updated']}"
+                    mkt_source = (f"The Odds API, {mkt['prob_source']} no-vig; {mkt['ml_books']} bettable "
+                                  f"book{'s' if mkt['ml_books'] != 1 else ''}, book update {mkt['updated']}")
                     break
         if mkt is None and g["home_ml"] is not None and g["away_ml"] is not None:
             mkt = {"home_prob": remove_vig(g["home_ml"], g["away_ml"])[0], "ml_books": 1,
@@ -640,15 +1031,19 @@ def build_slate(now=None, days=0):
             raw_side = p["raw_home_prob"] if best[1] == home_name else 1 - p["raw_home_prob"]
         flag = bool(best) and should_flag(best[0], raw_side, best[3], price=best[4])
 
-        kick = None
-        if g["gametime"]:
-            kick = datetime.strptime(f"{g['gameday']} {g['gametime']}", "%Y-%m-%d %H:%M").replace(tzinfo=ET).isoformat()
+        kick = _kickoff(g)
+        kick = kick.isoformat() if kick else None
         rows.append({
             "game": {"id": g["id"], "home": home_name, "away": away_name, "home_code": g["home"],
                      "away_code": g["away"], "start": kick, "neutral": g["neutral"],
                      "stadium": g["stadium"], "roof": g["roof"]},
             "pred": p, "market": mkt, "kalshi": km, "best": best, "flag": flag, "sigma": sigma,
-            "env": {**f, "forecast": wx, "home_rest": g["home_rest"], "away_rest": g["away_rest"]},
+            "key_weights": fitted["key_weights"],
+            "env": {**f, "forecast": wx, "home_rest": g["home_rest"], "away_rest": g["away_rest"],
+                    "home_qb": g["home_qb"], "away_qb": g["away_qb"],
+                    "home_qb_gap": team_qb_gap.get(g["id"], (0.0, 0.0))[0],
+                    "away_qb_gap": team_qb_gap.get(g["id"], (0.0, 0.0))[1],
+                    "qb_pts": env["applied"].get("qb", 0.0) * f["qb"]},
             "sources": {
                 "model": f"nflverse schedules + team EPA @ {games_stamp}",
                 "market": mkt_source or "no odds for this game",
@@ -659,6 +1054,11 @@ def build_slate(now=None, days=0):
                             if g["roof"] not in OUTDOOR or g["neutral"] else "Forecast unavailable"),
             },
         })
+    unmatched = [f"{r['game']['away']} @ {r['game']['home']}" for r in rows if r["kalshi"] is None]
+    if markets and unmatched:
+        notes.append(f"No Kalshi market matched for {len(unmatched)} of {len(rows)} games: " + "; ".join(unmatched))
+    if events is not None or markets is not None:
+        log_snapshot(rows, odds_stamp, kalshi_stamp)
     info = {"sport": "nfl", "label": f"NFL · {first.strftime('%a %b %-d')}" + (f"–{last.strftime('%b %-d')}" if days else ""),
             "env": env, "combo": combo, "sigma": sigma, "bet_basis": combo["mode"], "notes": notes}
     return info, rows
@@ -683,7 +1083,20 @@ def report(s):
         ["Raw Elo+EPA model alone", f"{rm['brier']:.4f}", f"{rm['log_loss']:.4f}"],
         ["Closing market (no-vig)", f"{vm['market']['brier']:.4f}", f"{vm['market']['log_loss']:.4f}"]],
         headers=[f"Test seasons ({vm['games']} games)", "Brier", "Log loss"]))
+    if rm.get("vs_market"):
+        d = rm["vs_market"]
+        out.append(f"Raw model minus market, Brier (paired bootstrap): {d['diff']:+.4f}, "
+                   f"95% CI [{d['ci95'][0]:+.4f}, {d['ci95'][1]:+.4f}], t = {d['t']:+.2f}  (negative = model better)")
     out.append(f"\n>>> {s['verdict']}\n")
+
+    out.append(f"EPA WEIGHT (EPA source: {config.NFL_EPA_SOURCE}), refit each season: "
+               "margin - elo = w * ramp * (epa - elo)")
+    out.append(tabulate([[w["season"], w["epa_w"]["games"], f"{w['epa_w']['fitted']:.3f}", f"{w['epa_w']['se']:.3f}",
+                          f"{w['epa_w']['t']:+.2f}", f"{w['epa_w']['w']:.3f}",
+                          "fitted" if w["epa_w"]["accepted"] else f"prior {w['epa_w']['prior']}"]
+                         for w in s["walk_forward"]],
+                        headers=["Season", "Fit games", "Fitted w", "Std err", "t vs prior", "Used w", "Source"]))
+    out.append("")
 
     out.append("BENTER-STYLE COMBINATION, refit each season: logit(p) = a0 + a1*logit(market) + a2*logit(model)")
     out.append(tabulate([[w["season"], w["combo"]["games"], f"{w['combo']['a1']:.3f}", f"{w['combo']['a2']:+.3f}",
@@ -701,6 +1114,15 @@ def report(s):
             for grp in ("margin", "total") for n, v in e[grp].items()]
     out.append(tabulate(rows, headers=["Feature", "Effect", "Std err", "t", "Decision", "Meaning"]))
 
+    sd = s["spread_dist"]
+    kw = s["key_weights"]
+    out.append(f"\nSPREAD DISTRIBUTION (P(home margin > t), t = -10.5..10.5, centered on the close; "
+               f"{sd['n']} games):")
+    out.append(f"  Normal curve Brier {sd['normal']:.5f} | key-number Brier {sd['key']:.5f} | key minus normal "
+               f"{sd['key_minus_normal']['diff']:+.5f}, 95% CI [{sd['key_minus_normal']['ci95'][0]:+.5f}, "
+               f"{sd['key_minus_normal']['ci95'][1]:+.5f}], t = {sd['key_minus_normal']['t']:+.2f}")
+    out.append("  Key-number weights (latest fit; 1.00 = as often as the normal curve says): " +
+               ", ".join(f"{k}: {kw[k]:.2f}" for k in (0, 1, 2, 3, 4, 6, 7, 8, 10, 14)))
     out.append("\nBETTING SIMULATION at closing prices (test seasons, flat 1 unit; Kelly = quarter Kelly, 2% cap):")
     b = s["betting"]
     out.append(tabulate([[k.replace("_", " "), v["bets"], pct(v["roi"]),

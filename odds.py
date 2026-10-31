@@ -1,6 +1,11 @@
 """Sportsbook odds math: American odds -> probability, vig removal, consensus."""
 from statistics import median
 
+# Books used as the market REFERENCE only. Pinnacle takes sharp action and moves
+# first, so its no-vig price is the best public estimate of the true odds. It
+# isn't bettable in most US states, so it is left out of the bettable averages.
+SHARP_BOOKS = ("pinnacle",)
+
 
 def american_to_prob(odds):
     """Implied probability INCLUDING the book's vig.
@@ -51,19 +56,23 @@ def consensus(book_prices):
 def parse_odds_event(event, home_name, away_name):
     """Pull one Odds API event apart into per-book numbers.
 
-    Returns dict with: books (count), home_prob (no-vig consensus),
-    home_spread (median across books, home view), total (median),
-    home_ml_dec / away_ml_dec (average decimal moneyline, for parlays),
-    updated (latest book update time).
+    Returns dict with: books (count), home_prob (no-vig: the sharp book's if
+    it is listed, else the consensus of the other books), sharp_prob,
+    consensus_prob, prob_source, home_spread (median across books, home view),
+    total (median), home_ml_dec / away_ml_dec (average decimal moneyline over
+    bettable books, for EV and parlays), updated (latest book update time).
     """
-    ml_pairs, spreads, totals, updates = [], [], [], []
+    ml_pairs, sharp_pairs, spreads, totals, updates = [], [], [], [], []
     spread_prices = {"home": [], "away": []}
     for book in event.get("bookmakers", []):
         updates.append(book.get("last_update", ""))
+        sharp = book.get("key") in SHARP_BOOKS
         for market in book.get("markets", []):
             outs = {o["name"]: o for o in market.get("outcomes", [])}
             if market["key"] == "h2h" and home_name in outs and away_name in outs:
-                ml_pairs.append((outs[home_name]["price"], outs[away_name]["price"]))
+                (sharp_pairs if sharp else ml_pairs).append((outs[home_name]["price"], outs[away_name]["price"]))
+            elif sharp:
+                continue
             elif market["key"] == "spreads" and home_name in outs:
                 if outs[home_name].get("point") is not None:
                     spreads.append(float(outs[home_name]["point"]))
@@ -73,10 +82,13 @@ def parse_odds_event(event, home_name, away_name):
             elif market["key"] == "totals" and "Over" in outs:
                 if outs["Over"].get("point") is not None:
                     totals.append(float(outs["Over"]["point"]))
+    sharp_prob, cons = consensus(sharp_pairs), consensus(ml_pairs)
     return {
         "books": len(event.get("bookmakers", [])),
         "ml_books": len(ml_pairs),
-        "home_prob": consensus(ml_pairs),
+        "home_prob": sharp_prob if sharp_prob is not None else cons,
+        "sharp_prob": sharp_prob, "consensus_prob": cons,
+        "prob_source": "Pinnacle (sharp)" if sharp_prob is not None else "book average",
         "home_spread": median(spreads) if spreads else None,
         "total": median(totals) if totals else None,
         "home_ml_dec": (sum(american_to_decimal(h) for h, _ in ml_pairs) / len(ml_pairs)) if ml_pairs else None,

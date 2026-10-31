@@ -119,12 +119,15 @@ class RatingSystem:
         return self._epa_cache
 
     # --- prediction
-    def predict(self, home, away, neutral=False, home_fbs=True, away_fbs=True, injury_adj=0.0):
+    def predict(self, home, away, neutral=False, home_fbs=True, away_fbs=True, injury_adj=0.0,
+                epa_weight_max=None):
         """Predict a game using only what update() has seen so far.
 
         Returns a dict. 'margin' = predicted home points minus away points.
         'home_spread' uses betting convention: negative = home favored.
+        epa_weight_max overrides cfg.EPA_WEIGHT_MAX (e.g. a weight fitted on past seasons).
         """
+        w_max = self.cfg.EPA_WEIGHT_MAX if epa_weight_max is None else epa_weight_max
         hfa = 0.0 if neutral else self.cfg.HOME_FIELD_POINTS
         r_h, r_a = self.rating(home, home_fbs), self.rating(away, away_fbs)
         elo_margin = (r_h - r_a) / self.cfg.ELO_PER_POINT + hfa
@@ -135,7 +138,7 @@ class RatingSystem:
             off_h, def_h, n_h = epa[home]
             off_a, def_a, n_a = epa[away]
             epa_margin = self.cfg.PLAYS_PER_GAME * ((off_h + def_a) - (off_a + def_h)) + hfa
-            weight = self.cfg.EPA_WEIGHT_MAX * min(min(n_h, n_a) / self.cfg.EPA_FULL_WEIGHT_GAMES, 1.0)
+            weight = w_max * min(min(n_h, n_a) / self.cfg.EPA_FULL_WEIGHT_GAMES, 1.0)
 
         base = elo_margin if epa_margin is None else (1 - weight) * elo_margin + weight * epa_margin
         margin = base + injury_adj

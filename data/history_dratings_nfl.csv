@@ -1,0 +1,1780 @@
+year,week,event_id,name,fpi_margin,home_line,total_line,home,away
+2026,6,2026_06_SEA_DEN,Seattle Seahawks at Denver Broncos,-2.558,2.5,40.5,17.0,14.0
+2026,5,2026_05_BUF_LA,Buffalo Bills at Los Angeles Rams,1.502,-3.5,55.5,34.0,37.0
+2026,5,2026_05_BAL_ATL,Baltimore Ravens at Atlanta Falcons,-1.24,-3.5,44.5,23.0,30.0
+2026,5,2026_05_DET_ARI,Detroit Lions at Arizona Cardinals,-6.153,5.5,55.5,21.0,45.0
+2026,5,2026_05_SF_SEA,San Francisco 49ers at Seattle Seahawks,3.733,-3.0,46.5,29.0,32.0
+2026,5,2026_05_DEN_LAC,Denver Broncos at Los Angeles Chargers,-4.383,3.5,42.5,17.0,23.0
+2026,5,2026_05_CHI_GB,Chicago Bears at Green Bay Packers,-0.326,1.5,46.5,31.0,7.0
+2026,5,2026_05_HOU_TEN,Houston Texans at Tennessee Titans,-8.085,6.5,37.5,3.0,26.0
+2026,5,2026_05_NYG_WAS,New York Giants at Washington Commanders,2.26,-3.5,41.5,27.0,27.0
+2026,5,2026_05_LV_NE,Las Vegas Raiders at New England Patriots,6.189,-3.5,45.5,45.0,17.0
+2026,5,2026_05_CIN_MIA,Cincinnati Bengals at Miami Dolphins,-9.777,7.0,44.5,24.0,31.0
+2026,5,2026_05_CLE_NYJ,Cleveland Browns at New York Jets,-0.717,-2.5,38.5,17.0,12.0
+2026,5,2026_05_MIN_NO,Minnesota Vikings at New Orleans Saints,-3.226,2.5,41.5,13.0,23.0
+2026,5,2026_05_IND_PIT,Indianapolis Colts at Pittsburgh Steelers,0.685,-3.0,41.5,34.0,22.0
+2026,5,2026_05_PHI_JAX,Philadelphia Eagles at Jacksonville Jaguars,7.308,-7.5,41.5,19.0,17.0
+2026,5,2026_05_TB_DAL,Tampa Bay Buccaneers at Dallas Cowboys,10.394,-9.5,49.5,16.0,24.0
+2026,4,2026_04_ATL_NO,Atlanta Falcons at New Orleans Saints,4.764,-1.5,47.5,24.0,45.0
+2026,4,2026_04_DET_CAR,Detroit Lions at Carolina Panthers,-5.327,4.5,52.5,32.0,26.0
+2026,4,2026_04_LAC_SEA,Los Angeles Chargers at Seattle Seahawks,7.849,-7.0,42.5,30.0,23.0
+2026,4,2026_04_KC_LV,Kansas City Chiefs at Las Vegas Raiders,-8.006,4.5,47.5,27.0,30.0
+2026,4,2026_04_DEN_SF,Denver Broncos at San Francisco 49ers,1.338,-3.0,48.5,24.0,14.0
+2026,4,2026_04_MIA_MIN,Miami Dolphins at Minnesota Vikings,11.606,-10.0,38.5,15.0,10.0
+2026,4,2026_04_TEN_BAL,Tennessee Titans at Baltimore Ravens,11.317,-11.5,42.5,24.0,18.0
+2026,4,2026_04_LA_PHI,Los Angeles Rams at Philadelphia Eagles,-3.395,3.5,42.5,20.0,24.0
+2026,4,2026_04_GB_TB,Green Bay Packers at Tampa Bay Buccaneers,-3.597,3.0,38.5,14.0,17.0
+2026,4,2026_04_JAX_CIN,Jacksonville Jaguars at Cincinnati Bengals,1.011,-2.5,51.5,17.0,22.0
+2026,4,2026_04_DAL_HOU,Dallas Cowboys at Houston Texans,1.996,-3.0,48.5,30.0,34.0
+2026,4,2026_04_ARI_NYG,Arizona Cardinals at New York Giants,-0.88,2.5,44.5,36.0,24.0
+2026,4,2026_04_NYJ_CHI,New York Jets at Chicago Bears,4.904,-3.5,43.5,23.0,12.0
+2026,4,2026_04_NE_BUF,New England Patriots at Buffalo Bills,7.538,-7.0,49.5,26.0,29.0
+2026,4,2026_04_IND_WAS,Indianapolis Colts at Washington Commanders,-5.791,4.5,46.5,13.0,30.0
+2026,4,2026_04_PIT_CLE,Pittsburgh Steelers at Cleveland Browns,-1.864,2.5,38.5,27.0,24.0
+2026,3,2026_03_PHI_CHI,Philadelphia Eagles at Chicago Bears,-4.764,3.5,42.5,27.0,7.0
+2026,3,2026_03_LA_DEN,Los Angeles Rams at Denver Broncos,-1.338,-1.5,43.5,30.0,26.0
+2026,3,2026_03_BAL_DAL,Baltimore Ravens at Dallas Cowboys,-2.958,3.0,53.5,31.0,34.0
+2026,3,2026_03_LV_NO,Las Vegas Raiders at New Orleans Saints,1.831,-3.5,43.5,27.0,35.0
+2026,3,2026_03_ARI_SF,Arizona Cardinals at San Francisco 49ers,13.418,-7.5,48.5,36.0,30.0
+2026,3,2026_03_MIN_TB,Minnesota Vikings at Tampa Bay Buccaneers,-1.634,1.5,42.5,16.0,23.0
+2026,3,2026_03_LAC_BUF,Los Angeles Chargers at Buffalo Bills,8.045,-7.0,50.5,24.0,16.0
+2026,3,2026_03_CAR_CLE,Carolina Panthers at Cleveland Browns,-3.025,2.5,41.5,21.0,18.0
+2026,3,2026_03_HOU_IND,Houston Texans at Indianapolis Colts,-0.522,1.5,41.5,19.0,17.0
+2026,3,2026_03_KC_MIA,Kansas City Chiefs at Miami Dolphins,-14.221,10.0,45.5,10.0,24.0
+2026,3,2026_03_NE_JAX,New England Patriots at Jacksonville Jaguars,3.092,-3.0,46.5,35.0,6.0
+2026,3,2026_03_TEN_NYG,Tennessee Titans at New York Giants,2.161,-2.5,37.5,12.0,7.0
+2026,3,2026_03_NYJ_DET,New York Jets at Detroit Lions,10.483,-7.0,49.5,31.0,24.0
+2026,3,2026_03_CIN_PIT,Cincinnati Bengals at Pittsburgh Steelers,-4.314,3.5,42.5,30.0,27.0
+2026,3,2026_03_SEA_WAS,Seattle Seahawks at Washington Commanders,-11.081,8.5,40.5,33.0,31.0
+2026,3,2026_03_ATL_GB,Atlanta Falcons at Green Bay Packers,5.362,-4.5,43.5,14.0,35.0
+2026,2,2026_02_NYG_LA,New York Giants at Los Angeles Rams,7.577,-6.5,47.5,28.0,6.0
+2026,2,2026_02_IND_KC,Indianapolis Colts at Kansas City Chiefs,8.605,-6.0,46.5,33.0,30.0
+2026,2,2026_02_MIA_SF,Miami Dolphins at San Francisco 49ers,14.643,-12.5,44.5,35.0,13.0
+2026,2,2026_02_SEA_ARI,Seattle Seahawks at Arizona Cardinals,-6.007,3.5,40.5,7.0,31.0
+2026,2,2026_02_WAS_DAL,Washington Commanders at Dallas Cowboys,3.835,-3.5,51.5,37.0,20.0
+2026,2,2026_02_JAX_DEN,Jacksonville Jaguars at Denver Broncos,2.658,-2.5,45.5,20.0,13.0
+2026,2,2026_02_LV_LAC,Las Vegas Raiders at Los Angeles Chargers,9.098,-6.5,43.5,14.0,26.0
+2026,2,2026_02_PHI_TEN,Philadelphia Eagles at Tennessee Titans,-8.006,7.0,39.5,20.0,24.0
+2026,2,2026_02_NO_BAL,New Orleans Saints at Baltimore Ravens,11.703,-8.5,45.5,17.0,24.0
+2026,2,2026_02_CIN_HOU,Cincinnati Bengals at Houston Texans,2.128,-3.0,45.5,6.0,20.0
+2026,2,2026_02_CLE_TB,Cleveland Browns at Tampa Bay Buccaneers,9.864,-8.5,41.5,19.0,23.0
+2026,2,2026_02_CAR_ATL,Carolina Panthers at Atlanta Falcons,-3.597,2.5,43.5,3.0,34.0
+2026,2,2026_02_PIT_NE,Pittsburgh Steelers at New England Patriots,4.799,-4.5,41.5,20.0,3.0
+2026,2,2026_02_MIN_CHI,Minnesota Vikings at Chicago Bears,9.224,-4.5,46.5,3.0,9.0
+2026,2,2026_02_GB_NYJ,Green Bay Packers at New York Jets,-6.262,3.5,44.5,17.0,20.0
+2026,2,2026_02_DET_BUF,Detroit Lions at Buffalo Bills,4.625,-5.5,54.5,41.0,31.0
+2026,1,2026_01_DEN_KC,Denver Broncos at Kansas City Chiefs,2.227,-2.5,42.5,31.0,10.0
+2026,1,2026_01_DAL_NYG,Dallas Cowboys at New York Giants,-3.159,3.0,47.5,28.0,20.0
+2026,1,2026_01_GB_MIN,Green Bay Packers at Minnesota Vikings,0.033,-1.5,46.5,39.0,22.0
+2026,1,2026_01_WAS_PHI,Washington Commanders at Philadelphia Eagles,5.755,-6.0,43.5,24.0,22.0
+2026,1,2026_01_MIA_LV,Miami Dolphins at Las Vegas Raiders,5.611,-3.0,40.5,27.0,13.0
+2026,1,2026_01_ARI_LAC,Arizona Cardinals at Los Angeles Chargers,11.557,-8.5,47.5,14.0,26.0
+2026,1,2026_01_NO_DET,New Orleans Saints at Detroit Lions,9.392,-7.0,49.5,31.0,30.0
+2026,1,2026_01_NYJ_TEN,New York Jets at Tennessee Titans,2.359,-1.5,39.5,10.0,23.0
+2026,1,2026_01_CHI_CAR,Chicago Bears at Carolina Panthers,-1.732,3.0,47.5,37.0,59.0
+2026,1,2026_01_BUF_HOU,Buffalo Bills at Houston Texans,-1.437,1.5,44.5,31.0,36.0
+2026,1,2026_01_ATL_PIT,Atlanta Falcons at Pittsburgh Steelers,4.314,-6.5,40.5,20.0,13.0
+2026,1,2026_01_BAL_IND,Baltimore Ravens at Indianapolis Colts,-5.504,3.0,48.5,23.0,41.0
+2026,1,2026_01_TB_CIN,Tampa Bay Buccaneers at Cincinnati Bengals,4.452,-3.5,50.5,33.0,27.0
+2026,1,2026_01_CLE_JAX,Cleveland Browns at Jacksonville Jaguars,11.175,-8.5,40.5,34.0,10.0
+2026,1,2026_01_SF_LA,San Francisco 49ers at Los Angeles Rams,5.54,-3.5,47.5,7.0,27.0
+2026,1,2026_01_NE_SEA,New England Patriots at Seattle Seahawks,1.666,-3.0,44.5,13.0,10.0
+2025,22,2025_22_SEA_NE,Seattle Seahawks at New England Patriots,-5.755,4.5,45.5,13.0,29.0
+2025,21,2025_21_LA_SEA,Los Angeles Rams at Seattle Seahawks,2.128,-2.5,45.5,31.0,27.0
+2025,21,2025_21_NE_DEN,New England Patriots at Denver Broncos,-2.591,3.5,43.5,7.0,10.0
+2025,20,2025_20_LA_CHI,Los Angeles Rams at Chicago Bears,-5.15,3.5,49.5,17.0,20.0
+2025,20,2025_20_HOU_NE,Houston Texans at New England Patriots,2.824,-3.0,40.5,28.0,16.0
+2025,20,2025_20_SF_SEA,San Francisco 49ers at Seattle Seahawks,10.438,-6.5,44.5,41.0,6.0
+2025,20,2025_20_BUF_DEN,Buffalo Bills at Denver Broncos,1.996,-1.5,45.5,33.0,30.0
+2025,19,2025_19_HOU_PIT,Houston Texans at Pittsburgh Steelers,-3.699,3.0,38.5,6.0,30.0
+2025,19,2025_19_LAC_NE,Los Angeles Chargers at New England Patriots,3.563,-3.5,45.5,16.0,3.0
+2025,19,2025_19_SF_PHI,San Francisco 49ers at Philadelphia Eagles,3.563,-6.0,44.5,19.0,23.0
+2025,19,2025_19_BUF_JAX,Buffalo Bills at Jacksonville Jaguars,2.392,-1.5,51.5,24.0,27.0
+2025,19,2025_19_GB_CHI,Green Bay Packers at Chicago Bears,1.338,2.5,45.5,31.0,27.0
+2025,19,2025_19_LA_CAR,Los Angeles Rams at Carolina Panthers,-10.483,10.0,44.5,31.0,34.0
+2025,18,2025_18_BAL_PIT,Baltimore Ravens at Pittsburgh Steelers,-4.974,4.5,41.5,26.0,24.0
+2025,18,2025_18_LAC_DEN,Los Angeles Chargers at Denver Broncos,13.813,-14.5,37.5,19.0,3.0
+2025,18,2025_18_ARI_LA,Arizona Cardinals at Los Angeles Rams,11.317,-14.5,49.5,37.0,20.0
+2025,18,2025_18_WAS_PHI,Washington Commanders at Philadelphia Eagles,3.294,-3.0,38.5,17.0,24.0
+2025,18,2025_18_NYJ_BUF,New York Jets at Buffalo Bills,15.739,-12.5,39.5,35.0,8.0
+2025,18,2025_18_DET_CHI,Detroit Lions at Chicago Bears,2.26,-3.5,51.5,16.0,19.0
+2025,18,2025_18_KC_LV,Kansas City Chiefs at Las Vegas Raiders,-5.719,3.5,36.5,14.0,12.0
+2025,18,2025_18_MIA_NE,Miami Dolphins at New England Patriots,13.642,-14.0,44.5,38.0,10.0
+2025,18,2025_18_TEN_JAX,Tennessee Titans at Jacksonville Jaguars,13.699,-12.5,46.5,41.0,7.0
+2025,18,2025_18_NO_ATL,New Orleans Saints at Atlanta Falcons,3.496,-4.5,43.5,19.0,17.0
+2025,18,2025_18_DAL_NYG,Dallas Cowboys at New York Giants,-6.372,3.0,50.5,34.0,17.0
+2025,18,2025_18_CLE_CIN,Cleveland Browns at Cincinnati Bengals,11.317,-9.5,47.5,18.0,20.0
+2025,18,2025_18_IND_HOU,Indianapolis Colts at Houston Texans,11.999,-9.5,37.5,38.0,30.0
+2025,18,2025_18_GB_MIN,Green Bay Packers at Minnesota Vikings,4.005,-12.5,37.5,16.0,3.0
+2025,18,2025_18_SEA_SF,Seattle Seahawks at San Francisco 49ers,-1.831,2.5,47.5,3.0,13.0
+2025,18,2025_18_CAR_TB,Carolina Panthers at Tampa Bay Buccaneers,3.159,-3.0,43.5,16.0,14.0
+2025,17,2025_17_LA_ATL,Los Angeles Rams at Atlanta Falcons,-10.127,7.5,48.5,27.0,24.0
+2025,17,2025_17_CHI_SF,Chicago Bears at San Francisco 49ers,3.26,-3.5,51.5,42.0,38.0
+2025,17,2025_17_PHI_BUF,Philadelphia Eagles at Buffalo Bills,1.634,-3.0,45.5,12.0,13.0
+2025,17,2025_17_NYG_LV,New York Giants at Las Vegas Raiders,-1.699,3.0,40.5,10.0,34.0
+2025,17,2025_17_NE_NYJ,New England Patriots at New York Jets,-13.756,12.5,42.5,10.0,42.0
+2025,17,2025_17_JAX_IND,Jacksonville Jaguars at Indianapolis Colts,-5.433,3.5,48.5,17.0,23.0
+2025,17,2025_17_TB_MIA,Tampa Bay Buccaneers at Miami Dolphins,-5.54,5.5,44.5,20.0,17.0
+2025,17,2025_17_NO_TEN,New Orleans Saints at Tennessee Titans,-1.404,1.5,39.5,26.0,34.0
+2025,17,2025_17_PIT_CLE,Pittsburgh Steelers at Cleveland Browns,-9.995,4.5,35.5,13.0,6.0
+2025,17,2025_17_SEA_CAR,Seattle Seahawks at Carolina Panthers,-9.864,6.5,42.5,10.0,27.0
+2025,17,2025_17_ARI_CIN,Arizona Cardinals at Cincinnati Bengals,6.557,-7.0,52.5,37.0,14.0
+2025,17,2025_17_BAL_GB,Baltimore Ravens at Green Bay Packers,2.891,-2.5,38.5,24.0,41.0
+2025,17,2025_17_HOU_LAC,Houston Texans at Los Angeles Chargers,-0.587,-1.5,40.5,16.0,20.0
+2025,17,2025_17_DEN_KC,Denver Broncos at Kansas City Chiefs,-14.829,13.5,37.5,13.0,20.0
+2025,17,2025_17_DET_MIN,Detroit Lions at Minnesota Vikings,-8.085,7.0,45.5,23.0,10.0
+2025,17,2025_17_DAL_WAS,Dallas Cowboys at Washington Commanders,-8.164,8.5,50.5,23.0,30.0
+2025,16,2025_16_SF_IND,San Francisco 49ers at Indianapolis Colts,-4.73,4.5,46.5,27.0,48.0
+2025,16,2025_16_NE_BAL,New England Patriots at Baltimore Ravens,2.392,-3.5,48.5,24.0,28.0
+2025,16,2025_16_LV_HOU,Las Vegas Raiders at Houston Texans,14.46,-14.5,39.5,23.0,21.0
+2025,16,2025_16_PIT_DET,Pittsburgh Steelers at Detroit Lions,6.93,-7.5,52.5,24.0,29.0
+2025,16,2025_16_JAX_DEN,Jacksonville Jaguars at Denver Broncos,3.361,-3.5,46.5,20.0,34.0
+2025,16,2025_16_ATL_ARI,Atlanta Falcons at Arizona Cardinals,-0.946,2.5,48.5,19.0,26.0
+2025,16,2025_16_CIN_MIA,Cincinnati Bengals at Miami Dolphins,1.535,3.5,48.5,21.0,45.0
+2025,16,2025_16_LAC_DAL,Los Angeles Chargers at Dallas Cowboys,-2.525,-1.5,50.5,17.0,34.0
+2025,16,2025_16_KC_TEN,Kansas City Chiefs at Tennessee Titans,-2.425,3.5,37.5,26.0,9.0
+2025,16,2025_16_TB_CAR,Tampa Bay Buccaneers at Carolina Panthers,-4.177,3.0,44.5,23.0,20.0
+2025,16,2025_16_MIN_NYG,Minnesota Vikings at New York Giants,-2.326,2.5,41.5,13.0,16.0
+2025,16,2025_16_NYJ_NO,New York Jets at New Orleans Saints,5.327,-6.5,39.5,29.0,6.0
+2025,16,2025_16_BUF_CLE,Buffalo Bills at Cleveland Browns,-14.582,10.5,41.5,20.0,23.0
+2025,16,2025_16_GB_CHI,Green Bay Packers at Chicago Bears,-0.554,-1.5,45.5,22.0,16.0
+2025,16,2025_16_PHI_WAS,Philadelphia Eagles at Washington Commanders,-8.728,7.0,43.5,18.0,29.0
+2025,16,2025_16_LA_SEA,Los Angeles Rams at Seattle Seahawks,0.685,-1.5,42.5,38.0,37.0
+2025,15,2025_15_MIA_PIT,Miami Dolphins at Pittsburgh Steelers,3.327,-3.0,42.5,28.0,15.0
+2025,15,2025_15_MIN_DAL,Minnesota Vikings at Dallas Cowboys,6.262,-5.5,47.5,26.0,34.0
+2025,15,2025_15_TEN_SF,Tennessee Titans at San Francisco 49ers,11.557,-12.5,44.5,37.0,24.0
+2025,15,2025_15_DET_LA,Detroit Lions at Los Angeles Rams,9.14,-5.5,54.5,41.0,34.0
+2025,15,2025_15_CAR_NO,Carolina Panthers at New Orleans Saints,-2.194,2.5,41.5,20.0,17.0
+2025,15,2025_15_GB_DEN,Green Bay Packers at Denver Broncos,0.717,1.5,42.5,34.0,26.0
+2025,15,2025_15_IND_SEA,Indianapolis Colts at Seattle Seahawks,15.21,-13.5,41.5,18.0,16.0
+2025,15,2025_15_WAS_NYG,Washington Commanders at New York Giants,1.47,-2.5,46.5,21.0,29.0
+2025,15,2025_15_LAC_KC,Los Angeles Chargers at Kansas City Chiefs,4.764,-5.5,41.5,13.0,16.0
+2025,15,2025_15_BAL_CIN,Baltimore Ravens at Cincinnati Bengals,-1.371,2.5,51.5,0.0,24.0
+2025,15,2025_15_BUF_NE,Buffalo Bills at New England Patriots,0.0,2.5,49.5,31.0,35.0
+2025,15,2025_15_CLE_CHI,Cleveland Browns at Chicago Bears,12.353,-7.5,38.5,31.0,3.0
+2025,15,2025_15_NYJ_JAX,New York Jets at Jacksonville Jaguars,15.945,-13.5,40.5,48.0,20.0
+2025,15,2025_15_LV_PHI,Las Vegas Raiders at Philadelphia Eagles,15.807,-12.5,37.5,31.0,0.0
+2025,15,2025_15_ARI_HOU,Arizona Cardinals at Houston Texans,10.619,-10.5,42.5,40.0,20.0
+2025,15,2025_15_ATL_TB,Atlanta Falcons at Tampa Bay Buccaneers,7.616,-6.0,43.5,28.0,29.0
+2025,14,2025_14_PHI_LAC,Philadelphia Eagles at Los Angeles Chargers,-2.293,1.5,41.5,22.0,19.0
+2025,14,2025_14_HOU_KC,Houston Texans at Kansas City Chiefs,4.418,-4.5,41.5,10.0,20.0
+2025,14,2025_14_LA_ARI,Los Angeles Rams at Arizona Cardinals,-10.711,9.5,49.5,17.0,45.0
+2025,14,2025_14_CHI_GB,Chicago Bears at Green Bay Packers,6.262,-6.5,44.5,28.0,21.0
+2025,14,2025_14_DEN_LV,Denver Broncos at Las Vegas Raiders,-9.995,8.5,40.5,17.0,24.0
+2025,14,2025_14_CIN_BUF,Cincinnati Bengals at Buffalo Bills,7.461,-6.0,54.5,39.0,34.0
+2025,14,2025_14_NO_TB,New Orleans Saints at Tampa Bay Buccaneers,9.14,-7.5,41.5,20.0,24.0
+2025,14,2025_14_IND_JAX,Indianapolis Colts at Jacksonville Jaguars,-0.456,2.5,44.5,36.0,19.0
+2025,14,2025_14_SEA_ATL,Seattle Seahawks at Atlanta Falcons,-11.175,7.0,44.5,9.0,37.0
+2025,14,2025_14_PIT_BAL,Pittsburgh Steelers at Baltimore Ravens,6.044,-5.5,43.5,22.0,27.0
+2025,14,2025_14_TEN_CLE,Tennessee Titans at Cleveland Browns,0.979,-4.5,33.5,29.0,31.0
+2025,14,2025_14_MIA_NYJ,Miami Dolphins at New York Jets,-4.074,2.5,41.5,10.0,34.0
+2025,14,2025_14_WAS_MIN,Washington Commanders at Minnesota Vikings,1.765,1.5,43.5,31.0,0.0
+2025,14,2025_14_DAL_DET,Dallas Cowboys at Detroit Lions,2.958,-3.5,55.5,44.0,30.0
+2025,13,2025_13_NYG_NE,New York Giants at New England Patriots,9.562,-7.0,46.5,33.0,15.0
+2025,13,2025_13_DEN_WAS,Denver Broncos at Washington Commanders,-8.974,6.5,43.5,26.0,27.0
+2025,13,2025_13_LV_LAC,Las Vegas Raiders at Los Angeles Chargers,12.2,-10.0,40.5,31.0,14.0
+2025,13,2025_13_BUF_PIT,Buffalo Bills at Pittsburgh Steelers,-5.256,3.0,44.5,7.0,26.0
+2025,13,2025_13_MIN_SEA,Minnesota Vikings at Seattle Seahawks,12.663,-12.5,42.5,26.0,0.0
+2025,13,2025_13_SF_CLE,San Francisco 49ers at Cleveland Browns,-9.951,5.5,35.5,8.0,26.0
+2025,13,2025_13_ATL_NYJ,Atlanta Falcons at New York Jets,-2.392,3.0,38.5,27.0,24.0
+2025,13,2025_13_NO_MIA,New Orleans Saints at Miami Dolphins,6.743,-5.5,41.5,21.0,17.0
+2025,13,2025_13_LA_CAR,Los Angeles Rams at Carolina Panthers,-14.521,10.0,44.5,31.0,28.0
+2025,13,2025_13_JAX_TEN,Jacksonville Jaguars at Tennessee Titans,-10.171,6.0,42.5,3.0,25.0
+2025,13,2025_13_ARI_TB,Arizona Cardinals at Tampa Bay Buccaneers,6.557,-4.5,44.5,20.0,17.0
+2025,13,2025_13_HOU_IND,Houston Texans at Indianapolis Colts,5.185,-3.0,44.5,16.0,20.0
+2025,13,2025_13_CHI_PHI,Chicago Bears at Philadelphia Eagles,8.605,-7.0,43.5,15.0,24.0
+2025,13,2025_13_CIN_BAL,Cincinnati Bengals at Baltimore Ravens,14.892,-7.0,52.5,14.0,32.0
+2025,13,2025_13_KC_DAL,Kansas City Chiefs at Dallas Cowboys,-5.971,3.5,53.5,31.0,28.0
+2025,13,2025_13_GB_DET,Green Bay Packers at Detroit Lions,1.897,-2.5,48.5,24.0,31.0
+2025,12,2025_12_CAR_SF,Carolina Panthers at San Francisco 49ers,11.222,-7.5,48.5,20.0,9.0
+2025,12,2025_12_TB_LA,Tampa Bay Buccaneers at Los Angeles Rams,9.392,-7.0,49.5,34.0,7.0
+2025,12,2025_12_PHI_DAL,Philadelphia Eagles at Dallas Cowboys,-3.631,3.0,47.5,24.0,21.0
+2025,12,2025_12_ATL_NO,Atlanta Falcons at New Orleans Saints,0.522,-1.5,41.5,10.0,24.0
+2025,12,2025_12_CLE_LV,Cleveland Browns at Las Vegas Raiders,5.611,-3.0,35.5,10.0,24.0
+2025,12,2025_12_JAX_ARI,Jacksonville Jaguars at Arizona Cardinals,-4.904,2.5,47.5,24.0,27.0
+2025,12,2025_12_IND_KC,Indianapolis Colts at Kansas City Chiefs,5.362,-3.5,50.5,23.0,20.0
+2025,12,2025_12_MIN_GB,Minnesota Vikings at Green Bay Packers,10.082,-6.5,41.5,23.0,6.0
+2025,12,2025_12_SEA_TEN,Seattle Seahawks at Tennessee Titans,-16.44,12.5,41.5,24.0,30.0
+2025,12,2025_12_NE_CIN,New England Patriots at Cincinnati Bengals,-11.752,7.5,50.5,20.0,26.0
+2025,12,2025_12_NYG_DET,New York Giants at Detroit Lions,11.175,-14.0,50.5,34.0,27.0
+2025,12,2025_12_NYJ_BAL,New York Jets at Baltimore Ravens,12.302,-14.0,44.5,23.0,10.0
+2025,12,2025_12_PIT_CHI,Pittsburgh Steelers at Chicago Bears,1.502,-3.0,46.5,31.0,28.0
+2025,12,2025_12_BUF_HOU,Buffalo Bills at Houston Texans,-8.974,5.5,43.5,23.0,19.0
+2025,11,2025_11_DAL_LV,Dallas Cowboys at Las Vegas Raiders,-4.556,3.5,48.5,16.0,33.0
+2025,11,2025_11_DET_PHI,Detroit Lions at Philadelphia Eagles,0.88,-2.5,46.5,16.0,9.0
+2025,11,2025_11_KC_DEN,Kansas City Chiefs at Denver Broncos,-3.193,3.5,44.5,22.0,19.0
+2025,11,2025_11_BAL_CLE,Baltimore Ravens at Cleveland Browns,-7.771,7.5,37.5,16.0,23.0
+2025,11,2025_11_SF_ARI,San Francisco 49ers at Arizona Cardinals,-4.869,3.5,48.5,22.0,41.0
+2025,11,2025_11_SEA_LA,Seattle Seahawks at Los Angeles Rams,4.28,-3.0,49.5,21.0,19.0
+2025,11,2025_11_LAC_JAX,Los Angeles Chargers at Jacksonville Jaguars,-2.558,3.0,43.5,35.0,6.0
+2025,11,2025_11_CAR_ATL,Carolina Panthers at Atlanta Falcons,3.496,-4.5,42.5,27.0,30.0
+2025,11,2025_11_CHI_MIN,Chicago Bears at Minnesota Vikings,2.128,-3.0,47.5,17.0,19.0
+2025,11,2025_11_HOU_TEN,Houston Texans at Tennessee Titans,-7.156,5.5,37.5,13.0,16.0
+2025,11,2025_11_CIN_PIT,Cincinnati Bengals at Pittsburgh Steelers,6.446,-5.5,48.5,34.0,12.0
+2025,11,2025_11_TB_BUF,Tampa Bay Buccaneers at Buffalo Bills,4.73,-6.0,46.5,44.0,32.0
+2025,11,2025_11_GB_NYG,Green Bay Packers at New York Giants,-7.967,7.5,41.5,20.0,27.0
+2025,11,2025_11_WAS_MIA,Washington Commanders at Miami Dolphins,2.591,-2.5,47.5,16.0,13.0
+2025,11,2025_11_NYJ_NE,New York Jets at New England Patriots,11.034,-12.5,43.5,27.0,14.0
+2025,10,2025_10_PHI_GB,Philadelphia Eagles at Green Bay Packers,3.058,-1.5,45.5,7.0,10.0
+2025,10,2025_10_PIT_LAC,Pittsburgh Steelers at Los Angeles Chargers,5.469,-3.0,45.5,25.0,10.0
+2025,10,2025_10_LA_SF,Los Angeles Rams at San Francisco 49ers,-7.849,5.5,49.5,26.0,42.0
+2025,10,2025_10_DET_WAS,Detroit Lions at Washington Commanders,-7.654,8.5,49.5,22.0,44.0
+2025,10,2025_10_ARI_SEA,Arizona Cardinals at Seattle Seahawks,9.864,-7.0,44.5,44.0,22.0
+2025,10,2025_10_NYG_CHI,New York Giants at Chicago Bears,2.758,-4.5,45.5,24.0,20.0
+2025,10,2025_10_NE_TB,New England Patriots at Tampa Bay Buccaneers,2.691,-2.5,48.5,23.0,28.0
+2025,10,2025_10_BAL_MIN,Baltimore Ravens at Minnesota Vikings,-6.855,4.5,48.5,19.0,27.0
+2025,10,2025_10_JAX_HOU,Jacksonville Jaguars at Houston Texans,1.831,1.5,37.5,36.0,29.0
+2025,10,2025_10_BUF_MIA,Buffalo Bills at Miami Dolphins,-11.9,8.5,50.5,30.0,13.0
+2025,10,2025_10_NO_CAR,New Orleans Saints at Carolina Panthers,4.108,-5.5,38.5,7.0,17.0
+2025,10,2025_10_CLE_NYJ,Cleveland Browns at New York Jets,0.196,1.5,37.5,27.0,20.0
+2025,10,2025_10_ATL_IND,Atlanta Falcons at Indianapolis Colts,5.755,-6.5,48.5,31.0,25.0
+2025,10,2025_10_LV_DEN,Las Vegas Raiders at Denver Broncos,12.15,-9.5,42.5,10.0,7.0
+2025,9,2025_09_ARI_DAL,Arizona Cardinals at Dallas Cowboys,2.293,-3.5,53.5,17.0,27.0
+2025,9,2025_09_SEA_WAS,Seattle Seahawks at Washington Commanders,-6.299,2.5,47.5,14.0,38.0
+2025,9,2025_09_KC_BUF,Kansas City Chiefs at Buffalo Bills,-0.424,2.5,53.5,28.0,21.0
+2025,9,2025_09_NO_LA,New Orleans Saints at Los Angeles Rams,15.018,-14.0,44.5,34.0,10.0
+2025,9,2025_09_JAX_LV,Jacksonville Jaguars at Las Vegas Raiders,-2.858,2.5,43.5,29.0,30.0
+2025,9,2025_09_LAC_TEN,Los Angeles Chargers at Tennessee Titans,-14.521,10.0,44.5,20.0,27.0
+2025,9,2025_09_DEN_HOU,Denver Broncos at Houston Texans,-0.88,-1.5,40.5,15.0,18.0
+2025,9,2025_09_MIN_DET,Minnesota Vikings at Detroit Lions,13.586,-9.5,47.5,24.0,27.0
+2025,9,2025_09_CAR_GB,Carolina Panthers at Green Bay Packers,13.87,-12.5,43.5,13.0,16.0
+2025,9,2025_09_IND_PIT,Indianapolis Colts at Pittsburgh Steelers,-2.724,3.5,51.5,27.0,20.0
+2025,9,2025_09_ATL_NE,Atlanta Falcons at New England Patriots,8.006,-5.5,45.5,24.0,23.0
+2025,9,2025_09_SF_NYG,San Francisco 49ers at New York Giants,0.228,2.5,47.5,24.0,34.0
+2025,9,2025_09_CHI_CIN,Chicago Bears at Cincinnati Bengals,-1.077,3.0,51.5,42.0,47.0
+2025,9,2025_09_BAL_MIA,Baltimore Ravens at Miami Dolphins,-7.888,7.5,51.5,6.0,28.0
+2025,8,2025_08_WAS_KC,Washington Commanders at Kansas City Chiefs,13.143,-10.5,48.5,28.0,7.0
+2025,8,2025_08_GB_PIT,Green Bay Packers at Pittsburgh Steelers,-5.15,3.0,46.5,25.0,35.0
+2025,8,2025_08_DAL_DEN,Dallas Cowboys at Denver Broncos,6.372,-3.5,51.5,44.0,24.0
+2025,8,2025_08_TEN_IND,Tennessee Titans at Indianapolis Colts,14.829,-15.5,47.5,38.0,14.0
+2025,8,2025_08_TB_NO,Tampa Bay Buccaneers at New Orleans Saints,-6.557,4.5,46.5,3.0,23.0
+2025,8,2025_08_CLE_NE,Cleveland Browns at New England Patriots,8.565,-7.0,40.5,32.0,13.0
+2025,8,2025_08_NYG_PHI,New York Giants at Philadelphia Eagles,9.864,-7.0,43.5,38.0,20.0
+2025,8,2025_08_BUF_CAR,Buffalo Bills at Carolina Panthers,-9.477,7.0,47.5,9.0,40.0
+2025,8,2025_08_MIA_ATL,Miami Dolphins at Atlanta Falcons,10.756,-7.0,44.5,10.0,34.0
+2025,8,2025_08_CHI_BAL,Chicago Bears at Baltimore Ravens,7.118,-2.5,45.5,30.0,16.0
+2025,8,2025_08_SF_HOU,San Francisco 49ers at Houston Texans,-2.128,-2.5,41.5,26.0,15.0
+2025,8,2025_08_NYJ_CIN,New York Jets at Cincinnati Bengals,11.034,-5.5,43.5,38.0,39.0
+2025,8,2025_08_MIN_LAC,Minnesota Vikings at Los Angeles Chargers,4.556,-3.0,45.5,37.0,10.0
+2025,7,2025_07_HOU_SEA,Houston Texans at Seattle Seahawks,3.058,-3.0,41.5,27.0,19.0
+2025,7,2025_07_TB_DET,Tampa Bay Buccaneers at Detroit Lions,5.256,-6.0,54.5,24.0,9.0
+2025,7,2025_07_ATL_SF,Atlanta Falcons at San Francisco 49ers,-3.193,-1.5,46.5,20.0,10.0
+2025,7,2025_07_GB_ARI,Green Bay Packers at Arizona Cardinals,-7.577,7.0,44.5,23.0,27.0
+2025,7,2025_07_WAS_DAL,Washington Commanders at Dallas Cowboys,-1.175,-1.5,54.5,44.0,22.0
+2025,7,2025_07_NYG_DEN,New York Giants at Denver Broncos,10.215,-7.5,39.5,33.0,32.0
+2025,7,2025_07_IND_LAC,Indianapolis Colts at Los Angeles Chargers,1.601,-2.5,48.5,24.0,38.0
+2025,7,2025_07_CAR_NYJ,Carolina Panthers at New York Jets,-2.492,-1.5,39.5,6.0,13.0
+2025,7,2025_07_PHI_MIN,Philadelphia Eagles at Minnesota Vikings,-4.349,2.5,43.5,22.0,28.0
+2025,7,2025_07_NO_CHI,New Orleans Saints at Chicago Bears,3.395,-4.5,43.5,26.0,14.0
+2025,7,2025_07_NE_TEN,New England Patriots at Tennessee Titans,-9.562,6.5,40.5,13.0,31.0
+2025,7,2025_07_MIA_CLE,Miami Dolphins at Cleveland Browns,1.634,-2.5,34.5,31.0,6.0
+2025,7,2025_07_LV_KC,Las Vegas Raiders at Kansas City Chiefs,11.081,-13.5,44.5,31.0,0.0
+2025,7,2025_07_LA_JAX,Los Angeles Rams at Jacksonville Jaguars,-4.005,3.0,44.5,7.0,35.0
+2025,7,2025_07_PIT_CIN,Pittsburgh Steelers at Cincinnati Bengals,-3.193,5.5,45.5,33.0,31.0
+2025,6,2025_06_CHI_WAS,Chicago Bears at Washington Commanders,6.153,-5.5,49.5,24.0,25.0
+2025,6,2025_06_BUF_ATL,Buffalo Bills at Atlanta Falcons,-5.009,3.5,49.5,24.0,14.0
+2025,6,2025_06_DET_KC,Detroit Lions at Kansas City Chiefs,0.619,-2.5,51.5,30.0,17.0
+2025,6,2025_06_CIN_GB,Cincinnati Bengals at Green Bay Packers,17.35,-14.0,44.5,27.0,18.0
+2025,6,2025_06_SF_TB,San Francisco 49ers at Tampa Bay Buccaneers,8.646,-3.5,46.5,30.0,19.0
+2025,6,2025_06_TEN_LV,Tennessee Titans at Las Vegas Raiders,3.733,-3.5,41.5,20.0,10.0
+2025,6,2025_06_NE_NO,New England Patriots at New Orleans Saints,-5.935,3.5,46.5,19.0,25.0
+2025,6,2025_06_LAC_MIA,Los Angeles Chargers at Miami Dolphins,-4.73,3.5,45.5,27.0,29.0
+2025,6,2025_06_DAL_CAR,Dallas Cowboys at Carolina Panthers,-3.092,3.0,47.5,30.0,27.0
+2025,6,2025_06_SEA_JAX,Seattle Seahawks at Jacksonville Jaguars,0.587,1.5,47.5,12.0,20.0
+2025,6,2025_06_LA_BAL,Los Angeles Rams at Baltimore Ravens,-11.703,7.0,43.5,3.0,17.0
+2025,6,2025_06_ARI_IND,Arizona Cardinals at Indianapolis Colts,3.395,-8.5,46.5,31.0,27.0
+2025,6,2025_06_CLE_PIT,Cleveland Browns at Pittsburgh Steelers,6.446,-5.5,37.5,23.0,9.0
+2025,6,2025_06_DEN_NYJ,Denver Broncos at New York Jets,-10.756,7.5,43.5,11.0,13.0
+2025,6,2025_06_PHI_NYG,Philadelphia Eagles at New York Giants,-12.099,7.0,40.5,34.0,17.0
+2025,5,2025_05_KC_JAX,Kansas City Chiefs at Jacksonville Jaguars,-4.66,3.5,45.5,31.0,28.0
+2025,5,2025_05_NE_BUF,New England Patriots at Buffalo Bills,11.461,-7.5,49.5,20.0,23.0
+2025,5,2025_05_WAS_LAC,Washington Commanders at Los Angeles Chargers,4.108,-2.5,47.5,10.0,27.0
+2025,5,2025_05_DET_CIN,Detroit Lions at Cincinnati Bengals,-12.875,10.5,49.5,24.0,37.0
+2025,5,2025_05_TB_SEA,Tampa Bay Buccaneers at Seattle Seahawks,2.591,-3.5,44.5,35.0,38.0
+2025,5,2025_05_TEN_ARI,Tennessee Titans at Arizona Cardinals,9.266,-7.5,41.5,21.0,22.0
+2025,5,2025_05_HOU_BAL,Houston Texans at Baltimore Ravens,-0.946,2.5,41.5,10.0,44.0
+2025,5,2025_05_NYG_NO,New York Giants at New Orleans Saints,-0.391,-1.5,41.5,26.0,14.0
+2025,5,2025_05_DEN_PHI,Denver Broncos at Philadelphia Eagles,7.888,-3.5,44.5,17.0,21.0
+2025,5,2025_05_LV_IND,Las Vegas Raiders at Indianapolis Colts,8.323,-7.0,46.5,40.0,6.0
+2025,5,2025_05_DAL_NYJ,Dallas Cowboys at New York Jets,-1.47,-1.5,48.5,22.0,37.0
+2025,5,2025_05_MIA_CAR,Miami Dolphins at Carolina Panthers,-2.925,1.5,44.5,27.0,24.0
+2025,5,2025_05_MIN_CLE,Minnesota Vikings at Cleveland Browns,-6.668,3.5,35.5,17.0,21.0
+2025,5,2025_05_SF_LA,San Francisco 49ers at Los Angeles Rams,8.524,-8.5,43.5,23.0,26.0
+2025,4,2025_04_CIN_DEN,Cincinnati Bengals at Denver Broncos,10.711,-7.5,44.5,28.0,3.0
+2025,4,2025_04_NYJ_MIA,New York Jets at Miami Dolphins,2.791,-2.5,44.5,27.0,21.0
+2025,4,2025_04_GB_DAL,Green Bay Packers at Dallas Cowboys,-6.78,7.0,47.5,40.0,40.0
+2025,4,2025_04_BAL_KC,Baltimore Ravens at Kansas City Chiefs,-5.683,2.5,48.5,37.0,20.0
+2025,4,2025_04_CHI_LV,Chicago Bears at Las Vegas Raiders,-0.358,-1.5,47.5,24.0,25.0
+2025,4,2025_04_IND_LA,Indianapolis Colts at Los Angeles Rams,5.755,-3.5,49.5,27.0,20.0
+2025,4,2025_04_JAX_SF,Jacksonville Jaguars at San Francisco 49ers,5.683,-3.5,45.5,21.0,26.0
+2025,4,2025_04_LAC_NYG,Los Angeles Chargers at New York Giants,-7.81,6.0,43.5,21.0,18.0
+2025,4,2025_04_TEN_HOU,Tennessee Titans at Houston Texans,8.809,-7.5,39.5,26.0,0.0
+2025,4,2025_04_CLE_DET,Cleveland Browns at Detroit Lions,12.353,-10.0,44.5,34.0,10.0
+2025,4,2025_04_WAS_ATL,Washington Commanders at Atlanta Falcons,0.065,-2.5,43.5,34.0,27.0
+2025,4,2025_04_CAR_NE,Carolina Panthers at New England Patriots,5.009,-5.5,42.5,42.0,13.0
+2025,4,2025_04_NO_BUF,New Orleans Saints at Buffalo Bills,20.322,-15.5,48.5,31.0,19.0
+2025,4,2025_04_PHI_TB,Philadelphia Eagles at Tampa Bay Buccaneers,-5.327,3.5,44.5,25.0,31.0
+2025,4,2025_04_MIN_PIT,Minnesota Vikings at Pittsburgh Steelers,-3.597,2.5,41.5,24.0,21.0
+2025,4,2025_04_SEA_ARI,Seattle Seahawks at Arizona Cardinals,0.033,1.5,43.5,20.0,23.0
+2025,3,2025_03_DET_BAL,Detroit Lions at Baltimore Ravens,6.262,-4.5,53.5,30.0,38.0
+2025,3,2025_03_KC_NYG,Kansas City Chiefs at New York Giants,-9.734,6.0,44.5,9.0,22.0
+2025,3,2025_03_ARI_SF,Arizona Cardinals at San Francisco 49ers,-2.858,-1.5,44.5,16.0,15.0
+2025,3,2025_03_DAL_CHI,Dallas Cowboys at Chicago Bears,-0.13,1.5,49.5,31.0,14.0
+2025,3,2025_03_NO_SEA,New Orleans Saints at Seattle Seahawks,9.82,-7.5,41.5,44.0,13.0
+2025,3,2025_03_DEN_LAC,Denver Broncos at Los Angeles Chargers,0.293,-2.5,45.5,23.0,20.0
+2025,3,2025_03_HOU_JAX,Houston Texans at Jacksonville Jaguars,-1.47,-1.5,43.5,17.0,10.0
+2025,3,2025_03_NYJ_TB,New York Jets at Tampa Bay Buccaneers,6.705,-6.5,43.5,29.0,27.0
+2025,3,2025_03_PIT_NE,Pittsburgh Steelers at New England Patriots,-1.963,1.5,44.5,14.0,21.0
+2025,3,2025_03_LA_PHI,Los Angeles Rams at Philadelphia Eagles,5.791,-3.5,45.5,33.0,26.0
+2025,3,2025_03_CIN_MIN,Cincinnati Bengals at Minnesota Vikings,8.085,-3.0,41.5,48.0,10.0
+2025,3,2025_03_GB_CLE,Green Bay Packers at Cleveland Browns,-10.438,8.5,41.5,13.0,10.0
+2025,3,2025_03_LV_WAS,Las Vegas Raiders at Washington Commanders,5.398,-2.5,43.5,41.0,24.0
+2025,3,2025_03_ATL_CAR,Atlanta Falcons at Carolina Panthers,-7.888,5.5,44.5,30.0,0.0
+2025,3,2025_03_IND_TEN,Indianapolis Colts at Tennessee Titans,-4.521,6.0,43.5,20.0,41.0
+2025,3,2025_03_MIA_BUF,Miami Dolphins at Buffalo Bills,15.876,-12.5,50.5,31.0,21.0
+2025,2,2025_02_LAC_LV,Los Angeles Chargers at Las Vegas Raiders,-7.967,3.5,46.5,9.0,20.0
+2025,2,2025_02_TB_HOU,Tampa Bay Buccaneers at Houston Texans,1.634,-2.5,42.5,19.0,20.0
+2025,2,2025_02_ATL_MIN,Atlanta Falcons at Minnesota Vikings,3.395,-3.5,44.5,6.0,22.0
+2025,2,2025_02_PHI_KC,Philadelphia Eagles at Kansas City Chiefs,0.554,1.5,46.5,17.0,20.0
+2025,2,2025_02_DEN_IND,Denver Broncos at Indianapolis Colts,-3.53,2.5,43.5,29.0,28.0
+2025,2,2025_02_CAR_ARI,Carolina Panthers at Arizona Cardinals,12.302,-7.0,45.5,27.0,22.0
+2025,2,2025_02_SF_NO,San Francisco 49ers at New Orleans Saints,-6.631,3.0,40.5,21.0,26.0
+2025,2,2025_02_SEA_PIT,Seattle Seahawks at Pittsburgh Steelers,3.126,-3.5,40.5,17.0,31.0
+2025,2,2025_02_CHI_DET,Chicago Bears at Detroit Lions,8.565,-6.0,46.5,52.0,21.0
+2025,2,2025_02_LA_TEN,Los Angeles Rams at Tennessee Titans,-4.869,5.5,41.5,19.0,33.0
+2025,2,2025_02_NYG_DAL,New York Giants at Dallas Cowboys,6.631,-4.5,44.5,40.0,37.0
+2025,2,2025_02_CLE_BAL,Cleveland Browns at Baltimore Ravens,15.807,-12.5,46.5,41.0,17.0
+2025,2,2025_02_JAX_CIN,Jacksonville Jaguars at Cincinnati Bengals,7.118,-3.5,49.5,31.0,27.0
+2025,2,2025_02_NE_MIA,New England Patriots at Miami Dolphins,1.535,-1.5,43.5,27.0,33.0
+2025,2,2025_02_WAS_GB,Washington Commanders at Green Bay Packers,5.54,-3.5,48.5,27.0,18.0
+2025,1,2025_01_MIN_CHI,Minnesota Vikings at Chicago Bears,-1.175,1.5,43.5,24.0,27.0
+2025,1,2025_01_BAL_BUF,Baltimore Ravens at Buffalo Bills,1.044,1.5,50.5,41.0,40.0
+2025,1,2025_01_HOU_LA,Houston Texans at Los Angeles Rams,1.011,-3.5,43.5,14.0,9.0
+2025,1,2025_01_DET_GB,Detroit Lions at Green Bay Packers,0.946,-1.5,48.5,27.0,13.0
+2025,1,2025_01_SF_SEA,San Francisco 49ers at Seattle Seahawks,-4.245,2.5,43.5,13.0,17.0
+2025,1,2025_01_TEN_DEN,Tennessee Titans at Denver Broncos,8.363,-8.5,42.5,20.0,12.0
+2025,1,2025_01_TB_ATL,Tampa Bay Buccaneers at Atlanta Falcons,-1.306,1.5,47.5,20.0,23.0
+2025,1,2025_01_ARI_NO,Arizona Cardinals at New Orleans Saints,-8.85,6.0,44.5,13.0,20.0
+2025,1,2025_01_LV_NE,Las Vegas Raiders at New England Patriots,3.26,-2.5,44.5,13.0,20.0
+2025,1,2025_01_CIN_CLE,Cincinnati Bengals at Cleveland Browns,-8.006,5.5,47.5,16.0,17.0
+2025,1,2025_01_NYG_WAS,New York Giants at Washington Commanders,8.646,-6.0,45.5,21.0,6.0
+2025,1,2025_01_CAR_JAX,Carolina Panthers at Jacksonville Jaguars,6.705,-4.5,45.5,26.0,10.0
+2025,1,2025_01_MIA_IND,Miami Dolphins at Indianapolis Colts,2.194,-1.5,47.5,33.0,8.0
+2025,1,2025_01_PIT_NYJ,Pittsburgh Steelers at New York Jets,-2.392,3.0,37.5,32.0,34.0
+2025,1,2025_01_KC_LAC,Kansas City Chiefs at Los Angeles Chargers,-3.631,3.0,47.5,27.0,21.0
+2025,1,2025_01_DAL_PHI,Dallas Cowboys at Philadelphia Eagles,9.098,-8.5,47.5,24.0,20.0
+2024,22,2024_22_KC_PHI,Kansas City Chiefs at Philadelphia Eagles,-2.925,1.5,48.5,40.0,22.0
+2024,21,2024_21_BUF_KC,Buffalo Bills at Kansas City Chiefs,2.359,-1.5,49.5,32.0,29.0
+2024,21,2024_21_WAS_PHI,Washington Commanders at Philadelphia Eagles,8.809,-6.0,46.5,55.0,23.0
+2024,20,2024_20_BAL_BUF,Baltimore Ravens at Buffalo Bills,1.24,1.5,51.5,27.0,25.0
+2024,20,2024_20_LA_PHI,Los Angeles Rams at Philadelphia Eagles,8.85,-7.0,43.5,28.0,22.0
+2024,20,2024_20_WAS_DET,Washington Commanders at Detroit Lions,11.365,-8.5,55.5,31.0,45.0
+2024,20,2024_20_HOU_KC,Houston Texans at Kansas City Chiefs,9.864,-9.5,41.5,23.0,14.0
+2024,19,2024_19_MIN_LA,Minnesota Vikings at Los Angeles Rams,-3.597,2.5,47.5,27.0,9.0
+2024,19,2024_19_WAS_TB,Washington Commanders at Tampa Bay Buccaneers,3.903,-3.0,51.5,20.0,23.0
+2024,19,2024_19_GB_PHI,Green Bay Packers at Philadelphia Eagles,5.079,-5.5,45.5,22.0,10.0
+2024,19,2024_19_DEN_BUF,Denver Broncos at Buffalo Bills,10.394,-7.5,48.5,31.0,7.0
+2024,19,2024_19_PIT_BAL,Pittsburgh Steelers at Baltimore Ravens,11.222,-9.5,44.5,28.0,14.0
+2024,19,2024_19_LAC_HOU,Los Angeles Chargers at Houston Texans,-1.077,3.0,41.5,32.0,12.0
+2024,18,2024_18_MIN_DET,Minnesota Vikings at Detroit Lions,4.349,-3.0,56.5,31.0,9.0
+2024,18,2024_18_SF_ARI,San Francisco 49ers at Arizona Cardinals,1.371,-4.5,42.5,47.0,24.0
+2024,18,2024_18_LAC_LV,Los Angeles Chargers at Las Vegas Raiders,-6.52,7.0,42.5,20.0,34.0
+2024,18,2024_18_KC_DEN,Kansas City Chiefs at Denver Broncos,14.767,-10.5,40.5,38.0,0.0
+2024,18,2024_18_MIA_NYJ,Miami Dolphins at New York Jets,1.404,-1.5,39.5,32.0,20.0
+2024,18,2024_18_SEA_LA,Seattle Seahawks at Los Angeles Rams,-12.559,7.5,38.5,25.0,30.0
+2024,18,2024_18_NYG_PHI,New York Giants at Philadelphia Eagles,0.619,-3.0,36.5,20.0,13.0
+2024,18,2024_18_HOU_TEN,Houston Texans at Tennessee Titans,0.13,-2.5,36.5,14.0,23.0
+2024,18,2024_18_WAS_DAL,Washington Commanders at Dallas Cowboys,-8.124,7.0,43.5,19.0,23.0
+2024,18,2024_18_CAR_ATL,Carolina Panthers at Atlanta Falcons,9.35,-7.5,48.5,38.0,44.0
+2024,18,2024_18_JAX_IND,Jacksonville Jaguars at Indianapolis Colts,2.992,-3.5,45.5,26.0,23.0
+2024,18,2024_18_CHI_GB,Chicago Bears at Green Bay Packers,13.474,-10.0,41.5,22.0,24.0
+2024,18,2024_18_BUF_NE,Buffalo Bills at New England Patriots,-5.899,3.0,36.5,23.0,16.0
+2024,18,2024_18_NO_TB,New Orleans Saints at Tampa Bay Buccaneers,12.981,-14.5,44.5,27.0,19.0
+2024,18,2024_18_CIN_PIT,Cincinnati Bengals at Pittsburgh Steelers,1.044,2.5,48.5,17.0,19.0
+2024,18,2024_18_CLE_BAL,Cleveland Browns at Baltimore Ravens,19.481,-19.5,42.5,35.0,10.0
+2024,17,2024_17_DET_SF,Detroit Lions at San Francisco 49ers,-7.927,4.0,50.5,34.0,40.0
+2024,17,2024_17_ATL_WAS,Atlanta Falcons at Washington Commanders,4.04,-3.5,46.5,30.0,24.0
+2024,17,2024_17_GB_MIN,Green Bay Packers at Minnesota Vikings,0.619,1.0,49.0,27.0,25.0
+2024,17,2024_17_MIA_CLE,Miami Dolphins at Cleveland Browns,-0.098,3.0,32.5,3.0,20.0
+2024,17,2024_17_DAL_PHI,Dallas Cowboys at Philadelphia Eagles,12.353,-7.5,37.5,41.0,7.0
+2024,17,2024_17_CAR_TB,Carolina Panthers at Tampa Bay Buccaneers,9.864,-9.5,47.5,48.0,14.0
+2024,17,2024_17_NYJ_BUF,New York Jets at Buffalo Bills,16.44,-10.0,44.5,40.0,14.0
+2024,17,2024_17_TEN_JAX,Tennessee Titans at Jacksonville Jaguars,-0.587,1.0,38.0,20.0,13.0
+2024,17,2024_17_LV_NO,Las Vegas Raiders at New Orleans Saints,-0.293,2.0,37.5,10.0,25.0
+2024,17,2024_17_IND_NYG,Indianapolis Colts at New York Giants,-7.771,7.5,40.5,45.0,33.0
+2024,17,2024_17_ARI_LA,Arizona Cardinals at Los Angeles Rams,5.899,-6.5,48.0,13.0,9.0
+2024,17,2024_17_DEN_CIN,Denver Broncos at Cincinnati Bengals,2.161,-3.5,50.5,30.0,24.0
+2024,17,2024_17_LAC_NE,Los Angeles Chargers at New England Patriots,-7.967,6.0,42.0,7.0,40.0
+2024,17,2024_17_SEA_CHI,Seattle Seahawks at Chicago Bears,-4.695,3.5,43.5,3.0,6.0
+2024,17,2024_17_BAL_HOU,Baltimore Ravens at Houston Texans,-5.719,5.5,46.5,2.0,31.0
+2024,17,2024_17_KC_PIT,Kansas City Chiefs at Pittsburgh Steelers,-2.194,3.0,43.5,10.0,29.0
+2024,16,2024_16_NO_GB,New Orleans Saints at Green Bay Packers,17.038,-14.0,44.0,34.0,0.0
+2024,16,2024_16_TB_DAL,Tampa Bay Buccaneers at Dallas Cowboys,-5.971,4.5,47.5,26.0,24.0
+2024,16,2024_16_JAX_LV,Jacksonville Jaguars at Las Vegas Raiders,0.13,-2.5,41.5,19.0,14.0
+2024,16,2024_16_SF_MIA,San Francisco 49ers at Miami Dolphins,-0.717,2.0,44.0,29.0,17.0
+2024,16,2024_16_NE_BUF,New England Patriots at Buffalo Bills,20.894,-14.0,48.0,24.0,21.0
+2024,16,2024_16_MIN_SEA,Minnesota Vikings at Seattle Seahawks,-3.563,2.5,43.0,24.0,27.0
+2024,16,2024_16_LA_NYJ,Los Angeles Rams at New York Jets,-4.695,3.0,47.0,9.0,19.0
+2024,16,2024_16_TEN_IND,Tennessee Titans at Indianapolis Colts,5.504,-4.0,42.5,38.0,30.0
+2024,16,2024_16_NYG_ATL,New York Giants at Atlanta Falcons,14.46,-9.5,42.5,34.0,7.0
+2024,16,2024_16_PHI_WAS,Philadelphia Eagles at Washington Commanders,-4.142,4.0,47.0,36.0,33.0
+2024,16,2024_16_ARI_CAR,Arizona Cardinals at Carolina Panthers,-6.817,5.5,47.0,36.0,30.0
+2024,16,2024_16_DET_CHI,Detroit Lions at Chicago Bears,-11.365,7.0,47.5,17.0,34.0
+2024,16,2024_16_CLE_CIN,Cleveland Browns at Cincinnati Bengals,6.446,-10.0,46.5,24.0,6.0
+2024,16,2024_16_PIT_BAL,Pittsburgh Steelers at Baltimore Ravens,9.14,-7.0,44.5,34.0,17.0
+2024,16,2024_16_HOU_KC,Houston Texans at Kansas City Chiefs,1.142,-3.5,42.5,27.0,19.0
+2024,16,2024_16_DEN_LAC,Denver Broncos at Los Angeles Chargers,2.492,-3.0,41.5,34.0,27.0
+2024,15,2024_15_ATL_LV,Atlanta Falcons at Las Vegas Raiders,-8.444,6.5,44.5,9.0,15.0
+2024,15,2024_15_CHI_MIN,Chicago Bears at Minnesota Vikings,10.438,-7.0,43.5,30.0,12.0
+2024,15,2024_15_GB_SEA,Green Bay Packers at Seattle Seahawks,-2.525,3.0,48.0,13.0,30.0
+2024,15,2024_15_NE_ARI,New England Patriots at Arizona Cardinals,8.363,-6.0,46.5,30.0,17.0
+2024,15,2024_15_TB_LAC,Tampa Bay Buccaneers at Los Angeles Chargers,3.699,-3.0,46.0,17.0,40.0
+2024,15,2024_15_IND_DEN,Indianapolis Colts at Denver Broncos,5.398,-4.5,43.5,31.0,13.0
+2024,15,2024_15_BUF_DET,Buffalo Bills at Detroit Lions,1.798,-2.5,55.5,42.0,48.0
+2024,15,2024_15_PIT_PHI,Pittsburgh Steelers at Philadelphia Eagles,5.079,-5.5,43.0,27.0,13.0
+2024,15,2024_15_DAL_CAR,Dallas Cowboys at Carolina Panthers,-2.26,-2.5,42.0,14.0,30.0
+2024,15,2024_15_KC_CLE,Kansas City Chiefs at Cleveland Browns,-7.732,4.5,41.5,7.0,21.0
+2024,15,2024_15_BAL_NYG,Baltimore Ravens at New York Giants,-18.532,16.5,43.5,14.0,35.0
+2024,15,2024_15_CIN_TEN,Cincinnati Bengals at Tennessee Titans,-4.695,6.0,46.5,27.0,37.0
+2024,15,2024_15_NYJ_JAX,New York Jets at Jacksonville Jaguars,-4.556,3.5,41.5,25.0,32.0
+2024,15,2024_15_MIA_HOU,Miami Dolphins at Houston Texans,3.631,-2.5,46.5,20.0,12.0
+2024,15,2024_15_WAS_NO,Washington Commanders at New Orleans Saints,-8.404,7.5,44.5,19.0,20.0
+2024,15,2024_15_LA_SF,Los Angeles Rams at San Francisco 49ers,1.404,-3.0,48.5,6.0,12.0
+2024,14,2024_14_CIN_DAL,Cincinnati Bengals at Dallas Cowboys,-3.665,5.0,51.0,20.0,27.0
+2024,14,2024_14_LAC_KC,Los Angeles Chargers at Kansas City Chiefs,5.469,-5.0,43.5,19.0,17.0
+2024,14,2024_14_CHI_SF,Chicago Bears at San Francisco 49ers,6.557,-3.0,43.5,38.0,13.0
+2024,14,2024_14_BUF_LA,Buffalo Bills at Los Angeles Rams,-9.224,3.5,49.5,44.0,42.0
+2024,14,2024_14_SEA_ARI,Seattle Seahawks at Arizona Cardinals,3.53,-3.0,45.5,18.0,30.0
+2024,14,2024_14_NYJ_MIA,New York Jets at Miami Dolphins,7.81,-6.5,45.0,32.0,26.0
+2024,14,2024_14_CAR_PHI,Carolina Panthers at Philadelphia Eagles,18.179,-14.0,44.5,22.0,16.0
+2024,14,2024_14_CLE_PIT,Cleveland Browns at Pittsburgh Steelers,8.085,-6.0,43.0,27.0,14.0
+2024,14,2024_14_LV_TB,Las Vegas Raiders at Tampa Bay Buccaneers,10.349,-7.0,47.0,28.0,13.0
+2024,14,2024_14_JAX_TEN,Jacksonville Jaguars at Tennessee Titans,6.483,-3.0,40.0,6.0,10.0
+2024,14,2024_14_NO_NYG,New Orleans Saints at New York Giants,-5.362,5.5,41.0,11.0,14.0
+2024,14,2024_14_ATL_MIN,Atlanta Falcons at Minnesota Vikings,7.346,-6.0,46.5,42.0,21.0
+2024,14,2024_14_GB_DET,Green Bay Packers at Detroit Lions,5.971,-3.0,53.0,34.0,31.0
+2024,13,2024_13_CLE_DEN,Cleveland Browns at Denver Broncos,6.594,-6.5,41.5,41.0,32.0
+2024,13,2024_13_SF_BUF,San Francisco 49ers at Buffalo Bills,8.605,-6.5,45.0,35.0,10.0
+2024,13,2024_13_PHI_BAL,Philadelphia Eagles at Baltimore Ravens,3.937,-3.0,50.0,19.0,24.0
+2024,13,2024_13_LA_NO,Los Angeles Rams at New Orleans Saints,-1.765,2.5,48.5,14.0,21.0
+2024,13,2024_13_TB_CAR,Tampa Bay Buccaneers at Carolina Panthers,-7.927,6.5,46.0,23.0,26.0
+2024,13,2024_13_SEA_NYJ,Seattle Seahawks at New York Jets,0.13,-1.0,41.5,21.0,26.0
+2024,13,2024_13_ARI_MIN,Arizona Cardinals at Minnesota Vikings,5.398,-3.5,45.5,23.0,22.0
+2024,13,2024_13_HOU_JAX,Houston Texans at Jacksonville Jaguars,-6.52,3.5,44.5,20.0,23.0
+2024,13,2024_13_IND_NE,Indianapolis Colts at New England Patriots,-4.383,2.5,41.5,24.0,25.0
+2024,13,2024_13_PIT_CIN,Pittsburgh Steelers at Cincinnati Bengals,2.227,-3.0,46.0,38.0,44.0
+2024,13,2024_13_LAC_ATL,Los Angeles Chargers at Atlanta Falcons,0.228,1.0,47.0,13.0,17.0
+2024,13,2024_13_TEN_WAS,Tennessee Titans at Washington Commanders,6.336,-6.0,45.0,42.0,19.0
+2024,13,2024_13_LV_KC,Las Vegas Raiders at Kansas City Chiefs,16.084,-13.5,42.0,19.0,17.0
+2024,13,2024_13_MIA_GB,Miami Dolphins at Green Bay Packers,4.799,-3.5,47.5,30.0,17.0
+2024,13,2024_13_NYG_DAL,New York Giants at Dallas Cowboys,3.496,-4.5,39.0,27.0,20.0
+2024,13,2024_13_CHI_DET,Chicago Bears at Detroit Lions,15.605,-9.5,47.5,23.0,20.0
+2024,12,2024_12_BAL_LAC,Baltimore Ravens at Los Angeles Chargers,-3.226,3.0,51.0,23.0,30.0
+2024,12,2024_12_PHI_LA,Philadelphia Eagles at Los Angeles Rams,-4.314,3.0,49.0,20.0,37.0
+2024,12,2024_12_SF_GB,San Francisco 49ers at Green Bay Packers,4.556,-6.5,44.5,38.0,10.0
+2024,12,2024_12_ARI_SEA,Arizona Cardinals at Seattle Seahawks,-0.326,1.0,46.5,16.0,6.0
+2024,12,2024_12_DEN_LV,Denver Broncos at Las Vegas Raiders,-7.346,6.5,41.5,19.0,29.0
+2024,12,2024_12_TEN_HOU,Tennessee Titans at Houston Texans,11.606,-8.0,40.5,27.0,32.0
+2024,12,2024_12_NE_MIA,New England Patriots at Miami Dolphins,11.85,-7.5,46.0,34.0,15.0
+2024,12,2024_12_TB_NYG,Tampa Bay Buccaneers at New York Giants,-5.044,6.5,40.5,7.0,30.0
+2024,12,2024_12_DAL_WAS,Dallas Cowboys at Washington Commanders,11.413,-10.5,45.0,26.0,34.0
+2024,12,2024_12_MIN_CHI,Minnesota Vikings at Chicago Bears,-7.577,3.0,39.5,27.0,30.0
+2024,12,2024_12_KC_CAR,Kansas City Chiefs at Carolina Panthers,-16.225,11.0,43.0,27.0,30.0
+2024,12,2024_12_DET_IND,Detroit Lions at Indianapolis Colts,-11.509,7.0,50.5,6.0,24.0
+2024,12,2024_12_PIT_CLE,Pittsburgh Steelers at Cleveland Browns,-0.913,3.5,36.5,24.0,19.0
+2024,11,2024_11_HOU_DAL,Houston Texans at Dallas Cowboys,-9.015,7.5,41.5,10.0,34.0
+2024,11,2024_11_CIN_LAC,Cincinnati Bengals at Los Angeles Chargers,1.47,-1.0,48.0,34.0,27.0
+2024,11,2024_11_KC_BUF,Kansas City Chiefs at Buffalo Bills,-0.358,-2.5,46.5,30.0,21.0
+2024,11,2024_11_ATL_DEN,Atlanta Falcons at Denver Broncos,0.163,-2.0,44.5,38.0,6.0
+2024,11,2024_11_SEA_SF,Seattle Seahawks at San Francisco 49ers,9.477,-6.0,49.0,17.0,20.0
+2024,11,2024_11_IND_NYJ,Indianapolis Colts at New York Jets,6.705,-4.0,43.0,27.0,28.0
+2024,11,2024_11_MIN_TEN,Minnesota Vikings at Tennessee Titans,-9.477,6.0,40.0,13.0,23.0
+2024,11,2024_11_JAX_DET,Jacksonville Jaguars at Detroit Lions,19.283,-14.0,47.5,52.0,6.0
+2024,11,2024_11_LV_MIA,Las Vegas Raiders at Miami Dolphins,12.875,-8.0,43.5,34.0,19.0
+2024,11,2024_11_BAL_PIT,Baltimore Ravens at Pittsburgh Steelers,-5.899,3.0,48.0,18.0,16.0
+2024,11,2024_11_LA_NE,Los Angeles Rams at New England Patriots,-6.372,4.0,42.5,22.0,28.0
+2024,11,2024_11_CLE_NO,Cleveland Browns at New Orleans Saints,2.359,1.0,44.0,35.0,14.0
+2024,11,2024_11_GB_CHI,Green Bay Packers at Chicago Bears,-8.524,6.0,41.0,19.0,20.0
+2024,11,2024_11_WAS_PHI,Washington Commanders at Philadelphia Eagles,6.892,-4.5,49.5,26.0,18.0
+2024,10,2024_10_MIA_LA,Miami Dolphins at Los Angeles Rams,2.326,-2.5,49.5,15.0,23.0
+2024,10,2024_10_DET_HOU,Detroit Lions at Houston Texans,-4.591,4.5,49.0,23.0,26.0
+2024,10,2024_10_NYJ_ARI,New York Jets at Arizona Cardinals,0.261,2.0,45.5,31.0,6.0
+2024,10,2024_10_PHI_DAL,Philadelphia Eagles at Dallas Cowboys,-8.124,7.5,44.5,6.0,34.0
+2024,10,2024_10_TEN_LAC,Tennessee Titans at Los Angeles Chargers,8.323,-8.0,40.0,27.0,17.0
+2024,10,2024_10_NE_CHI,New England Patriots at Chicago Bears,8.006,-6.5,37.5,3.0,19.0
+2024,10,2024_10_SF_TB,San Francisco 49ers at Tampa Bay Buccaneers,-8.164,6.5,50.5,20.0,23.0
+2024,10,2024_10_DEN_KC,Denver Broncos at Kansas City Chiefs,15.082,-7.5,42.5,16.0,14.0
+2024,10,2024_10_ATL_NO,Atlanta Falcons at New Orleans Saints,-4.521,3.5,46.5,20.0,17.0
+2024,10,2024_10_PIT_WAS,Pittsburgh Steelers at Washington Commanders,0.424,-1.5,45.0,27.0,28.0
+2024,10,2024_10_MIN_JAX,Minnesota Vikings at Jacksonville Jaguars,-12.559,7.0,42.5,7.0,12.0
+2024,10,2024_10_BUF_IND,Buffalo Bills at Indianapolis Colts,-6.631,4.5,46.5,20.0,30.0
+2024,10,2024_10_NYG_CAR,New York Giants at Carolina Panthers,-7.043,6.5,40.5,20.0,17.0
+2024,10,2024_10_CIN_BAL,Cincinnati Bengals at Baltimore Ravens,7.461,-6.0,53.0,35.0,34.0
+2024,9,2024_09_TB_KC,Tampa Bay Buccaneers at Kansas City Chiefs,10.215,-9.0,45.5,30.0,24.0
+2024,9,2024_09_IND_MIN,Indianapolis Colts at Minnesota Vikings,6.52,-6.5,47.0,21.0,13.0
+2024,9,2024_09_DET_GB,Detroit Lions at Green Bay Packers,-1.897,2.5,47.5,14.0,24.0
+2024,9,2024_09_LA_SEA,Los Angeles Rams at Seattle Seahawks,0.913,1.5,48.5,20.0,26.0
+2024,9,2024_09_JAX_PHI,Jacksonville Jaguars at Philadelphia Eagles,7.27,-7.5,46.0,28.0,23.0
+2024,9,2024_09_CHI_ARI,Chicago Bears at Arizona Cardinals,0.652,-1.5,44.5,29.0,9.0
+2024,9,2024_09_WAS_NYG,Washington Commanders at New York Giants,-3.159,4.5,44.5,22.0,27.0
+2024,9,2024_09_LV_CIN,Las Vegas Raiders at Cincinnati Bengals,10.483,-8.0,45.0,41.0,24.0
+2024,9,2024_09_DEN_BAL,Denver Broncos at Baltimore Ravens,9.82,-9.0,46.5,41.0,10.0
+2024,9,2024_09_DAL_ATL,Dallas Cowboys at Atlanta Falcons,4.383,-3.0,52.0,27.0,21.0
+2024,9,2024_09_MIA_BUF,Miami Dolphins at Buffalo Bills,9.734,-6.5,49.0,30.0,27.0
+2024,9,2024_09_NO_CAR,New Orleans Saints at Carolina Panthers,-10.304,7.0,43.5,23.0,22.0
+2024,9,2024_09_LAC_CLE,Los Angeles Chargers at Cleveland Browns,-2.958,2.0,42.5,10.0,27.0
+2024,9,2024_09_NE_TEN,New England Patriots at Tennessee Titans,5.791,-3.0,38.5,20.0,17.0
+2024,9,2024_09_HOU_NYJ,Houston Texans at New York Jets,-0.554,-2.5,43.5,21.0,13.0
+2024,8,2024_08_NYG_PIT,New York Giants at Pittsburgh Steelers,7.005,-6.0,37.5,26.0,18.0
+2024,8,2024_08_DAL_SF,Dallas Cowboys at San Francisco 49ers,9.35,-5.5,48.0,30.0,24.0
+2024,8,2024_08_CAR_DEN,Carolina Panthers at Denver Broncos,10.848,-13.0,40.5,28.0,14.0
+2024,8,2024_08_KC_LV,Kansas City Chiefs at Las Vegas Raiders,-13.418,9.0,42.0,20.0,27.0
+2024,8,2024_08_CHI_WAS,Chicago Bears at Washington Commanders,-0.554,-1.5,46.5,18.0,15.0
+2024,8,2024_08_NO_LAC,New Orleans Saints at Los Angeles Chargers,8.244,-7.0,41.5,26.0,8.0
+2024,8,2024_08_BUF_SEA,Buffalo Bills at Seattle Seahawks,-1.864,3.0,45.5,10.0,31.0
+2024,8,2024_08_PHI_CIN,Philadelphia Eagles at Cincinnati Bengals,1.831,-2.5,47.5,17.0,37.0
+2024,8,2024_08_NYJ_NE,New York Jets at New England Patriots,-9.951,7.0,41.0,25.0,22.0
+2024,8,2024_08_ATL_TB,Atlanta Falcons at Tampa Bay Buccaneers,-0.815,1.5,47.0,26.0,31.0
+2024,8,2024_08_ARI_MIA,Arizona Cardinals at Miami Dolphins,2.425,-4.0,46.5,27.0,28.0
+2024,8,2024_08_IND_HOU,Indianapolis Colts at Houston Texans,5.971,-5.0,45.0,23.0,20.0
+2024,8,2024_08_GB_JAX,Green Bay Packers at Jacksonville Jaguars,-5.327,3.5,49.0,27.0,30.0
+2024,8,2024_08_BAL_CLE,Baltimore Ravens at Cleveland Browns,-14.46,7.5,44.5,29.0,24.0
+2024,8,2024_08_TEN_DET,Tennessee Titans at Detroit Lions,14.705,-12.5,45.0,52.0,14.0
+2024,8,2024_08_MIN_LA,Minnesota Vikings at Los Angeles Rams,-4.66,3.0,47.5,30.0,20.0
+2024,7,2024_07_LAC_ARI,Los Angeles Chargers at Arizona Cardinals,-2.359,1.0,44.0,17.0,15.0
+2024,7,2024_07_BAL_TB,Baltimore Ravens at Tampa Bay Buccaneers,-2.791,4.5,51.0,31.0,41.0
+2024,7,2024_07_NYJ_PIT,New York Jets at Pittsburgh Steelers,0.979,3.0,40.0,37.0,15.0
+2024,7,2024_07_KC_SF,Kansas City Chiefs at San Francisco 49ers,0.75,-2.5,47.5,18.0,28.0
+2024,7,2024_07_CAR_WAS,Carolina Panthers at Washington Commanders,8.933,-10.0,51.0,40.0,7.0
+2024,7,2024_07_LV_LA,Las Vegas Raiders at Los Angeles Rams,6.262,-7.0,43.0,20.0,15.0
+2024,7,2024_07_PHI_NYG,Philadelphia Eagles at New York Giants,-4.521,3.0,42.0,3.0,28.0
+2024,7,2024_07_DET_MIN,Detroit Lions at Minnesota Vikings,-0.815,-1.0,50.5,29.0,31.0
+2024,7,2024_07_MIA_IND,Miami Dolphins at Indianapolis Colts,1.732,-3.0,44.0,16.0,10.0
+2024,7,2024_07_HOU_GB,Houston Texans at Green Bay Packers,1.044,-3.0,48.0,24.0,22.0
+2024,7,2024_07_CIN_CLE,Cincinnati Bengals at Cleveland Browns,-4.695,5.5,42.0,14.0,21.0
+2024,7,2024_07_TEN_BUF,Tennessee Titans at Buffalo Bills,11.128,-9.5,41.0,34.0,10.0
+2024,7,2024_07_SEA_ATL,Seattle Seahawks at Atlanta Falcons,3.126,-3.0,51.5,14.0,34.0
+2024,7,2024_07_NE_JAX,New England Patriots at Jacksonville Jaguars,6.668,-6.5,42.0,32.0,16.0
+2024,7,2024_07_DEN_NO,Denver Broncos at New Orleans Saints,-0.88,2.5,37.0,10.0,33.0
+2024,6,2024_06_BUF_NYJ,Buffalo Bills at New York Jets,-3.395,1.0,42.0,20.0,23.0
+2024,6,2024_06_CIN_NYG,Cincinnati Bengals at New York Giants,-3.395,4.5,46.0,7.0,17.0
+2024,6,2024_06_DET_DAL,Detroit Lions at Dallas Cowboys,-4.625,3.5,52.5,9.0,47.0
+2024,6,2024_06_ATL_CAR,Atlanta Falcons at Carolina Panthers,-7.423,6.0,45.5,20.0,38.0
+2024,6,2024_06_PIT_LV,Pittsburgh Steelers at Las Vegas Raiders,-3.971,3.5,36.5,13.0,32.0
+2024,6,2024_06_LAC_DEN,Los Angeles Chargers at Denver Broncos,-0.098,3.0,37.0,16.0,23.0
+2024,6,2024_06_IND_TEN,Indianapolis Colts at Tennessee Titans,1.437,-2.5,42.0,17.0,20.0
+2024,6,2024_06_CLE_PHI,Cleveland Browns at Philadelphia Eagles,7.888,-8.0,42.0,20.0,16.0
+2024,6,2024_06_TB_NO,Tampa Bay Buccaneers at New Orleans Saints,-5.899,3.5,42.5,27.0,51.0
+2024,6,2024_06_HOU_NE,Houston Texans at New England Patriots,-8.728,6.5,38.5,21.0,41.0
+2024,6,2024_06_ARI_GB,Arizona Cardinals at Green Bay Packers,6.967,-5.5,47.0,34.0,13.0
+2024,6,2024_06_WAS_BAL,Washington Commanders at Baltimore Ravens,9.057,-6.5,51.5,30.0,23.0
+2024,6,2024_06_JAX_CHI,Jacksonville Jaguars at Chicago Bears,0.815,1.5,44.5,35.0,16.0
+2024,6,2024_06_SF_SEA,San Francisco 49ers at Seattle Seahawks,-2.891,3.5,49.0,24.0,36.0
+2024,5,2024_05_NO_KC,New Orleans Saints at Kansas City Chiefs,6.817,-5.5,43.0,26.0,13.0
+2024,5,2024_05_DAL_PIT,Dallas Cowboys at Pittsburgh Steelers,-0.391,-2.5,43.5,17.0,20.0
+2024,5,2024_05_NYG_SEA,New York Giants at Seattle Seahawks,6.557,-7.0,42.5,20.0,29.0
+2024,5,2024_05_GB_LA,Green Bay Packers at Los Angeles Rams,-4.108,3.0,49.5,19.0,24.0
+2024,5,2024_05_ARI_SF,Arizona Cardinals at San Francisco 49ers,9.864,-7.0,48.5,23.0,24.0
+2024,5,2024_05_LV_DEN,Las Vegas Raiders at Denver Broncos,2.161,-3.0,36.0,34.0,18.0
+2024,5,2024_05_CLE_WAS,Cleveland Browns at Washington Commanders,1.897,-3.0,44.0,34.0,13.0
+2024,5,2024_05_MIA_NE,Miami Dolphins at New England Patriots,0.391,2.0,37.0,10.0,15.0
+2024,5,2024_05_IND_JAX,Indianapolis Colts at Jacksonville Jaguars,3.226,-3.5,45.0,37.0,34.0
+2024,5,2024_05_BUF_HOU,Buffalo Bills at Houston Texans,-0.033,-1.0,48.0,23.0,20.0
+2024,5,2024_05_BAL_CIN,Baltimore Ravens at Cincinnati Bengals,-3.631,2.5,48.5,38.0,41.0
+2024,5,2024_05_CAR_CHI,Carolina Panthers at Chicago Bears,8.124,-4.0,40.0,36.0,10.0
+2024,5,2024_05_NYJ_MIN,New York Jets at Minnesota Vikings,1.996,-2.5,42.0,23.0,17.0
+2024,5,2024_05_TB_ATL,Tampa Bay Buccaneers at Atlanta Falcons,1.699,-2.5,44.0,36.0,30.0
+2024,4,2024_04_SEA_DET,Seattle Seahawks at Detroit Lions,3.53,-3.5,46.5,42.0,29.0
+2024,4,2024_04_TEN_MIA,Tennessee Titans at Miami Dolphins,-0.196,-2.5,37.0,12.0,31.0
+2024,4,2024_04_BUF_BAL,Buffalo Bills at Baltimore Ravens,1.371,-2.5,46.5,35.0,10.0
+2024,4,2024_04_KC_LAC,Kansas City Chiefs at Los Angeles Chargers,-5.863,7.5,41.5,10.0,17.0
+2024,4,2024_04_CLE_LV,Cleveland Browns at Las Vegas Raiders,-0.358,2.5,36.5,20.0,16.0
+2024,4,2024_04_NE_SF,New England Patriots at San Francisco 49ers,11.317,-10.5,41.5,30.0,13.0
+2024,4,2024_04_WAS_ARI,Washington Commanders at Arizona Cardinals,6.372,-3.5,49.0,14.0,42.0
+2024,4,2024_04_PHI_TB,Philadelphia Eagles at Tampa Bay Buccaneers,-1.011,1.0,42.0,33.0,16.0
+2024,4,2024_04_DEN_NYJ,Denver Broncos at New York Jets,7.693,-7.5,39.5,9.0,10.0
+2024,4,2024_04_LA_CHI,Los Angeles Rams at Chicago Bears,5.791,-3.0,40.0,24.0,18.0
+2024,4,2024_04_CIN_CAR,Cincinnati Bengals at Carolina Panthers,-5.719,4.5,47.0,24.0,34.0
+2024,4,2024_04_MIN_GB,Minnesota Vikings at Green Bay Packers,2.029,-2.5,44.0,29.0,31.0
+2024,4,2024_04_JAX_HOU,Jacksonville Jaguars at Houston Texans,5.827,-5.5,44.5,24.0,20.0
+2024,4,2024_04_PIT_IND,Pittsburgh Steelers at Indianapolis Colts,1.535,2.5,40.0,27.0,24.0
+2024,4,2024_04_NO_ATL,New Orleans Saints at Atlanta Falcons,2.425,-2.5,41.5,26.0,24.0
+2024,4,2024_04_DAL_NYG,Dallas Cowboys at New York Giants,-6.226,5.5,45.0,15.0,20.0
+2024,3,2024_03_WAS_CIN,Washington Commanders at Cincinnati Bengals,10.394,-7.5,46.0,33.0,38.0
+2024,3,2024_03_JAX_BUF,Jacksonville Jaguars at Buffalo Bills,7.27,-4.0,46.5,47.0,10.0
+2024,3,2024_03_KC_ATL,Kansas City Chiefs at Atlanta Falcons,-3.801,3.0,46.0,17.0,22.0
+2024,3,2024_03_SF_LA,San Francisco 49ers at Los Angeles Rams,-8.524,6.0,44.5,27.0,24.0
+2024,3,2024_03_BAL_DAL,Baltimore Ravens at Dallas Cowboys,-0.783,1.5,47.5,25.0,28.0
+2024,3,2024_03_DET_ARI,Detroit Lions at Arizona Cardinals,-2.724,3.0,51.5,13.0,20.0
+2024,3,2024_03_MIA_SEA,Miami Dolphins at Seattle Seahawks,7.771,-4.0,41.5,24.0,3.0
+2024,3,2024_03_CAR_LV,Carolina Panthers at Las Vegas Raiders,6.892,-5.5,40.0,22.0,36.0
+2024,3,2024_03_GB_TEN,Green Bay Packers at Tennessee Titans,0.489,-3.0,37.0,14.0,30.0
+2024,3,2024_03_DEN_TB,Denver Broncos at Tampa Bay Buccaneers,6.817,-6.0,40.5,7.0,26.0
+2024,3,2024_03_PHI_NO,Philadelphia Eagles at New Orleans Saints,-1.24,-2.5,49.0,12.0,15.0
+2024,3,2024_03_NYG_CLE,New York Giants at Cleveland Browns,7.08,-6.5,38.0,15.0,21.0
+2024,3,2024_03_HOU_MIN,Houston Texans at Minnesota Vikings,-1.732,2.0,46.0,34.0,7.0
+2024,3,2024_03_CHI_IND,Chicago Bears at Indianapolis Colts,0.0,-1.5,43.0,21.0,16.0
+2024,3,2024_03_LAC_PIT,Los Angeles Chargers at Pittsburgh Steelers,-0.228,-3.0,36.0,20.0,10.0
+2024,3,2024_03_NE_NYJ,New England Patriots at New York Jets,9.015,-6.5,39.0,24.0,3.0
+2024,2,2024_02_ATL_PHI,Atlanta Falcons at Philadelphia Eagles,4.521,-5.5,46.5,21.0,22.0
+2024,2,2024_02_CHI_HOU,Chicago Bears at Houston Texans,4.521,-6.0,45.5,19.0,13.0
+2024,2,2024_02_PIT_DEN,Pittsburgh Steelers at Denver Broncos,-1.601,3.0,36.5,6.0,13.0
+2024,2,2024_02_CIN_KC,Cincinnati Bengals at Kansas City Chiefs,7.423,-6.5,47.5,26.0,25.0
+2024,2,2024_02_LA_ARI,Los Angeles Rams at Arizona Cardinals,2.161,1.0,47.5,41.0,10.0
+2024,2,2024_02_NYG_WAS,New York Giants at Washington Commanders,-0.717,-1.5,42.5,21.0,18.0
+2024,2,2024_02_NYJ_TEN,New York Jets at Tennessee Titans,-3.631,3.5,41.5,17.0,24.0
+2024,2,2024_02_SEA_NE,Seattle Seahawks at New England Patriots,-3.801,3.5,39.0,20.0,23.0
+2024,2,2024_02_SF_MIN,San Francisco 49ers at Minnesota Vikings,-4.108,4.5,46.5,23.0,17.0
+2024,2,2024_02_CLE_JAX,Cleveland Browns at Jacksonville Jaguars,4.074,-3.0,41.5,13.0,18.0
+2024,2,2024_02_IND_GB,Indianapolis Colts at Green Bay Packers,-3.395,3.0,41.5,16.0,10.0
+2024,2,2024_02_TB_DET,Tampa Bay Buccaneers at Detroit Lions,5.899,-7.5,51.5,16.0,20.0
+2024,2,2024_02_NO_DAL,New Orleans Saints at Dallas Cowboys,4.939,-6.5,47.0,19.0,44.0
+2024,2,2024_02_LAC_CAR,Los Angeles Chargers at Carolina Panthers,-6.262,5.0,39.0,3.0,26.0
+2024,2,2024_02_LV_BAL,Las Vegas Raiders at Baltimore Ravens,10.483,-9.0,41.0,23.0,26.0
+2024,2,2024_02_BUF_MIA,Buffalo Bills at Miami Dolphins,-1.011,-2.5,48.5,10.0,31.0
+2024,1,2024_01_NYJ_SF,New York Jets at San Francisco 49ers,5.115,-3.5,43.0,32.0,19.0
+2024,1,2024_01_LA_DET,Los Angeles Rams at Detroit Lions,6.668,-5.0,54.0,26.0,20.0
+2024,1,2024_01_DAL_CLE,Dallas Cowboys at Cleveland Browns,0.228,-2.5,42.0,17.0,33.0
+2024,1,2024_01_WAS_TB,Washington Commanders at Tampa Bay Buccaneers,5.362,-4.0,42.0,37.0,20.0
+2024,1,2024_01_DEN_SEA,Denver Broncos at Seattle Seahawks,6.743,-6.5,42.0,26.0,20.0
+2024,1,2024_01_LV_LAC,Las Vegas Raiders at Los Angeles Chargers,3.801,-3.0,41.0,22.0,10.0
+2024,1,2024_01_HOU_IND,Houston Texans at Indianapolis Colts,-2.359,3.0,49.0,27.0,29.0
+2024,1,2024_01_ARI_BUF,Arizona Cardinals at Buffalo Bills,10.259,-6.5,46.0,34.0,28.0
+2024,1,2024_01_TEN_CHI,Tennessee Titans at Chicago Bears,4.452,-4.0,43.0,24.0,17.0
+2024,1,2024_01_NE_CIN,New England Patriots at Cincinnati Bengals,10.756,-8.0,40.5,10.0,16.0
+2024,1,2024_01_CAR_NO,Carolina Panthers at New Orleans Saints,6.409,-3.5,41.5,47.0,10.0
+2024,1,2024_01_MIN_NYG,Minnesota Vikings at New York Giants,-1.371,1.0,42.5,6.0,28.0
+2024,1,2024_01_PIT_ATL,Pittsburgh Steelers at Atlanta Falcons,3.835,-4.0,43.0,10.0,18.0
+2024,1,2024_01_JAX_MIA,Jacksonville Jaguars at Miami Dolphins,3.092,-3.5,49.5,20.0,17.0
+2024,1,2024_01_GB_PHI,Green Bay Packers at Philadelphia Eagles,1.634,-2.0,49.5,34.0,29.0
+2024,1,2024_01_BAL_KC,Baltimore Ravens at Kansas City Chiefs,2.128,-3.0,46.0,27.0,20.0
+2023,22,2023_22_SF_KC,San Francisco 49ers at Kansas City Chiefs,-2.194,1.5,47.0,25.0,22.0
+2023,21,2023_21_DET_SF,Detroit Lions at San Francisco 49ers,6.557,-7.5,52.5,34.0,31.0
+2023,21,2023_21_KC_BAL,Kansas City Chiefs at Baltimore Ravens,4.521,-4.5,44.0,10.0,17.0
+2023,20,2023_20_KC_BUF,Kansas City Chiefs at Buffalo Bills,4.245,-2.5,45.5,24.0,27.0
+2023,20,2023_20_TB_DET,Tampa Bay Buccaneers at Detroit Lions,6.594,-6.0,49.5,31.0,23.0
+2023,20,2023_20_GB_SF,Green Bay Packers at San Francisco 49ers,9.82,-10.5,50.5,24.0,21.0
+2023,20,2023_20_HOU_BAL,Houston Texans at Baltimore Ravens,11.128,-10.0,44.0,34.0,10.0
+2023,19,2023_19_PHI_TB,Philadelphia Eagles at Tampa Bay Buccaneers,-1.699,2.5,43.0,32.0,9.0
+2023,19,2023_19_PIT_BUF,Pittsburgh Steelers at Buffalo Bills,10.711,-10.0,39.5,31.0,17.0
+2023,19,2023_19_LA_DET,Los Angeles Rams at Detroit Lions,4.28,-3.5,52.5,24.0,23.0
+2023,19,2023_19_GB_DAL,Green Bay Packers at Dallas Cowboys,8.085,-7.0,52.5,32.0,48.0
+2023,19,2023_19_MIA_KC,Miami Dolphins at Kansas City Chiefs,3.395,-4.5,43.5,26.0,7.0
+2023,19,2023_19_CLE_HOU,Cleveland Browns at Houston Texans,-0.88,2.5,45.0,45.0,14.0
+2023,18,2023_18_BUF_MIA,Buffalo Bills at Miami Dolphins,-0.424,2.5,47.5,14.0,21.0
+2023,18,2023_18_KC_LAC,Kansas City Chiefs at Los Angeles Chargers,7.538,-3.5,35.0,12.0,13.0
+2023,18,2023_18_DEN_LV,Denver Broncos at Las Vegas Raiders,0.815,-3.5,37.5,27.0,14.0
+2023,18,2023_18_SEA_ARI,Seattle Seahawks at Arizona Cardinals,-3.937,2.5,48.0,20.0,21.0
+2023,18,2023_18_CHI_GB,Chicago Bears at Green Bay Packers,5.185,-2.5,45.5,17.0,9.0
+2023,18,2023_18_PHI_NYG,Philadelphia Eagles at New York Giants,-9.52,4.5,43.0,27.0,10.0
+2023,18,2023_18_LA_SF,Los Angeles Rams at San Francisco 49ers,7.967,-5.5,40.0,20.0,21.0
+2023,18,2023_18_DAL_WAS,Dallas Cowboys at Washington Commanders,-9.562,13.0,47.5,10.0,38.0
+2023,18,2023_18_TB_CAR,Tampa Bay Buccaneers at Carolina Panthers,-4.211,5.0,36.5,0.0,9.0
+2023,18,2023_18_MIN_DET,Minnesota Vikings at Detroit Lions,7.423,-3.5,47.5,30.0,20.0
+2023,18,2023_18_JAX_TEN,Jacksonville Jaguars at Tennessee Titans,-4.487,3.5,41.5,28.0,20.0
+2023,18,2023_18_NYJ_NE,New York Jets at New England Patriots,1.338,-2.5,28.5,3.0,17.0
+2023,18,2023_18_CLE_CIN,Cleveland Browns at Cincinnati Bengals,5.791,-7.5,37.0,31.0,14.0
+2023,18,2023_18_ATL_NO,Atlanta Falcons at New Orleans Saints,5.54,-3.5,41.5,48.0,17.0
+2023,18,2023_18_HOU_IND,Houston Texans at Indianapolis Colts,1.568,1.5,47.5,19.0,23.0
+2023,18,2023_18_PIT_BAL,Pittsburgh Steelers at Baltimore Ravens,-3.496,3.0,34.0,10.0,17.0
+2023,17,2023_17_GB_MIN,Green Bay Packers at Minnesota Vikings,2.758,-1.0,42.5,10.0,33.0
+2023,17,2023_17_LAC_DEN,Los Angeles Chargers at Denver Broncos,7.005,-3.5,39.5,16.0,9.0
+2023,17,2023_17_CIN_KC,Cincinnati Bengals at Kansas City Chiefs,5.863,-7.5,46.0,25.0,17.0
+2023,17,2023_17_PIT_SEA,Pittsburgh Steelers at Seattle Seahawks,3.665,-4.5,40.5,23.0,30.0
+2023,17,2023_17_SF_WAS,San Francisco 49ers at Washington Commanders,-12.456,14.0,49.0,10.0,27.0
+2023,17,2023_17_NO_TB,New Orleans Saints at Tampa Bay Buccaneers,3.26,-2.5,42.5,13.0,23.0
+2023,17,2023_17_ARI_PHI,Arizona Cardinals at Philadelphia Eagles,10.304,-12.0,48.0,31.0,35.0
+2023,17,2023_17_LA_NYG,Los Angeles Rams at New York Giants,-4.904,6.0,43.5,25.0,26.0
+2023,17,2023_17_CAR_JAX,Carolina Panthers at Jacksonville Jaguars,3.767,-3.5,38.0,26.0,0.0
+2023,17,2023_17_LV_IND,Las Vegas Raiders at Indianapolis Colts,1.765,-3.5,42.5,23.0,20.0
+2023,17,2023_17_TEN_HOU,Tennessee Titans at Houston Texans,4.695,-5.0,44.0,26.0,3.0
+2023,17,2023_17_ATL_CHI,Atlanta Falcons at Chicago Bears,0.717,-3.0,39.0,37.0,17.0
+2023,17,2023_17_NE_BUF,New England Patriots at Buffalo Bills,13.307,-15.0,40.0,27.0,21.0
+2023,17,2023_17_MIA_BAL,Miami Dolphins at Baltimore Ravens,4.869,-3.0,47.0,56.0,19.0
+2023,17,2023_17_DET_DAL,Detroit Lions at Dallas Cowboys,6.446,-5.5,53.0,20.0,19.0
+2023,17,2023_17_NYJ_CLE,New York Jets at Cleveland Browns,8.444,-6.5,33.5,37.0,20.0
+2023,16,2023_16_BAL_SF,Baltimore Ravens at San Francisco 49ers,3.937,-6.5,47.5,19.0,33.0
+2023,16,2023_16_NYG_PHI,New York Giants at Philadelphia Eagles,11.175,-14.0,41.0,33.0,25.0
+2023,16,2023_16_LV_KC,Las Vegas Raiders at Kansas City Chiefs,10.619,-11.0,40.5,14.0,20.0
+2023,16,2023_16_NE_DEN,New England Patriots at Denver Broncos,7.461,-7.0,37.5,23.0,26.0
+2023,16,2023_16_ARI_CHI,Arizona Cardinals at Chicago Bears,5.327,-4.5,42.0,27.0,16.0
+2023,16,2023_16_DAL_MIA,Dallas Cowboys at Miami Dolphins,0.619,-1.5,48.5,22.0,20.0
+2023,16,2023_16_JAX_TB,Jacksonville Jaguars at Tampa Bay Buccaneers,3.092,2.0,43.0,30.0,12.0
+2023,16,2023_16_DET_MIN,Detroit Lions at Minnesota Vikings,-1.338,2.5,47.5,24.0,30.0
+2023,16,2023_16_WAS_NYJ,Washington Commanders at New York Jets,2.128,-3.0,36.5,30.0,28.0
+2023,16,2023_16_SEA_TEN,Seattle Seahawks at Tennessee Titans,-1.175,3.0,42.0,17.0,20.0
+2023,16,2023_16_CLE_HOU,Cleveland Browns at Houston Texans,1.634,3.0,40.0,22.0,36.0
+2023,16,2023_16_GB_CAR,Green Bay Packers at Carolina Panthers,-4.28,3.5,39.5,30.0,33.0
+2023,16,2023_16_IND_ATL,Indianapolis Colts at Atlanta Falcons,0.587,-3.0,44.0,29.0,10.0
+2023,16,2023_16_BUF_LAC,Buffalo Bills at Los Angeles Chargers,-8.323,13.0,44.5,22.0,24.0
+2023,16,2023_16_CIN_PIT,Cincinnati Bengals at Pittsburgh Steelers,2.891,3.0,39.5,34.0,11.0
+2023,16,2023_16_NO_LA,New Orleans Saints at Los Angeles Rams,3.631,-4.0,45.5,30.0,22.0
+2023,15,2023_15_PHI_SEA,Philadelphia Eagles at Seattle Seahawks,-3.665,5.0,46.0,20.0,17.0
+2023,15,2023_15_BAL_JAX,Baltimore Ravens at Jacksonville Jaguars,-6.372,4.0,42.5,7.0,23.0
+2023,15,2023_15_DAL_BUF,Dallas Cowboys at Buffalo Bills,-1.044,-2.0,49.5,31.0,10.0
+2023,15,2023_15_WAS_LA,Washington Commanders at Los Angeles Rams,7.771,-6.5,48.5,28.0,20.0
+2023,15,2023_15_SF_ARI,San Francisco 49ers at Arizona Cardinals,-11.703,12.5,48.0,29.0,45.0
+2023,15,2023_15_KC_NE,Kansas City Chiefs at New England Patriots,-8.283,10.0,39.5,17.0,27.0
+2023,15,2023_15_NYJ_MIA,New York Jets at Miami Dolphins,12.928,-7.5,36.0,30.0,0.0
+2023,15,2023_15_NYG_NO,New York Giants at New Orleans Saints,8.768,-6.0,39.5,24.0,6.0
+2023,15,2023_15_HOU_TEN,Houston Texans at Tennessee Titans,-0.489,-3.0,38.0,16.0,19.0
+2023,15,2023_15_TB_GB,Tampa Bay Buccaneers at Green Bay Packers,3.971,-4.0,41.5,20.0,34.0
+2023,15,2023_15_CHI_CLE,Chicago Bears at Cleveland Browns,7.005,-3.0,38.0,20.0,17.0
+2023,15,2023_15_ATL_CAR,Atlanta Falcons at Carolina Panthers,-4.108,3.0,32.0,9.0,7.0
+2023,15,2023_15_DEN_DET,Denver Broncos at Detroit Lions,5.291,-5.5,49.0,42.0,17.0
+2023,15,2023_15_PIT_IND,Pittsburgh Steelers at Indianapolis Colts,1.077,-1.5,41.5,30.0,13.0
+2023,15,2023_15_MIN_CIN,Minnesota Vikings at Cincinnati Bengals,0.358,-3.0,41.5,27.0,24.0
+2023,15,2023_15_LAC_LV,Los Angeles Chargers at Las Vegas Raiders,1.207,-3.0,36.0,63.0,21.0
+2023,14,2023_14_GB_NYG,Green Bay Packers at New York Giants,-4.869,6.0,37.5,24.0,22.0
+2023,14,2023_14_TEN_MIA,Tennessee Titans at Miami Dolphins,12.456,-14.0,45.0,27.0,28.0
+2023,14,2023_14_PHI_DAL,Philadelphia Eagles at Dallas Cowboys,7.194,-3.5,52.5,33.0,13.0
+2023,14,2023_14_BUF_KC,Buffalo Bills at Kansas City Chiefs,4.418,-2.0,49.5,17.0,20.0
+2023,14,2023_14_DEN_LAC,Denver Broncos at Los Angeles Chargers,4.834,-3.0,45.0,7.0,24.0
+2023,14,2023_14_MIN_LV,Minnesota Vikings at Las Vegas Raiders,-1.601,3.0,40.5,0.0,3.0
+2023,14,2023_14_SEA_SF,Seattle Seahawks at San Francisco 49ers,12.716,-14.5,44.5,28.0,16.0
+2023,14,2023_14_HOU_NYJ,Houston Texans at New York Jets,-4.005,3.5,33.5,30.0,6.0
+2023,14,2023_14_IND_CIN,Indianapolis Colts at Cincinnati Bengals,-0.424,-3.0,45.0,34.0,14.0
+2023,14,2023_14_TB_ATL,Tampa Bay Buccaneers at Atlanta Falcons,3.025,-1.5,41.5,25.0,29.0
+2023,14,2023_14_CAR_NO,Carolina Panthers at New Orleans Saints,9.907,-5.5,39.0,28.0,6.0
+2023,14,2023_14_DET_CHI,Detroit Lions at Chicago Bears,-7.346,3.0,44.5,28.0,13.0
+2023,14,2023_14_LA_BAL,Los Angeles Rams at Baltimore Ravens,9.477,-7.5,42.0,37.0,31.0
+2023,14,2023_14_JAX_CLE,Jacksonville Jaguars at Cleveland Browns,-2.227,-2.5,37.5,31.0,27.0
+2023,14,2023_14_NE_PIT,New England Patriots at Pittsburgh Steelers,8.006,-6.0,30.0,18.0,21.0
+2023,13,2023_13_CIN_JAX,Cincinnati Bengals at Jacksonville Jaguars,9.266,-10.0,41.0,31.0,34.0
+2023,13,2023_13_KC_GB,Kansas City Chiefs at Green Bay Packers,-6.557,5.5,43.5,27.0,19.0
+2023,13,2023_13_CLE_LA,Cleveland Browns at Los Angeles Rams,5.398,-3.5,39.5,36.0,19.0
+2023,13,2023_13_SF_PHI,San Francisco 49ers at Philadelphia Eagles,-1.207,3.0,46.5,19.0,42.0
+2023,13,2023_13_CAR_TB,Carolina Panthers at Tampa Bay Buccaneers,8.484,-4.0,37.0,21.0,18.0
+2023,13,2023_13_DEN_HOU,Denver Broncos at Houston Texans,2.392,-3.5,47.5,22.0,17.0
+2023,13,2023_13_MIA_WAS,Miami Dolphins at Washington Commanders,-9.435,8.5,50.0,15.0,45.0
+2023,13,2023_13_IND_TEN,Indianapolis Colts at Tennessee Titans,-0.196,1.5,42.0,28.0,31.0
+2023,13,2023_13_ARI_PIT,Arizona Cardinals at Pittsburgh Steelers,10.215,-6.0,41.0,10.0,24.0
+2023,13,2023_13_ATL_NYJ,Atlanta Falcons at New York Jets,-0.489,2.0,33.0,8.0,13.0
+2023,13,2023_13_DET_NO,Detroit Lions at New Orleans Saints,-4.04,4.0,47.5,28.0,33.0
+2023,13,2023_13_LAC_NE,Los Angeles Chargers at New England Patriots,-5.044,4.5,38.5,0.0,6.0
+2023,13,2023_13_SEA_DAL,Seattle Seahawks at Dallas Cowboys,10.171,-9.5,47.5,41.0,35.0
+2023,12,2023_12_CHI_MIN,Chicago Bears at Minnesota Vikings,5.079,-3.0,43.5,10.0,12.0
+2023,12,2023_12_BAL_LAC,Baltimore Ravens at Los Angeles Chargers,-4.73,3.0,49.0,10.0,20.0
+2023,12,2023_12_KC_LV,Kansas City Chiefs at Las Vegas Raiders,-8.891,9.0,42.5,17.0,31.0
+2023,12,2023_12_BUF_PHI,Buffalo Bills at Philadelphia Eagles,4.418,-2.5,49.0,37.0,34.0
+2023,12,2023_12_CLE_DEN,Cleveland Browns at Denver Broncos,2.128,-1.5,37.5,29.0,12.0
+2023,12,2023_12_LA_ARI,Los Angeles Rams at Arizona Cardinals,-0.196,3.0,45.0,14.0,37.0
+2023,12,2023_12_NO_ATL,New Orleans Saints at Atlanta Falcons,-0.783,2.0,42.0,24.0,15.0
+2023,12,2023_12_PIT_CIN,Pittsburgh Steelers at Cincinnati Bengals,-0.717,2.0,36.0,10.0,16.0
+2023,12,2023_12_CAR_TEN,Carolina Panthers at Tennessee Titans,8.204,-3.5,36.0,17.0,10.0
+2023,12,2023_12_NE_NYG,New England Patriots at New York Giants,-2.891,4.5,36.5,10.0,7.0
+2023,12,2023_12_TB_IND,Tampa Bay Buccaneers at Indianapolis Colts,2.691,-2.5,45.0,27.0,20.0
+2023,12,2023_12_JAX_HOU,Jacksonville Jaguars at Houston Texans,-2.029,1.0,48.0,21.0,24.0
+2023,12,2023_12_MIA_NYJ,Miami Dolphins at New York Jets,-4.349,9.5,40.0,13.0,34.0
+2023,12,2023_12_SF_SEA,San Francisco 49ers at Seattle Seahawks,-5.791,7.0,43.5,13.0,31.0
+2023,12,2023_12_WAS_DAL,Washington Commanders at Dallas Cowboys,14.103,-13.0,48.0,45.0,10.0
+2023,12,2023_12_GB_DET,Green Bay Packers at Detroit Lions,9.224,-8.5,47.0,22.0,29.0
+2023,11,2023_11_PHI_KC,Philadelphia Eagles at Kansas City Chiefs,3.733,-2.5,46.0,17.0,21.0
+2023,11,2023_11_MIN_DEN,Minnesota Vikings at Denver Broncos,3.903,-2.5,43.5,21.0,20.0
+2023,11,2023_11_NYJ_BUF,New York Jets at Buffalo Bills,7.423,-8.0,39.5,32.0,6.0
+2023,11,2023_11_SEA_LA,Seattle Seahawks at Los Angeles Rams,-1.044,-2.5,45.0,17.0,16.0
+2023,11,2023_11_TB_SF,Tampa Bay Buccaneers at San Francisco 49ers,12.302,-13.5,41.5,27.0,14.0
+2023,11,2023_11_DAL_CAR,Dallas Cowboys at Carolina Panthers,-12.769,11.0,43.0,10.0,33.0
+2023,11,2023_11_LV_MIA,Las Vegas Raiders at Miami Dolphins,10.483,-14.0,44.5,20.0,13.0
+2023,11,2023_11_CHI_DET,Chicago Bears at Detroit Lions,13.87,-8.0,48.0,31.0,26.0
+2023,11,2023_11_TEN_JAX,Tennessee Titans at Jacksonville Jaguars,7.967,-6.5,40.0,34.0,14.0
+2023,11,2023_11_NYG_WAS,New York Giants at Washington Commanders,8.164,-7.5,39.0,19.0,31.0
+2023,11,2023_11_LAC_GB,Los Angeles Chargers at Green Bay Packers,-1.831,3.0,44.0,23.0,20.0
+2023,11,2023_11_ARI_HOU,Arizona Cardinals at Houston Texans,6.93,-5.5,48.0,21.0,16.0
+2023,11,2023_11_PIT_CLE,Pittsburgh Steelers at Cleveland Browns,-0.587,-2.5,34.0,13.0,10.0
+2023,11,2023_11_CIN_BAL,Cincinnati Bengals at Baltimore Ravens,6.116,-4.0,46.5,34.0,20.0
+2023,10,2023_10_DEN_BUF,Denver Broncos at Buffalo Bills,9.35,-7.5,47.5,22.0,24.0
+2023,10,2023_10_NYJ_LV,New York Jets at Las Vegas Raiders,-1.109,1.0,35.5,16.0,12.0
+2023,10,2023_10_WAS_SEA,Washington Commanders at Seattle Seahawks,7.346,-6.0,44.0,29.0,26.0
+2023,10,2023_10_NYG_DAL,New York Giants at Dallas Cowboys,16.44,-17.5,38.5,49.0,17.0
+2023,10,2023_10_DET_LAC,Detroit Lions at Los Angeles Chargers,1.044,2.5,48.5,38.0,41.0
+2023,10,2023_10_ATL_ARI,Atlanta Falcons at Arizona Cardinals,-2.062,2.0,43.5,25.0,23.0
+2023,10,2023_10_TEN_TB,Tennessee Titans at Tampa Bay Buccaneers,1.732,-2.5,39.5,20.0,6.0
+2023,10,2023_10_GB_PIT,Green Bay Packers at Pittsburgh Steelers,4.314,-3.0,38.5,23.0,19.0
+2023,10,2023_10_NO_MIN,New Orleans Saints at Minnesota Vikings,-3.395,3.0,41.0,27.0,19.0
+2023,10,2023_10_SF_JAX,San Francisco 49ers at Jacksonville Jaguars,0.196,3.0,44.5,3.0,34.0
+2023,10,2023_10_HOU_CIN,Houston Texans at Cincinnati Bengals,8.006,-5.5,46.0,27.0,30.0
+2023,10,2023_10_CLE_BAL,Cleveland Browns at Baltimore Ravens,9.182,-6.0,38.5,31.0,33.0
+2023,10,2023_10_IND_NE,Indianapolis Colts at New England Patriots,-1.765,1.0,42.0,6.0,10.0
+2023,10,2023_10_CAR_CHI,Carolina Panthers at Chicago Bears,2.128,-3.0,38.0,16.0,13.0
+2023,9,2023_09_LAC_NYJ,Los Angeles Chargers at New York Jets,1.175,3.0,41.0,6.0,27.0
+2023,9,2023_09_BUF_CIN,Buffalo Bills at Cincinnati Bengals,1.634,-1.5,51.0,24.0,18.0
+2023,9,2023_09_DAL_PHI,Dallas Cowboys at Philadelphia Eagles,2.359,-3.5,46.5,28.0,23.0
+2023,9,2023_09_NYG_LV,New York Giants at Las Vegas Raiders,4.314,-1.0,38.5,30.0,6.0
+2023,9,2023_09_IND_CAR,Indianapolis Colts at Carolina Panthers,-2.161,1.5,45.0,13.0,27.0
+2023,9,2023_09_CHI_NO,Chicago Bears at New Orleans Saints,11.081,-9.0,42.0,24.0,17.0
+2023,9,2023_09_WAS_NE,Washington Commanders at New England Patriots,2.791,-2.5,40.5,17.0,20.0
+2023,9,2023_09_TB_HOU,Tampa Bay Buccaneers at Houston Texans,2.858,-2.5,39.5,39.0,37.0
+2023,9,2023_09_LA_GB,Los Angeles Rams at Green Bay Packers,4.625,-3.5,38.0,20.0,3.0
+2023,9,2023_09_ARI_CLE,Arizona Cardinals at Cleveland Browns,11.509,-13.0,38.0,27.0,0.0
+2023,9,2023_09_SEA_BAL,Seattle Seahawks at Baltimore Ravens,7.577,-6.0,44.5,37.0,3.0
+2023,9,2023_09_MIN_ATL,Minnesota Vikings at Atlanta Falcons,5.256,-3.5,38.5,28.0,31.0
+2023,9,2023_09_MIA_KC,Miami Dolphins at Kansas City Chiefs,2.591,-1.0,51.0,21.0,14.0
+2023,9,2023_09_TEN_PIT,Tennessee Titans at Pittsburgh Steelers,4.487,-3.5,37.0,20.0,16.0
+2023,8,2023_08_LV_DET,Las Vegas Raiders at Detroit Lions,9.562,-7.0,46.0,26.0,14.0
+2023,8,2023_08_CHI_LAC,Chicago Bears at Los Angeles Chargers,11.752,-9.5,46.0,30.0,13.0
+2023,8,2023_08_BAL_ARI,Baltimore Ravens at Arizona Cardinals,-12.611,9.5,44.5,24.0,31.0
+2023,8,2023_08_CIN_SF,Cincinnati Bengals at San Francisco 49ers,7.538,-4.0,44.0,17.0,31.0
+2023,8,2023_08_KC_DEN,Kansas City Chiefs at Denver Broncos,-11.081,7.0,45.5,24.0,9.0
+2023,8,2023_08_CLE_SEA,Cleveland Browns at Seattle Seahawks,5.327,-4.0,39.5,24.0,20.0
+2023,8,2023_08_MIN_GB,Minnesota Vikings at Green Bay Packers,0.098,1.0,41.5,10.0,24.0
+2023,8,2023_08_ATL_TEN,Atlanta Falcons at Tennessee Titans,2.992,2.5,35.0,28.0,23.0
+2023,8,2023_08_NYJ_NYG,New York Jets at New York Giants,-5.504,3.0,35.0,10.0,13.0
+2023,8,2023_08_NE_MIA,New England Patriots at Miami Dolphins,10.349,-7.5,46.5,31.0,17.0
+2023,8,2023_08_LA_DAL,Los Angeles Rams at Dallas Cowboys,9.777,-6.5,44.5,43.0,20.0
+2023,8,2023_08_PHI_WAS,Philadelphia Eagles at Washington Commanders,-6.594,7.0,42.5,31.0,38.0
+2023,8,2023_08_HOU_CAR,Houston Texans at Carolina Panthers,-3.903,3.0,43.0,15.0,13.0
+2023,8,2023_08_JAX_PIT,Jacksonville Jaguars at Pittsburgh Steelers,-0.783,2.5,41.0,10.0,20.0
+2023,8,2023_08_NO_IND,New Orleans Saints at Indianapolis Colts,-1.109,2.0,43.5,27.0,38.0
+2023,8,2023_08_TB_BUF,Tampa Bay Buccaneers at Buffalo Bills,11.85,-10.0,43.0,24.0,18.0
+2023,7,2023_07_SF_MIN,San Francisco 49ers at Minnesota Vikings,-7.771,7.0,44.5,22.0,17.0
+2023,7,2023_07_MIA_PHI,Miami Dolphins at Philadelphia Eagles,4.66,-3.0,52.0,31.0,17.0
+2023,7,2023_07_GB_DEN,Green Bay Packers at Denver Broncos,-2.095,-1.5,44.0,19.0,17.0
+2023,7,2023_07_LAC_KC,Los Angeles Chargers at Kansas City Chiefs,12.251,-5.5,48.5,31.0,17.0
+2023,7,2023_07_PIT_LA,Pittsburgh Steelers at Los Angeles Rams,-0.065,-3.5,44.0,17.0,24.0
+2023,7,2023_07_ARI_SEA,Arizona Cardinals at Seattle Seahawks,10.082,-9.5,43.5,20.0,10.0
+2023,7,2023_07_WAS_NYG,Washington Commanders at New York Giants,-1.044,3.0,37.0,14.0,7.0
+2023,7,2023_07_BUF_NE,Buffalo Bills at New England Patriots,-10.438,7.5,41.0,29.0,25.0
+2023,7,2023_07_DET_BAL,Detroit Lions at Baltimore Ravens,2.525,-3.0,43.5,38.0,6.0
+2023,7,2023_07_CLE_IND,Cleveland Browns at Indianapolis Colts,-2.858,3.5,40.0,38.0,39.0
+2023,7,2023_07_LV_CHI,Las Vegas Raiders at Chicago Bears,-4.869,2.5,38.5,30.0,12.0
+2023,7,2023_07_ATL_TB,Atlanta Falcons at Tampa Bay Buccaneers,4.074,-3.0,37.5,13.0,16.0
+2023,7,2023_07_JAX_NO,Jacksonville Jaguars at New Orleans Saints,-0.391,-2.5,41.0,24.0,31.0
+2023,6,2023_06_DAL_LAC,Dallas Cowboys at Los Angeles Chargers,-0.326,1.5,49.5,17.0,20.0
+2023,6,2023_06_NYG_BUF,New York Giants at Buffalo Bills,16.368,-15.5,43.5,14.0,9.0
+2023,6,2023_06_PHI_NYJ,Philadelphia Eagles at New York Jets,-7.308,6.5,43.0,20.0,14.0
+2023,6,2023_06_ARI_LA,Arizona Cardinals at Los Angeles Rams,11.703,-7.0,48.0,26.0,9.0
+2023,6,2023_06_DET_TB,Detroit Lions at Tampa Bay Buccaneers,-1.175,3.0,43.5,6.0,20.0
+2023,6,2023_06_NE_LV,New England Patriots at Las Vegas Raiders,3.159,-3.0,41.5,21.0,17.0
+2023,6,2023_06_CAR_MIA,Carolina Panthers at Miami Dolphins,10.848,-14.0,47.5,42.0,21.0
+2023,6,2023_06_IND_JAX,Indianapolis Colts at Jacksonville Jaguars,8.204,-4.0,44.0,37.0,20.0
+2023,6,2023_06_NO_HOU,New Orleans Saints at Houston Texans,-1.864,2.0,42.5,20.0,13.0
+2023,6,2023_06_SF_CLE,San Francisco 49ers at Cleveland Browns,-8.363,9.5,36.0,19.0,17.0
+2023,6,2023_06_SEA_CIN,Seattle Seahawks at Cincinnati Bengals,1.535,-3.0,45.5,17.0,13.0
+2023,6,2023_06_MIN_CHI,Minnesota Vikings at Chicago Bears,-4.142,3.0,44.5,13.0,19.0
+2023,6,2023_06_WAS_ATL,Washington Commanders at Atlanta Falcons,2.992,-1.5,42.0,16.0,24.0
+2023,6,2023_06_BAL_TEN,Baltimore Ravens at Tennessee Titans,-4.66,5.5,42.5,16.0,24.0
+2023,6,2023_06_DEN_KC,Denver Broncos at Kansas City Chiefs,15.018,-10.5,47.5,19.0,8.0
+2023,5,2023_05_GB_LV,Green Bay Packers at Las Vegas Raiders,0.913,-1.0,45.0,17.0,13.0
+2023,5,2023_05_DAL_SF,Dallas Cowboys at San Francisco 49ers,3.835,-3.5,45.0,42.0,10.0
+2023,5,2023_05_KC_MIN,Kansas City Chiefs at Minnesota Vikings,-6.668,3.5,52.5,20.0,27.0
+2023,5,2023_05_NYJ_DEN,New York Jets at Denver Broncos,3.665,-2.5,42.5,21.0,31.0
+2023,5,2023_05_PHI_LA,Philadelphia Eagles at Los Angeles Rams,-9.266,3.5,50.5,14.0,23.0
+2023,5,2023_05_CIN_ARI,Cincinnati Bengals at Arizona Cardinals,-8.204,3.0,45.5,20.0,34.0
+2023,5,2023_05_BAL_PIT,Baltimore Ravens at Pittsburgh Steelers,-2.293,4.5,38.5,17.0,10.0
+2023,5,2023_05_NO_NE,New Orleans Saints at New England Patriots,2.459,-2.5,38.5,0.0,34.0
+2023,5,2023_05_NYG_MIA,New York Giants at Miami Dolphins,7.967,-12.5,47.5,31.0,16.0
+2023,5,2023_05_TEN_IND,Tennessee Titans at Indianapolis Colts,-1.404,2.5,43.5,23.0,16.0
+2023,5,2023_05_CAR_DET,Carolina Panthers at Detroit Lions,10.756,-9.5,43.5,42.0,24.0
+2023,5,2023_05_HOU_ATL,Houston Texans at Atlanta Falcons,3.193,-2.5,42.0,21.0,19.0
+2023,5,2023_05_JAX_BUF,Jacksonville Jaguars at Buffalo Bills,8.484,-5.5,48.5,20.0,25.0
+2023,5,2023_05_CHI_WAS,Chicago Bears at Washington Commanders,8.444,-6.0,45.5,20.0,40.0
+2023,4,2023_04_SEA_NYG,Seattle Seahawks at New York Giants,-0.196,2.5,46.5,3.0,24.0
+2023,4,2023_04_KC_NYJ,Kansas City Chiefs at New York Jets,-9.392,9.5,41.5,20.0,23.0
+2023,4,2023_04_ARI_SF,Arizona Cardinals at San Francisco 49ers,16.513,-15.0,44.0,35.0,16.0
+2023,4,2023_04_NE_DAL,New England Patriots at Dallas Cowboys,7.043,-6.5,43.0,38.0,3.0
+2023,4,2023_04_LV_LAC,Las Vegas Raiders at Los Angeles Chargers,6.93,-7.0,49.0,24.0,17.0
+2023,4,2023_04_CIN_TEN,Cincinnati Bengals at Tennessee Titans,-4.245,2.5,41.5,27.0,3.0
+2023,4,2023_04_WAS_PHI,Washington Commanders at Philadelphia Eagles,12.611,-9.5,43.0,34.0,31.0
+2023,4,2023_04_TB_NO,Tampa Bay Buccaneers at New Orleans Saints,5.115,-4.0,41.0,9.0,26.0
+2023,4,2023_04_LA_IND,Los Angeles Rams at Indianapolis Colts,-1.044,1.0,44.5,23.0,29.0
+2023,4,2023_04_PIT_HOU,Pittsburgh Steelers at Houston Texans,-5.079,3.0,41.5,30.0,6.0
+2023,4,2023_04_BAL_CLE,Baltimore Ravens at Cleveland Browns,-1.142,2.0,38.5,3.0,28.0
+2023,4,2023_04_DEN_CHI,Denver Broncos at Chicago Bears,-0.489,3.0,47.0,28.0,31.0
+2023,4,2023_04_MIN_CAR,Minnesota Vikings at Carolina Panthers,-2.459,4.5,46.5,13.0,21.0
+2023,4,2023_04_MIA_BUF,Miami Dolphins at Buffalo Bills,6.668,-2.5,53.0,48.0,20.0
+2023,4,2023_04_ATL_JAX,Atlanta Falcons at Jacksonville Jaguars,1.306,-3.5,42.5,23.0,7.0
+2023,4,2023_04_DET_GB,Detroit Lions at Green Bay Packers,0.098,2.5,45.0,20.0,34.0
+2023,3,2023_03_LA_CIN,Los Angeles Rams at Cincinnati Bengals,7.156,-3.0,45.5,19.0,16.0
+2023,3,2023_03_PHI_TB,Philadelphia Eagles at Tampa Bay Buccaneers,-8.323,6.0,44.0,11.0,25.0
+2023,3,2023_03_PIT_LV,Pittsburgh Steelers at Las Vegas Raiders,0.685,-3.0,43.5,18.0,23.0
+2023,3,2023_03_CHI_KC,Chicago Bears at Kansas City Chiefs,14.767,-13.0,48.0,41.0,10.0
+2023,3,2023_03_DAL_ARI,Dallas Cowboys at Arizona Cardinals,-16.809,11.5,43.5,28.0,16.0
+2023,3,2023_03_CAR_SEA,Carolina Panthers at Seattle Seahawks,7.346,-5.0,42.5,37.0,27.0
+2023,3,2023_03_IND_BAL,Indianapolis Colts at Baltimore Ravens,12.2,-7.5,43.5,19.0,22.0
+2023,3,2023_03_ATL_DET,Atlanta Falcons at Detroit Lions,4.487,-3.0,47.5,20.0,6.0
+2023,3,2023_03_BUF_WAS,Buffalo Bills at Washington Commanders,-8.124,5.5,44.0,3.0,37.0
+2023,3,2023_03_DEN_MIA,Denver Broncos at Miami Dolphins,5.327,-6.0,47.5,70.0,20.0
+2023,3,2023_03_NO_GB,New Orleans Saints at Green Bay Packers,1.24,1.5,41.5,18.0,17.0
+2023,3,2023_03_NE_NYJ,New England Patriots at New York Jets,-0.456,2.5,35.5,10.0,15.0
+2023,3,2023_03_HOU_JAX,Houston Texans at Jacksonville Jaguars,12.663,-7.5,43.5,17.0,37.0
+2023,3,2023_03_TEN_CLE,Tennessee Titans at Cleveland Browns,8.687,-3.5,38.0,27.0,3.0
+2023,3,2023_03_LAC_MIN,Los Angeles Chargers at Minnesota Vikings,1.338,-1.0,54.0,24.0,28.0
+2023,3,2023_03_NYG_SF,New York Giants at San Francisco 49ers,11.413,-10.5,43.5,30.0,12.0
+2023,2,2023_02_CLE_PIT,Cleveland Browns at Pittsburgh Steelers,-0.946,2.5,39.0,26.0,22.0
+2023,2,2023_02_NO_CAR,New Orleans Saints at Carolina Panthers,-4.314,3.0,39.5,17.0,20.0
+2023,2,2023_02_MIA_NE,Miami Dolphins at New England Patriots,-1.306,2.0,46.5,17.0,24.0
+2023,2,2023_02_WAS_DEN,Washington Commanders at Denver Broncos,4.764,-4.0,38.5,33.0,35.0
+2023,2,2023_02_NYJ_DAL,New York Jets at Dallas Cowboys,9.477,-8.5,38.5,30.0,10.0
+2023,2,2023_02_SF_LA,San Francisco 49ers at Los Angeles Rams,-5.398,7.5,45.0,23.0,30.0
+2023,2,2023_02_NYG_ARI,New York Giants at Arizona Cardinals,-7.967,5.0,40.0,28.0,31.0
+2023,2,2023_02_BAL_CIN,Baltimore Ravens at Cincinnati Bengals,4.521,-3.5,45.5,24.0,27.0
+2023,2,2023_02_KC_JAX,Kansas City Chiefs at Jacksonville Jaguars,-2.691,3.5,50.5,9.0,17.0
+2023,2,2023_02_LV_BUF,Las Vegas Raiders at Buffalo Bills,12.716,-7.5,47.0,38.0,10.0
+2023,2,2023_02_CHI_TB,Chicago Bears at Tampa Bay Buccaneers,4.005,-2.5,41.0,27.0,17.0
+2023,2,2023_02_SEA_DET,Seattle Seahawks at Detroit Lions,4.974,-4.5,47.5,31.0,37.0
+2023,2,2023_02_IND_HOU,Indianapolis Colts at Houston Texans,0.522,1.0,40.0,20.0,31.0
+2023,2,2023_02_GB_ATL,Green Bay Packers at Atlanta Falcons,1.699,-3.0,40.5,25.0,24.0
+2023,2,2023_02_LAC_TEN,Los Angeles Chargers at Tennessee Titans,-3.937,2.5,45.5,27.0,24.0
+2023,2,2023_02_MIN_PHI,Minnesota Vikings at Philadelphia Eagles,9.82,-6.0,49.0,34.0,28.0
+2023,1,2023_01_BUF_NYJ,Buffalo Bills at New York Jets,-4.177,2.5,44.5,22.0,16.0
+2023,1,2023_01_DAL_NYG,Dallas Cowboys at New York Giants,-4.452,3.5,44.5,0.0,40.0
+2023,1,2023_01_LA_SEA,Los Angeles Rams at Seattle Seahawks,5.863,-4.5,45.0,13.0,30.0
+2023,1,2023_01_PHI_NE,Philadelphia Eagles at New England Patriots,-6.743,3.5,44.5,20.0,25.0
+2023,1,2023_01_MIA_LAC,Miami Dolphins at Los Angeles Chargers,3.226,-3.0,50.5,34.0,36.0
+2023,1,2023_01_LV_DEN,Las Vegas Raiders at Denver Broncos,5.185,-3.0,43.0,16.0,17.0
+2023,1,2023_01_GB_CHI,Green Bay Packers at Chicago Bears,0.261,-1.0,41.0,20.0,38.0
+2023,1,2023_01_ARI_WAS,Arizona Cardinals at Washington Commanders,11.461,-7.0,38.0,20.0,16.0
+2023,1,2023_01_SF_PIT,San Francisco 49ers at Pittsburgh Steelers,-3.025,1.5,41.5,7.0,30.0
+2023,1,2023_01_TEN_NO,Tennessee Titans at New Orleans Saints,7.118,-3.0,41.0,16.0,15.0
+2023,1,2023_01_TB_MIN,Tampa Bay Buccaneers at Minnesota Vikings,4.695,-4.0,45.0,17.0,20.0
+2023,1,2023_01_JAX_IND,Jacksonville Jaguars at Indianapolis Colts,-5.755,4.0,45.5,21.0,31.0
+2023,1,2023_01_CIN_CLE,Cincinnati Bengals at Cleveland Browns,-3.631,1.0,46.5,24.0,3.0
+2023,1,2023_01_HOU_BAL,Houston Texans at Baltimore Ravens,13.53,-9.5,43.5,25.0,9.0
+2023,1,2023_01_CAR_ATL,Carolina Panthers at Atlanta Falcons,6.08,-3.5,40.5,24.0,10.0
+2023,1,2023_01_DET_KC,Detroit Lions at Kansas City Chiefs,10.039,-4.0,53.0,20.0,21.0
+2022,22,2022_22_KC_PHI,Kansas City Chiefs at Philadelphia Eagles,0.848,-1.0,51.0,35.0,38.0
+2022,21,2022_21_CIN_KC,Cincinnati Bengals at Kansas City Chiefs,1.963,-2.0,48.5,23.0,20.0
+2022,21,2022_21_SF_PHI,San Francisco 49ers at Philadelphia Eagles,3.26,-2.5,45.0,31.0,7.0
+2022,20,2022_20_DAL_SF,Dallas Cowboys at San Francisco 49ers,4.418,-3.5,46.5,19.0,12.0
+2022,20,2022_20_CIN_BUF,Cincinnati Bengals at Buffalo Bills,6.044,-6.0,48.5,10.0,27.0
+2022,20,2022_20_NYG_PHI,New York Giants at Philadelphia Eagles,10.711,-8.0,48.0,38.0,7.0
+2022,20,2022_20_JAX_KC,Jacksonville Jaguars at Kansas City Chiefs,12.663,-10.0,52.5,27.0,20.0
+2022,19,2022_19_DAL_TB,Dallas Cowboys at Tampa Bay Buccaneers,-5.079,2.5,45.5,14.0,31.0
+2022,19,2022_19_BAL_CIN,Baltimore Ravens at Cincinnati Bengals,13.363,-7.5,40.0,24.0,17.0
+2022,19,2022_19_NYG_MIN,New York Giants at Minnesota Vikings,3.971,-2.5,48.0,24.0,31.0
+2022,19,2022_19_MIA_BUF,Miami Dolphins at Buffalo Bills,11.461,-14.0,44.0,34.0,31.0
+2022,19,2022_19_LAC_JAX,Los Angeles Chargers at Jacksonville Jaguars,0.815,2.0,46.5,31.0,30.0
+2022,19,2022_19_SEA_SF,Seattle Seahawks at San Francisco 49ers,10.802,-10.0,42.0,41.0,23.0
+2022,18,2022_18_DET_GB,Detroit Lions at Green Bay Packers,4.66,-5.5,49.0,16.0,20.0
+2022,18,2022_18_DAL_WAS,Dallas Cowboys at Washington Commanders,-5.185,7.5,40.5,26.0,6.0
+2022,18,2022_18_LAC_DEN,Los Angeles Chargers at Denver Broncos,-3.801,-6.0,38.5,31.0,28.0
+2022,18,2022_18_ARI_SF,Arizona Cardinals at San Francisco 49ers,17.923,-14.0,40.0,38.0,13.0
+2022,18,2022_18_NYG_PHI,New York Giants at Philadelphia Eagles,11.509,-16.5,42.5,22.0,16.0
+2022,18,2022_18_LA_SEA,Los Angeles Rams at Seattle Seahawks,3.631,-5.5,41.5,19.0,16.0
+2022,18,2022_18_MIN_CHI,Minnesota Vikings at Chicago Bears,-3.226,6.5,42.5,13.0,29.0
+2022,18,2022_18_BAL_CIN,Baltimore Ravens at Cincinnati Bengals,12.049,-11.0,39.0,27.0,16.0
+2022,18,2022_18_NE_BUF,New England Patriots at Buffalo Bills,8.363,-8.0,44.0,35.0,23.0
+2022,18,2022_18_CAR_NO,Carolina Panthers at New Orleans Saints,4.349,-3.5,41.5,7.0,10.0
+2022,18,2022_18_TB_ATL,Tampa Bay Buccaneers at Atlanta Falcons,3.53,-6.0,40.5,30.0,17.0
+2022,18,2022_18_HOU_IND,Houston Texans at Indianapolis Colts,5.15,-3.0,38.0,31.0,32.0
+2022,18,2022_18_CLE_PIT,Cleveland Browns at Pittsburgh Steelers,1.142,-2.5,40.0,28.0,14.0
+2022,18,2022_18_NYJ_MIA,New York Jets at Miami Dolphins,3.327,-3.5,37.5,11.0,6.0
+2022,18,2022_18_TEN_JAX,Tennessee Titans at Jacksonville Jaguars,4.939,-6.0,39.5,20.0,16.0
+2022,18,2022_18_KC_LV,Kansas City Chiefs at Las Vegas Raiders,-9.734,9.0,51.5,13.0,31.0
+2022,17,2022_17_PIT_BAL,Pittsburgh Steelers at Baltimore Ravens,2.227,-1.0,35.5,13.0,16.0
+2022,17,2022_17_LA_LAC,Los Angeles Rams at Los Angeles Chargers,10.483,-6.5,41.5,31.0,10.0
+2022,17,2022_17_MIN_GB,Minnesota Vikings at Green Bay Packers,2.227,-3.0,47.5,41.0,17.0
+2022,17,2022_17_SF_LV,San Francisco 49ers at Las Vegas Raiders,-5.863,10.0,41.5,34.0,37.0
+2022,17,2022_17_NYJ_SEA,New York Jets at Seattle Seahawks,1.338,1.0,43.0,23.0,6.0
+2022,17,2022_17_IND_NYG,Indianapolis Colts at New York Giants,5.15,-5.5,38.5,38.0,10.0
+2022,17,2022_17_DEN_KC,Denver Broncos at Kansas City Chiefs,15.807,-13.5,46.0,27.0,24.0
+2022,17,2022_17_MIA_NE,Miami Dolphins at New England Patriots,1.732,-3.0,41.5,23.0,21.0
+2022,17,2022_17_CHI_DET,Chicago Bears at Detroit Lions,7.043,-4.5,52.5,41.0,10.0
+2022,17,2022_17_JAX_HOU,Jacksonville Jaguars at Houston Texans,-4.764,3.5,43.0,3.0,31.0
+2022,17,2022_17_ARI_ATL,Arizona Cardinals at Atlanta Falcons,7.81,-7.0,41.0,20.0,19.0
+2022,17,2022_17_NO_PHI,New Orleans Saints at Philadelphia Eagles,8.565,-5.5,41.5,10.0,20.0
+2022,17,2022_17_CLE_WAS,Cleveland Browns at Washington Commanders,0.946,-1.0,41.5,10.0,24.0
+2022,17,2022_17_CAR_TB,Carolina Panthers at Tampa Bay Buccaneers,5.899,-3.5,40.5,30.0,24.0
+2022,17,2022_17_DAL_TEN,Dallas Cowboys at Tennessee Titans,-8.006,14.0,41.0,13.0,27.0
+2022,16,2022_16_LAC_IND,Los Angeles Chargers at Indianapolis Colts,-3.563,3.5,44.5,3.0,20.0
+2022,16,2022_16_TB_ARI,Tampa Bay Buccaneers at Arizona Cardinals,-7.461,7.5,41.5,16.0,19.0
+2022,16,2022_16_DEN_LA,Denver Broncos at Los Angeles Rams,-3.126,3.0,36.5,51.0,14.0
+2022,16,2022_16_GB_MIA,Green Bay Packers at Miami Dolphins,4.005,-3.5,49.0,20.0,26.0
+2022,16,2022_16_LV_PIT,Las Vegas Raiders at Pittsburgh Steelers,0.13,-2.5,38.5,13.0,10.0
+2022,16,2022_16_PHI_DAL,Philadelphia Eagles at Dallas Cowboys,2.925,-4.0,48.0,40.0,34.0
+2022,16,2022_16_WAS_SF,Washington Commanders at San Francisco 49ers,7.888,-6.5,37.5,37.0,20.0
+2022,16,2022_16_HOU_TEN,Houston Texans at Tennessee Titans,11.752,-3.0,34.0,14.0,19.0
+2022,16,2022_16_ATL_BAL,Atlanta Falcons at Baltimore Ravens,4.521,-6.5,35.0,17.0,9.0
+2022,16,2022_16_SEA_KC,Seattle Seahawks at Kansas City Chiefs,13.699,-10.5,50.5,24.0,10.0
+2022,16,2022_16_BUF_CHI,Buffalo Bills at Chicago Bears,-12.302,8.0,40.0,13.0,35.0
+2022,16,2022_16_CIN_NE,Cincinnati Bengals at New England Patriots,-4.28,3.0,42.0,18.0,22.0
+2022,16,2022_16_DET_CAR,Detroit Lions at Carolina Panthers,-2.891,2.5,43.5,37.0,23.0
+2022,16,2022_16_NO_CLE,New Orleans Saints at Cleveland Browns,5.504,-3.0,32.0,10.0,17.0
+2022,16,2022_16_NYG_MIN,New York Giants at Minnesota Vikings,6.153,-4.5,48.0,27.0,24.0
+2022,16,2022_16_JAX_NYJ,Jacksonville Jaguars at New York Jets,2.591,-2.5,36.5,3.0,19.0
+2022,15,2022_15_LA_GB,Los Angeles Rams at Green Bay Packers,12.15,-8.0,39.5,24.0,12.0
+2022,15,2022_15_NYG_WAS,New York Giants at Washington Commanders,6.743,-4.5,40.5,12.0,20.0
+2022,15,2022_15_CIN_TB,Cincinnati Bengals at Tampa Bay Buccaneers,-1.207,3.5,47.0,23.0,34.0
+2022,15,2022_15_TEN_LAC,Tennessee Titans at Los Angeles Chargers,2.095,-3.0,46.5,17.0,14.0
+2022,15,2022_15_NE_LV,New England Patriots at Las Vegas Raiders,-2.062,-1.0,45.0,30.0,24.0
+2022,15,2022_15_ARI_DEN,Arizona Cardinals at Denver Broncos,7.232,-1.5,37.5,24.0,15.0
+2022,15,2022_15_DAL_JAX,Dallas Cowboys at Jacksonville Jaguars,-8.204,4.0,48.5,40.0,34.0
+2022,15,2022_15_PIT_CAR,Pittsburgh Steelers at Carolina Panthers,0.0,-2.5,36.5,16.0,24.0
+2022,15,2022_15_PHI_CHI,Philadelphia Eagles at Chicago Bears,-14.643,8.5,48.0,20.0,25.0
+2022,15,2022_15_KC_HOU,Kansas City Chiefs at Houston Texans,-18.266,14.5,48.5,24.0,30.0
+2022,15,2022_15_DET_NYJ,Detroit Lions at New York Jets,0.685,-2.0,44.0,17.0,20.0
+2022,15,2022_15_ATL_NO,Atlanta Falcons at New Orleans Saints,4.764,-5.0,43.5,21.0,18.0
+2022,15,2022_15_MIA_BUF,Miami Dolphins at Buffalo Bills,8.974,-7.0,44.0,32.0,29.0
+2022,15,2022_15_BAL_CLE,Baltimore Ravens at Cleveland Browns,4.005,-2.5,39.5,13.0,3.0
+2022,15,2022_15_IND_MIN,Indianapolis Colts at Minnesota Vikings,7.732,-3.5,46.5,39.0,36.0
+2022,15,2022_15_SF_SEA,San Francisco 49ers at Seattle Seahawks,-4.418,3.0,43.0,13.0,21.0
+2022,14,2022_14_NE_ARI,New England Patriots at Arizona Cardinals,-4.487,2.0,44.0,13.0,27.0
+2022,14,2022_14_MIA_LAC,Miami Dolphins at Los Angeles Chargers,-2.992,3.0,54.5,23.0,17.0
+2022,14,2022_14_TB_SF,Tampa Bay Buccaneers at San Francisco 49ers,2.992,-3.5,38.0,35.0,7.0
+2022,14,2022_14_CAR_SEA,Carolina Panthers at Seattle Seahawks,6.93,-3.5,44.5,24.0,30.0
+2022,14,2022_14_KC_DEN,Kansas City Chiefs at Denver Broncos,-11.752,8.5,44.5,28.0,34.0
+2022,14,2022_14_HOU_DAL,Houston Texans at Dallas Cowboys,22.759,-17.0,44.5,27.0,23.0
+2022,14,2022_14_JAX_TEN,Jacksonville Jaguars at Tennessee Titans,6.372,-3.0,42.0,22.0,36.0
+2022,14,2022_14_CLE_CIN,Cleveland Browns at Cincinnati Bengals,8.484,-4.5,47.0,23.0,10.0
+2022,14,2022_14_PHI_NYG,Philadelphia Eagles at New York Giants,-12.404,7.5,44.5,22.0,48.0
+2022,14,2022_14_BAL_PIT,Baltimore Ravens at Pittsburgh Steelers,-1.864,-1.5,37.0,14.0,16.0
+2022,14,2022_14_NYJ_BUF,New York Jets at Buffalo Bills,13.198,-10.0,43.5,20.0,12.0
+2022,14,2022_14_MIN_DET,Minnesota Vikings at Detroit Lions,-4.349,-2.5,51.5,34.0,23.0
+2022,14,2022_14_LV_LA,Las Vegas Raiders at Los Angeles Rams,-10.039,6.5,42.5,17.0,16.0
+2022,13,2022_13_NO_TB,New Orleans Saints at Tampa Bay Buccaneers,8.768,-3.5,41.0,17.0,16.0
+2022,13,2022_13_IND_DAL,Indianapolis Colts at Dallas Cowboys,14.46,-11.0,44.5,54.0,19.0
+2022,13,2022_13_KC_CIN,Kansas City Chiefs at Cincinnati Bengals,-3.26,2.5,53.0,27.0,24.0
+2022,13,2022_13_LAC_LV,Los Angeles Chargers at Las Vegas Raiders,-0.326,-2.5,49.0,27.0,20.0
+2022,13,2022_13_MIA_SF,Miami Dolphins at San Francisco 49ers,3.597,-4.5,46.0,33.0,17.0
+2022,13,2022_13_SEA_LA,Seattle Seahawks at Los Angeles Rams,-8.687,7.0,41.0,23.0,27.0
+2022,13,2022_13_GB_CHI,Green Bay Packers at Chicago Bears,-5.611,4.0,45.0,19.0,28.0
+2022,13,2022_13_CLE_HOU,Cleveland Browns at Houston Texans,-8.124,7.5,47.0,14.0,27.0
+2022,13,2022_13_WAS_NYG,Washington Commanders at New York Giants,-0.489,2.5,40.0,20.0,20.0
+2022,13,2022_13_JAX_DET,Jacksonville Jaguars at Detroit Lions,2.625,-1.0,51.5,40.0,14.0
+2022,13,2022_13_TEN_PHI,Tennessee Titans at Philadelphia Eagles,12.875,-5.0,44.5,35.0,10.0
+2022,13,2022_13_PIT_ATL,Pittsburgh Steelers at Atlanta Falcons,1.109,1.0,43.0,16.0,19.0
+2022,13,2022_13_DEN_BAL,Denver Broncos at Baltimore Ravens,13.089,-9.5,40.5,10.0,9.0
+2022,13,2022_13_NYJ_MIN,New York Jets at Minnesota Vikings,6.226,-3.0,44.0,27.0,22.0
+2022,13,2022_13_BUF_NE,Buffalo Bills at New England Patriots,-6.594,3.5,43.5,10.0,24.0
+2022,12,2022_12_PIT_IND,Pittsburgh Steelers at Indianapolis Colts,2.925,-2.5,40.0,17.0,24.0
+2022,12,2022_12_GB_PHI,Green Bay Packers at Philadelphia Eagles,10.529,-6.5,46.0,40.0,33.0
+2022,12,2022_12_NO_SF,New Orleans Saints at San Francisco 49ers,9.14,-9.5,44.0,13.0,0.0
+2022,12,2022_12_LA_KC,Los Angeles Rams at Kansas City Chiefs,18.623,-16.5,42.0,26.0,10.0
+2022,12,2022_12_LAC_ARI,Los Angeles Chargers at Arizona Cardinals,-1.47,2.5,48.5,24.0,25.0
+2022,12,2022_12_LV_SEA,Las Vegas Raiders at Seattle Seahawks,3.327,-4.0,47.5,34.0,40.0
+2022,12,2022_12_CHI_NYJ,Chicago Bears at New York Jets,8.363,-8.5,36.5,31.0,10.0
+2022,12,2022_12_HOU_MIA,Houston Texans at Miami Dolphins,17.51,-14.0,47.0,30.0,15.0
+2022,12,2022_12_CIN_TEN,Cincinnati Bengals at Tennessee Titans,-2.128,1.0,43.0,16.0,20.0
+2022,12,2022_12_TB_CLE,Tampa Bay Buccaneers at Cleveland Browns,-3.869,3.0,42.0,23.0,17.0
+2022,12,2022_12_ATL_WAS,Atlanta Falcons at Washington Commanders,5.54,-3.5,40.5,19.0,13.0
+2022,12,2022_12_DEN_CAR,Denver Broncos at Carolina Panthers,-0.489,1.0,36.5,23.0,10.0
+2022,12,2022_12_BAL_JAX,Baltimore Ravens at Jacksonville Jaguars,-9.098,3.5,43.0,28.0,27.0
+2022,12,2022_12_NE_MIN,New England Patriots at Minnesota Vikings,4.521,-2.5,42.5,33.0,26.0
+2022,12,2022_12_NYG_DAL,New York Giants at Dallas Cowboys,13.474,-10.5,45.5,28.0,20.0
+2022,12,2022_12_BUF_DET,Buffalo Bills at Detroit Lions,-11.222,10.0,54.0,25.0,28.0
+2022,11,2022_11_SF_ARI,San Francisco 49ers at Arizona Cardinals,-13.253,10.0,43.5,10.0,38.0
+2022,11,2022_11_KC_LAC,Kansas City Chiefs at Los Angeles Chargers,-9.015,5.5,52.5,27.0,30.0
+2022,11,2022_11_CIN_PIT,Cincinnati Bengals at Pittsburgh Steelers,-6.855,3.5,39.0,30.0,37.0
+2022,11,2022_11_DAL_MIN,Dallas Cowboys at Minnesota Vikings,2.492,1.5,48.5,3.0,40.0
+2022,11,2022_11_LV_DEN,Las Vegas Raiders at Denver Broncos,1.831,-2.5,41.5,16.0,22.0
+2022,11,2022_11_CLE_BUF,Cleveland Browns at Buffalo Bills,11.752,-7.5,50.5,31.0,23.0
+2022,11,2022_11_CHI_ATL,Chicago Bears at Atlanta Falcons,3.597,-3.0,48.5,27.0,24.0
+2022,11,2022_11_LA_NO,Los Angeles Rams at New Orleans Saints,0.587,-2.5,39.5,27.0,20.0
+2022,11,2022_11_DET_NYG,Detroit Lions at New York Giants,4.005,-3.0,44.0,18.0,31.0
+2022,11,2022_11_NYJ_NE,New York Jets at New England Patriots,4.521,-3.5,38.5,10.0,3.0
+2022,11,2022_11_WAS_HOU,Washington Commanders at Houston Texans,-6.817,3.0,41.0,10.0,23.0
+2022,11,2022_11_PHI_IND,Philadelphia Eagles at Indianapolis Colts,-11.222,6.5,45.5,16.0,17.0
+2022,11,2022_11_CAR_BAL,Carolina Panthers at Baltimore Ravens,15.538,-13.0,42.0,13.0,3.0
+2022,11,2022_11_TEN_GB,Tennessee Titans at Green Bay Packers,6.892,-3.0,40.5,17.0,27.0
+2022,10,2022_10_WAS_PHI,Washington Commanders at Philadelphia Eagles,15.945,-11.0,43.0,21.0,32.0
+2022,10,2022_10_LAC_SF,Los Angeles Chargers at San Francisco 49ers,7.08,-8.5,45.5,22.0,16.0
+2022,10,2022_10_DAL_GB,Dallas Cowboys at Green Bay Packers,-2.293,3.5,44.5,31.0,28.0
+2022,10,2022_10_ARI_LA,Arizona Cardinals at Los Angeles Rams,10.802,-3.5,38.0,17.0,27.0
+2022,10,2022_10_IND_LV,Indianapolis Colts at Las Vegas Raiders,5.079,-4.5,41.0,20.0,25.0
+2022,10,2022_10_DEN_TEN,Denver Broncos at Tennessee Titans,5.899,-2.5,40.0,17.0,10.0
+2022,10,2022_10_MIN_BUF,Minnesota Vikings at Buffalo Bills,6.557,-6.5,47.0,30.0,33.0
+2022,10,2022_10_CLE_MIA,Cleveland Browns at Miami Dolphins,6.93,-3.0,49.0,39.0,17.0
+2022,10,2022_10_DET_CHI,Detroit Lions at Chicago Bears,1.601,-3.0,48.5,30.0,31.0
+2022,10,2022_10_NO_PIT,New Orleans Saints at Pittsburgh Steelers,-0.815,-1.0,39.5,20.0,10.0
+2022,10,2022_10_HOU_NYG,Houston Texans at New York Giants,10.483,-5.5,41.5,24.0,16.0
+2022,10,2022_10_JAX_KC,Jacksonville Jaguars at Kansas City Chiefs,11.557,-10.0,51.5,27.0,17.0
+2022,10,2022_10_SEA_TB,Seattle Seahawks at Tampa Bay Buccaneers,6.892,-2.5,45.0,21.0,16.0
+2022,10,2022_10_ATL_CAR,Atlanta Falcons at Carolina Panthers,-0.979,2.5,41.5,25.0,15.0
+2022,9,2022_09_BAL_NO,Baltimore Ravens at New Orleans Saints,-5.362,1.0,46.0,13.0,27.0
+2022,9,2022_09_TEN_KC,Tennessee Titans at Kansas City Chiefs,8.646,-14.0,45.0,20.0,17.0
+2022,9,2022_09_LA_TB,Los Angeles Rams at Tampa Bay Buccaneers,2.128,-3.0,43.0,16.0,13.0
+2022,9,2022_09_SEA_ARI,Seattle Seahawks at Arizona Cardinals,4.074,-1.5,49.5,21.0,31.0
+2022,9,2022_09_LV_JAX,Las Vegas Raiders at Jacksonville Jaguars,2.625,2.5,47.5,27.0,20.0
+2022,9,2022_09_CAR_CIN,Carolina Panthers at Cincinnati Bengals,11.222,-7.0,43.0,42.0,21.0
+2022,9,2022_09_LAC_ATL,Los Angeles Chargers at Atlanta Falcons,-0.13,2.5,49.5,17.0,20.0
+2022,9,2022_09_GB_DET,Green Bay Packers at Detroit Lions,-6.446,4.0,49.5,15.0,9.0
+2022,9,2022_09_MIN_WAS,Minnesota Vikings at Washington Commanders,-6.08,3.0,43.5,17.0,20.0
+2022,9,2022_09_MIA_CHI,Miami Dolphins at Chicago Bears,-4.418,4.0,46.0,32.0,35.0
+2022,9,2022_09_BUF_NYJ,Buffalo Bills at New York Jets,-10.895,11.0,46.0,20.0,17.0
+2022,9,2022_09_IND_NE,Indianapolis Colts at New England Patriots,5.54,-5.0,40.0,26.0,3.0
+2022,9,2022_09_PHI_HOU,Philadelphia Eagles at Houston Texans,-19.283,14.0,45.5,17.0,29.0
+2022,8,2022_08_CIN_CLE,Cincinnati Bengals at Cleveland Browns,-5.827,3.0,45.0,32.0,13.0
+2022,8,2022_08_GB_BUF,Green Bay Packers at Buffalo Bills,8.404,-10.5,47.0,27.0,17.0
+2022,8,2022_08_SF_LA,San Francisco 49ers at Los Angeles Rams,2.958,1.0,42.0,14.0,31.0
+2022,8,2022_08_WAS_IND,Washington Commanders at Indianapolis Colts,2.194,-3.0,40.5,16.0,17.0
+2022,8,2022_08_NYG_SEA,New York Giants at Seattle Seahawks,0.913,-3.0,44.5,27.0,13.0
+2022,8,2022_08_TEN_HOU,Tennessee Titans at Houston Texans,-8.646,1.0,39.0,10.0,17.0
+2022,8,2022_08_NE_NYJ,New England Patriots at New York Jets,0.88,3.0,40.0,17.0,22.0
+2022,8,2022_08_ARI_MIN,Arizona Cardinals at Minnesota Vikings,10.802,-4.0,48.5,34.0,26.0
+2022,8,2022_08_MIA_DET,Miami Dolphins at Detroit Lions,-4.556,3.5,52.0,27.0,31.0
+2022,8,2022_08_PIT_PHI,Pittsburgh Steelers at Philadelphia Eagles,16.513,-11.0,43.0,35.0,13.0
+2022,8,2022_08_CAR_ATL,Carolina Panthers at Atlanta Falcons,2.194,-4.5,41.0,37.0,34.0
+2022,8,2022_08_LV_NO,Las Vegas Raiders at New Orleans Saints,1.798,1.0,48.5,24.0,0.0
+2022,8,2022_08_CHI_DAL,Chicago Bears at Dallas Cowboys,8.891,-10.5,43.0,49.0,29.0
+2022,8,2022_08_DEN_JAX,Denver Broncos at Jacksonville Jaguars,2.925,-1.0,41.0,17.0,21.0
+2022,8,2022_08_BAL_TB,Baltimore Ravens at Tampa Bay Buccaneers,0.424,-2.0,46.0,22.0,27.0
+2022,7,2022_07_CHI_NE,Chicago Bears at New England Patriots,8.933,-9.5,40.0,14.0,33.0
+2022,7,2022_07_PIT_MIA,Pittsburgh Steelers at Miami Dolphins,5.398,-7.5,44.5,16.0,10.0
+2022,7,2022_07_SEA_LAC,Seattle Seahawks at Los Angeles Chargers,8.768,-5.5,51.5,23.0,37.0
+2022,7,2022_07_KC_SF,Kansas City Chiefs at San Francisco 49ers,-0.587,1.0,49.0,23.0,44.0
+2022,7,2022_07_HOU_LV,Houston Texans at Las Vegas Raiders,9.562,-7.0,46.0,38.0,20.0
+2022,7,2022_07_NYJ_DEN,New York Jets at Denver Broncos,1.634,2.0,37.0,9.0,16.0
+2022,7,2022_07_GB_WAS,Green Bay Packers at Washington Commanders,-5.009,4.0,41.5,23.0,21.0
+2022,7,2022_07_TB_CAR,Tampa Bay Buccaneers at Carolina Panthers,-11.509,13.0,39.5,21.0,3.0
+2022,7,2022_07_CLE_BAL,Cleveland Browns at Baltimore Ravens,7.888,-6.5,46.0,23.0,20.0
+2022,7,2022_07_ATL_CIN,Atlanta Falcons at Cincinnati Bengals,8.974,-6.5,47.5,35.0,17.0
+2022,7,2022_07_IND_TEN,Indianapolis Colts at Tennessee Titans,3.327,-2.5,43.0,19.0,10.0
+2022,7,2022_07_NYG_JAX,New York Giants at Jacksonville Jaguars,4.73,-3.0,44.0,17.0,23.0
+2022,7,2022_07_DET_DAL,Detroit Lions at Dallas Cowboys,10.483,-7.0,49.5,24.0,6.0
+2022,7,2022_07_NO_ARI,New Orleans Saints at Arizona Cardinals,1.306,-2.5,44.0,42.0,34.0
+2022,6,2022_06_DEN_LAC,Denver Broncos at Los Angeles Chargers,5.433,-3.5,45.5,19.0,16.0
+2022,6,2022_06_DAL_PHI,Dallas Cowboys at Philadelphia Eagles,8.646,-6.5,42.5,26.0,17.0
+2022,6,2022_06_BUF_KC,Buffalo Bills at Kansas City Chiefs,0.554,2.5,54.0,20.0,24.0
+2022,6,2022_06_ARI_SEA,Arizona Cardinals at Seattle Seahawks,-1.996,2.5,50.0,19.0,9.0
+2022,6,2022_06_CAR_LA,Carolina Panthers at Los Angeles Rams,13.586,-10.0,41.5,24.0,10.0
+2022,6,2022_06_SF_ATL,San Francisco 49ers at Atlanta Falcons,-5.185,3.5,46.0,28.0,14.0
+2022,6,2022_06_MIN_MIA,Minnesota Vikings at Miami Dolphins,-1.568,3.0,45.0,16.0,24.0
+2022,6,2022_06_BAL_NYG,Baltimore Ravens at New York Giants,-5.185,5.5,46.0,24.0,20.0
+2022,6,2022_06_NYJ_GB,New York Jets at Green Bay Packers,9.951,-7.5,44.5,10.0,27.0
+2022,6,2022_06_NE_CLE,New England Patriots at Cleveland Browns,1.897,-2.5,43.0,15.0,38.0
+2022,6,2022_06_JAX_IND,Jacksonville Jaguars at Indianapolis Colts,4.521,-1.0,41.0,34.0,27.0
+2022,6,2022_06_CIN_NO,Cincinnati Bengals at New Orleans Saints,-0.033,3.0,42.5,26.0,30.0
+2022,6,2022_06_TB_PIT,Tampa Bay Buccaneers at Pittsburgh Steelers,-7.118,10.0,47.0,20.0,18.0
+2022,6,2022_06_WAS_CHI,Washington Commanders at Chicago Bears,2.062,1.0,38.5,7.0,12.0
+2022,5,2022_05_LV_KC,Las Vegas Raiders at Kansas City Chiefs,9.605,-7.5,51.5,30.0,29.0
+2022,5,2022_05_CIN_BAL,Cincinnati Bengals at Baltimore Ravens,0.88,-3.0,47.5,19.0,17.0
+2022,5,2022_05_DAL_LA,Dallas Cowboys at Los Angeles Rams,7.461,-5.5,42.0,10.0,22.0
+2022,5,2022_05_PHI_ARI,Philadelphia Eagles at Arizona Cardinals,-3.631,5.5,48.5,17.0,20.0
+2022,5,2022_05_SF_CAR,San Francisco 49ers at Carolina Panthers,-3.462,6.0,40.0,15.0,37.0
+2022,5,2022_05_DET_NE,Detroit Lions at New England Patriots,3.597,-3.0,46.5,29.0,0.0
+2022,5,2022_05_LAC_CLE,Los Angeles Chargers at Cleveland Browns,-1.109,1.0,47.0,28.0,30.0
+2022,5,2022_05_MIA_NYJ,Miami Dolphins at New York Jets,-4.974,3.0,46.0,40.0,17.0
+2022,5,2022_05_TEN_WAS,Tennessee Titans at Washington Commanders,-0.685,1.0,43.0,17.0,21.0
+2022,5,2022_05_CHI_MIN,Chicago Bears at Minnesota Vikings,8.323,-10.0,44.0,29.0,22.0
+2022,5,2022_05_ATL_TB,Atlanta Falcons at Tampa Bay Buccaneers,11.27,-10.5,46.0,21.0,15.0
+2022,5,2022_05_PIT_BUF,Pittsburgh Steelers at Buffalo Bills,13.986,-14.0,44.0,38.0,3.0
+2022,5,2022_05_HOU_JAX,Houston Texans at Jacksonville Jaguars,8.006,-7.0,44.0,6.0,13.0
+2022,5,2022_05_SEA_NO,Seattle Seahawks at New Orleans Saints,7.385,-5.5,45.5,39.0,32.0
+2022,5,2022_05_NYG_GB,New York Giants at Green Bay Packers,8.283,-8.5,42.0,22.0,27.0
+2022,5,2022_05_IND_DEN,Indianapolis Colts at Denver Broncos,2.791,-3.5,42.0,9.0,12.0
+2022,4,2022_04_LA_SF,Los Angeles Rams at San Francisco 49ers,1.077,-1.0,42.0,24.0,9.0
+2022,4,2022_04_KC_TB,Kansas City Chiefs at Tampa Bay Buccaneers,0.326,-1.0,46.5,31.0,41.0
+2022,4,2022_04_NE_GB,New England Patriots at Green Bay Packers,9.562,-10.0,40.5,27.0,24.0
+2022,4,2022_04_DEN_LV,Denver Broncos at Las Vegas Raiders,0.619,-2.5,45.5,32.0,23.0
+2022,4,2022_04_ARI_CAR,Arizona Cardinals at Carolina Panthers,0.75,-1.0,44.0,16.0,26.0
+2022,4,2022_04_CLE_ATL,Cleveland Browns at Atlanta Falcons,-2.858,1.0,48.0,23.0,20.0
+2022,4,2022_04_WAS_DAL,Washington Commanders at Dallas Cowboys,2.459,-3.0,40.5,25.0,10.0
+2022,4,2022_04_JAX_PHI,Jacksonville Jaguars at Philadelphia Eagles,6.044,-6.5,44.0,29.0,21.0
+2022,4,2022_04_NYJ_PIT,New York Jets at Pittsburgh Steelers,5.327,-3.0,41.0,20.0,24.0
+2022,4,2022_04_SEA_DET,Seattle Seahawks at Detroit Lions,5.327,-3.0,48.5,45.0,48.0
+2022,4,2022_04_LAC_HOU,Los Angeles Chargers at Houston Texans,-7.849,5.5,45.0,24.0,34.0
+2022,4,2022_04_BUF_BAL,Buffalo Bills at Baltimore Ravens,-2.992,3.0,50.0,20.0,23.0
+2022,4,2022_04_CHI_NYG,Chicago Bears at New York Giants,4.108,-3.0,39.0,20.0,12.0
+2022,4,2022_04_TEN_IND,Tennessee Titans at Indianapolis Colts,3.767,-4.5,43.0,17.0,24.0
+2022,4,2022_04_MIN_NO,Minnesota Vikings at New Orleans Saints,-0.75,4.0,42.0,25.0,28.0
+2022,4,2022_04_MIA_CIN,Miami Dolphins at Cincinnati Bengals,2.891,-4.0,48.5,27.0,15.0
+2022,3,2022_03_DAL_NYG,Dallas Cowboys at New York Giants,2.062,-1.0,38.5,16.0,23.0
+2022,3,2022_03_SF_DEN,San Francisco 49ers at Denver Broncos,0.848,1.0,44.0,11.0,10.0
+2022,3,2022_03_LA_ARI,Los Angeles Rams at Arizona Cardinals,-2.925,3.5,49.0,12.0,20.0
+2022,3,2022_03_ATL_SEA,Atlanta Falcons at Seattle Seahawks,3.53,-1.0,43.0,23.0,27.0
+2022,3,2022_03_GB_TB,Green Bay Packers at Tampa Bay Buccaneers,3.294,-1.0,41.5,12.0,14.0
+2022,3,2022_03_JAX_LAC,Jacksonville Jaguars at Los Angeles Chargers,9.82,-6.5,46.0,10.0,38.0
+2022,3,2022_03_HOU_CHI,Houston Texans at Chicago Bears,4.418,-3.0,40.0,23.0,20.0
+2022,3,2022_03_PHI_WAS,Philadelphia Eagles at Washington Commanders,-3.26,6.0,47.0,8.0,24.0
+2022,3,2022_03_LV_TEN,Las Vegas Raiders at Tennessee Titans,0.979,1.5,45.5,24.0,22.0
+2022,3,2022_03_KC_IND,Kansas City Chiefs at Indianapolis Colts,-6.189,4.5,51.0,20.0,17.0
+2022,3,2022_03_DET_MIN,Detroit Lions at Minnesota Vikings,8.363,-6.5,52.0,28.0,24.0
+2022,3,2022_03_NO_CAR,New Orleans Saints at Carolina Panthers,-1.338,2.0,41.0,22.0,14.0
+2022,3,2022_03_CIN_NYJ,Cincinnati Bengals at New York Jets,-5.185,6.5,46.0,12.0,27.0
+2022,3,2022_03_BUF_MIA,Buffalo Bills at Miami Dolphins,-4.177,4.0,54.0,21.0,19.0
+2022,3,2022_03_BAL_NE,Baltimore Ravens at New England Patriots,-0.848,2.5,45.5,26.0,37.0
+2022,3,2022_03_PIT_CLE,Pittsburgh Steelers at Cleveland Browns,3.801,-4.5,38.0,29.0,17.0
+2022,2,2022_02_MIN_PHI,Minnesota Vikings at Philadelphia Eagles,1.47,-2.5,49.5,24.0,7.0
+2022,2,2022_02_TEN_BUF,Tennessee Titans at Buffalo Bills,10.574,-10.0,47.5,41.0,7.0
+2022,2,2022_02_CHI_GB,Chicago Bears at Green Bay Packers,9.995,-10.5,42.0,27.0,10.0
+2022,2,2022_02_ARI_LV,Arizona Cardinals at Las Vegas Raiders,2.326,-5.5,51.5,23.0,29.0
+2022,2,2022_02_HOU_DEN,Houston Texans at Denver Broncos,14.221,-10.5,46.0,16.0,9.0
+2022,2,2022_02_CIN_DAL,Cincinnati Bengals at Dallas Cowboys,-4.487,7.5,42.0,20.0,17.0
+2022,2,2022_02_SEA_SF,Seattle Seahawks at San Francisco 49ers,8.891,-8.5,40.0,27.0,7.0
+2022,2,2022_02_ATL_LA,Atlanta Falcons at Los Angeles Rams,14.521,-10.5,46.5,31.0,27.0
+2022,2,2022_02_NE_PIT,New England Patriots at Pittsburgh Steelers,-0.065,3.0,40.0,14.0,17.0
+2022,2,2022_02_CAR_NYG,Carolina Panthers at New York Giants,1.338,1.0,44.0,19.0,16.0
+2022,2,2022_02_TB_NO,Tampa Bay Buccaneers at New Orleans Saints,-3.835,2.5,44.0,10.0,20.0
+2022,2,2022_02_IND_JAX,Indianapolis Colts at Jacksonville Jaguars,-3.665,3.0,43.5,24.0,0.0
+2022,2,2022_02_WAS_DET,Washington Commanders at Detroit Lions,-1.044,1.0,48.5,36.0,27.0
+2022,2,2022_02_NYJ_CLE,New York Jets at Cleveland Browns,8.164,-6.5,38.5,30.0,31.0
+2022,2,2022_02_MIA_BAL,Miami Dolphins at Baltimore Ravens,3.903,-3.0,44.0,38.0,42.0
+2022,2,2022_02_LAC_KC,Los Angeles Chargers at Kansas City Chiefs,3.428,-4.0,52.5,27.0,24.0
+2022,1,2022_01_DEN_SEA,Denver Broncos at Seattle Seahawks,-6.594,6.0,44.0,17.0,16.0
+2022,1,2022_01_TB_DAL,Tampa Bay Buccaneers at Dallas Cowboys,-2.326,2.5,49.5,3.0,19.0
+2022,1,2022_01_NYG_TEN,New York Giants at Tennessee Titans,7.693,-5.5,43.5,20.0,21.0
+2022,1,2022_01_GB_MIN,Green Bay Packers at Minnesota Vikings,-1.338,-2.5,47.0,23.0,7.0
+2022,1,2022_01_LV_LAC,Las Vegas Raiders at Los Angeles Chargers,6.336,-3.5,52.5,24.0,19.0
+2022,1,2022_01_KC_ARI,Kansas City Chiefs at Arizona Cardinals,-2.791,6.0,54.0,21.0,44.0
+2022,1,2022_01_JAX_WAS,Jacksonville Jaguars at Washington Commanders,4.487,-3.0,43.5,28.0,22.0
+2022,1,2022_01_IND_HOU,Indianapolis Colts at Houston Texans,-9.098,7.0,46.0,20.0,20.0
+2022,1,2022_01_PHI_DET,Philadelphia Eagles at Detroit Lions,-3.126,6.0,49.0,35.0,38.0
+2022,1,2022_01_SF_CHI,San Francisco 49ers at Chicago Bears,-5.863,6.5,38.0,19.0,10.0
+2022,1,2022_01_PIT_CIN,Pittsburgh Steelers at Cincinnati Bengals,7.156,-7.5,44.5,20.0,23.0
+2022,1,2022_01_CLE_CAR,Cleveland Browns at Carolina Panthers,-0.489,-2.5,42.5,24.0,26.0
+2022,1,2022_01_NE_MIA,New England Patriots at Miami Dolphins,3.025,-3.0,47.0,20.0,7.0
+2022,1,2022_01_NO_ATL,New Orleans Saints at Atlanta Falcons,-5.576,6.0,43.5,26.0,27.0
+2022,1,2022_01_BAL_NYJ,Baltimore Ravens at New York Jets,-6.372,6.5,44.0,9.0,24.0
+2022,1,2022_01_BUF_LA,Buffalo Bills at Los Angeles Rams,1.011,1.0,51.5,10.0,31.0
+2021,22,2021_22_LA_CIN,Los Angeles Rams at Cincinnati Bengals,-4.764,4.5,48.5,20.0,23.0
+2021,21,2021_21_SF_LA,San Francisco 49ers at Los Angeles Rams,4.66,-3.5,45.5,20.0,17.0
+2021,21,2021_21_CIN_KC,Cincinnati Bengals at Kansas City Chiefs,7.81,-7.0,54.5,24.0,27.0
+2021,20,2021_20_BUF_KC,Buffalo Bills at Kansas City Chiefs,3.395,-2.5,54.0,42.0,36.0
+2021,20,2021_20_LA_TB,Los Angeles Rams at Tampa Bay Buccaneers,4.005,-2.5,48.0,27.0,30.0
+2021,20,2021_20_SF_GB,San Francisco 49ers at Green Bay Packers,2.791,-5.5,47.0,10.0,13.0
+2021,20,2021_20_CIN_TEN,Cincinnati Bengals at Tennessee Titans,2.992,-4.0,48.5,16.0,19.0
+2021,19,2021_19_ARI_LA,Arizona Cardinals at Los Angeles Rams,3.597,-4.0,49.5,34.0,11.0
+2021,19,2021_19_PIT_KC,Pittsburgh Steelers at Kansas City Chiefs,9.308,-13.0,46.0,42.0,21.0
+2021,19,2021_19_SF_DAL,San Francisco 49ers at Dallas Cowboys,5.398,-3.0,51.0,17.0,23.0
+2021,19,2021_19_PHI_TB,Philadelphia Eagles at Tampa Bay Buccaneers,7.927,-7.5,45.5,31.0,15.0
+2021,19,2021_19_NE_BUF,New England Patriots at Buffalo Bills,5.15,-4.5,43.0,47.0,17.0
+2021,19,2021_19_LV_CIN,Las Vegas Raiders at Cincinnati Bengals,5.398,-6.0,48.5,26.0,19.0
+2021,18,2021_18_LAC_LV,Los Angeles Chargers at Las Vegas Raiders,-0.619,3.5,48.0,35.0,32.0
+2021,18,2021_18_SF_LA,San Francisco 49ers at Los Angeles Rams,6.226,-3.0,46.5,24.0,27.0
+2021,18,2021_18_SEA_ARI,Seattle Seahawks at Arizona Cardinals,5.185,-5.5,48.0,30.0,38.0
+2021,18,2021_18_NO_ATL,New Orleans Saints at Atlanta Falcons,-8.363,4.5,40.0,20.0,30.0
+2021,18,2021_18_CAR_TB,Carolina Panthers at Tampa Bay Buccaneers,12.981,-11.0,43.0,41.0,17.0
+2021,18,2021_18_NYJ_BUF,New York Jets at Buffalo Bills,15.739,-16.0,43.0,27.0,10.0
+2021,18,2021_18_NE_MIA,New England Patriots at Miami Dolphins,-5.899,6.0,41.0,33.0,24.0
+2021,18,2021_18_CIN_CLE,Cincinnati Bengals at Cleveland Browns,2.658,-6.5,38.0,21.0,16.0
+2021,18,2021_18_PIT_BAL,Pittsburgh Steelers at Baltimore Ravens,0.261,-3.0,41.0,13.0,16.0
+2021,18,2021_18_WAS_NYG,Washington Commanders at New York Giants,-4.695,6.0,36.0,7.0,22.0
+2021,18,2021_18_TEN_HOU,Tennessee Titans at Houston Texans,-7.616,10.5,43.0,25.0,28.0
+2021,18,2021_18_IND_JAX,Indianapolis Colts at Jacksonville Jaguars,-10.082,14.0,43.0,26.0,11.0
+2021,18,2021_18_CHI_MIN,Chicago Bears at Minnesota Vikings,7.5,-3.5,45.5,31.0,17.0
+2021,18,2021_18_GB_DET,Green Bay Packers at Detroit Lions,-5.971,4.0,45.0,37.0,30.0
+2021,18,2021_18_DAL_PHI,Dallas Cowboys at Philadelphia Eagles,-1.732,6.5,46.0,26.0,51.0
+2021,18,2021_18_KC_DEN,Kansas City Chiefs at Denver Broncos,-11.703,11.5,44.5,24.0,28.0
+2021,17,2021_17_CLE_PIT,Cleveland Browns at Pittsburgh Steelers,1.306,1.0,43.5,26.0,14.0
+2021,17,2021_17_MIN_GB,Minnesota Vikings at Green Bay Packers,10.529,-13.0,42.0,37.0,10.0
+2021,17,2021_17_DET_SEA,Detroit Lions at Seattle Seahawks,12.507,-8.5,41.5,51.0,29.0
+2021,17,2021_17_CAR_NO,Carolina Panthers at New Orleans Saints,2.891,-7.0,37.0,18.0,10.0
+2021,17,2021_17_ARI_DAL,Arizona Cardinals at Dallas Cowboys,4.904,-6.5,53.0,22.0,25.0
+2021,17,2021_17_HOU_SF,Houston Texans at San Francisco 49ers,8.974,-14.0,44.0,23.0,7.0
+2021,17,2021_17_DEN_LAC,Denver Broncos at Los Angeles Chargers,4.869,-8.0,45.5,34.0,13.0
+2021,17,2021_17_LA_BAL,Los Angeles Rams at Baltimore Ravens,-3.631,7.0,47.0,19.0,20.0
+2021,17,2021_17_MIA_TEN,Miami Dolphins at Tennessee Titans,4.177,-3.0,41.0,34.0,3.0
+2021,17,2021_17_JAX_NE,Jacksonville Jaguars at New England Patriots,14.162,-17.5,42.0,50.0,10.0
+2021,17,2021_17_KC_CIN,Kansas City Chiefs at Cincinnati Bengals,-2.558,3.5,51.0,34.0,31.0
+2021,17,2021_17_PHI_WAS,Philadelphia Eagles at Washington Commanders,-1.437,6.5,44.5,16.0,20.0
+2021,17,2021_17_ATL_BUF,Atlanta Falcons at Buffalo Bills,11.654,-14.0,46.5,29.0,15.0
+2021,17,2021_17_TB_NYJ,Tampa Bay Buccaneers at New York Jets,-11.128,14.5,48.0,24.0,28.0
+2021,17,2021_17_NYG_CHI,New York Giants at Chicago Bears,3.801,-7.0,36.5,29.0,3.0
+2021,17,2021_17_LV_IND,Las Vegas Raiders at Indianapolis Colts,6.044,-8.5,46.5,20.0,23.0
+2021,16,2021_16_MIA_NO,Miami Dolphins at New Orleans Saints,2.525,3.0,37.5,3.0,20.0
+2021,16,2021_16_WAS_DAL,Washington Commanders at Dallas Cowboys,9.392,-10.5,45.5,56.0,14.0
+2021,16,2021_16_DEN_LV,Denver Broncos at Las Vegas Raiders,2.658,1.0,42.0,17.0,13.0
+2021,16,2021_16_PIT_KC,Pittsburgh Steelers at Kansas City Chiefs,10.394,-10.5,44.0,36.0,10.0
+2021,16,2021_16_CHI_SEA,Chicago Bears at Seattle Seahawks,9.392,-7.0,41.0,24.0,25.0
+2021,16,2021_16_BUF_NE,Buffalo Bills at New England Patriots,0.456,-1.0,43.5,21.0,33.0
+2021,16,2021_16_JAX_NYJ,Jacksonville Jaguars at New York Jets,3.563,-2.5,42.5,26.0,21.0
+2021,16,2021_16_LA_MIN,Los Angeles Rams at Minnesota Vikings,-0.587,3.5,48.5,23.0,30.0
+2021,16,2021_16_BAL_CIN,Baltimore Ravens at Cincinnati Bengals,4.834,-7.5,43.0,41.0,21.0
+2021,16,2021_16_DET_ATL,Detroit Lions at Atlanta Falcons,8.283,-7.5,42.5,20.0,16.0
+2021,16,2021_16_LAC_HOU,Los Angeles Chargers at Houston Texans,-9.605,13.5,46.0,41.0,29.0
+2021,16,2021_16_NYG_PHI,New York Giants at Philadelphia Eagles,10.711,-11.0,41.0,34.0,10.0
+2021,16,2021_16_TB_CAR,Tampa Bay Buccaneers at Carolina Panthers,-6.668,11.5,44.5,6.0,32.0
+2021,16,2021_16_IND_ARI,Indianapolis Colts at Arizona Cardinals,0.685,-3.0,48.0,16.0,22.0
+2021,16,2021_16_CLE_GB,Cleveland Browns at Green Bay Packers,6.817,-7.5,46.5,24.0,22.0
+2021,16,2021_16_SF_TEN,San Francisco 49ers at Tennessee Titans,0.685,3.5,45.5,20.0,17.0
+2021,15,2021_15_WAS_PHI,Washington Commanders at Philadelphia Eagles,8.164,-10.0,39.5,27.0,17.0
+2021,15,2021_15_SEA_LA,Seattle Seahawks at Los Angeles Rams,6.855,-7.5,47.0,20.0,10.0
+2021,15,2021_15_MIN_CHI,Minnesota Vikings at Chicago Bears,-5.719,7.0,48.0,9.0,17.0
+2021,15,2021_15_LV_CLE,Las Vegas Raiders at Cleveland Browns,-0.358,3.0,41.0,14.0,16.0
+2021,15,2021_15_NO_TB,New Orleans Saints at Tampa Bay Buccaneers,9.35,-11.5,45.5,0.0,9.0
+2021,15,2021_15_GB_BAL,Green Bay Packers at Baltimore Ravens,-0.261,9.5,45.5,30.0,31.0
+2021,15,2021_15_CIN_DEN,Cincinnati Bengals at Denver Broncos,2.658,-3.0,45.0,10.0,15.0
+2021,15,2021_15_ATL_SF,Atlanta Falcons at San Francisco 49ers,7.232,-9.5,48.0,31.0,13.0
+2021,15,2021_15_ARI_DET,Arizona Cardinals at Detroit Lions,-10.756,13.0,48.0,30.0,12.0
+2021,15,2021_15_HOU_JAX,Houston Texans at Jacksonville Jaguars,4.211,-6.0,40.0,16.0,30.0
+2021,15,2021_15_TEN_PIT,Tennessee Titans at Pittsburgh Steelers,-0.619,-1.0,44.0,19.0,13.0
+2021,15,2021_15_DAL_NYG,Dallas Cowboys at New York Giants,-8.85,11.5,43.0,6.0,21.0
+2021,15,2021_15_NYJ_MIA,New York Jets at Miami Dolphins,9.308,-10.5,42.0,31.0,24.0
+2021,15,2021_15_CAR_BUF,Carolina Panthers at Buffalo Bills,9.907,-14.0,43.0,31.0,14.0
+2021,15,2021_15_NE_IND,New England Patriots at Indianapolis Colts,0.065,1.0,46.0,27.0,17.0
+2021,15,2021_15_KC_LAC,Kansas City Chiefs at Los Angeles Chargers,-1.963,3.0,54.0,28.0,34.0
+2021,14,2021_14_LA_ARI,Los Angeles Rams at Arizona Cardinals,2.558,-3.0,51.0,23.0,30.0
+2021,14,2021_14_CHI_GB,Chicago Bears at Green Bay Packers,12.15,-11.5,43.0,45.0,30.0
+2021,14,2021_14_BUF_TB,Buffalo Bills at Tampa Bay Buccaneers,3.563,-3.5,52.5,33.0,27.0
+2021,14,2021_14_SF_CIN,San Francisco 49ers at Cincinnati Bengals,0.489,2.5,49.0,23.0,26.0
+2021,14,2021_14_NYG_LAC,New York Giants at Los Angeles Chargers,10.941,-9.5,44.0,37.0,21.0
+2021,14,2021_14_DET_DEN,Detroit Lions at Denver Broncos,12.353,-13.0,42.0,38.0,10.0
+2021,14,2021_14_SEA_HOU,Seattle Seahawks at Houston Texans,-6.007,10.0,40.5,13.0,33.0
+2021,14,2021_14_DAL_WAS,Dallas Cowboys at Washington Commanders,-3.058,6.5,48.0,20.0,27.0
+2021,14,2021_14_ATL_CAR,Atlanta Falcons at Carolina Panthers,4.834,-2.5,41.0,21.0,29.0
+2021,14,2021_14_BAL_CLE,Baltimore Ravens at Cleveland Browns,2.227,-3.0,44.0,24.0,22.0
+2021,14,2021_14_JAX_TEN,Jacksonville Jaguars at Tennessee Titans,12.875,-8.5,44.5,20.0,0.0
+2021,14,2021_14_NO_NYJ,New Orleans Saints at New York Jets,-5.899,4.5,42.0,9.0,30.0
+2021,14,2021_14_LV_KC,Las Vegas Raiders at Kansas City Chiefs,10.483,-10.0,48.0,48.0,9.0
+2021,14,2021_14_PIT_MIN,Pittsburgh Steelers at Minnesota Vikings,3.563,-3.5,45.0,36.0,28.0
+2021,13,2021_13_NE_BUF,New England Patriots at Buffalo Bills,4.28,-3.0,40.0,10.0,14.0
+2021,13,2021_13_DEN_KC,Denver Broncos at Kansas City Chiefs,8.974,-8.5,46.5,22.0,9.0
+2021,13,2021_13_SF_SEA,San Francisco 49ers at Seattle Seahawks,-0.456,3.0,44.5,30.0,23.0
+2021,13,2021_13_BAL_PIT,Baltimore Ravens at Pittsburgh Steelers,-2.824,4.0,44.0,20.0,19.0
+2021,13,2021_13_JAX_LA,Jacksonville Jaguars at Los Angeles Rams,15.739,-14.0,48.0,37.0,7.0
+2021,13,2021_13_WAS_LV,Washington Commanders at Las Vegas Raiders,3.092,-1.0,47.5,15.0,17.0
+2021,13,2021_13_NYG_MIA,New York Giants at Miami Dolphins,6.93,-6.5,40.0,20.0,9.0
+2021,13,2021_13_LAC_CIN,Los Angeles Chargers at Cincinnati Bengals,2.161,-2.5,49.5,22.0,41.0
+2021,13,2021_13_PHI_NYJ,Philadelphia Eagles at New York Jets,-5.791,5.0,44.0,18.0,33.0
+2021,13,2021_13_IND_HOU,Indianapolis Colts at Houston Texans,-8.444,10.0,45.5,0.0,31.0
+2021,13,2021_13_TB_ATL,Tampa Bay Buccaneers at Atlanta Falcons,-8.565,11.0,51.0,17.0,30.0
+2021,13,2021_13_ARI_CHI,Arizona Cardinals at Chicago Bears,-8.006,7.5,43.5,22.0,33.0
+2021,13,2021_13_MIN_DET,Minnesota Vikings at Detroit Lions,-9.691,7.0,47.5,29.0,27.0
+2021,13,2021_13_DAL_NO,Dallas Cowboys at New Orleans Saints,-0.652,6.0,46.0,17.0,27.0
+2021,12,2021_12_SEA_WAS,Seattle Seahawks at Washington Commanders,-0.293,1.0,47.0,17.0,15.0
+2021,12,2021_12_CLE_BAL,Cleveland Browns at Baltimore Ravens,4.142,-3.0,47.0,16.0,10.0
+2021,12,2021_12_LA_GB,Los Angeles Rams at Green Bay Packers,-2.858,2.0,47.0,36.0,28.0
+2021,12,2021_12_MIN_SF,Minnesota Vikings at San Francisco 49ers,3.058,-3.5,49.0,34.0,26.0
+2021,12,2021_12_LAC_DEN,Los Angeles Chargers at Denver Broncos,1.502,2.5,47.5,28.0,13.0
+2021,12,2021_12_PIT_CIN,Pittsburgh Steelers at Cincinnati Bengals,2.891,-3.5,43.5,41.0,10.0
+2021,12,2021_12_CAR_MIA,Carolina Panthers at Miami Dolphins,1.601,1.0,41.0,33.0,10.0
+2021,12,2021_12_ATL_JAX,Atlanta Falcons at Jacksonville Jaguars,-0.456,1.5,46.0,14.0,21.0
+2021,12,2021_12_TB_IND,Tampa Bay Buccaneers at Indianapolis Colts,-3.294,3.0,53.0,31.0,38.0
+2021,12,2021_12_PHI_NYG,Philadelphia Eagles at New York Giants,-1.634,4.0,45.5,13.0,7.0
+2021,12,2021_12_NYJ_HOU,New York Jets at Houston Texans,2.128,-3.0,44.5,14.0,21.0
+2021,12,2021_12_TEN_NE,Tennessee Titans at New England Patriots,4.28,-7.5,43.0,36.0,13.0
+2021,12,2021_12_BUF_NO,Buffalo Bills at New Orleans Saints,-3.327,7.0,45.0,6.0,31.0
+2021,12,2021_12_LV_DAL,Las Vegas Raiders at Dallas Cowboys,8.565,-7.0,51.0,33.0,36.0
+2021,12,2021_12_CHI_DET,Chicago Bears at Detroit Lions,-2.492,2.0,41.5,14.0,16.0
+2021,11,2021_11_NYG_TB,New York Giants at Tampa Bay Buccaneers,10.438,-11.5,49.5,30.0,10.0
+2021,11,2021_11_PIT_LAC,Pittsburgh Steelers at Los Angeles Chargers,3.26,-5.5,47.5,41.0,37.0
+2021,11,2021_11_DAL_KC,Dallas Cowboys at Kansas City Chiefs,4.211,-2.5,56.0,19.0,9.0
+2021,11,2021_11_ARI_SEA,Arizona Cardinals at Seattle Seahawks,1.142,-2.5,46.0,13.0,23.0
+2021,11,2021_11_CIN_LV,Cincinnati Bengals at Las Vegas Raiders,0.13,1.0,50.5,13.0,32.0
+2021,11,2021_11_GB_MIN,Green Bay Packers at Minnesota Vikings,0.196,1.0,48.0,34.0,31.0
+2021,11,2021_11_HOU_TEN,Houston Texans at Tennessee Titans,14.892,-10.5,44.5,13.0,22.0
+2021,11,2021_11_NO_PHI,New Orleans Saints at Philadelphia Eagles,1.142,-2.5,42.5,40.0,29.0
+2021,11,2021_11_BAL_CHI,Baltimore Ravens at Chicago Bears,-0.88,5.0,43.0,13.0,16.0
+2021,11,2021_11_WAS_CAR,Washington Commanders at Carolina Panthers,0.326,-3.5,43.0,21.0,27.0
+2021,11,2021_11_MIA_NYJ,Miami Dolphins at New York Jets,-0.587,3.5,44.5,17.0,24.0
+2021,11,2021_11_IND_BUF,Indianapolis Colts at Buffalo Bills,8.85,-7.5,49.5,15.0,41.0
+2021,11,2021_11_SF_JAX,San Francisco 49ers at Jacksonville Jaguars,-8.085,6.5,45.0,10.0,30.0
+2021,11,2021_11_DET_CLE,Detroit Lions at Cleveland Browns,16.154,-13.0,42.5,13.0,10.0
+2021,11,2021_11_NE_ATL,New England Patriots at Atlanta Falcons,-4.625,7.0,47.5,0.0,25.0
+2021,10,2021_10_LA_SF,Los Angeles Rams at San Francisco 49ers,-5.827,3.5,50.0,31.0,10.0
+2021,10,2021_10_KC_LV,Kansas City Chiefs at Las Vegas Raiders,-5.755,2.5,53.5,14.0,41.0
+2021,10,2021_10_PHI_DEN,Philadelphia Eagles at Denver Broncos,4.764,-1.0,44.5,13.0,30.0
+2021,10,2021_10_SEA_GB,Seattle Seahawks at Green Bay Packers,4.799,-3.0,49.5,17.0,0.0
+2021,10,2021_10_CAR_ARI,Carolina Panthers at Arizona Cardinals,12.251,-7.0,42.0,10.0,34.0
+2021,10,2021_10_MIN_LAC,Minnesota Vikings at Los Angeles Chargers,2.858,-3.0,53.5,20.0,27.0
+2021,10,2021_10_DET_PIT,Detroit Lions at Pittsburgh Steelers,11.128,-9.0,43.0,16.0,16.0
+2021,10,2021_10_TB_WAS,Tampa Bay Buccaneers at Washington Commanders,-11.034,10.0,51.0,29.0,19.0
+2021,10,2021_10_NO_TEN,New Orleans Saints at Tennessee Titans,6.044,-3.0,44.0,23.0,21.0
+2021,10,2021_10_BUF_NYJ,Buffalo Bills at New York Jets,-14.28,13.0,47.0,17.0,45.0
+2021,10,2021_10_ATL_DAL,Atlanta Falcons at Dallas Cowboys,10.988,-8.0,55.0,43.0,3.0
+2021,10,2021_10_CLE_NE,Cleveland Browns at New England Patriots,-0.261,-2.5,45.5,45.0,7.0
+2021,10,2021_10_JAX_IND,Jacksonville Jaguars at Indianapolis Colts,10.895,-10.5,47.5,23.0,17.0
+2021,10,2021_10_BAL_MIA,Baltimore Ravens at Miami Dolphins,-13.089,8.5,46.5,22.0,10.0
+2021,9,2021_09_CHI_PIT,Chicago Bears at Pittsburgh Steelers,9.82,-7.0,40.0,29.0,27.0
+2021,9,2021_09_TEN_LA,Tennessee Titans at Los Angeles Rams,9.098,-7.0,53.5,16.0,28.0
+2021,9,2021_09_ARI_SF,Arizona Cardinals at San Francisco 49ers,2.459,-5.5,44.5,17.0,31.0
+2021,9,2021_09_GB_KC,Green Bay Packers at Kansas City Chiefs,8.85,-7.0,48.0,13.0,7.0
+2021,9,2021_09_LAC_PHI,Los Angeles Chargers at Philadelphia Eagles,-1.601,1.0,49.5,24.0,27.0
+2021,9,2021_09_ATL_NO,Atlanta Falcons at New Orleans Saints,10.394,-7.0,43.0,25.0,27.0
+2021,9,2021_09_LV_NYG,Las Vegas Raiders at New York Giants,-4.834,3.0,47.0,23.0,16.0
+2021,9,2021_09_CLE_CIN,Cleveland Browns at Cincinnati Bengals,0.456,-2.5,47.5,16.0,41.0
+2021,9,2021_09_BUF_JAX,Buffalo Bills at Jacksonville Jaguars,-15.945,14.5,48.0,9.0,6.0
+2021,9,2021_09_NE_CAR,New England Patriots at Carolina Panthers,0.033,3.5,41.5,6.0,24.0
+2021,9,2021_09_MIN_BAL,Minnesota Vikings at Baltimore Ravens,7.967,-7.5,51.0,34.0,31.0
+2021,9,2021_09_DEN_DAL,Denver Broncos at Dallas Cowboys,7.577,-10.5,50.0,16.0,30.0
+2021,9,2021_09_HOU_MIA,Houston Texans at Miami Dolphins,6.93,-4.0,45.0,17.0,9.0
+2021,9,2021_09_NYJ_IND,New York Jets at Indianapolis Colts,10.941,-10.5,46.0,45.0,30.0
+2021,8,2021_08_NYG_KC,New York Giants at Kansas City Chiefs,13.198,-10.5,53.0,20.0,17.0
+2021,8,2021_08_DAL_MIN,Dallas Cowboys at Minnesota Vikings,4.834,-4.5,49.5,16.0,20.0
+2021,8,2021_08_TB_NO,Tampa Bay Buccaneers at New Orleans Saints,-1.601,4.0,48.5,36.0,27.0
+2021,8,2021_08_WAS_DEN,Washington Commanders at Denver Broncos,7.538,-4.0,45.0,17.0,10.0
+2021,8,2021_08_NE_LAC,New England Patriots at Los Angeles Chargers,5.15,-3.5,50.5,24.0,27.0
+2021,8,2021_08_JAX_SEA,Jacksonville Jaguars at Seattle Seahawks,9.392,-4.0,44.0,31.0,7.0
+2021,8,2021_08_SF_CHI,San Francisco 49ers at Chicago Bears,-3.193,4.5,40.0,22.0,33.0
+2021,8,2021_08_PIT_CLE,Pittsburgh Steelers at Cleveland Browns,2.591,-5.5,43.0,10.0,15.0
+2021,8,2021_08_CIN_NYJ,Cincinnati Bengals at New York Jets,-8.085,11.5,43.5,34.0,31.0
+2021,8,2021_08_LA_HOU,Los Angeles Rams at Houston Texans,-22.463,17.0,47.0,22.0,38.0
+2021,8,2021_08_TEN_IND,Tennessee Titans at Indianapolis Colts,-0.88,-3.0,51.0,31.0,34.0
+2021,8,2021_08_PHI_DET,Philadelphia Eagles at Detroit Lions,-6.153,3.0,48.5,6.0,44.0
+2021,8,2021_08_CAR_ATL,Carolina Panthers at Atlanta Falcons,2.824,-2.5,47.0,13.0,19.0
+2021,8,2021_08_MIA_BUF,Miami Dolphins at Buffalo Bills,17.038,-15.0,48.5,26.0,11.0
+2021,8,2021_08_GB_ARI,Green Bay Packers at Arizona Cardinals,5.827,-6.5,51.0,21.0,24.0
+2021,7,2021_07_NO_SEA,New Orleans Saints at Seattle Seahawks,-8.444,6.0,42.0,10.0,13.0
+2021,7,2021_07_IND_SF,Indianapolis Colts at San Francisco 49ers,6.044,-3.5,41.5,18.0,30.0
+2021,7,2021_07_HOU_ARI,Houston Texans at Arizona Cardinals,18.532,-20.5,47.0,31.0,5.0
+2021,7,2021_07_CHI_TB,Chicago Bears at Tampa Bay Buccaneers,15.472,-12.5,47.0,38.0,3.0
+2021,7,2021_07_PHI_LV,Philadelphia Eagles at Las Vegas Raiders,4.28,-1.0,48.0,33.0,22.0
+2021,7,2021_07_DET_LA,Detroit Lions at Los Angeles Rams,18.806,-17.0,51.0,28.0,19.0
+2021,7,2021_07_NYJ_NE,New York Jets at New England Patriots,8.204,-7.0,43.0,54.0,13.0
+2021,7,2021_07_ATL_MIA,Atlanta Falcons at Miami Dolphins,-0.913,1.5,48.5,28.0,30.0
+2021,7,2021_07_KC_TEN,Kansas City Chiefs at Tennessee Titans,-5.327,4.0,57.5,27.0,3.0
+2021,7,2021_07_WAS_GB,Washington Commanders at Green Bay Packers,9.14,-8.5,48.0,24.0,10.0
+2021,7,2021_07_CAR_NYG,Carolina Panthers at New York Giants,-1.601,3.0,42.5,25.0,3.0
+2021,7,2021_07_CIN_BAL,Cincinnati Bengals at Baltimore Ravens,10.756,-6.5,45.5,17.0,41.0
+2021,7,2021_07_DEN_CLE,Denver Broncos at Cleveland Browns,1.732,-2.0,40.5,17.0,14.0
+2021,6,2021_06_BUF_TEN,Buffalo Bills at Tennessee Titans,-6.892,6.0,53.5,34.0,31.0
+2021,6,2021_06_SEA_PIT,Seattle Seahawks at Pittsburgh Steelers,5.185,-5.5,43.0,23.0,20.0
+2021,6,2021_06_DAL_NE,Dallas Cowboys at New England Patriots,-0.358,3.5,50.5,29.0,35.0
+2021,6,2021_06_LV_DEN,Las Vegas Raiders at Denver Broncos,3.733,-5.0,45.5,24.0,34.0
+2021,6,2021_06_ARI_CLE,Arizona Cardinals at Cleveland Browns,0.228,-3.0,48.0,14.0,37.0
+2021,6,2021_06_LA_NYG,Los Angeles Rams at New York Giants,-9.224,7.5,49.5,11.0,38.0
+2021,6,2021_06_CIN_DET,Cincinnati Bengals at Detroit Lions,-3.563,3.5,46.5,11.0,34.0
+2021,6,2021_06_LAC_BAL,Los Angeles Chargers at Baltimore Ravens,4.904,-3.0,50.5,34.0,6.0
+2021,6,2021_06_MIN_CAR,Minnesota Vikings at Carolina Panthers,1.207,2.5,45.5,28.0,34.0
+2021,6,2021_06_KC_WAS,Kansas City Chiefs at Washington Commanders,-6.372,6.0,54.0,13.0,31.0
+2021,6,2021_06_GB_CHI,Green Bay Packers at Chicago Bears,-6.78,5.5,44.0,14.0,24.0
+2021,6,2021_06_HOU_IND,Houston Texans at Indianapolis Colts,14.4,-10.5,43.5,31.0,3.0
+2021,6,2021_06_MIA_JAX,Miami Dolphins at Jacksonville Jaguars,-8.484,2.5,47.5,23.0,20.0
+2021,6,2021_06_TB_PHI,Tampa Bay Buccaneers at Philadelphia Eagles,-9.82,7.0,53.0,22.0,28.0
+2021,5,2021_05_IND_BAL,Indianapolis Colts at Baltimore Ravens,7.616,-7.5,46.5,31.0,25.0
+2021,5,2021_05_BUF_KC,Buffalo Bills at Kansas City Chiefs,3.631,-2.5,57.0,20.0,38.0
+2021,5,2021_05_SF_ARI,San Francisco 49ers at Arizona Cardinals,7.156,-6.0,48.5,17.0,10.0
+2021,5,2021_05_NYG_DAL,New York Giants at Dallas Cowboys,8.045,-7.5,53.0,44.0,20.0
+2021,5,2021_05_CLE_LAC,Cleveland Browns at Los Angeles Chargers,1.142,-2.5,46.5,47.0,42.0
+2021,5,2021_05_CHI_LV,Chicago Bears at Las Vegas Raiders,5.009,-5.5,46.0,9.0,20.0
+2021,5,2021_05_NE_HOU,New England Patriots at Houston Texans,-12.302,8.0,39.5,22.0,25.0
+2021,5,2021_05_GB_CIN,Green Bay Packers at Cincinnati Bengals,-5.935,2.0,50.0,22.0,25.0
+2021,5,2021_05_DEN_PIT,Denver Broncos at Pittsburgh Steelers,1.142,2.0,40.0,27.0,19.0
+2021,5,2021_05_DET_MIN,Detroit Lions at Minnesota Vikings,9.82,-10.0,49.5,19.0,17.0
+2021,5,2021_05_TEN_JAX,Tennessee Titans at Jacksonville Jaguars,-6.044,4.0,49.0,19.0,37.0
+2021,5,2021_05_NO_WAS,New Orleans Saints at Washington Commanders,-2.425,2.5,43.5,22.0,33.0
+2021,5,2021_05_PHI_CAR,Philadelphia Eagles at Carolina Panthers,4.418,-2.5,46.0,18.0,21.0
+2021,5,2021_05_MIA_TB,Miami Dolphins at Tampa Bay Buccaneers,14.767,-11.0,48.0,45.0,17.0
+2021,5,2021_05_NYJ_ATL,New York Jets at Atlanta Falcons,5.009,-3.0,45.5,27.0,20.0
+2021,5,2021_05_LA_SEA,Los Angeles Rams at Seattle Seahawks,-0.815,2.5,53.5,17.0,26.0
+2021,4,2021_04_LV_LAC,Las Vegas Raiders at Los Angeles Chargers,5.15,-3.0,52.0,28.0,14.0
+2021,4,2021_04_TB_NE,Tampa Bay Buccaneers at New England Patriots,-5.719,6.0,49.5,17.0,19.0
+2021,4,2021_04_PIT_GB,Pittsburgh Steelers at Green Bay Packers,6.52,-6.5,45.0,27.0,17.0
+2021,4,2021_04_BAL_DEN,Baltimore Ravens at Denver Broncos,0.228,-1.0,44.0,7.0,23.0
+2021,4,2021_04_SEA_SF,Seattle Seahawks at San Francisco 49ers,2.724,-2.5,52.0,21.0,28.0
+2021,4,2021_04_ARI_LA,Arizona Cardinals at Los Angeles Rams,4.418,-3.5,53.5,20.0,37.0
+2021,4,2021_04_HOU_BUF,Houston Texans at Buffalo Bills,18.994,-19.0,47.5,40.0,0.0
+2021,4,2021_04_KC_PHI,Kansas City Chiefs at Philadelphia Eagles,-8.728,7.5,53.5,30.0,42.0
+2021,4,2021_04_NYG_NO,New York Giants at New Orleans Saints,9.691,-7.5,43.0,21.0,27.0
+2021,4,2021_04_CAR_DAL,Carolina Panthers at Dallas Cowboys,4.625,-4.5,51.5,36.0,28.0
+2021,4,2021_04_IND_MIA,Indianapolis Colts at Miami Dolphins,1.831,-2.5,41.5,17.0,27.0
+2021,4,2021_04_CLE_MIN,Cleveland Browns at Minnesota Vikings,-0.033,1.0,52.0,7.0,14.0
+2021,4,2021_04_TEN_NYJ,Tennessee Titans at New York Jets,-7.346,5.5,44.5,27.0,24.0
+2021,4,2021_04_DET_CHI,Detroit Lions at Chicago Bears,3.801,-3.0,42.0,24.0,14.0
+2021,4,2021_04_WAS_ATL,Washington Commanders at Atlanta Falcons,0.0,1.0,47.5,30.0,34.0
+2021,4,2021_04_JAX_CIN,Jacksonville Jaguars at Cincinnati Bengals,8.891,-7.5,46.0,24.0,21.0
+2021,3,2021_03_PHI_DAL,Philadelphia Eagles at Dallas Cowboys,5.899,-3.5,51.5,41.0,21.0
+2021,3,2021_03_GB_SF,Green Bay Packers at San Francisco 49ers,3.496,-3.5,50.5,28.0,30.0
+2021,3,2021_03_SEA_MIN,Seattle Seahawks at Minnesota Vikings,-2.658,2.0,53.5,30.0,17.0
+2021,3,2021_03_TB_LA,Tampa Bay Buccaneers at Los Angeles Rams,-0.065,1.0,55.0,34.0,24.0
+2021,3,2021_03_NYJ_DEN,New York Jets at Denver Broncos,9.14,-10.5,42.0,26.0,0.0
+2021,3,2021_03_MIA_LV,Miami Dolphins at Las Vegas Raiders,6.52,-4.0,45.0,31.0,28.0
+2021,3,2021_03_CIN_PIT,Cincinnati Bengals at Pittsburgh Steelers,7.849,-2.5,42.5,10.0,24.0
+2021,3,2021_03_CHI_CLE,Chicago Bears at Cleveland Browns,8.323,-7.5,45.0,26.0,6.0
+2021,3,2021_03_ATL_NYG,Atlanta Falcons at New York Giants,0.261,-3.0,48.0,14.0,17.0
+2021,3,2021_03_LAC_KC,Los Angeles Chargers at Kansas City Chiefs,9.82,-6.5,55.0,24.0,30.0
+2021,3,2021_03_NO_NE,New Orleans Saints at New England Patriots,2.459,-3.0,44.0,13.0,28.0
+2021,3,2021_03_WAS_BUF,Washington Commanders at Buffalo Bills,12.2,-7.5,45.5,43.0,21.0
+2021,3,2021_03_BAL_DET,Baltimore Ravens at Detroit Lions,-10.039,7.5,51.0,17.0,19.0
+2021,3,2021_03_IND_TEN,Indianapolis Colts at Tennessee Titans,2.758,-4.5,47.0,25.0,16.0
+2021,3,2021_03_ARI_JAX,Arizona Cardinals at Jacksonville Jaguars,-8.974,8.0,51.5,19.0,31.0
+2021,3,2021_03_CAR_HOU,Carolina Panthers at Houston Texans,-8.768,8.0,43.0,9.0,24.0
+2021,2,2021_02_DET_GB,Detroit Lions at Green Bay Packers,14.34,-11.5,49.5,35.0,17.0
+2021,2,2021_02_KC_BAL,Kansas City Chiefs at Baltimore Ravens,-1.666,3.5,53.5,36.0,35.0
+2021,2,2021_02_DAL_LAC,Dallas Cowboys at Los Angeles Chargers,3.53,-3.0,55.0,17.0,20.0
+2021,2,2021_02_TEN_SEA,Tennessee Titans at Seattle Seahawks,8.085,-6.5,53.5,30.0,33.0
+2021,2,2021_02_ATL_TB,Atlanta Falcons at Tampa Bay Buccaneers,10.941,-13.5,52.0,48.0,25.0
+2021,2,2021_02_MIN_ARI,Minnesota Vikings at Arizona Cardinals,4.66,-4.0,51.0,34.0,33.0
+2021,2,2021_02_NE_NYJ,New England Patriots at New York Jets,-5.719,5.5,43.0,6.0,25.0
+2021,2,2021_02_DEN_JAX,Denver Broncos at Jacksonville Jaguars,-6.116,6.0,45.0,13.0,23.0
+2021,2,2021_02_SF_PHI,San Francisco 49ers at Philadelphia Eagles,-3.226,3.0,49.0,11.0,17.0
+2021,2,2021_02_LA_IND,Los Angeles Rams at Indianapolis Colts,-3.26,4.0,48.0,24.0,27.0
+2021,2,2021_02_BUF_MIA,Buffalo Bills at Miami Dolphins,-2.691,3.5,48.0,0.0,35.0
+2021,2,2021_02_LV_PIT,Las Vegas Raiders at Pittsburgh Steelers,6.743,-5.5,46.5,17.0,26.0
+2021,2,2021_02_CIN_CHI,Cincinnati Bengals at Chicago Bears,3.193,-2.0,44.5,20.0,17.0
+2021,2,2021_02_HOU_CLE,Houston Texans at Cleveland Browns,11.081,-13.5,48.5,31.0,21.0
+2021,2,2021_02_NO_CAR,New Orleans Saints at Carolina Panthers,-3.631,3.0,45.0,26.0,7.0
+2021,2,2021_02_NYG_WAS,New York Giants at Washington Commanders,5.899,-4.0,42.0,30.0,29.0
+2021,1,2021_01_BAL_LV,Baltimore Ravens at Las Vegas Raiders,-6.483,3.0,50.5,33.0,27.0
+2021,1,2021_01_CHI_LA,Chicago Bears at Los Angeles Rams,8.687,-9.5,46.0,34.0,14.0
+2021,1,2021_01_GB_NO,Green Bay Packers at New Orleans Saints,-4.799,4.0,49.0,38.0,3.0
+2021,1,2021_01_DEN_NYG,Denver Broncos at New York Giants,-1.437,3.0,41.5,13.0,27.0
+2021,1,2021_01_MIA_NE,Miami Dolphins at New England Patriots,4.487,-3.5,43.5,16.0,17.0
+2021,1,2021_01_CLE_KC,Cleveland Browns at Kansas City Chiefs,8.524,-5.5,54.5,33.0,29.0
+2021,1,2021_01_MIN_CIN,Minnesota Vikings at Cincinnati Bengals,-3.903,3.0,47.0,27.0,24.0
+2021,1,2021_01_SF_DET,San Francisco 49ers at Detroit Lions,-7.385,9.5,46.0,33.0,41.0
+2021,1,2021_01_SEA_IND,Seattle Seahawks at Indianapolis Colts,0.522,3.0,49.0,16.0,28.0
+2021,1,2021_01_PHI_ATL,Philadelphia Eagles at Atlanta Falcons,4.73,-3.5,49.0,6.0,32.0
+2021,1,2021_01_LAC_WAS,Los Angeles Chargers at Washington Commanders,2.958,-2.5,45.5,16.0,20.0
+2021,1,2021_01_ARI_TEN,Arizona Cardinals at Tennessee Titans,3.226,-2.5,54.0,13.0,38.0
+2021,1,2021_01_JAX_HOU,Jacksonville Jaguars at Houston Texans,-1.765,3.5,45.5,37.0,21.0
+2021,1,2021_01_NYJ_CAR,New York Jets at Carolina Panthers,4.695,-3.5,44.5,19.0,14.0
+2021,1,2021_01_PIT_BUF,Pittsburgh Steelers at Buffalo Bills,5.791,-6.5,48.0,16.0,23.0
+2021,1,2021_01_DAL_TB,Dallas Cowboys at Tampa Bay Buccaneers,6.817,-10.0,52.5,31.0,29.0
+2020,21,2020_21_KC_TB,Kansas City Chiefs at Tampa Bay Buccaneers,-2.791,3.0,55.0,31.0,9.0
+2020,20,2020_20_BUF_KC,Buffalo Bills at Kansas City Chiefs,4.142,-3.0,54.5,38.0,24.0
+2020,20,2020_20_TB_GB,Tampa Bay Buccaneers at Green Bay Packers,2.029,-3.0,53.0,26.0,31.0
+2020,19,2020_19_TB_NO,Tampa Bay Buccaneers at New Orleans Saints,2.359,-2.5,53.0,20.0,30.0
+2020,19,2020_19_CLE_KC,Cleveland Browns at Kansas City Chiefs,9.605,-7.5,55.5,22.0,17.0
+2020,19,2020_19_BAL_BUF,Baltimore Ravens at Buffalo Bills,0.717,-2.5,50.0,17.0,3.0
+2020,19,2020_19_LA_GB,Los Angeles Rams at Green Bay Packers,3.733,-7.0,45.0,32.0,18.0
+2020,18,2020_18_CLE_PIT,Cleveland Browns at Pittsburgh Steelers,6.044,-5.0,47.5,37.0,48.0
+2020,18,2020_18_CHI_NO,Chicago Bears at New Orleans Saints,11.703,-11.0,48.0,21.0,9.0
+2020,18,2020_18_BAL_TEN,Baltimore Ravens at Tennessee Titans,-0.196,3.5,53.0,13.0,20.0
+2020,18,2020_18_TB_WAS,Tampa Bay Buccaneers at Washington Commanders,-5.863,10.0,45.0,23.0,31.0
+2020,18,2020_18_LA_SEA,Los Angeles Rams at Seattle Seahawks,4.349,-3.0,42.0,20.0,30.0
+2020,18,2020_18_IND_BUF,Indianapolis Colts at Buffalo Bills,3.665,-7.0,50.5,27.0,24.0
+2020,17,2020_17_WAS_PHI,Washington Commanders at Philadelphia Eagles,-2.891,6.5,43.5,14.0,20.0
+2020,17,2020_17_ARI_LA,Arizona Cardinals at Los Angeles Rams,-0.685,-1.0,42.0,18.0,7.0
+2020,17,2020_17_LV_DEN,Las Vegas Raiders at Denver Broncos,-2.925,2.5,50.5,31.0,32.0
+2020,17,2020_17_SEA_SF,Seattle Seahawks at San Francisco 49ers,-5.827,7.0,45.0,23.0,26.0
+2020,17,2020_17_LAC_KC,Los Angeles Chargers at Kansas City Chiefs,-0.456,7.0,43.0,21.0,38.0
+2020,17,2020_17_NO_CAR,New Orleans Saints at Carolina Panthers,-10.988,6.0,47.0,7.0,33.0
+2020,17,2020_17_TEN_HOU,Tennessee Titans at Houston Texans,-7.771,7.0,55.5,38.0,41.0
+2020,17,2020_17_GB_CHI,Green Bay Packers at Chicago Bears,-6.93,4.5,48.5,16.0,35.0
+2020,17,2020_17_JAX_IND,Jacksonville Jaguars at Indianapolis Colts,18.442,-15.5,48.0,28.0,14.0
+2020,17,2020_17_MIA_BUF,Miami Dolphins at Buffalo Bills,1.47,3.5,42.5,56.0,26.0
+2020,17,2020_17_BAL_CIN,Baltimore Ravens at Cincinnati Bengals,-11.128,13.5,46.0,3.0,38.0
+2020,17,2020_17_ATL_TB,Atlanta Falcons at Tampa Bay Buccaneers,10.171,-7.5,51.0,44.0,27.0
+2020,17,2020_17_MIN_DET,Minnesota Vikings at Detroit Lions,-1.93,3.0,54.0,35.0,37.0
+2020,17,2020_17_NYJ_NE,New York Jets at New England Patriots,6.372,-3.0,41.0,28.0,14.0
+2020,17,2020_17_PIT_CLE,Pittsburgh Steelers at Cleveland Browns,8.323,-10.5,45.0,24.0,22.0
+2020,17,2020_17_DAL_NYG,Dallas Cowboys at New York Giants,-0.033,1.5,44.5,23.0,19.0
+2020,16,2020_16_BUF_NE,Buffalo Bills at New England Patriots,-6.336,7.0,47.0,9.0,38.0
+2020,16,2020_16_TEN_GB,Tennessee Titans at Green Bay Packers,5.576,-3.0,52.5,40.0,14.0
+2020,16,2020_16_PHI_DAL,Philadelphia Eagles at Dallas Cowboys,-0.456,3.0,50.0,37.0,17.0
+2020,16,2020_16_LA_SEA,Los Angeles Rams at Seattle Seahawks,-0.293,-1.5,48.0,20.0,9.0
+2020,16,2020_16_CAR_WAS,Carolina Panthers at Washington Commanders,0.946,1.0,41.0,13.0,20.0
+2020,16,2020_16_DEN_LAC,Denver Broncos at Los Angeles Chargers,3.496,-2.5,47.5,19.0,16.0
+2020,16,2020_16_ATL_KC,Atlanta Falcons at Kansas City Chiefs,12.716,-11.0,54.0,17.0,14.0
+2020,16,2020_16_NYG_BAL,New York Giants at Baltimore Ravens,13.253,-10.0,43.5,27.0,13.0
+2020,16,2020_16_CHI_JAX,Chicago Bears at Jacksonville Jaguars,-8.323,9.5,47.0,17.0,41.0
+2020,16,2020_16_IND_PIT,Indianapolis Colts at Pittsburgh Steelers,0.554,1.0,43.0,28.0,24.0
+2020,16,2020_16_CIN_HOU,Cincinnati Bengals at Houston Texans,5.899,-7.5,46.0,31.0,37.0
+2020,16,2020_16_CLE_NYJ,Cleveland Browns at New York Jets,-10.802,6.5,45.0,23.0,16.0
+2020,16,2020_16_MIA_LV,Miami Dolphins at Las Vegas Raiders,0.815,2.0,50.0,25.0,26.0
+2020,16,2020_16_SF_ARI,San Francisco 49ers at Arizona Cardinals,6.817,-6.0,49.0,12.0,20.0
+2020,16,2020_16_TB_DET,Tampa Bay Buccaneers at Detroit Lions,-9.182,12.0,55.0,7.0,47.0
+2020,16,2020_16_MIN_NO,Minnesota Vikings at New Orleans Saints,10.304,-6.5,49.0,52.0,33.0
+2020,15,2020_15_PIT_CIN,Pittsburgh Steelers at Cincinnati Bengals,-19.089,14.5,40.5,27.0,17.0
+2020,15,2020_15_CLE_NYG,Cleveland Browns at New York Giants,-5.54,6.0,44.5,6.0,20.0
+2020,15,2020_15_KC_NO,Kansas City Chiefs at New Orleans Saints,-2.425,2.5,53.5,29.0,32.0
+2020,15,2020_15_PHI_ARI,Philadelphia Eagles at Arizona Cardinals,7.732,-6.5,49.5,33.0,26.0
+2020,15,2020_15_NYJ_LA,New York Jets at Los Angeles Rams,21.135,-17.5,44.5,20.0,23.0
+2020,15,2020_15_SF_DAL,San Francisco 49ers at Dallas Cowboys,-2.858,4.0,46.0,41.0,33.0
+2020,15,2020_15_JAX_BAL,Jacksonville Jaguars at Baltimore Ravens,17.839,-13.0,49.5,40.0,14.0
+2020,15,2020_15_CHI_MIN,Chicago Bears at Minnesota Vikings,2.658,-2.5,47.5,27.0,33.0
+2020,15,2020_15_SEA_WAS,Seattle Seahawks at Washington Commanders,-7.118,6.0,44.5,15.0,20.0
+2020,15,2020_15_NE_MIA,New England Patriots at Miami Dolphins,1.437,1.5,40.0,22.0,12.0
+2020,15,2020_15_TB_ATL,Tampa Bay Buccaneers at Atlanta Falcons,-6.446,6.0,49.5,27.0,31.0
+2020,15,2020_15_DET_TEN,Detroit Lions at Tennessee Titans,9.182,-9.5,54.5,46.0,25.0
+2020,15,2020_15_HOU_IND,Houston Texans at Indianapolis Colts,9.057,-7.5,52.5,27.0,20.0
+2020,15,2020_15_CAR_GB,Carolina Panthers at Green Bay Packers,11.034,-9.5,53.0,24.0,16.0
+2020,15,2020_15_BUF_DEN,Buffalo Bills at Denver Broncos,-8.244,5.5,49.0,19.0,48.0
+2020,15,2020_15_LAC_LV,Los Angeles Chargers at Las Vegas Raiders,5.291,-3.5,52.0,27.0,30.0
+2020,14,2020_14_BAL_CLE,Baltimore Ravens at Cleveland Browns,1.371,3.0,45.5,42.0,47.0
+2020,14,2020_14_PIT_BUF,Pittsburgh Steelers at Buffalo Bills,0.489,-2.0,48.5,26.0,15.0
+2020,14,2020_14_WAS_SF,Washington Commanders at San Francisco 49ers,6.116,-3.0,43.5,15.0,23.0
+2020,14,2020_14_NO_PHI,New Orleans Saints at Philadelphia Eagles,-8.085,7.5,43.0,24.0,21.0
+2020,14,2020_14_ATL_LAC,Atlanta Falcons at Los Angeles Chargers,-1.371,-1.0,49.0,20.0,17.0
+2020,14,2020_14_GB_DET,Green Bay Packers at Detroit Lions,-7.849,9.5,55.5,24.0,31.0
+2020,14,2020_14_NYJ_SEA,New York Jets at Seattle Seahawks,17.923,-16.5,49.5,40.0,3.0
+2020,14,2020_14_IND_LV,Indianapolis Colts at Las Vegas Raiders,-4.108,2.5,51.5,27.0,44.0
+2020,14,2020_14_KC_MIA,Kansas City Chiefs at Miami Dolphins,-11.557,7.5,51.5,27.0,33.0
+2020,14,2020_14_MIN_TB,Minnesota Vikings at Tampa Bay Buccaneers,8.085,-7.0,52.5,26.0,14.0
+2020,14,2020_14_DEN_CAR,Denver Broncos at Carolina Panthers,5.15,-4.0,46.0,27.0,32.0
+2020,14,2020_14_HOU_CHI,Houston Texans at Chicago Bears,-0.358,1.0,46.0,36.0,7.0
+2020,14,2020_14_ARI_NYG,Arizona Cardinals at New York Giants,-7.888,3.0,47.0,7.0,26.0
+2020,14,2020_14_DAL_CIN,Dallas Cowboys at Cincinnati Bengals,-5.683,3.0,44.0,7.0,30.0
+2020,14,2020_14_TEN_JAX,Tennessee Titans at Jacksonville Jaguars,-11.128,7.5,53.0,10.0,31.0
+2020,14,2020_14_NE_LA,New England Patriots at Los Angeles Rams,6.557,-5.0,43.5,24.0,3.0
+2020,13,2020_13_DAL_BAL,Dallas Cowboys at Baltimore Ravens,8.404,-8.5,46.0,34.0,17.0
+2020,13,2020_13_BUF_SF,Buffalo Bills at San Francisco 49ers,-1.502,-1.5,48.0,24.0,34.0
+2020,13,2020_13_WAS_PIT,Washington Commanders at Pittsburgh Steelers,16.014,-5.5,43.5,17.0,23.0
+2020,13,2020_13_DEN_KC,Denver Broncos at Kansas City Chiefs,18.442,-13.0,51.0,22.0,16.0
+2020,13,2020_13_NE_LAC,New England Patriots at Los Angeles Chargers,-1.535,-2.5,47.0,0.0,45.0
+2020,13,2020_13_PHI_GB,Philadelphia Eagles at Green Bay Packers,9.951,-8.0,50.0,30.0,16.0
+2020,13,2020_13_LA_ARI,Los Angeles Rams at Arizona Cardinals,-1.502,2.5,49.0,28.0,38.0
+2020,13,2020_13_NYG_SEA,New York Giants at Seattle Seahawks,12.611,-11.0,48.5,12.0,17.0
+2020,13,2020_13_CLE_TEN,Cleveland Browns at Tennessee Titans,3.126,-4.0,54.0,35.0,41.0
+2020,13,2020_13_NO_ATL,New Orleans Saints at Atlanta Falcons,-3.159,2.5,46.0,16.0,21.0
+2020,13,2020_13_LV_NYJ,Las Vegas Raiders at New York Jets,-12.15,7.5,48.0,28.0,31.0
+2020,13,2020_13_JAX_MIN,Jacksonville Jaguars at Minnesota Vikings,11.365,-10.5,51.0,27.0,24.0
+2020,13,2020_13_IND_HOU,Indianapolis Colts at Houston Texans,-5.647,3.5,50.0,20.0,26.0
+2020,13,2020_13_CIN_MIA,Cincinnati Bengals at Miami Dolphins,12.353,-10.5,43.0,19.0,7.0
+2020,13,2020_13_DET_CHI,Detroit Lions at Chicago Bears,1.109,-3.0,44.0,30.0,34.0
+2020,12,2020_12_BAL_PIT,Baltimore Ravens at Pittsburgh Steelers,8.646,-10.5,41.5,19.0,14.0
+2020,12,2020_12_SEA_PHI,Seattle Seahawks at Philadelphia Eagles,-5.15,6.5,50.0,17.0,23.0
+2020,12,2020_12_CHI_GB,Chicago Bears at Green Bay Packers,10.349,-7.5,44.0,41.0,25.0
+2020,12,2020_12_KC_TB,Kansas City Chiefs at Tampa Bay Buccaneers,-3.801,3.5,56.0,24.0,27.0
+2020,12,2020_12_SF_LA,San Francisco 49ers at Los Angeles Rams,9.777,-5.0,44.5,20.0,23.0
+2020,12,2020_12_NO_DEN,New Orleans Saints at Denver Broncos,-16.154,17.0,36.5,3.0,31.0
+2020,12,2020_12_MIA_NYJ,Miami Dolphins at New York Jets,-10.848,7.5,46.0,3.0,20.0
+2020,12,2020_12_LAC_BUF,Los Angeles Chargers at Buffalo Bills,8.363,-4.5,51.0,27.0,17.0
+2020,12,2020_12_TEN_IND,Tennessee Titans at Indianapolis Colts,6.631,-3.0,51.5,26.0,45.0
+2020,12,2020_12_CAR_MIN,Carolina Panthers at Minnesota Vikings,3.733,-3.0,50.0,28.0,27.0
+2020,12,2020_12_CLE_JAX,Cleveland Browns at Jacksonville Jaguars,-11.365,7.5,48.5,25.0,27.0
+2020,12,2020_12_NYG_CIN,New York Giants at Cincinnati Bengals,-3.226,6.5,45.0,17.0,19.0
+2020,12,2020_12_ARI_NE,Arizona Cardinals at New England Patriots,-1.568,1.0,51.0,20.0,17.0
+2020,12,2020_12_LV_ATL,Las Vegas Raiders at Atlanta Falcons,-2.161,3.5,53.0,43.0,6.0
+2020,12,2020_12_WAS_DAL,Washington Commanders at Dallas Cowboys,0.75,-2.5,46.0,16.0,41.0
+2020,12,2020_12_HOU_DET,Houston Texans at Detroit Lions,-0.88,3.0,52.5,25.0,41.0
+2020,11,2020_11_LA_TB,Los Angeles Rams at Tampa Bay Buccaneers,5.647,-4.0,47.5,24.0,27.0
+2020,11,2020_11_KC_LV,Kansas City Chiefs at Las Vegas Raiders,-8.768,7.5,56.5,31.0,35.0
+2020,11,2020_11_DAL_MIN,Dallas Cowboys at Minnesota Vikings,8.646,-7.0,50.0,28.0,31.0
+2020,11,2020_11_GB_IND,Green Bay Packers at Indianapolis Colts,0.717,-1.5,52.0,34.0,31.0
+2020,11,2020_11_NYJ_LAC,New York Jets at Los Angeles Chargers,9.995,-10.0,47.0,34.0,28.0
+2020,11,2020_11_MIA_DEN,Miami Dolphins at Denver Broncos,-3.395,4.0,46.0,20.0,13.0
+2020,11,2020_11_TEN_BAL,Tennessee Titans at Baltimore Ravens,8.363,-6.0,50.5,24.0,30.0
+2020,11,2020_11_CIN_WAS,Cincinnati Bengals at Washington Commanders,0.587,-2.0,48.0,20.0,9.0
+2020,11,2020_11_PIT_JAX,Pittsburgh Steelers at Jacksonville Jaguars,-16.296,11.0,47.0,3.0,27.0
+2020,11,2020_11_NE_HOU,New England Patriots at Houston Texans,-1.306,2.5,49.5,27.0,20.0
+2020,11,2020_11_DET_CAR,Detroit Lions at Carolina Panthers,-4.074,3.0,47.0,20.0,0.0
+2020,11,2020_11_ATL_NO,Atlanta Falcons at New Orleans Saints,7.967,-3.5,49.5,24.0,9.0
+2020,11,2020_11_PHI_CLE,Philadelphia Eagles at Cleveland Browns,5.935,-2.5,45.5,22.0,17.0
+2020,11,2020_11_ARI_SEA,Arizona Cardinals at Seattle Seahawks,4.939,-3.0,56.5,28.0,21.0
+2020,10,2020_10_MIN_CHI,Minnesota Vikings at Chicago Bears,-1.502,3.5,44.0,13.0,19.0
+2020,10,2020_10_BAL_NE,Baltimore Ravens at New England Patriots,-8.006,7.0,44.0,23.0,17.0
+2020,10,2020_10_SF_NO,San Francisco 49ers at New Orleans Saints,15.082,-9.5,49.5,27.0,13.0
+2020,10,2020_10_SEA_LA,Seattle Seahawks at Los Angeles Rams,0.88,-3.0,55.0,23.0,16.0
+2020,10,2020_10_CIN_PIT,Cincinnati Bengals at Pittsburgh Steelers,16.735,-6.5,45.5,36.0,10.0
+2020,10,2020_10_LAC_MIA,Los Angeles Chargers at Miami Dolphins,3.327,-1.0,48.5,29.0,21.0
+2020,10,2020_10_BUF_ARI,Buffalo Bills at Arizona Cardinals,-0.979,-3.0,55.5,32.0,30.0
+2020,10,2020_10_DEN_LV,Denver Broncos at Las Vegas Raiders,7.967,-3.5,50.5,37.0,12.0
+2020,10,2020_10_TB_CAR,Tampa Bay Buccaneers at Carolina Panthers,-8.605,6.0,49.5,23.0,46.0
+2020,10,2020_10_PHI_NYG,Philadelphia Eagles at New York Giants,-7.08,4.5,45.0,27.0,17.0
+2020,10,2020_10_JAX_GB,Jacksonville Jaguars at Green Bay Packers,19.891,-13.5,47.0,24.0,20.0
+2020,10,2020_10_HOU_CLE,Houston Texans at Cleveland Browns,2.824,-4.5,46.0,10.0,7.0
+2020,10,2020_10_WAS_DET,Washington Commanders at Detroit Lions,5.899,-2.5,46.0,30.0,27.0
+2020,10,2020_10_IND_TEN,Indianapolis Colts at Tennessee Titans,2.758,1.0,49.0,17.0,34.0
+2020,9,2020_09_NE_NYJ,New England Patriots at New York Jets,-11.801,9.5,41.5,27.0,30.0
+2020,9,2020_09_NO_TB,New Orleans Saints at Tampa Bay Buccaneers,3.092,-3.0,51.0,3.0,38.0
+2020,9,2020_09_MIA_ARI,Miami Dolphins at Arizona Cardinals,3.903,-6.0,49.0,31.0,34.0
+2020,9,2020_09_PIT_DAL,Pittsburgh Steelers at Dallas Cowboys,-19.683,14.0,44.0,19.0,24.0
+2020,9,2020_09_LV_LAC,Las Vegas Raiders at Los Angeles Chargers,-0.163,1.0,52.5,26.0,31.0
+2020,9,2020_09_NYG_WAS,New York Giants at Washington Commanders,4.974,-3.0,43.0,20.0,23.0
+2020,9,2020_09_HOU_JAX,Houston Texans at Jacksonville Jaguars,-7.118,7.0,49.0,25.0,27.0
+2020,9,2020_09_CAR_KC,Carolina Panthers at Kansas City Chiefs,14.643,-10.0,51.5,33.0,31.0
+2020,9,2020_09_BAL_IND,Baltimore Ravens at Indianapolis Colts,-3.971,-1.0,48.0,10.0,24.0
+2020,9,2020_09_DET_MIN,Detroit Lions at Minnesota Vikings,4.764,-3.0,51.5,34.0,20.0
+2020,9,2020_09_CHI_TEN,Chicago Bears at Tennessee Titans,7.232,-6.5,46.5,24.0,17.0
+2020,9,2020_09_DEN_ATL,Denver Broncos at Atlanta Falcons,3.159,-4.5,50.0,34.0,27.0
+2020,9,2020_09_SEA_BUF,Seattle Seahawks at Buffalo Bills,-1.404,3.0,55.0,44.0,34.0
+2020,9,2020_09_GB_SF,Green Bay Packers at San Francisco 49ers,-6.967,6.0,48.5,17.0,34.0
+2020,8,2020_08_TB_NYG,Tampa Bay Buccaneers at New York Giants,-15.876,13.0,47.0,23.0,25.0
+2020,8,2020_08_DAL_PHI,Dallas Cowboys at Philadelphia Eagles,10.941,-10.0,43.0,23.0,9.0
+2020,8,2020_08_SF_SEA,San Francisco 49ers at Seattle Seahawks,1.765,-1.0,54.5,37.0,27.0
+2020,8,2020_08_NO_CHI,New Orleans Saints at Chicago Bears,-3.126,5.5,41.0,23.0,26.0
+2020,8,2020_08_LAC_DEN,Los Angeles Chargers at Denver Broncos,-0.946,3.0,44.5,31.0,30.0
+2020,8,2020_08_PIT_BAL,Pittsburgh Steelers at Baltimore Ravens,4.939,-4.0,44.0,24.0,28.0
+2020,8,2020_08_LA_MIA,Los Angeles Rams at Miami Dolphins,-5.935,3.5,46.5,28.0,17.0
+2020,8,2020_08_NYJ_KC,New York Jets at Kansas City Chiefs,25.261,-20.0,49.0,35.0,9.0
+2020,8,2020_08_LV_CLE,Las Vegas Raiders at Cleveland Browns,2.724,-1.0,48.0,6.0,16.0
+2020,8,2020_08_TEN_CIN,Tennessee Titans at Cincinnati Bengals,-14.34,7.5,49.5,31.0,20.0
+2020,8,2020_08_NE_BUF,New England Patriots at Buffalo Bills,5.327,-4.0,41.0,24.0,21.0
+2020,8,2020_08_MIN_GB,Minnesota Vikings at Green Bay Packers,10.941,-5.5,47.0,22.0,28.0
+2020,8,2020_08_IND_DET,Indianapolis Colts at Detroit Lions,-4.04,3.5,49.0,21.0,41.0
+2020,8,2020_08_ATL_CAR,Atlanta Falcons at Carolina Panthers,2.925,-1.5,52.0,17.0,25.0
+2020,7,2020_07_CHI_LA,Chicago Bears at Los Angeles Rams,5.15,-6.5,44.0,24.0,10.0
+2020,7,2020_07_SEA_ARI,Seattle Seahawks at Arizona Cardinals,-5.719,3.5,55.5,37.0,34.0
+2020,7,2020_07_JAX_LAC,Jacksonville Jaguars at Los Angeles Chargers,10.304,-8.0,48.0,39.0,29.0
+2020,7,2020_07_KC_DEN,Kansas City Chiefs at Denver Broncos,-16.154,7.0,46.0,16.0,43.0
+2020,7,2020_07_SF_NE,San Francisco 49ers at New England Patriots,-0.391,-3.0,44.0,6.0,33.0
+2020,7,2020_07_TB_LV,Tampa Bay Buccaneers at Las Vegas Raiders,-4.28,3.5,51.5,20.0,45.0
+2020,7,2020_07_PIT_TEN,Pittsburgh Steelers at Tennessee Titans,-1.175,-1.0,51.0,24.0,27.0
+2020,7,2020_07_GB_HOU,Green Bay Packers at Houston Texans,-7.346,2.5,55.5,20.0,35.0
+2020,7,2020_07_BUF_NYJ,Buffalo Bills at New York Jets,-16.961,9.5,47.0,10.0,18.0
+2020,7,2020_07_CAR_NO,Carolina Panthers at New Orleans Saints,11.461,-7.0,49.5,27.0,24.0
+2020,7,2020_07_DET_ATL,Detroit Lions at Atlanta Falcons,1.306,-1.0,54.0,22.0,23.0
+2020,7,2020_07_DAL_WAS,Dallas Cowboys at Washington Commanders,-2.128,1.0,44.5,25.0,3.0
+2020,7,2020_07_CLE_CIN,Cleveland Browns at Cincinnati Bengals,-7.771,4.5,50.0,34.0,37.0
+2020,7,2020_07_NYG_PHI,New York Giants at Philadelphia Eagles,9.907,-5.0,44.5,22.0,21.0
+2020,6,2020_06_ARI_DAL,Arizona Cardinals at Dallas Cowboys,-1.109,-1.0,55.5,10.0,38.0
+2020,6,2020_06_KC_BUF,Kansas City Chiefs at Buffalo Bills,-7.308,5.5,55.0,17.0,26.0
+2020,6,2020_06_LA_SF,Los Angeles Rams at San Francisco 49ers,3.835,2.0,51.0,24.0,16.0
+2020,6,2020_06_GB_TB,Green Bay Packers at Tampa Bay Buccaneers,1.077,3.0,55.0,38.0,10.0
+2020,6,2020_06_NYJ_MIA,New York Jets at Miami Dolphins,6.892,-9.5,46.0,24.0,0.0
+2020,6,2020_06_DEN_NE,Denver Broncos at New England Patriots,9.35,-7.0,43.5,12.0,18.0
+2020,6,2020_06_CIN_IND,Cincinnati Bengals at Indianapolis Colts,13.253,-7.5,46.0,31.0,27.0
+2020,6,2020_06_BAL_PHI,Baltimore Ravens at Philadelphia Eagles,-12.507,10.5,46.5,28.0,30.0
+2020,6,2020_06_CLE_PIT,Cleveland Browns at Pittsburgh Steelers,6.743,-3.0,50.0,38.0,7.0
+2020,6,2020_06_WAS_NYG,Washington Commanders at New York Giants,2.128,-2.0,42.5,20.0,19.0
+2020,6,2020_06_HOU_TEN,Houston Texans at Tennessee Titans,9.648,-4.0,52.0,42.0,36.0
+2020,6,2020_06_ATL_MIN,Atlanta Falcons at Minnesota Vikings,2.525,-3.5,53.0,23.0,40.0
+2020,6,2020_06_DET_JAX,Detroit Lions at Jacksonville Jaguars,-5.647,3.0,52.5,16.0,34.0
+2020,6,2020_06_CHI_CAR,Chicago Bears at Carolina Panthers,-1.338,-2.0,45.0,16.0,23.0
+2020,5,2020_05_BUF_TEN,Buffalo Bills at Tennessee Titans,-1.306,3.0,52.0,42.0,16.0
+2020,5,2020_05_LAC_NO,Los Angeles Chargers at New Orleans Saints,10.941,-7.0,49.5,30.0,27.0
+2020,5,2020_05_MIN_SEA,Minnesota Vikings at Seattle Seahawks,7.693,-6.5,54.0,27.0,26.0
+2020,5,2020_05_IND_CLE,Indianapolis Colts at Cleveland Browns,-6.116,-1.0,48.5,32.0,23.0
+2020,5,2020_05_NYG_DAL,New York Giants at Dallas Cowboys,13.699,-7.5,52.0,37.0,34.0
+2020,5,2020_05_MIA_SF,Miami Dolphins at San Francisco 49ers,7.156,-8.5,50.5,17.0,43.0
+2020,5,2020_05_CIN_BAL,Cincinnati Bengals at Baltimore Ravens,21.904,-12.5,49.0,27.0,3.0
+2020,5,2020_05_PHI_PIT,Philadelphia Eagles at Pittsburgh Steelers,3.597,-7.5,44.0,38.0,29.0
+2020,5,2020_05_ARI_NYJ,Arizona Cardinals at New York Jets,-7.927,7.0,48.5,10.0,30.0
+2020,5,2020_05_JAX_HOU,Jacksonville Jaguars at Houston Texans,6.705,-6.5,55.0,30.0,14.0
+2020,5,2020_05_LA_WAS,Los Angeles Rams at Washington Commanders,-15.21,7.0,45.0,10.0,30.0
+2020,5,2020_05_LV_KC,Las Vegas Raiders at Kansas City Chiefs,18.994,-11.0,54.5,32.0,40.0
+2020,5,2020_05_CAR_ATL,Carolina Panthers at Atlanta Falcons,7.849,-2.5,53.5,16.0,23.0
+2020,5,2020_05_TB_CHI,Tampa Bay Buccaneers at Chicago Bears,-7.08,3.5,44.0,20.0,19.0
+2020,4,2020_04_ATL_GB,Atlanta Falcons at Green Bay Packers,4.695,-5.0,56.5,30.0,16.0
+2020,4,2020_04_NE_KC,New England Patriots at Kansas City Chiefs,13.307,-7.0,52.5,26.0,10.0
+2020,4,2020_04_PHI_SF,Philadelphia Eagles at San Francisco 49ers,2.691,-8.5,45.5,20.0,25.0
+2020,4,2020_04_BUF_LV,Buffalo Bills at Las Vegas Raiders,-5.863,3.0,53.0,23.0,30.0
+2020,4,2020_04_IND_CHI,Indianapolis Colts at Chicago Bears,-3.26,3.5,43.5,11.0,19.0
+2020,4,2020_04_NYG_LA,New York Giants at Los Angeles Rams,12.611,-13.5,49.5,17.0,9.0
+2020,4,2020_04_BAL_WAS,Baltimore Ravens at Washington Commanders,-15.945,14.5,45.0,17.0,31.0
+2020,4,2020_04_LAC_TB,Los Angeles Chargers at Tampa Bay Buccaneers,8.524,-7.5,42.5,38.0,31.0
+2020,4,2020_04_SEA_MIA,Seattle Seahawks at Miami Dolphins,-6.93,4.5,55.0,23.0,31.0
+2020,4,2020_04_MIN_HOU,Minnesota Vikings at Houston Texans,1.765,-3.5,52.5,23.0,31.0
+2020,4,2020_04_CLE_DAL,Cleveland Browns at Dallas Cowboys,4.108,-3.5,56.5,38.0,49.0
+2020,4,2020_04_JAX_CIN,Jacksonville Jaguars at Cincinnati Bengals,1.175,-1.0,50.0,33.0,25.0
+2020,4,2020_04_ARI_CAR,Arizona Cardinals at Carolina Panthers,-7.461,3.0,52.5,31.0,21.0
+2020,4,2020_04_NO_DET,New Orleans Saints at Detroit Lions,-9.52,3.0,51.5,29.0,35.0
+2020,4,2020_04_DEN_NYJ,Denver Broncos at New York Jets,0.75,-1.0,41.0,28.0,37.0
+2020,3,2020_03_KC_BAL,Kansas City Chiefs at Baltimore Ravens,3.767,-3.5,55.0,20.0,34.0
+2020,3,2020_03_GB_NO,Green Bay Packers at New Orleans Saints,3.699,-3.5,52.0,30.0,37.0
+2020,3,2020_03_DAL_SEA,Dallas Cowboys at Seattle Seahawks,1.634,-5.5,58.0,38.0,31.0
+2020,3,2020_03_TB_DEN,Tampa Bay Buccaneers at Denver Broncos,-5.504,6.0,42.5,10.0,28.0
+2020,3,2020_03_DET_ARI,Detroit Lions at Arizona Cardinals,3.159,-4.5,55.5,23.0,26.0
+2020,3,2020_03_CAR_LAC,Carolina Panthers at Los Angeles Chargers,6.08,-6.0,43.5,16.0,21.0
+2020,3,2020_03_NYJ_IND,New York Jets at Indianapolis Colts,8.687,-12.5,44.0,36.0,7.0
+2020,3,2020_03_CHI_ATL,Chicago Bears at Atlanta Falcons,4.314,-2.5,46.0,26.0,30.0
+2020,3,2020_03_CIN_PHI,Cincinnati Bengals at Philadelphia Eagles,11.461,-5.5,46.5,23.0,23.0
+2020,3,2020_03_WAS_CLE,Washington Commanders at Cleveland Browns,6.892,-7.5,45.0,34.0,20.0
+2020,3,2020_03_TEN_MIN,Tennessee Titans at Minnesota Vikings,0.326,3.0,49.5,30.0,31.0
+2020,3,2020_03_SF_NYG,San Francisco 49ers at New York Giants,-10.529,3.0,44.0,9.0,36.0
+2020,3,2020_03_HOU_PIT,Houston Texans at Pittsburgh Steelers,10.665,-4.0,46.5,28.0,21.0
+2020,3,2020_03_LA_BUF,Los Angeles Rams at Buffalo Bills,5.291,-1.5,46.5,35.0,32.0
+2020,3,2020_03_LV_NE,Las Vegas Raiders at New England Patriots,3.428,-7.0,47.0,36.0,20.0
+2020,3,2020_03_MIA_JAX,Miami Dolphins at Jacksonville Jaguars,4.66,-3.0,49.0,13.0,31.0
+2020,2,2020_02_NO_LV,New Orleans Saints at Las Vegas Raiders,-9.14,4.0,47.5,34.0,24.0
+2020,2,2020_02_NE_SEA,New England Patriots at Seattle Seahawks,2.525,-4.0,45.0,35.0,30.0
+2020,2,2020_02_KC_LAC,Kansas City Chiefs at Los Angeles Chargers,-7.693,8.5,47.0,20.0,23.0
+2020,2,2020_02_BAL_HOU,Baltimore Ravens at Houston Texans,-10.039,7.5,49.5,16.0,33.0
+2020,2,2020_02_WAS_ARI,Washington Commanders at Arizona Cardinals,8.444,-7.5,46.5,30.0,15.0
+2020,2,2020_02_JAX_TEN,Jacksonville Jaguars at Tennessee Titans,10.483,-7.0,44.5,33.0,30.0
+2020,2,2020_02_NYG_CHI,New York Giants at Chicago Bears,5.971,-4.5,42.5,17.0,13.0
+2020,2,2020_02_DET_GB,Detroit Lions at Green Bay Packers,8.646,-7.0,51.0,42.0,21.0
+2020,2,2020_02_MIN_IND,Minnesota Vikings at Indianapolis Colts,3.092,-3.5,49.0,28.0,11.0
+2020,2,2020_02_BUF_MIA,Buffalo Bills at Miami Dolphins,-4.245,5.5,42.5,28.0,31.0
+2020,2,2020_02_SF_NYJ,San Francisco 49ers at New York Jets,-12.507,7.0,41.5,13.0,31.0
+2020,2,2020_02_ATL_DAL,Atlanta Falcons at Dallas Cowboys,6.743,-3.0,53.0,40.0,39.0
+2020,2,2020_02_DEN_PIT,Denver Broncos at Pittsburgh Steelers,10.127,-6.0,41.0,26.0,21.0
+2020,2,2020_02_CAR_TB,Carolina Panthers at Tampa Bay Buccaneers,13.53,-7.5,47.0,31.0,17.0
+2020,2,2020_02_LA_PHI,Los Angeles Rams at Philadelphia Eagles,5.791,-2.0,46.0,19.0,37.0
+2020,2,2020_02_CIN_CLE,Cincinnati Bengals at Cleveland Browns,8.484,-6.0,44.5,35.0,30.0
+2020,1,2020_01_TEN_DEN,Tennessee Titans at Denver Broncos,-2.359,3.0,41.0,14.0,16.0
+2020,1,2020_01_PIT_NYG,Pittsburgh Steelers at New York Giants,-8.244,6.0,44.0,16.0,26.0
+2020,1,2020_01_DAL_LA,Dallas Cowboys at Los Angeles Rams,-1.93,-1.0,52.0,20.0,17.0
+2020,1,2020_01_TB_NO,Tampa Bay Buccaneers at New Orleans Saints,5.362,-4.0,48.5,34.0,23.0
+2020,1,2020_01_ARI_SF,Arizona Cardinals at San Francisco 49ers,11.317,-7.0,48.5,20.0,24.0
+2020,1,2020_01_LAC_CIN,Los Angeles Chargers at Cincinnati Bengals,-5.185,2.5,41.5,13.0,16.0
+2020,1,2020_01_GB_MIN,Green Bay Packers at Minnesota Vikings,1.897,-1.0,45.0,34.0,43.0
+2020,1,2020_01_IND_JAX,Indianapolis Colts at Jacksonville Jaguars,-9.82,7.0,44.0,27.0,20.0
+2020,1,2020_01_CHI_DET,Chicago Bears at Detroit Lions,0.88,-2.5,42.5,23.0,27.0
+2020,1,2020_01_PHI_WAS,Philadelphia Eagles at Washington Commanders,-11.654,5.5,41.5,27.0,17.0
+2020,1,2020_01_SEA_ATL,Seattle Seahawks at Atlanta Falcons,-3.733,-1.0,49.5,25.0,38.0
+2020,1,2020_01_LV_CAR,Las Vegas Raiders at Carolina Panthers,0.424,3.0,48.0,30.0,34.0
+2020,1,2020_01_NYJ_BUF,New York Jets at Buffalo Bills,9.477,-6.5,39.5,27.0,17.0
+2020,1,2020_01_CLE_BAL,Cleveland Browns at Baltimore Ravens,10.483,-7.0,47.0,38.0,6.0
+2020,1,2020_01_MIA_NE,Miami Dolphins at New England Patriots,11.034,-7.5,41.5,21.0,11.0
+2020,1,2020_01_HOU_KC,Houston Texans at Kansas City Chiefs,14.521,-9.5,53.5,34.0,20.0
+2019,21,2019_21_SF_KC,San Francisco 49ers at Kansas City Chiefs,-0.783,-1.5,52.5,31.0,20.0
+2019,20,2019_20_GB_SF,Green Bay Packers at San Francisco 49ers,6.594,-8.0,46.5,37.0,20.0
+2019,20,2019_20_TEN_KC,Tennessee Titans at Kansas City Chiefs,7.849,-7.5,51.0,35.0,24.0
+2019,19,2019_19_SEA_GB,Seattle Seahawks at Green Bay Packers,4.177,-4.5,46.0,28.0,23.0
+2019,19,2019_19_HOU_KC,Houston Texans at Kansas City Chiefs,7.27,-10.0,50.5,51.0,31.0
+2019,19,2019_19_TEN_BAL,Tennessee Titans at Baltimore Ravens,10.895,-10.0,47.5,12.0,28.0
+2019,19,2019_19_MIN_SF,Minnesota Vikings at San Francisco 49ers,6.631,-7.0,44.5,27.0,10.0

@@ -1,0 +1,1523 @@
+year,week,event_id,name,fpi_margin,home_line,total_line,home,away
+2026,0,10/17/2026 Western Michigan Broncos at Central Michigan Chippewas,Western Michigan Broncos at Central Michigan Chippewas,-7.159,7.5,,14,21
+2026,0,10/17/2026 Massachusetts Minutemen at Buffalo Bulls,Massachusetts Minutemen at Buffalo Bulls,0.96,-6.0,,25,18
+2026,0,10/17/2026 Charlotte 49ers at Temple Owls,Charlotte 49ers at Temple Owls,21.809,-17.0,,31,38
+2026,0,10/17/2026 Rutgers Scarlet Knights at Maryland Terrapins,Rutgers Scarlet Knights at Maryland Terrapins,8.583,-5.0,,30,37
+2026,0,10/17/2026 Mississippi State Bulldogs at LSU Tigers,Mississippi State Bulldogs at LSU Tigers,13.49,-17.5,,31,0
+2026,0,10/17/2026 Florida Gators at Texas Longhorns,Florida Gators at Texas Longhorns,13.631,-13.5,,24,27
+2026,0,10/17/2026 Kansas Jayhawks at Kansas State Wildcats,Kansas Jayhawks at Kansas State Wildcats,2.8,-3.0,,35,24
+2026,0,10/17/2026 Virginia Cavaliers at SMU Mustangs,Virginia Cavaliers at SMU Mustangs,2.249,-10.0,,23,13
+2026,0,10/17/2026 Georgia State Panthers at James Madison Dukes,Georgia State Panthers at James Madison Dukes,14.381,-7.5,,49,22
+2026,0,10/17/2026 Pittsburgh Panthers at Boston College Eagles,Pittsburgh Panthers at Boston College Eagles,-18.714,6.5,,27,21
+2026,0,10/17/2026 Florida Atlantic Owls at Army Black Knights,Florida Atlantic Owls at Army Black Knights,6.902,-2.0,,56,24
+2026,0,10/17/2026 Ball State Cardinals at Bowling Green Falcons,Ball State Cardinals at Bowling Green Falcons,6.263,-6.0,,31,32
+2026,0,10/17/2026 Northwestern Wildcats at Michigan State Spartans,Northwestern Wildcats at Michigan State Spartans,2.853,7.5,,21,24
+2026,0,10/17/2026 Ohio State Buckeyes at Indiana Hoosiers,Ohio State Buckeyes at Indiana Hoosiers,37.683,2.5,,15,19
+2026,0,10/17/2026 Cincinnati Bearcats at West Virginia Mountaineers,Cincinnati Bearcats at West Virginia Mountaineers,3.129,-1.5,,45,42
+2026,0,10/17/2026 Appalachian State Mountaineers at Coastal Carolina Chanticleers,Appalachian State Mountaineers at Coastal Carolina Chanticleers,-0.582,-1.0,,32,35
+2026,0,10/17/2026 Washington Huskies at Purdue Boilermakers,Washington Huskies at Purdue Boilermakers,1.434,-3.0,,26,38
+2026,0,10/16/2026 Memphis Tigers at Tulane Green Wave,Memphis Tigers at Tulane Green Wave,-5.334,6.5,,31,17
+2026,0,10/16/2026 Colorado State Rams at Texas State Bobcats,Colorado State Rams at Texas State Bobcats,4.665,-15.0,,66,27
+2026,0,10/15/2026 East Carolina Pirates at UAB Blazers,East Carolina Pirates at UAB Blazers,-7.183,4.5,,30,17
+2026,0,10/15/2026 Georgia Southern Eagles at Old Dominion Monarchs,Georgia Southern Eagles at Old Dominion Monarchs,-40.138,3.0,,15,23
+2026,0,10/15/2026 Western Kentucky Hilltoppers at Sam Houston State Bearkats,Western Kentucky Hilltoppers at Sam Houston State Bearkats,2.333,1.0,,3,16
+2026,0,10/14/2026 Kennesaw State Owls at Missouri State Bears,Kennesaw State Owls at Missouri State Bears,33.364,2.5,,24,21
+2026,0,10/14/2026 FIU Panthers at Jacksonville State Gamecocks,FIU Panthers at Jacksonville State Gamecocks,3.56,-3.0,,27,24
+2026,0,10/11/2026 Boise State Broncos at Fresno State Bulldogs,Boise State Broncos at Fresno State Bulldogs,-4.782,9.5,,31,38
+2026,0,10/11/2026 Hawaii Rainbow Warriors at Arizona State Sun Devils,Hawaii Rainbow Warriors at Arizona State Sun Devils,21.973,-20.5,,30,12
+2026,0,10/11/2026 James Madison Dukes at Georgia Southern Eagles,James Madison Dukes at Georgia Southern Eagles,23.151,7.0,,24,27
+2026,0,10/11/2026 Kansas Jayhawks at Utah Utes,Kansas Jayhawks at Utah Utes,15.002,-16.0,,41,24
+2026,0,10/11/2026 Minnesota Golden Gophers at Purdue Boilermakers,Minnesota Golden Gophers at Purdue Boilermakers,-5.076,2.5,,41,13
+2026,0,10/10/2026 Georgia Bulldogs at Alabama Crimson Tide,Georgia Bulldogs at Alabama Crimson Tide,3.466,-2.5,,17,20
+2026,0,10/10/2026 Syracuse Orange at Virginia Cavaliers,Syracuse Orange at Virginia Cavaliers,9.563,-14.0,,28,25
+2026,0,10/10/2026 USC Trojans at Penn State Nittany Lions,USC Trojans at Penn State Nittany Lions,1.308,-1.0,,23,31
+2026,0,10/10/2026 Air Force Falcons at Northern Illinois Huskies,Air Force Falcons at Northern Illinois Huskies,-13.091,7.0,,7,28
+2026,0,10/10/2026 Louisiana Ragin' Cajuns at Louisiana Tech Bulldogs,Louisiana Ragin' Cajuns at Louisiana Tech Bulldogs,9.287,-3.0,,32,31
+2026,0,10/10/2026 UAB Blazers at Memphis Tigers,UAB Blazers at Memphis Tigers,19.996,-15.0,,38,13
+2026,0,10/10/2026 North Dakota State Bison at UNLV Rebels,North Dakota State Bison at UNLV Rebels,-3.327,3.0,,13,7
+2026,0,10/10/2026 Nevada Wolf Pack at UTEP Miners,Nevada Wolf Pack at UTEP Miners,-4.797,10.0,,13,30
+2026,0,10/10/2026 LSU Tigers at Kentucky Wildcats,LSU Tigers at Kentucky Wildcats,-13.352,9.0,,35,34
+2026,0,10/10/2026 Coastal Carolina Chanticleers at Marshall Thundering Herd,Coastal Carolina Chanticleers at Marshall Thundering Herd,-0.38,-4.5,,21,27
+2026,0,10/10/2026 San Diego State Aztecs at Oregon State Beavers,San Diego State Aztecs at Oregon State Beavers,8.744,-14.5,,66,14
+2026,0,10/10/2026 Tennessee Volunteers at Arkansas Razorbacks,Tennessee Volunteers at Arkansas Razorbacks,-15.625,13.5,,17,24
+2026,0,10/10/2026 Maryland Terrapins at Ohio State Buckeyes,Maryland Terrapins at Ohio State Buckeyes,-9.725,-31.0,,45,16
+2026,0,10/10/2026 Connecticut Huskies at Temple Owls,Connecticut Huskies at Temple Owls,2.764,-3.5,,20,34
+2026,0,10/10/2026 Texas Longhorns at Oklahoma Sooners,Texas Longhorns at Oklahoma Sooners,-10.129,7.5,,27,24
+2026,0,10/10/2026 Houston Cougars at Kansas State Wildcats,Houston Cougars at Kansas State Wildcats,-5.187,-2.5,,16,35
+2026,0,10/10/2026 Stanford Cardinal at Notre Dame Fighting Irish,Stanford Cardinal at Notre Dame Fighting Irish,43.84,-40.5,,58,7
+2026,0,10/10/2026 UCLA Bruins at Oregon Ducks,UCLA Bruins at Oregon Ducks,11.705,-9.5,,15,17
+2026,0,10/10/2026 Duke Blue Devils at Georgia Tech Yellow Jackets,Duke Blue Devils at Georgia Tech Yellow Jackets,-7.417,4.5,,28,25
+2026,0,10/10/2026 Tulsa Golden Hurricane at Navy Midshipmen,Tulsa Golden Hurricane at Navy Midshipmen,0.919,-3.0,,34,26
+2026,0,10/10/2026 Virginia Tech Hokies at California Golden Bears,Virginia Tech Hokies at California Golden Bears,-9.345,11.0,,25,20
+2026,0,10/10/2026 Charlotte 49ers at North Texas Mean Green,Charlotte 49ers at North Texas Mean Green,29.406,-28.0,,50,10
+2026,0,10/10/2026 Ole Miss Rebels at Vanderbilt Commodores,Ole Miss Rebels at Vanderbilt Commodores,-7.82,9.5,,17,52
+2026,0,10/10/2026 Kent State Golden Flashes at Western Michigan Broncos,Kent State Golden Flashes at Western Michigan Broncos,19.32,-14.0,,38,7
+2026,0,10/10/2026 Eastern Michigan Eagles at Akron Zips,Eastern Michigan Eagles at Akron Zips,-2.081,4.5,,23,25
+2026,0,10/10/2026 Central Michigan Chippewas at Ohio Bobcats,Central Michigan Chippewas at Ohio Bobcats,3.425,-2.5,,31,14
+2026,0,10/10/2026 Buffalo Bulls at Toledo Rockets,Buffalo Bulls at Toledo Rockets,22.86,-18.5,,8,23
+2026,0,10/10/2026 Illinois Fighting Illini at Michigan State Spartans,Illinois Fighting Illini at Michigan State Spartans,10.044,3.0,,37,38
+2026,0,10/10/2026 Miami (OH) RedHawks at Massachusetts Minutemen,Miami (OH) RedHawks at Massachusetts Minutemen,-41.658,6.5,,19,20
+2026,0,10/10/2026 Rice Owls at East Carolina Pirates,Rice Owls at East Carolina Pirates,9.893,-10.0,,28,12
+2026,0,10/10/2026 Old Dominion Monarchs at Appalachian State Mountaineers,Old Dominion Monarchs at Appalachian State Mountaineers,10.28,-9.5,,3,10
+2026,0,10/10/2026 South Carolina Gamecocks at Florida Gators,South Carolina Gamecocks at Florida Gators,10.906,-10.0,,19,38
+2026,0,10/10/2026 Ball State Cardinals at Northwestern Wildcats,Ball State Cardinals at Northwestern Wildcats,39.381,-35.0,,45,14
+2026,0,10/10/2026 Sacramento State Hornets at Bowling Green Falcons,Sacramento State Hornets at Bowling Green Falcons,3.007,-9.5,,38,10
+2026,0,10/10/2026 Texas A&M Aggies at Missouri Tigers,Texas A&M Aggies at Missouri Tigers,-9.793,-5.0,,27,6
+2026,0,10/10/2026 UCF Knights at Oklahoma State Cowboys,UCF Knights at Oklahoma State Cowboys,9.021,-9.5,,42,28
+2026,0,10/10/2026 Indiana Hoosiers at Nebraska Cornhuskers,Indiana Hoosiers at Nebraska Cornhuskers,-8.747,9.0,,17,20
+2026,0,10/10/2026 Wake Forest Demon Deacons at NC State Wolfpack,Wake Forest Demon Deacons at NC State Wolfpack,-1.447,4.0,,14,38
+2026,0,10/10/2026 Arizona Wildcats at West Virginia Mountaineers,Arizona Wildcats at West Virginia Mountaineers,-1.505,3.5,,31,52
+2026,0,10/10/2026 North Carolina Tar Heels at Pittsburgh Panthers,North Carolina Tar Heels at Pittsburgh Panthers,13.349,-3.5,,17,21
+2026,0,10/10/2026 Tulane Green Wave at Army Black Knights,Tulane Green Wave at Army Black Knights,8.669,-5.0,,20,17
+2026,0,10/10/2026 Iowa State Cyclones at BYU Cougars,Iowa State Cyclones at BYU Cougars,6.158,-11.5,,24,10
+2026,0,10/10/2026 Washington State Cougars at Utah State Aggies,Washington State Cougars at Utah State Aggies,14.516,-4.0,,17,16
+2026,0,10/10/2026 Wyoming Cowboys at San Jose State Spartans,Wyoming Cowboys at San Jose State Spartans,8.006,-4.0,,13,16
+2026,0,10/10/2026 Iowa Hawkeyes at Washington Huskies,Iowa Hawkeyes at Washington Huskies,-2.419,-3.0,,24,41
+2026,0,10/09/2026 Florida State Seminoles at Louisville Cardinals,Florida State Seminoles at Louisville Cardinals,-5.359,-4.0,,44,20
+2026,0,10/09/2026 Florida A&M Rattlers at Alabama State Hornets,Florida A&M Rattlers at Alabama State Hornets,14.6,-14.5,,27,28
+2026,0,10/08/2026 South Florida Bulls at UTSA Roadrunners,South Florida Bulls at UTSA Roadrunners,6.936,-6.0,,31,24
+2026,0,10/08/2026 South Alabama Jaguars at Arkansas State Red Wolves,South Alabama Jaguars at Arkansas State Red Wolves,3.52,-3.0,,49,56
+2026,0,10/08/2026 Missouri State Bears at Western Kentucky Hilltoppers,Missouri State Bears at Western Kentucky Hilltoppers,-31.132,2.0,,34,13
+2026,0,10/08/2026 Sam Houston State Bearkats at Liberty Flames,Sam Houston State Bearkats at Liberty Flames,14.231,-13.5,,35,3
+2026,0,10/08/2026 New Mexico State Aggies at FIU Panthers,New Mexico State Aggies at FIU Panthers,-20.666,-7.0,,22,3
+2026,0,10/07/2026 Jacksonville State Gamecocks at Kennesaw State Owls,Jacksonville State Gamecocks at Kennesaw State Owls,1.836,3.0,,26,27
+2026,0,10/07/2026 Southern Miss Golden Eagles at Troy Trojans,Southern Miss Golden Eagles at Troy Trojans,10.861,-9.5,,55,34
+2026,0,10/04/2026 San Jose State Spartans at Hawaii Rainbow Warriors,San Jose State Spartans at Hawaii Rainbow Warriors,1.408,-2.5,,16,20
+2026,0,10/04/2026 Cincinnati Bearcats at Arizona Wildcats,Cincinnati Bearcats at Arizona Wildcats,3.47,-7.0,,34,7
+2026,0,10/04/2026 Texas State Bobcats at San Diego State Aztecs,Texas State Bobcats at San Diego State Aztecs,-1.194,10.0,,31,29
+2026,0,10/04/2026 Baylor Bears at Arizona State Sun Devils,Baylor Bears at Arizona State Sun Devils,4.166,-3.5,,19,55
+2026,0,10/04/2026 Fresno State Bulldogs at Washington State Cougars,Fresno State Bulldogs at Washington State Cougars,9.415,-2.5,,6,26
+2026,0,10/04/2026 Indiana Hoosiers at Rutgers Scarlet Knights,Indiana Hoosiers at Rutgers Scarlet Knights,-24.038,24.5,,15,47
+2026,0,10/04/2026 Arkansas State Red Wolves at Louisiana Ragin' Cajuns,Arkansas State Red Wolves at Louisiana Ragin' Cajuns,8.585,-5.0,,23,20
+2026,0,10/03/2026 Miami Hurricanes at Clemson Tigers,Miami Hurricanes at Clemson Tigers,-17.897,14.0,,13,41
+2026,0,10/03/2026 Washington Huskies at USC Trojans,Washington Huskies at USC Trojans,10.858,-7.0,,25,21
+2026,0,10/03/2026 Texas Tech Red Raiders at Colorado Buffaloes,Texas Tech Red Raiders at Colorado Buffaloes,-16.797,13.5,,7,29
+2026,0,10/03/2026 Utah State Aggies at Boise State Broncos,Utah State Aggies at Boise State Broncos,-6.447,-19.5,,37,18
+2026,0,10/03/2026 Army Black Knights at Louisiana Tech Bulldogs,Army Black Knights at Louisiana Tech Bulldogs,1.854,-1.0,,31,29
+2026,0,10/03/2026 Temple Owls at South Florida Bulls,Temple Owls at South Florida Bulls,7.61,-5.0,,13,17
+2026,0,10/03/2026 Arkansas Razorbacks at Texas A&M Aggies,Arkansas Razorbacks at Texas A&M Aggies,30.741,-13.5,,34,7
+2026,0,10/03/2026 UTSA Roadrunners at Rice Owls,UTSA Roadrunners at Rice Owls,-14.46,11.5,,14,16
+2026,0,10/03/2026 ULM Warhawks at South Alabama Jaguars,ULM Warhawks at South Alabama Jaguars,19.057,-13.5,,52,35
+2026,0,10/03/2026 BYU Cougars at TCU Horned Frogs,BYU Cougars at TCU Horned Frogs,-5.079,5.5,,10,17
+2026,0,10/03/2026 Georgia Southern Eagles at Coastal Carolina Chanticleers,Georgia Southern Eagles at Coastal Carolina Chanticleers,-40.107,2.5,,24,31
+2026,0,10/03/2026 Texas Southern Tigers at Florida Atlantic Owls,Texas Southern Tigers at Florida Atlantic Owls,-34.172,-47.0,,66,10
+2026,0,10/03/2026 Oregon State Beavers at Colorado State Rams,Oregon State Beavers at Colorado State Rams,-0.179,7.0,,26,56
+2026,0,10/03/2026 Purdue Boilermakers at Illinois Fighting Illini,Purdue Boilermakers at Illinois Fighting Illini,11.649,-10.0,,17,24
+2026,0,10/03/2026 Kentucky Wildcats at South Carolina Gamecocks,Kentucky Wildcats at South Carolina Gamecocks,4.732,-2.5,,34,35
+2026,0,10/03/2026 UTEP Miners at New Mexico Lobos,UTEP Miners at New Mexico Lobos,29.85,-23.5,,61,7
+2026,0,10/03/2026 Maryland Terrapins at Nebraska Cornhuskers,Maryland Terrapins at Nebraska Cornhuskers,12.604,-15.5,,48,23
+2026,0,10/03/2026 Marshall Thundering Herd at James Madison Dukes,Marshall Thundering Herd at James Madison Dukes,27.623,-15.0,,45,17
+2026,0,10/03/2026 Virginia Cavaliers at Florida State Seminoles,Virginia Cavaliers at Florida State Seminoles,12.18,0.0,,38,7
+2026,0,10/03/2026 California Golden Bears at UNLV Rebels,California Golden Bears at UNLV Rebels,-3.341,-1.5,,39,31
+2026,0,10/03/2026 Wyoming Cowboys at North Dakota State Bison,Wyoming Cowboys at North Dakota State Bison,20.218,-17.0,,28,0
+2026,0,10/03/2026 Florida Gators at Missouri Tigers,Florida Gators at Missouri Tigers,-8.561,5.5,,45,17
+2026,0,10/03/2026 Ohio State Buckeyes at Iowa Hawkeyes,Ohio State Buckeyes at Iowa Hawkeyes,27.981,14.5,,14,31
+2026,0,10/03/2026 Auburn Tigers at Tennessee Volunteers,Auburn Tigers at Tennessee Volunteers,9.443,-5.5,,24,14
+2026,0,10/03/2026 Old Dominion Monarchs at Georgia State Panthers,Old Dominion Monarchs at Georgia State Panthers,6.349,-1.0,,42,10
+2026,0,10/03/2026 Louisville Cardinals at NC State Wolfpack,Louisville Cardinals at NC State Wolfpack,-2.243,5.5,,31,28
+2026,0,10/03/2026 Eastern Michigan Eagles at Massachusetts Minutemen,Eastern Michigan Eagles at Massachusetts Minutemen,11.441,-6.0,,14,38
+2026,0,10/03/2026 Ohio Bobcats at Kent State Golden Flashes,Ohio Bobcats at Kent State Golden Flashes,-9.219,3.5,,10,13
+2026,0,10/03/2026 Bowling Green Falcons at Miami (OH) RedHawks,Bowling Green Falcons at Miami (OH) RedHawks,56.968,-10.0,,20,24
+2026,0,10/03/2026 Akron Zips at Central Michigan Chippewas,Akron Zips at Central Michigan Chippewas,5.538,-7.0,,41,17
+2026,0,10/03/2026 Toledo Rockets at Ball State Cardinals,Toledo Rockets at Ball State Cardinals,-21.835,21.0,,24,39
+2026,0,10/03/2026 Western Michigan Broncos at Buffalo Bulls,Western Michigan Broncos at Buffalo Bulls,-15.308,13.5,,17,20
+2026,0,10/03/2026 Vanderbilt Commodores at Georgia Bulldogs,Vanderbilt Commodores at Georgia Bulldogs,29.945,-25.5,,38,14
+2026,0,10/03/2026 Michigan State Spartans at Wisconsin Badgers,Michigan State Spartans at Wisconsin Badgers,-0.476,-8.5,,31,3
+2026,0,10/03/2026 UCF Knights at Houston Cougars,UCF Knights at Houston Cougars,6.84,-10.0,,27,17
+2026,0,10/03/2026 Alabama Crimson Tide at Mississippi State Bulldogs,Alabama Crimson Tide at Mississippi State Bulldogs,-8.0,5.5,,23,56
+2026,0,10/03/2026 West Virginia Mountaineers at Iowa State Cyclones,West Virginia Mountaineers at Iowa State Cyclones,11.654,-3.0,,45,42
+2026,0,10/03/2026 Michigan Wolverines at Minnesota Golden Gophers,Michigan Wolverines at Minnesota Golden Gophers,-2.909,6.5,,20,14
+2026,0,10/03/2026 Boston College Eagles at SMU Mustangs,Boston College Eagles at SMU Mustangs,18.476,-21.5,,25,16
+2026,0,10/03/2026 Navy Midshipmen at Air Force Falcons,Navy Midshipmen at Air Force Falcons,2.107,-2.5,,14,9
+2026,0,10/03/2026 Notre Dame Fighting Irish at North Carolina Tar Heels,Notre Dame Fighting Irish at North Carolina Tar Heels,-24.353,21.5,,26,37
+2026,0,10/03/2026 Syracuse Orange at Connecticut Huskies,Syracuse Orange at Connecticut Huskies,-6.989,6.5,,41,42
+2026,0,10/03/2026 Stanford Cardinal at Wake Forest Demon Deacons,Stanford Cardinal at Wake Forest Demon Deacons,15.13,-14.5,,57,3
+2026,0,10/03/2026 Memphis Tigers at Charlotte 49ers,Memphis Tigers at Charlotte 49ers,-17.661,19.0,,8,59
+2026,0,10/03/2026 Penn State Nittany Lions at Northwestern Wildcats,Penn State Nittany Lions at Northwestern Wildcats,-3.8,3.0,,34,13
+2026,0,10/02/2026 Pittsburgh Panthers at Virginia Tech Hokies,Pittsburgh Panthers at Virginia Tech Hokies,-1.956,-1.5,,33,35
+2026,0,10/02/2026 North Texas Mean Green at Tulsa Golden Hurricane,North Texas Mean Green at Tulsa Golden Hurricane,-0.615,3.0,,44,45
+2026,0,10/02/2026 Western Kentucky Hilltoppers at New Mexico State Aggies,Western Kentucky Hilltoppers at New Mexico State Aggies,24.525,-2.5,,34,13
+2026,0,09/27/2026 Minnesota Golden Gophers at Washington Huskies,Minnesota Golden Gophers at Washington Huskies,3.98,-12.0,,24,27
+2026,0,09/27/2026 Georgia Tech Yellow Jackets at Stanford Cardinal,Georgia Tech Yellow Jackets at Stanford Cardinal,-6.035,3.0,,34,27
+2026,0,09/27/2026 Air Force Falcons at Nevada Wolf Pack,Air Force Falcons at Nevada Wolf Pack,-7.563,5.5,,33,36
+2026,0,09/27/2026 Rice Owls at Fresno State Bulldogs,Rice Owls at Fresno State Bulldogs,18.587,-11.5,,38,24
+2026,0,09/27/2026 Massachusetts Minutemen at Sacramento State Hornets,Massachusetts Minutemen at Sacramento State Hornets,-3.687,6.0,,6,35
+2026,0,09/27/2026 Oregon State Beavers at UTEP Miners,Oregon State Beavers at UTEP Miners,-12.194,10.5,,7,33
+2026,0,09/27/2026 Missouri State Bears at SMU Mustangs,Missouri State Bears at SMU Mustangs,2.74,-30.5,,34,24
+2026,0,09/27/2026 Florida Atlantic Owls at ULM Warhawks,Florida Atlantic Owls at ULM Warhawks,-12.631,12.0,,17,45
+2026,0,09/27/2026 Tulsa Golden Hurricane at Arkansas Razorbacks,Tulsa Golden Hurricane at Arkansas Razorbacks,0.534,-6.5,,34,6
+2026,0,09/26/2026 Missouri Tigers at Mississippi State Bulldogs,Missouri Tigers at Mississippi State Bulldogs,7.445,-3.5,,31,24
+2026,0,09/26/2026 Texas A&M Aggies at LSU Tigers,Texas A&M Aggies at LSU Tigers,-2.162,-8.0,,35,6
+2026,0,09/26/2026 Arizona Wildcats at Washington State Cougars,Arizona Wildcats at Washington State Cougars,5.855,12.0,,24,34
+2026,0,09/26/2026 Houston Christian Huskies at North Texas Mean Green,Houston Christian Huskies at North Texas Mean Green,-15.683,-38.0,,63,14
+2026,0,09/26/2026 Troy Trojans at Utah State Aggies,Troy Trojans at Utah State Aggies,28.624,-3.0,,21,10
+2026,0,09/26/2026 Oregon Ducks at USC Trojans,Oregon Ducks at USC Trojans,-6.927,3.5,,27,41
+2026,0,09/26/2026 Appalachian State Mountaineers at NC State Wolfpack,Appalachian State Mountaineers at NC State Wolfpack,15.073,-13.0,,41,31
+2026,0,09/26/2026 Alabama A&M Bulldogs at Florida A&M Rattlers,Alabama A&M Bulldogs at Florida A&M Rattlers,-1.876,3.5,,21,40
+2026,0,09/26/2026 Kennesaw State Owls at Arkansas State Red Wolves,Kennesaw State Owls at Arkansas State Red Wolves,4.139,-6.5,,17,14
+2026,0,09/26/2026 Southern Miss Golden Eagles at Tulane Green Wave,Southern Miss Golden Eagles at Tulane Green Wave,17.397,-17.5,,24,21
+2026,0,09/26/2026 South Carolina Gamecocks at Alabama Crimson Tide,South Carolina Gamecocks at Alabama Crimson Tide,14.189,-11.5,,49,18
+2026,0,09/26/2026 Oklahoma State Cowboys at West Virginia Mountaineers,Oklahoma State Cowboys at West Virginia Mountaineers,-9.484,-2.0,,24,41
+2026,0,09/26/2026 Kansas State Wildcats at Cincinnati Bearcats,Kansas State Wildcats at Cincinnati Bearcats,2.564,6.5,,31,26
+2026,0,09/26/2026 Central Michigan Chippewas at Miami Hurricanes,Central Michigan Chippewas at Miami Hurricanes,45.61,-41.0,,52,3
+2026,0,09/26/2026 Louisiana Ragin' Cajuns at Charlotte 49ers,Louisiana Ragin' Cajuns at Charlotte 49ers,-8.768,9.0,,7,34
+2026,0,09/26/2026 James Madison Dukes at Old Dominion Monarchs,James Madison Dukes at Old Dominion Monarchs,-13.733,7.0,,20,46
+2026,0,09/26/2026 Wisconsin Badgers at Penn State Nittany Lions,Wisconsin Badgers at Penn State Nittany Lions,13.892,-9.0,,20,24
+2026,0,09/26/2026 South Florida Bulls at Bowling Green Falcons,South Florida Bulls at Bowling Green Falcons,-26.545,18.5,,6,14
+2026,0,09/26/2026 Nebraska Cornhuskers at Michigan State Spartans,Nebraska Cornhuskers at Michigan State Spartans,9.336,6.0,,13,31
+2026,0,09/26/2026 Vanderbilt Commodores at Auburn Tigers,Vanderbilt Commodores at Auburn Tigers,11.007,-10.0,,21,15
+2026,0,09/26/2026 North Carolina Central Eagles at East Carolina Pirates,North Carolina Central Eagles at East Carolina Pirates,-7.242,-37.5,,42,9
+2026,0,09/26/2026 Houston Cougars at Georgia Southern Eagles,Houston Cougars at Georgia Southern Eagles,16.086,17.0,,28,42
+2026,0,09/26/2026 Ole Miss Rebels at Florida Gators,Ole Miss Rebels at Florida Gators,2.95,-4.0,,52,28
+2026,0,09/26/2026 Oklahoma Sooners at Georgia Bulldogs,Oklahoma Sooners at Georgia Bulldogs,11.124,-11.0,,41,13
+2026,0,09/26/2026 Iowa Hawkeyes at Michigan Wolverines,Iowa Hawkeyes at Michigan Wolverines,4.9,-4.5,,19,20
+2026,0,09/26/2026 New Mexico Lobos at New Mexico State Aggies,New Mexico Lobos at New Mexico State Aggies,2.8,11.0,,18,42
+2026,0,09/26/2026 Utah Utes at Iowa State Cyclones,Utah Utes at Iowa State Cyclones,-2.452,7.5,,17,31
+2026,0,09/26/2026 TCU Horned Frogs at UCF Knights,TCU Horned Frogs at UCF Knights,2.724,3.5,,21,13
+2026,0,09/26/2026 Boise State Broncos at Western Michigan Broncos,Boise State Broncos at Western Michigan Broncos,-6.494,9.0,,7,32
+2026,0,09/26/2026 Connecticut Huskies at Miami (OH) RedHawks,Connecticut Huskies at Miami (OH) RedHawks,34.307,-2.0,,24,21
+2026,0,09/26/2026 Hawaii Rainbow Warriors at Wyoming Cowboys,Hawaii Rainbow Warriors at Wyoming Cowboys,-3.412,2.5,,27,10
+2026,0,09/26/2026 Notre Dame Fighting Irish at Purdue Boilermakers,Notre Dame Fighting Irish at Purdue Boilermakers,-28.442,27.5,,10,49
+2026,0,09/26/2026 Northern Illinois Huskies at Georgia State Panthers,Northern Illinois Huskies at Georgia State Panthers,18.651,-8.5,,35,14
+2026,0,09/26/2026 UCLA Bruins at Maryland Terrapins,UCLA Bruins at Maryland Terrapins,1.361,3.0,,3,54
+2026,0,09/26/2026 South Alabama Jaguars at Kentucky Wildcats,South Alabama Jaguars at Kentucky Wildcats,21.631,-20.5,,45,21
+2026,0,09/26/2026 Sam Houston State Bearkats at Texas Tech Red Raiders,Sam Houston State Bearkats at Texas Tech Red Raiders,30.234,-34.5,,49,14
+2026,0,09/26/2026 Colorado State Rams at UTSA Roadrunners,Colorado State Rams at UTSA Roadrunners,9.26,-14.5,,59,45
+2026,0,09/26/2026 Colorado Buffaloes at Baylor Bears,Colorado Buffaloes at Baylor Bears,15.339,-8.0,,23,13
+2026,0,09/26/2026 Ball State Cardinals at Kent State Golden Flashes,Ball State Cardinals at Kent State Golden Flashes,2.082,-2.5,,26,13
+2026,0,09/26/2026 Illinois Fighting Illini at Ohio State Buckeyes,Illinois Fighting Illini at Ohio State Buckeyes,-15.399,-26.0,,42,19
+2026,0,09/26/2026 Virginia Tech Hokies at Boston College Eagles,Virginia Tech Hokies at Boston College Eagles,-23.496,14.5,,14,21
+2026,0,09/26/2026 San Diego State Aztecs at Toledo Rockets,San Diego State Aztecs at Toledo Rockets,0.624,-2.5,,41,16
+2026,0,09/26/2026 UNLV Rebels at Akron Zips,UNLV Rebels at Akron Zips,-4.267,13.5,,10,38
+2026,0,09/26/2026 Texas Longhorns at Tennessee Volunteers,Texas Longhorns at Tennessee Volunteers,-8.985,5.5,,17,20
+2026,0,09/26/2026 Wake Forest Demon Deacons at Louisville Cardinals,Wake Forest Demon Deacons at Louisville Cardinals,13.806,-11.5,,27,30
+2026,0,09/26/2026 Clemson Tigers at California Golden Bears,Clemson Tigers at California Golden Bears,-0.93,2.5,,10,24
+2026,0,09/26/2026 Northwestern Wildcats at Indiana Hoosiers,Northwestern Wildcats at Indiana Hoosiers,22.513,-20.5,,29,23
+2026,0,09/25/2026 Navy Midshipmen at UAB Blazers,Navy Midshipmen at UAB Blazers,-10.212,6.5,,24,20
+2026,0,09/25/2026 Army Black Knights at Temple Owls,Army Black Knights at Temple Owls,-5.748,4.0,,17,21
+2026,0,09/24/2026 Liberty Flames at Coastal Carolina Chanticleers,Liberty Flames at Coastal Carolina Chanticleers,0.662,2.5,,17,34
+2026,0,09/20/2026 Purdue Boilermakers at UCLA Bruins,Purdue Boilermakers at UCLA Bruins,18.912,-13.5,,52,38
+2026,0,09/20/2026 Fresno State Bulldogs at San Jose State Spartans,Fresno State Bulldogs at San Jose State Spartans,-10.609,4.5,,10,26
+2026,0,09/20/2026 North Dakota State Bison at Sacramento State Hornets,North Dakota State Bison at Sacramento State Hornets,-18.913,24.5,,10,31
+2026,0,09/20/2026 Northern Illinois Huskies at Arizona Wildcats,Northern Illinois Huskies at Arizona Wildcats,34.151,-34.5,,42,17
+2026,0,09/20/2026 James Madison Dukes at San Diego State Aztecs,James Madison Dukes at San Diego State Aztecs,-2.307,-2.5,,13,26
+2026,0,09/20/2026 Charlotte 49ers at Appalachian State Mountaineers,Charlotte 49ers at Appalachian State Mountaineers,21.655,-15.5,,26,21
+2026,0,09/20/2026 BYU Cougars at Colorado State Rams,BYU Cougars at Colorado State Rams,-13.746,17.5,,23,41
+2026,0,09/20/2026 Texas A&M Commerce Lions at Tulsa Golden Hurricane,Texas A&M Commerce Lions at Tulsa Golden Hurricane,-28.448,-41.0,,42,0
+2026,0,09/20/2026 UAB Blazers at Louisiana Ragin' Cajuns,UAB Blazers at Louisiana Ragin' Cajuns,14.517,-7.0,,21,14
+2026,0,09/20/2026 UTSA Roadrunners at Texas Longhorns,UTSA Roadrunners at Texas Longhorns,34.431,-30.0,,30,6
+2026,0,09/20/2026 Arkansas State Red Wolves at TCU Horned Frogs,Arkansas State Red Wolves at TCU Horned Frogs,22.149,-18.5,,31,7
+2026,0,09/19/2026 Kennesaw State Owls at Tennessee Volunteers,Kennesaw State Owls at Tennessee Volunteers,33.722,-35.5,,42,9
+2026,0,09/19/2026 LSU Tigers at Ole Miss Rebels,LSU Tigers at Ole Miss Rebels,-8.007,2.5,,32,24
+2026,0,09/19/2026 Michigan State Spartans at Notre Dame Fighting Irish,Michigan State Spartans at Notre Dame Fighting Irish,17.415,-28.5,,27,10
+2026,0,09/19/2026 West Virginia Mountaineers at Virginia Cavaliers,West Virginia Mountaineers at Virginia Cavaliers,15.505,-10.5,,27,38
+2026,0,09/19/2026 Colorado Buffaloes at Northwestern Wildcats,Colorado Buffaloes at Northwestern Wildcats,2.548,-3.5,,41,7
+2026,0,09/19/2026 New Mexico Lobos at Oklahoma Sooners,New Mexico Lobos at Oklahoma Sooners,18.882,-21.0,,14,6
+2026,0,09/19/2026 Virginia Tech Hokies at Maryland Terrapins,Virginia Tech Hokies at Maryland Terrapins,-1.009,2.5,,26,35
+2026,0,09/19/2026 Tennessee State Tigers at Florida A&M Rattlers,Tennessee State Tigers at Florida A&M Rattlers,4.731,-3.5,,26,29
+2026,0,09/19/2026 Delaware State Hornets at South Florida Bulls,Delaware State Hornets at South Florida Bulls,9.074,-36.5,,59,17
+2026,0,09/19/2026 Connecticut Huskies at Southern Miss Golden Eagles,Connecticut Huskies at Southern Miss Golden Eagles,-2.629,3.5,,20,48
+2026,0,09/19/2026 Florida Gators at Auburn Tigers,Florida Gators at Auburn Tigers,-4.525,2.5,,39,44
+2026,0,09/19/2026 Western Michigan Broncos at Rice Owls,Western Michigan Broncos at Rice Owls,-10.603,9.0,,21,28
+2026,0,09/19/2026 Ohio Bobcats at South Alabama Jaguars,Ohio Bobcats at South Alabama Jaguars,5.176,-7.0,,41,36
+2026,0,09/19/2026 Georgia Southern Eagles at Jacksonville State Gamecocks,Georgia Southern Eagles at Jacksonville State Gamecocks,-35.474,-3.5,,31,27
+2026,0,09/19/2026 Georgia State Panthers at UCF Knights,Georgia State Panthers at UCF Knights,20.95,-17.0,,44,30
+2026,0,09/19/2026 Troy Trojans at Missouri Tigers,Troy Trojans at Missouri Tigers,30.295,-25.0,,27,17
+2026,0,09/19/2026 Marshall Thundering Herd at Missouri State Bears,Marshall Thundering Herd at Missouri State Bears,32.593,4.5,,24,30
+2026,0,09/19/2026 FIU Panthers at Florida Atlantic Owls,FIU Panthers at Florida Atlantic Owls,6.567,-4.5,,16,10
+2026,0,09/19/2026 East Carolina Pirates at Old Dominion Monarchs,East Carolina Pirates at Old Dominion Monarchs,3.428,-2.5,,17,20
+2026,0,09/19/2026 Mississippi State Bulldogs at South Carolina Gamecocks,Mississippi State Bulldogs at South Carolina Gamecocks,2.43,-3.0,,34,41
+2026,0,09/19/2026 Florida State Seminoles at Alabama Crimson Tide,Florida State Seminoles at Alabama Crimson Tide,7.685,-18.0,,50,36
+2026,0,09/19/2026 Louisiana Tech Bulldogs at Baylor Bears,Louisiana Tech Bulldogs at Baylor Bears,8.738,-20.0,,36,19
+2026,0,09/19/2026 Western Kentucky Hilltoppers at Indiana Hoosiers,Western Kentucky Hilltoppers at Indiana Hoosiers,51.064,-45.0,,38,0
+2026,0,09/19/2026 Stanford Cardinal at Duke Blue Devils,Stanford Cardinal at Duke Blue Devils,13.104,-9.5,,35,7
+2026,0,09/19/2026 Ball State Cardinals at Liberty Flames,Ball State Cardinals at Liberty Flames,12.695,-14.5,,51,15
+2026,0,09/19/2026 Kentucky Wildcats at Texas A&M Aggies,Kentucky Wildcats at Texas A&M Aggies,30.384,-16.5,,21,31
+2026,0,09/19/2026 USC Trojans at Rutgers Scarlet Knights,USC Trojans at Rutgers Scarlet Knights,-25.243,21.0,,35,42
+2026,0,09/19/2026 Utah State Aggies at Utah Utes,Utah State Aggies at Utah Utes,2.8,-26.0,,33,0
+2026,0,09/19/2026 UTEP Miners at Michigan Wolverines,UTEP Miners at Michigan Wolverines,35.903,-34.5,,52,17
+2026,0,09/19/2026 Miami (OH) RedHawks at Cincinnati Bearcats,Miami (OH) RedHawks at Cincinnati Bearcats,-21.109,-14.5,,35,31
+2026,0,09/19/2026 SMU Mustangs at Louisville Cardinals,SMU Mustangs at Louisville Cardinals,2.797,-3.0,,41,31
+2026,0,09/19/2026 Temple Owls at Toledo Rockets,Temple Owls at Toledo Rockets,8.615,-5.0,,49,48
+2026,0,09/19/2026 Wyoming Cowboys at Central Michigan Chippewas,Wyoming Cowboys at Central Michigan Chippewas,1.71,2.0,,24,10
+2026,0,09/19/2026 NC State Wolfpack at Vanderbilt Commodores,NC State Wolfpack at Vanderbilt Commodores,-2.623,-3.0,,35,31
+2026,0,09/19/2026 Eastern Michigan Eagles at Wisconsin Badgers,Eastern Michigan Eagles at Wisconsin Badgers,23.692,-22.5,,54,10
+2026,0,09/19/2026 North Texas Mean Green at Texas State Bobcats,North Texas Mean Green at Texas State Bobcats,-2.57,-3.0,,49,35
+2026,0,09/19/2026 Bowling Green Falcons at Iowa State Cyclones,Bowling Green Falcons at Iowa State Cyclones,38.538,-22.5,,55,7
+2026,0,09/19/2026 Georgia Bulldogs at Arkansas Razorbacks,Georgia Bulldogs at Arkansas Razorbacks,-27.786,24.5,,17,45
+2026,0,09/19/2026 Tulane Green Wave at Kansas State Wildcats,Tulane Green Wave at Kansas State Wildcats,12.541,-20.5,,31,20
+2026,0,09/19/2026 Akron Zips at Minnesota Golden Gophers,Akron Zips at Minnesota Golden Gophers,22.059,-22.5,,41,7
+2026,0,09/19/2026 North Carolina Tar Heels at Clemson Tigers,North Carolina Tar Heels at Clemson Tigers,3.754,-3.0,,28,20
+2026,0,09/19/2026 Kent State Golden Flashes at Ohio State Buckeyes,Kent State Golden Flashes at Ohio State Buckeyes,14.337,-53.0,,59,3
+2026,0,09/19/2026 Buffalo Bulls at Penn State Nittany Lions,Buffalo Bulls at Penn State Nittany Lions,40.523,-40.0,,55,13
+2026,0,09/19/2026 Arizona State Sun Devils at Kansas Jayhawks,Arizona State Sun Devils at Kansas Jayhawks,-3.379,5.5,,17,24
+2026,0,09/19/2026 Houston Cougars at Texas Tech Red Raiders,Houston Cougars at Texas Tech Red Raiders,3.538,-8.0,,28,26
+2026,0,09/18/2026 Miami Hurricanes at Wake Forest Demon Deacons,Miami Hurricanes at Wake Forest Demon Deacons,-24.326,19.5,,20,33
+2026,0,09/17/2026 Syracuse Orange at Pittsburgh Panthers,Syracuse Orange at Pittsburgh Panthers,13.457,-10.5,,27,13
+2026,0,09/13/2026 New Mexico State Aggies at Hawaii Rainbow Warriors,New Mexico State Aggies at Hawaii Rainbow Warriors,-9.861,-7.5,,29,19
+2026,0,09/13/2026 Louisiana Ragin' Cajuns at USC Trojans,Louisiana Ragin' Cajuns at USC Trojans,30.45,-31.0,,49,30
+2026,0,09/13/2026 Sacramento State Hornets at Fresno State Bulldogs,Sacramento State Hornets at Fresno State Bulldogs,13.04,-17.5,,49,3
+2026,0,09/13/2026 Arkansas Razorbacks at Utah Utes,Arkansas Razorbacks at Utah Utes,17.207,-13.5,,43,10
+2026,0,09/13/2026 North Dakota State Bison at Air Force Falcons,North Dakota State Bison at Air Force Falcons,-4.296,1.5,,32,38
+2026,0,09/13/2026 Georgia Southern Eagles at Clemson Tigers,Georgia Southern Eagles at Clemson Tigers,-19.792,-19.5,,22,7
+2026,0,09/13/2026 Texas Southern Tigers at UTEP Miners,Texas Southern Tigers at UTEP Miners,-51.558,-27.0,,51,10
+2026,0,09/13/2026 Southern Miss Golden Eagles at Auburn Tigers,Southern Miss Golden Eagles at Auburn Tigers,25.851,-33.0,,43,8
+2026,0,09/12/2026 Ohio State Buckeyes at Texas Longhorns,Ohio State Buckeyes at Texas Longhorns,48.872,-2.5,,24,23
+2026,0,09/12/2026 Charlotte 49ers at Ole Miss Rebels,Charlotte 49ers at Ole Miss Rebels,48.584,-44.0,,41,9
+2026,0,09/12/2026 Texas Tech Red Raiders at Oregon State Beavers,Texas Tech Red Raiders at Oregon State Beavers,-20.743,25.5,,24,35
+2026,0,09/12/2026 Iowa State Cyclones at Iowa Hawkeyes,Iowa State Cyclones at Iowa Hawkeyes,2.8,-14.0,,16,13
+2026,0,09/12/2026 Navy Midshipmen at Florida Atlantic Owls,Navy Midshipmen at Florida Atlantic Owls,-8.197,5.0,,38,30
+2026,0,09/12/2026 Louisiana Tech Bulldogs at LSU Tigers,Louisiana Tech Bulldogs at LSU Tigers,28.837,-34.5,,45,14
+2026,0,09/12/2026 San Diego State Aztecs at UCLA Bruins,San Diego State Aztecs at UCLA Bruins,11.48,-13.5,,28,10
+2026,0,09/12/2026 Tennessee Volunteers at Georgia Tech Yellow Jackets,Tennessee Volunteers at Georgia Tech Yellow Jackets,-11.126,12.5,,24,45
+2026,0,09/12/2026 Northwestern State Demons at Texas A&M Commerce Lions,Northwestern State Demons at Texas A&M Commerce Lions,25.15,-21.0,,38,14
+2026,0,09/12/2026 Tennessee State Tigers at Alabama A&M Bulldogs,Tennessee State Tigers at Alabama A&M Bulldogs,8.919,3.0,,30,3
+2026,0,09/12/2026 Illinois State Redbirds at Northern Illinois Huskies,Illinois State Redbirds at Northern Illinois Huskies,-24.944,2.5,,24,28
+2026,0,09/12/2026 Tulsa Golden Hurricane at Sam Houston State Bearkats,Tulsa Golden Hurricane at Sam Houston State Bearkats,-14.445,13.0,,17,23
+2026,0,09/12/2026 Bowling Green Falcons at Nebraska Cornhuskers,Bowling Green Falcons at Nebraska Cornhuskers,34.014,-31.0,,56,7
+2026,0,09/12/2026 South Alabama Jaguars at Tulane Green Wave,South Alabama Jaguars at Tulane Green Wave,9.225,-10.0,,28,24
+2026,0,09/12/2026 Georgia State Panthers at Kennesaw State Owls,Georgia State Panthers at Kennesaw State Owls,6.705,-7.0,,17,31
+2026,0,09/12/2026 Jacksonville State Gamecocks at Ohio Bobcats,Jacksonville State Gamecocks at Ohio Bobcats,-1.38,1.0,,29,27
+2026,0,09/12/2026 Memphis Tigers at Boise State Broncos,Memphis Tigers at Boise State Broncos,13.859,-8.0,,38,20
+2026,0,09/12/2026 Buffalo Bulls at FIU Panthers,Buffalo Bulls at FIU Panthers,7.494,-8.0,,33,20
+2026,0,09/12/2026 UCF Knights at Pittsburgh Panthers,UCF Knights at Pittsburgh Panthers,7.033,-7.0,,12,7
+2026,0,09/12/2026 Alabama State Hornets at Troy Trojans,Alabama State Hornets at Troy Trojans,-32.289,-23.5,,34,17
+2026,0,09/12/2026 Arizona Wildcats at BYU Cougars,Arizona Wildcats at BYU Cougars,14.019,-6.5,,28,17
+2026,0,09/12/2026 UNLV Rebels at North Texas Mean Green,UNLV Rebels at North Texas Mean Green,-4.133,3.0,,44,6
+2026,0,09/12/2026 Utah State Aggies at Washington Huskies,Utah State Aggies at Washington Huskies,3.067,-28.0,,16,14
+2026,0,09/12/2026 Rice Owls at Notre Dame Fighting Irish,Rice Owls at Notre Dame Fighting Irish,45.295,-44.5,,52,0
+2026,0,09/12/2026 UTSA Roadrunners at Texas State Bobcats,UTSA Roadrunners at Texas State Bobcats,-1.209,-1.0,,26,30
+2026,0,09/12/2026 Duke Blue Devils at Illinois Fighting Illini,Duke Blue Devils at Illinois Fighting Illini,5.697,-6.0,,27,31
+2026,0,09/12/2026 ULM Warhawks at UAB Blazers,ULM Warhawks at UAB Blazers,11.66,-9.0,,26,20
+2026,0,09/12/2026 Mississippi State Bulldogs at Minnesota Golden Gophers,Mississippi State Bulldogs at Minnesota Golden Gophers,2.617,1.0,,13,38
+2026,0,09/12/2026 Eastern Michigan Eagles at Michigan State Spartans,Eastern Michigan Eagles at Michigan State Spartans,29.044,-17.5,,35,7
+2026,0,09/12/2026 California Golden Bears at Syracuse Orange,California Golden Bears at Syracuse Orange,9.374,-4.0,,18,21
+2026,0,09/12/2026 Alabama Crimson Tide at Kentucky Wildcats,Alabama Crimson Tide at Kentucky Wildcats,-13.532,9.0,,17,45
+2026,0,09/12/2026 Maryland Terrapins at Connecticut Huskies,Maryland Terrapins at Connecticut Huskies,-11.301,12.0,,14,38
+2026,0,09/12/2026 Oregon Ducks at Oklahoma State Cowboys,Oregon Ducks at Oklahoma State Cowboys,0.116,24.0,,39,31
+2026,0,09/12/2026 Western Kentucky Hilltoppers at Georgia Bulldogs,Western Kentucky Hilltoppers at Georgia Bulldogs,48.91,-40.0,,70,20
+2026,0,09/12/2026 Oklahoma Sooners at Michigan Wolverines,Oklahoma Sooners at Michigan Wolverines,-7.431,5.0,,17,10
+2026,0,09/12/2026 Arizona State Sun Devils at Texas A&M Aggies,Arizona State Sun Devils at Texas A&M Aggies,21.73,-15.0,,48,20
+2026,0,09/12/2026 North Carolina A&T Aggies at North Carolina Central Eagles,North Carolina A&T Aggies at North Carolina Central Eagles,2.8,-22.0,,30,22
+2026,0,09/12/2026 Washington State Cougars at Kansas State Wildcats,Washington State Cougars at Kansas State Wildcats,-5.525,-17.5,,34,7
+2026,0,09/12/2026 South Florida Bulls at Army Black Knights,South Florida Bulls at Army Black Knights,10.661,-3.5,,24,28
+2026,0,09/12/2026 Appalachian State Mountaineers at East Carolina Pirates,Appalachian State Mountaineers at East Carolina Pirates,-0.044,-6.5,,24,27
+2026,0,09/12/2026 Penn State Nittany Lions at Temple Owls,Penn State Nittany Lions at Temple Owls,-27.211,24.0,,9,27
+2026,0,09/12/2026 Old Dominion Monarchs at Virginia Tech Hokies,Old Dominion Monarchs at Virginia Tech Hokies,24.038,-18.0,,44,21
+2026,0,09/12/2026 Wake Forest Demon Deacons at Purdue Boilermakers,Wake Forest Demon Deacons at Purdue Boilermakers,-2.297,2.5,,36,38
+2026,0,09/12/2026 Missouri Tigers at Kansas Jayhawks,Missouri Tigers at Kansas Jayhawks,-3.669,4.5,,21,38
+2026,0,09/11/2026 Rutgers Scarlet Knights at Boston College Eagles,Rutgers Scarlet Knights at Boston College Eagles,4.567,-3.0,,28,21
+2026,0,09/11/2026 Florida A&M Rattlers at Miami Hurricanes,Florida A&M Rattlers at Miami Hurricanes,10.327,-59.5,,77,7
+2026,0,09/08/2026 SMU Mustangs at Florida State Seminoles,SMU Mustangs at Florida State Seminoles,5.53,3.0,,24,27
+2026,0,09/06/2026 Wisconsin Badgers at Notre Dame Fighting Irish,Wisconsin Badgers at Notre Dame Fighting Irish,24.127,-21.5,,41,13
+2026,0,09/06/2026 Louisville Cardinals at Ole Miss Rebels,Louisville Cardinals at Ole Miss Rebels,11.922,-6.5,,41,38
+2026,0,09/06/2026 Washington State Cougars at Washington Huskies,Washington State Cougars at Washington Huskies,2.8,-24.0,,24,10
+2026,0,09/06/2026 South Carolina State Bulldogs at Florida A&M Rattlers,South Carolina State Bulldogs at Florida A&M Rattlers,6.519,19.5,,13,31
+2026,0,09/06/2026 Western Kentucky Hilltoppers at Nevada Wolf Pack,Western Kentucky Hilltoppers at Nevada Wolf Pack,-5.883,-1.0,,49,14
+2026,0,09/06/2026 UCLA Bruins at California Golden Bears,UCLA Bruins at California Golden Bears,0.111,3.0,,24,45
+2026,0,09/06/2026 Central Michigan Chippewas at New Mexico Lobos,Central Michigan Chippewas at New Mexico Lobos,13.701,-11.5,,38,7
+2026,0,09/06/2026 UNLV Rebels at Hawaii Rainbow Warriors,UNLV Rebels at Hawaii Rainbow Warriors,-1.979,2.5,,6,21
+2026,0,09/06/2026 Clemson Tigers at LSU Tigers,Clemson Tigers at LSU Tigers,12.549,-9.5,,51,10
+2026,0,09/06/2026 Utah Tech Trailblazers at BYU Cougars,Utah Tech Trailblazers at BYU Cougars,5.189,-51.0,,63,7
+2026,0,09/05/2026 Florida Atlantic Owls at Florida Gators,Florida Atlantic Owls at Florida Gators,26.99,-25.0,,66,21
+2026,0,09/05/2026 Northwestern State Demons at Louisiana Tech Bulldogs,Northwestern State Demons at Louisiana Tech Bulldogs,-11.433,-45.0,,80,6
+2026,0,09/05/2026 ULM Warhawks at Mississippi State Bulldogs,ULM Warhawks at Mississippi State Bulldogs,30.487,-28.0,,62,13
+2026,0,09/05/2026 Western Michigan Broncos at Michigan Wolverines,Western Michigan Broncos at Michigan Wolverines,31.341,-27.5,,13,12
+2026,0,09/05/2026 Houston Christian Huskies at Rice Owls,Houston Christian Huskies at Rice Owls,-23.111,-22.5,,31,3
+2026,0,09/05/2026 Missouri State Bears at Texas A&M Aggies,Missouri State Bears at Texas A&M Aggies,16.21,-38.5,,50,0
+2026,0,09/05/2026 Arkansas State Red Wolves at Memphis Tigers,Arkansas State Red Wolves at Memphis Tigers,14.907,-10.0,,42,24
+2026,0,09/05/2026 Sam Houston State Bearkats at Troy Trojans,Sam Houston State Bearkats at Troy Trojans,19.419,-16.5,,24,21
+2026,0,09/05/2026 FIU Panthers at South Florida Bulls,FIU Panthers at South Florida Bulls,14.925,-14.5,,19,9
+2026,0,09/05/2026 Wyoming Cowboys at Colorado State Rams,Wyoming Cowboys at Colorado State Rams,14.028,-2.5,,35,13
+2026,0,09/05/2026 Tulane Green Wave at Duke Blue Devils,Tulane Green Wave at Duke Blue Devils,8.302,-9.5,,17,3
+2026,0,09/05/2026 Northern Illinois Huskies at Iowa Hawkeyes,Northern Illinois Huskies at Iowa Hawkeyes,36.656,-31.0,,40,0
+2026,0,09/05/2026 Oklahoma State Cowboys at Tulsa Golden Hurricane,Oklahoma State Cowboys at Tulsa Golden Hurricane,-29.468,13.5,,24,10
+2026,0,09/05/2026 Baylor Bears at Auburn Tigers,Baylor Bears at Auburn Tigers,12.052,-6.5,,17,16
+2026,0,09/05/2026 Boise State Broncos at Oregon Ducks,Boise State Broncos at Oregon Ducks,24.62,-25.0,,34,27
+2026,0,09/05/2026 Texas State Bobcats at Texas Longhorns,Texas State Bobcats at Texas Longhorns,30.374,-29.5,,59,7
+2026,0,09/05/2026 Marshall Thundering Herd at Penn State Nittany Lions,Marshall Thundering Herd at Penn State Nittany Lions,27.578,-23.0,,45,0
+2026,0,09/05/2026 Boston College Eagles at Cincinnati Bearcats,Boston College Eagles at Cincinnati Bearcats,8.793,-7.0,,34,15
+2026,0,09/05/2026 Tennessee State Tigers at Georgia Bulldogs,Tennessee State Tigers at Georgia Bulldogs,13.583,-49.0,,63,3
+2026,0,09/05/2026 Kent State Golden Flashes at South Carolina Gamecocks,Kent State Golden Flashes at South Carolina Gamecocks,38.035,-35.0,,57,0
+2026,0,09/05/2026 Ball State Cardinals at Ohio State Buckeyes,Ball State Cardinals at Ohio State Buckeyes,13.755,-50.0,,56,3
+2026,0,09/05/2026 Miami (OH) RedHawks at Pittsburgh Panthers,Miami (OH) RedHawks at Pittsburgh Panthers,-12.647,-16.5,,59,14
+2026,0,09/05/2026 Liberty Flames at James Madison Dukes,Liberty Flames at James Madison Dukes,10.106,-6.0,,20,13
+2026,0,09/05/2026 Ohio Bobcats at Nebraska Cornhuskers,Ohio Bobcats at Nebraska Cornhuskers,23.351,-24.0,,49,21
+2026,0,09/05/2026 East Carolina Pirates at Alabama Crimson Tide,East Carolina Pirates at Alabama Crimson Tide,29.313,-28.0,,48,10
+2026,0,09/05/2026 Oregon State Beavers at Houston Cougars,Oregon State Beavers at Houston Cougars,21.551,-21.0,,33,20
+2026,0,09/05/2026 North Texas Mean Green at Indiana Hoosiers,North Texas Mean Green at Indiana Hoosiers,39.892,-40.0,,52,16
+2026,0,09/05/2026 Coastal Carolina Chanticleers at West Virginia Mountaineers,Coastal Carolina Chanticleers at West Virginia Mountaineers,21.395,-21.0,,31,24
+2026,0,09/05/2026 Miami Hurricanes at Stanford Cardinal,Miami Hurricanes at Stanford Cardinal,-24.797,24.5,,6,45
+2026,0,09/05/2026 Fresno State Bulldogs at USC Trojans,Fresno State Bulldogs at USC Trojans,16.412,-22.5,,39,0
+2026,0,09/05/2026 Toledo Rockets at Michigan State Spartans,Toledo Rockets at Michigan State Spartans,31.178,-9.5,,30,20
+2026,0,09/05/2026 UTEP Miners at Oklahoma Sooners,UTEP Miners at Oklahoma Sooners,45.815,-41.0,,51,0
+2026,0,09/04/2026 Indiana State SycamoresÂ  at Purdue Boilermakers,Indiana State SycamoresÂ  at Purdue Boilermakers,-28.121,-35.0,,44,19
+2026,0,09/04/2026 North Carolina A&T Aggies at Georgia State Panthers,North Carolina A&T Aggies at Georgia State Panthers,-20.646,-28.5,,59,10
+2026,0,09/04/2026 San Jose State Spartans at Eastern Michigan Eagles,San Jose State Spartans at Eastern Michigan Eagles,0.194,-1.0,,21,27
+2026,0,09/04/2026 UAB Blazers at Illinois Fighting Illini,UAB Blazers at Illinois Fighting Illini,29.947,-25.0,,42,23
+2026,0,09/04/2026 Colorado Buffaloes at Georgia Tech Yellow Jackets,Colorado Buffaloes at Georgia Tech Yellow Jackets,9.341,-6.5,,13,14
+2026,0,09/03/2026 Akron Zips at Wake Forest Demon Deacons,Akron Zips at Wake Forest Demon Deacons,23.393,-28.0,,38,16
+2026,0,09/03/2026 Massachusetts Minutemen at Rutgers Scarlet Knights,Massachusetts Minutemen at Rutgers Scarlet Knights,30.875,-29.0,,21,37
+2026,0,08/30/2026 Memphis Tigers at UNLV Rebels,Memphis Tigers at UNLV Rebels,3.981,-4.5,,21,27
+2026,0,08/29/2026 New Mexico State Aggies at Florida State Seminoles,New Mexico State Aggies at Florida State Seminoles,21.453,-31.0,,34,17
+2026,0,08/29/2026 North Carolina Central Eagles at Texas Southern Tigers,North Carolina Central Eagles at Texas Southern Tigers,29.357,10.5,,42,30
+2026,0,08/29/2026 Hawaii Rainbow Warriors at Stanford Cardinal,Hawaii Rainbow Warriors at Stanford Cardinal,6.816,-4.5,,37,27
+2026,0,08/29/2026 Sacramento State Hornets at Eastern Michigan Eagles,Sacramento State Hornets at Eastern Michigan Eagles,8.984,-9.5,,28,17
+2026,0,08/29/2026 Jacksonville State Gamecocks at North Dakota State Bison,Jacksonville State Gamecocks at North Dakota State Bison,11.382,-7.0,,33,7
+2026,0,08/29/2026 NC State Wolfpack at Virginia Cavaliers,NC State Wolfpack at Virginia Cavaliers,5.419,-4.0,,34,8
+2026,0,08/29/2026 San Jose State Spartans at USC Trojans,San Jose State Spartans at USC Trojans,39.484,-37.0,,42,26
+2026,0,08/29/2026 North Carolina Tar Heels at TCU Horned Frogs,North Carolina Tar Heels at TCU Horned Frogs,10.421,-7.5,,10,15
+2025,0,01/20/2026 Miami Hurricanes at Indiana Hoosiers,Miami Hurricanes at Indiana Hoosiers,13.81,-7.5,,27,21
+2025,0,01/10/2026 Oregon Ducks at Indiana Hoosiers,Oregon Ducks at Indiana Hoosiers,7.503,-3.0,,56,22
+2025,0,01/09/2026 Miami Hurricanes at Ole Miss Rebels,Miami Hurricanes at Ole Miss Rebels,-0.845,3.0,,27,31
+2025,0,01/03/2026 Wake Forest Demon Deacons at Mississippi State Bulldogs,Wake Forest Demon Deacons at Mississippi State Bulldogs,7.361,-3.0,,29,43
+2025,0,01/03/2026 Arizona Wildcats at SMU Mustangs,Arizona Wildcats at SMU Mustangs,2.878,-2.5,,24,19
+2025,0,01/02/2026 Navy Midshipmen at Cincinnati Bearcats,Navy Midshipmen at Cincinnati Bearcats,11.209,7.5,,13,35
+2025,0,01/02/2026 Rice Owls at Texas State Bobcats,Rice Owls at Texas State Bobcats,17.008,-19.0,,41,10
+2025,0,01/02/2026 Ole Miss Rebels at Georgia Bulldogs,Ole Miss Rebels at Georgia Bulldogs,5.728,-6.0,,34,39
+2025,0,01/01/2026 Alabama Crimson Tide at Indiana Hoosiers,Alabama Crimson Tide at Indiana Hoosiers,11.621,-7.5,,38,3
+2025,0,01/01/2026 Oregon Ducks at Texas Tech Red Raiders,Oregon Ducks at Texas Tech Red Raiders,3.741,-1.0,,0,23
+2025,0,01/01/2026 Miami Hurricanes at Ohio State Buckeyes,Miami Hurricanes at Ohio State Buckeyes,-24.971,-7.5,,14,24
+2025,0,12/31/2025 Nebraska Cornhuskers at Utah Utes,Nebraska Cornhuskers at Utah Utes,16.27,-13.5,,44,22
+2025,0,12/31/2025 Michigan Wolverines at Texas Longhorns,Michigan Wolverines at Texas Longhorns,4.438,-3.5,,41,27
+2025,0,12/31/2025 Arizona State Sun Devils at Duke Blue Devils,Arizona State Sun Devils at Duke Blue Devils,0.845,-3.5,,42,39
+2025,0,12/31/2025 Iowa Hawkeyes at Vanderbilt Commodores,Iowa Hawkeyes at Vanderbilt Commodores,3.123,-3.0,,27,34
+2025,0,12/31/2025 USC Trojans at TCU Horned Frogs,USC Trojans at TCU Horned Frogs,-8.369,4.5,,30,27
+2025,0,12/30/2025 Tennessee Volunteers at Illinois Fighting Illini,Tennessee Volunteers at Illinois Fighting Illini,-0.021,2.5,,30,28
+2025,0,12/30/2025 Coastal Carolina Chanticleers at Louisiana Tech Bulldogs,Coastal Carolina Chanticleers at Louisiana Tech Bulldogs,12.06,-10.0,,23,14
+2025,0,12/29/2025 Georgia Southern Eagles at Appalachian State Mountaineers,Georgia Southern Eagles at Appalachian State Mountaineers,-35.549,10.0,,10,29
+2025,0,12/28/2025 LSU Tigers at Houston Cougars,LSU Tigers at Houston Cougars,-5.482,-1.0,,38,35
+2025,0,12/28/2025 Virginia Cavaliers at Missouri Tigers,Virginia Cavaliers at Missouri Tigers,9.751,-4.0,,7,13
+2025,0,12/27/2025 North Texas Mean Green at San Diego State Aztecs,North Texas Mean Green at San Diego State Aztecs,-5.581,7.5,,47,49
+2025,0,12/27/2025 Miami (OH) RedHawks at Fresno State Bulldogs,Miami (OH) RedHawks at Fresno State Bulldogs,-24.889,-5.5,,18,3
+2025,0,12/27/2025 Georgia Tech Yellow Jackets at BYU Cougars,Georgia Tech Yellow Jackets at BYU Cougars,10.954,-3.5,,25,21
+2025,0,12/27/2025 Connecticut Huskies at Army Black Knights,Connecticut Huskies at Army Black Knights,0.356,-8.0,,41,16
+2025,0,12/27/2025 Penn State Nittany Lions at Clemson Tigers,Penn State Nittany Lions at Clemson Tigers,-2.972,-2.5,,10,22
+2025,0,12/27/2025 Pittsburgh Panthers at East Carolina Pirates,Pittsburgh Panthers at East Carolina Pirates,-5.219,13.0,,23,17
+2025,0,12/27/2025 FIU Panthers at UTSA Roadrunners,FIU Panthers at UTSA Roadrunners,13.096,-7.0,,57,20
+2025,0,12/26/2025 New Mexico Lobos at Minnesota Golden Gophers,New Mexico Lobos at Minnesota Golden Gophers,11.829,-1.5,,20,17
+2025,0,12/26/2025 Central Michigan Chippewas at Northwestern Wildcats,Central Michigan Chippewas at Northwestern Wildcats,18.423,-13.5,,34,7
+2025,0,12/25/2025 California Golden Bears at Hawaii Rainbow Warriors,California Golden Bears at Hawaii Rainbow Warriors,-0.034,-1.5,,35,31
+2025,0,12/24/2025 UNLV Rebels at Ohio Bobcats,UNLV Rebels at Ohio Bobcats,-0.487,6.5,,17,10
+2025,0,12/23/2025 Western Kentucky Hilltoppers at Southern Miss Golden Eagles,Western Kentucky Hilltoppers at Southern Miss Golden Eagles,-0.358,-2.5,,16,27
+2025,0,12/23/2025 Toledo Rockets at Louisville Cardinals,Toledo Rockets at Louisville Cardinals,9.742,-12.0,,27,22
+2025,0,12/22/2025 Washington State Cougars at Utah State Aggies,Washington State Cougars at Utah State Aggies,8.758,-1.0,,21,34
+2025,0,12/21/2025 James Madison Dukes at Oregon Ducks,James Madison Dukes at Oregon Ducks,21.213,-20.5,,51,34
+2025,0,12/20/2025 Tulane Green Wave at Ole Miss Rebels,Tulane Green Wave at Ole Miss Rebels,19.704,-17.0,,41,10
+2025,0,12/20/2025 Miami Hurricanes at Texas A&M Aggies,Miami Hurricanes at Texas A&M Aggies,-1.628,-3.0,,3,10
+2025,0,12/20/2025 Alabama Crimson Tide at Oklahoma Sooners,Alabama Crimson Tide at Oklahoma Sooners,-1.29,-2.5,,24,34
+2025,0,12/19/2025 Memphis Tigers at NC State Wolfpack,Memphis Tigers at NC State Wolfpack,5.649,-3.0,,31,7
+2025,0,12/19/2025 Kennesaw State Owls at Western Michigan Broncos,Kennesaw State Owls at Western Michigan Broncos,4.593,-3.5,,41,6
+2025,0,12/19/2025 Missouri State Bears at Arkansas State Red Wolves,Missouri State Bears at Arkansas State Red Wolves,-25.092,-1.5,,34,28
+2025,0,12/17/2025 Old Dominion Monarchs at South Florida Bulls,Old Dominion Monarchs at South Florida Bulls,12.239,-4.0,,10,24
+2025,0,12/17/2025 Troy Trojans at Jacksonville State Gamecocks,Troy Trojans at Jacksonville State Gamecocks,0.105,-3.0,,17,13
+2025,0,12/14/2025 Boise State Broncos at Washington Huskies,Boise State Broncos at Washington Huskies,14.106,-10.0,,38,10
+2025,0,12/13/2025 Army Black Knights at Navy Midshipmen,Army Black Knights at Navy Midshipmen,7.938,-6.0,,17,16
+2025,0,12/07/2025 Indiana Hoosiers at Ohio State Buckeyes,Indiana Hoosiers at Ohio State Buckeyes,-34.574,-3.5,,10,13
+2025,0,12/07/2025 Duke Blue Devils at Virginia Cavaliers,Duke Blue Devils at Virginia Cavaliers,5.74,-3.5,,20,27
+2025,0,12/06/2025 Georgia Bulldogs at Alabama Crimson Tide,Georgia Bulldogs at Alabama Crimson Tide,5.409,1.5,,7,28
+2025,0,12/06/2025 Miami (OH) RedHawks at Western Michigan Broncos,Miami (OH) RedHawks at Western Michigan Broncos,-27.331,-2.5,,23,13
+2025,0,12/06/2025 BYU Cougars at Texas Tech Red Raiders,BYU Cougars at Texas Tech Red Raiders,12.365,-13.0,,34,7
+2025,0,12/06/2025 UNLV Rebels at Boise State Broncos,UNLV Rebels at Boise State Broncos,7.77,-6.0,,38,21
+2025,0,12/06/2025 North Texas Mean Green at Tulane Green Wave,North Texas Mean Green at Tulane Green Wave,-3.742,1.0,,34,21
+2025,0,12/06/2025 Troy Trojans at James Madison Dukes,Troy Trojans at James Madison Dukes,21.779,-24.5,,31,14
+2025,0,12/06/2025 Kennesaw State Owls at Jacksonville State Gamecocks,Kennesaw State Owls at Jacksonville State Gamecocks,0.227,3.0,,15,19
+2025,0,11/30/2025 Wyoming Cowboys at Hawaii Rainbow Warriors,Wyoming Cowboys at Hawaii Rainbow Warriors,7.768,-8.0,,27,7
+2025,0,11/30/2025 Notre Dame Fighting Irish at Stanford Cardinal,Notre Dame Fighting Irish at Stanford Cardinal,-30.69,32.5,,20,49
+2025,0,11/30/2025 Fresno State Bulldogs at San Jose State Spartans,Fresno State Bulldogs at San Jose State Spartans,-5.984,3.5,,14,41
+2025,0,11/30/2025 UNLV Rebels at Nevada Wolf Pack,UNLV Rebels at Nevada Wolf Pack,-10.688,7.5,,17,42
+2025,0,11/30/2025 SMU Mustangs at California Golden Bears,SMU Mustangs at California Golden Bears,-15.357,13.5,,38,35
+2025,0,11/30/2025 Alabama Crimson Tide at Auburn Tigers,Alabama Crimson Tide at Auburn Tigers,-9.138,7.0,,20,27
+2025,0,11/30/2025 Northwestern Wildcats at Illinois Fighting Illini,Northwestern Wildcats at Illinois Fighting Illini,10.858,-7.0,,20,13
+2025,0,11/30/2025 North Carolina Tar Heels at NC State Wolfpack,North Carolina Tar Heels at NC State Wolfpack,12.767,-7.0,,42,19
+2025,0,11/30/2025 UCLA Bruins at USC Trojans,UCLA Bruins at USC Trojans,24.426,-21.5,,29,10
+2025,0,11/30/2025 Charlotte 49ers at Tulane Green Wave,Charlotte 49ers at Tulane Green Wave,29.605,-31.0,,27,0
+2025,0,11/30/2025 Virginia Tech Hokies at Virginia Cavaliers,Virginia Tech Hokies at Virginia Cavaliers,12.607,-8.0,,27,7
+2025,0,11/30/2025 Maryland Terrapins at Michigan State Spartans,Maryland Terrapins at Michigan State Spartans,20.5,-4.0,,38,28
+2025,0,11/30/2025 Rice Owls at South Florida Bulls,Rice Owls at South Florida Bulls,30.499,-28.0,,52,3
+2025,0,11/29/2025 Oregon State Beavers at Washington State Cougars,Oregon State Beavers at Washington State Cougars,31.01,-14.0,,32,8
+2025,0,11/29/2025 Florida State Seminoles at Florida Gators,Florida State Seminoles at Florida Gators,2.8,1.0,,40,21
+2025,0,11/29/2025 James Madison Dukes at Coastal Carolina Chanticleers,James Madison Dukes at Coastal Carolina Chanticleers,-19.917,24.0,,10,59
+2025,0,11/29/2025 Cincinnati Bearcats at TCU Horned Frogs,Cincinnati Bearcats at TCU Horned Frogs,1.317,-3.0,,45,23
+2025,0,11/29/2025 LSU Tigers at Oklahoma Sooners,LSU Tigers at Oklahoma Sooners,9.303,-11.5,,17,13
+2025,0,11/29/2025 Oregon Ducks at Washington Huskies,Oregon Ducks at Washington Huskies,-8.208,7.0,,14,26
+2025,0,11/29/2025 Missouri Tigers at Arkansas Razorbacks,Missouri Tigers at Arkansas Razorbacks,-2.899,4.5,,17,31
+2025,0,11/29/2025 Kennesaw State Owls at Liberty Flames,Kennesaw State Owls at Liberty Flames,1.525,3.0,,42,48
+2025,0,11/29/2025 Wisconsin Badgers at Minnesota Golden Gophers,Wisconsin Badgers at Minnesota Golden Gophers,1.112,2.5,,17,7
+2025,0,11/29/2025 Wake Forest Demon Deacons at Duke Blue Devils,Wake Forest Demon Deacons at Duke Blue Devils,5.127,-2.0,,49,32
+2025,0,11/29/2025 Vanderbilt Commodores at Tennessee Volunteers,Vanderbilt Commodores at Tennessee Volunteers,2.061,-1.0,,24,45
+2025,0,11/29/2025 Troy Trojans at Southern Miss Golden Eagles,Troy Trojans at Southern Miss Golden Eagles,2.906,-7.0,,18,28
+2025,0,11/29/2025 Army Black Knights at UTSA Roadrunners,Army Black Knights at UTSA Roadrunners,8.932,-8.5,,24,27
+2025,0,11/29/2025 Penn State Nittany Lions at Rutgers Scarlet Knights,Penn State Nittany Lions at Rutgers Scarlet Knights,-12.66,14.0,,36,40
+2025,0,11/29/2025 Boston College Eagles at Syracuse Orange,Boston College Eagles at Syracuse Orange,2.805,3.0,,12,34
+2025,0,11/29/2025 ULM Warhawks at Louisiana Ragin' Cajuns,ULM Warhawks at Louisiana Ragin' Cajuns,14.038,-11.0,,30,27
+2025,0,11/29/2025 South Alabama Jaguars at Texas State Bobcats,South Alabama Jaguars at Texas State Bobcats,8.64,-9.5,,49,26
+2025,0,11/29/2025 UAB Blazers at Tulsa Golden Hurricane,UAB Blazers at Tulsa Golden Hurricane,5.798,-8.5,,24,31
+2025,0,11/29/2025 Arkansas State Red Wolves at Appalachian State Mountaineers,Arkansas State Red Wolves at Appalachian State Mountaineers,0.951,1.0,,29,30
+2025,0,11/29/2025 Western Kentucky Hilltoppers at Jacksonville State Gamecocks,Western Kentucky Hilltoppers at Jacksonville State Gamecocks,-1.693,1.5,,37,34
+2025,0,11/29/2025 Louisiana Tech Bulldogs at Missouri State Bears,Louisiana Tech Bulldogs at Missouri State Bears,25.397,-2.5,,30,42
+2025,0,11/29/2025 Georgia State Panthers at Old Dominion Monarchs,Georgia State Panthers at Old Dominion Monarchs,27.303,-29.0,,27,10
+2025,0,11/29/2025 Georgia Southern Eagles at Marshall Thundering Herd,Georgia Southern Eagles at Marshall Thundering Herd,-28.784,-10.0,,19,24
+2025,0,11/29/2025 UCF Knights at BYU Cougars,UCF Knights at BYU Cougars,19.551,-17.5,,41,21
+2025,0,11/29/2025 FIU Panthers at Sam Houston State Bearkats,FIU Panthers at Sam Houston State Bearkats,-8.238,11.0,,16,56
+2025,0,11/29/2025 Ohio State Buckeyes at Michigan Wolverines,Ohio State Buckeyes at Michigan Wolverines,25.115,9.5,,9,27
+2025,0,11/29/2025 Iowa State Cyclones at Oklahoma State Cowboys,Iowa State Cyclones at Oklahoma State Cowboys,5.493,14.0,,13,20
+2025,0,11/29/2025 Houston Cougars at Baylor Bears,Houston Cougars at Baylor Bears,4.005,-2.0,,24,31
+2025,0,11/29/2025 Colorado Buffaloes at Kansas State Wildcats,Colorado Buffaloes at Kansas State Wildcats,11.262,-17.0,,24,14
+2025,0,11/29/2025 Ball State Cardinals at Miami (OH) RedHawks,Ball State Cardinals at Miami (OH) RedHawks,46.665,-17.0,,45,24
+2025,0,11/29/2025 Toledo Rockets at Central Michigan Chippewas,Toledo Rockets at Central Michigan Chippewas,-12.102,11.0,,3,21
+2025,0,11/29/2025 Miami Hurricanes at Pittsburgh Panthers,Miami Hurricanes at Pittsburgh Panthers,-6.247,6.5,,7,38
+2025,0,11/29/2025 Clemson Tigers at South Carolina Gamecocks,Clemson Tigers at South Carolina Gamecocks,3.255,-2.5,,14,28
+2025,0,11/29/2025 Kentucky Wildcats at Louisville Cardinals,Kentucky Wildcats at Louisville Cardinals,3.783,1.0,,41,0
+2025,0,11/29/2025 East Carolina Pirates at Florida Atlantic Owls,East Carolina Pirates at Florida Atlantic Owls,-11.04,7.0,,3,42
+2025,0,11/29/2025 Texas Tech Red Raiders at West Virginia Mountaineers,Texas Tech Red Raiders at West Virginia Mountaineers,-24.118,24.0,,0,49
+2025,0,11/29/2025 Arizona Wildcats at Arizona State Sun Devils,Arizona Wildcats at Arizona State Sun Devils,0.683,2.0,,7,23
+2025,0,11/29/2025 Indiana Hoosiers at Purdue Boilermakers,Indiana Hoosiers at Purdue Boilermakers,-30.583,28.5,,3,56
+2025,0,11/29/2025 Texas A&M Aggies at Texas Longhorns,Texas A&M Aggies at Texas Longhorns,2.8,2.5,,27,17
+2025,0,11/28/2025 Boise State Broncos at Utah State Aggies,Boise State Broncos at Utah State Aggies,22.06,1.5,,24,25
+2025,0,11/28/2025 Temple Owls at North Texas Mean Green,Temple Owls at North Texas Mean Green,20.292,-20.5,,52,25
+2025,0,11/28/2025 San Diego State Aztecs at New Mexico Lobos,San Diego State Aztecs at New Mexico Lobos,-2.049,1.5,,23,17
+2025,0,11/28/2025 Georgia Bulldogs at Georgia Tech Yellow Jackets,Georgia Bulldogs at Georgia Tech Yellow Jackets,-12.1,15.5,,9,16
+2025,0,11/28/2025 Air Force Falcons at Colorado State Rams,Air Force Falcons at Colorado State Rams,9.097,2.5,,21,42
+2025,0,11/28/2025 Utah Utes at Kansas Jayhawks,Utah Utes at Kansas Jayhawks,-15.43,10.5,,21,31
+2025,0,11/28/2025 Kent State Golden Flashes at Northern Illinois Huskies,Kent State Golden Flashes at Northern Illinois Huskies,8.691,-4.0,,31,35
+2025,0,11/28/2025 Iowa Hawkeyes at Nebraska Cornhuskers,Iowa Hawkeyes at Nebraska Cornhuskers,-3.449,5.5,,16,40
+2025,0,11/28/2025 Ole Miss Rebels at Mississippi State Bulldogs,Ole Miss Rebels at Mississippi State Bulldogs,-9.407,7.0,,19,38
+2025,0,11/28/2025 Ohio Bobcats at Buffalo Bulls,Ohio Bobcats at Buffalo Bulls,-6.197,7.0,,26,31
+2025,0,11/28/2025 Navy Midshipmen at Memphis Tigers,Navy Midshipmen at Memphis Tigers,7.721,-4.0,,17,28
+2025,0,11/26/2025 Western Michigan Broncos at Eastern Michigan Eagles,Western Michigan Broncos at Eastern Michigan Eagles,-6.894,10.0,,21,31
+2025,0,11/25/2025 Bowling Green Falcons at Massachusetts Minutemen,Bowling Green Falcons at Massachusetts Minutemen,-15.625,14.0,,14,45
+2025,0,11/23/2025 Utah State Aggies at Fresno State Bulldogs,Utah State Aggies at Fresno State Bulldogs,-26.246,-2.0,,17,28
+2025,0,11/23/2025 Washington Huskies at UCLA Bruins,Washington Huskies at UCLA Bruins,-12.044,11.0,,14,48
+2025,0,11/23/2025 San Jose State Spartans at San Diego State Aztecs,San Jose State Spartans at San Diego State Aztecs,16.148,-10.5,,25,3
+2025,0,11/23/2025 Arizona State Sun Devils at Colorado Buffaloes,Arizona State Sun Devils at Colorado Buffaloes,-6.896,7.0,,17,42
+2025,0,11/23/2025 BYU Cougars at Cincinnati Bearcats,BYU Cougars at Cincinnati Bearcats,-4.728,2.5,,14,26
+2025,0,11/23/2025 Western Kentucky Hilltoppers at LSU Tigers,Western Kentucky Hilltoppers at LSU Tigers,26.828,-24.5,,13,10
+2025,0,11/23/2025 Tennessee Volunteers at Florida Gators,Tennessee Volunteers at Florida Gators,-2.159,3.5,,11,31
+2025,0,11/23/2025 California Golden Bears at Stanford Cardinal,California Golden Bears at Stanford Cardinal,0.039,5.0,,31,10
+2025,0,11/23/2025 Illinois Fighting Illini at Wisconsin Badgers,Illinois Fighting Illini at Wisconsin Badgers,-8.361,9.5,,27,10
+2025,0,11/23/2025 North Texas Mean Green at Rice Owls,North Texas Mean Green at Rice Owls,-20.623,19.0,,24,56
+2025,0,11/23/2025 New Mexico Lobos at Air Force Falcons,New Mexico Lobos at Air Force Falcons,1.635,3.5,,3,20
+2025,0,11/23/2025 Colorado State Rams at Boise State Broncos,Colorado State Rams at Boise State Broncos,7.708,-17.5,,49,21
+2025,0,11/23/2025 Nebraska Cornhuskers at Penn State Nittany Lions,Nebraska Cornhuskers at Penn State Nittany Lions,7.347,-7.0,,37,10
+2025,0,11/23/2025 Pittsburgh Panthers at Georgia Tech Yellow Jackets,Pittsburgh Panthers at Georgia Tech Yellow Jackets,1.025,-2.5,,28,42
+2025,0,11/22/2025 ULM Warhawks at Texas State Bobcats,ULM Warhawks at Texas State Bobcats,19.745,-20.0,,31,14
+2025,0,11/22/2025 Coastal Carolina Chanticleers at South Carolina Gamecocks,Coastal Carolina Chanticleers at South Carolina Gamecocks,26.695,-24.0,,51,7
+2025,0,11/22/2025 Kansas State Wildcats at Utah Utes,Kansas State Wildcats at Utah Utes,21.127,-17.5,,51,47
+2025,0,11/22/2025 Georgia State Panthers at Troy Trojans,Georgia State Panthers at Troy Trojans,14.89,-9.0,,31,19
+2025,0,11/22/2025 TCU Horned Frogs at Houston Cougars,TCU Horned Frogs at Houston Cougars,0.187,1.5,,14,17
+2025,0,11/22/2025 Michigan Wolverines at Maryland Terrapins,Michigan Wolverines at Maryland Terrapins,-12.797,14.0,,20,45
+2025,0,11/22/2025 Oklahoma State Cowboys at UCF Knights,Oklahoma State Cowboys at UCF Knights,-14.104,-13.0,,17,14
+2025,0,11/22/2025 Tulane Green Wave at Temple Owls,Tulane Green Wave at Temple Owls,-6.739,7.5,,13,37
+2025,0,11/22/2025 Syracuse Orange at Notre Dame Fighting Irish,Syracuse Orange at Notre Dame Fighting Irish,32.72,-37.0,,70,7
+2025,0,11/22/2025 Jacksonville State Gamecocks at FIU Panthers,Jacksonville State Gamecocks at FIU Panthers,-0.503,-1.5,,27,21
+2025,0,11/22/2025 USC Trojans at Oregon Ducks,USC Trojans at Oregon Ducks,8.725,-10.5,,42,27
+2025,0,11/22/2025 Michigan State Spartans at Iowa Hawkeyes,Michigan State Spartans at Iowa Hawkeyes,4.698,-17.0,,20,17
+2025,0,11/22/2025 Kentucky Wildcats at Vanderbilt Commodores,Kentucky Wildcats at Vanderbilt Commodores,11.109,-7.0,,45,17
+2025,0,11/22/2025 East Carolina Pirates at UTSA Roadrunners,East Carolina Pirates at UTSA Roadrunners,-4.052,1.5,,58,24
+2025,0,11/22/2025 Southern Miss Golden Eagles at South Alabama Jaguars,Southern Miss Golden Eagles at South Alabama Jaguars,-0.057,2.5,,42,35
+2025,0,11/22/2025 Arkansas Razorbacks at Texas Longhorns,Arkansas Razorbacks at Texas Longhorns,11.776,-8.5,,52,37
+2025,0,11/22/2025 Duke Blue Devils at North Carolina Tar Heels,Duke Blue Devils at North Carolina Tar Heels,-7.639,7.0,,25,32
+2025,0,11/22/2025 Alabama A&M Bulldogs at Texas Southern Tigers,Alabama A&M Bulldogs at Texas Southern Tigers,-3.83,-4.0,,24,7
+2025,0,11/22/2025 New Mexico State Aggies at UTEP Miners,New Mexico State Aggies at UTEP Miners,-7.529,-4.0,,31,34
+2025,0,11/22/2025 Liberty Flames at Louisiana Tech Bulldogs,Liberty Flames at Louisiana Tech Bulldogs,5.451,1.0,,34,28
+2025,0,11/22/2025 South Florida Bulls at UAB Blazers,South Florida Bulls at UAB Blazers,-24.356,21.5,,18,48
+2025,0,11/22/2025 Connecticut Huskies at Florida Atlantic Owls,Connecticut Huskies at Florida Atlantic Owls,-7.984,6.5,,45,48
+2025,0,11/22/2025 Marshall Thundering Herd at Appalachian State Mountaineers,Marshall Thundering Herd at Appalachian State Mountaineers,-4.23,4.0,,26,24
+2025,0,11/22/2025 Nevada Wolf Pack at Wyoming Cowboys,Nevada Wolf Pack at Wyoming Cowboys,9.401,-6.0,,7,13
+2025,0,11/22/2025 Missouri State Bears at Kennesaw State Owls,Missouri State Bears at Kennesaw State Owls,-21.734,-6.0,,41,34
+2025,0,11/22/2025 Ball State Cardinals at Toledo Rockets,Ball State Cardinals at Toledo Rockets,29.285,-29.5,,38,9
+2025,0,11/22/2025 South Carolina State Bulldogs at Delaware State Hornets,South Carolina State Bulldogs at Delaware State Hornets,-23.162,5.5,,17,28
+2025,0,11/22/2025 Baylor Bears at Arizona Wildcats,Baylor Bears at Arizona Wildcats,6.125,-6.5,,41,17
+2025,0,11/22/2025 Washington State Cougars at James Madison Dukes,Washington State Cougars at James Madison Dukes,-3.334,-15.0,,24,20
+2025,0,11/22/2025 Old Dominion Monarchs at Georgia Southern Eagles,Old Dominion Monarchs at Georgia Southern Eagles,26.298,10.0,,10,45
+2025,0,11/22/2025 Charlotte 49ers at Georgia Bulldogs,Charlotte 49ers at Georgia Bulldogs,53.495,-43.0,,35,3
+2025,0,11/22/2025 Miami Hurricanes at Virginia Tech Hokies,Miami Hurricanes at Virginia Tech Hokies,-21.024,17.5,,17,34
+2025,0,11/22/2025 Louisville Cardinals at SMU Mustangs,Louisville Cardinals at SMU Mustangs,3.897,-3.5,,38,6
+2025,0,11/22/2025 Minnesota Golden Gophers at Northwestern Wildcats,Minnesota Golden Gophers at Northwestern Wildcats,3.579,-4.0,,38,35
+2025,0,11/22/2025 Kansas Jayhawks at Iowa State Cyclones,Kansas Jayhawks at Iowa State Cyclones,14.016,-3.5,,38,14
+2025,0,11/22/2025 Missouri Tigers at Oklahoma Sooners,Missouri Tigers at Oklahoma Sooners,7.21,-4.5,,17,6
+2025,0,11/22/2025 Rutgers Scarlet Knights at Ohio State Buckeyes,Rutgers Scarlet Knights at Ohio State Buckeyes,-4.991,-29.0,,42,9
+2025,0,11/22/2025 Tulsa Golden Hurricane at Army Black Knights,Tulsa Golden Hurricane at Army Black Knights,13.371,-10.0,,25,26
+2025,0,11/22/2025 Hawaii Rainbow Warriors at UNLV Rebels,Hawaii Rainbow Warriors at UNLV Rebels,4.183,-2.5,,38,10
+2025,0,11/22/2025 Florida State Seminoles at NC State Wolfpack,Florida State Seminoles at NC State Wolfpack,-5.524,6.5,,21,11
+2025,0,11/21/2025 Louisiana Ragin' Cajuns at Arkansas State Red Wolves,Louisiana Ragin' Cajuns at Arkansas State Red Wolves,1.677,-2.5,,30,34
+2025,0,11/20/2025 Central Michigan Chippewas at Kent State Golden Flashes,Central Michigan Chippewas at Kent State Golden Flashes,-8.233,7.5,,16,28
+2025,0,11/20/2025 Miami (OH) RedHawks at Buffalo Bulls,Miami (OH) RedHawks at Buffalo Bulls,-31.366,2.5,,20,37
+2025,0,11/19/2025 Massachusetts Minutemen at Ohio Bobcats,Massachusetts Minutemen at Ohio Bobcats,32.143,-34.0,,42,14
+2025,0,11/19/2025 Western Michigan Broncos at Northern Illinois Huskies,Western Michigan Broncos at Northern Illinois Huskies,-5.143,7.0,,19,35
+2025,0,11/19/2025 Akron Zips at Bowling Green Falcons,Akron Zips at Bowling Green Falcons,8.067,-2.5,,16,19
+2025,0,11/16/2025 Boise State Broncos at San Diego State Aztecs,Boise State Broncos at San Diego State Aztecs,-3.64,-2.0,,17,7
+2025,0,11/16/2025 Wyoming Cowboys at Fresno State Bulldogs,Wyoming Cowboys at Fresno State Bulldogs,6.112,-3.0,,24,3
+2025,0,11/16/2025 TCU Horned Frogs at BYU Cougars,TCU Horned Frogs at BYU Cougars,9.245,-3.0,,44,13
+2025,0,11/16/2025 Louisiana Tech Bulldogs at Washington State Cougars,Louisiana Tech Bulldogs at Washington State Cougars,21.528,-10.0,,28,3
+2025,0,11/16/2025 Kennesaw State Owls at Jacksonville State Gamecocks,Kennesaw State Owls at Jacksonville State Gamecocks,0.509,4.0,,35,26
+2025,0,11/16/2025 Texas Longhorns at Georgia Bulldogs,Texas Longhorns at Georgia Bulldogs,5.907,-4.0,,35,10
+2025,0,11/16/2025 Mississippi State Bulldogs at Missouri Tigers,Mississippi State Bulldogs at Missouri Tigers,8.295,-7.0,,49,27
+2025,0,11/16/2025 UCLA Bruins at Ohio State Buckeyes,UCLA Bruins at Ohio State Buckeyes,-1.857,-33.5,,48,10
+2025,0,11/16/2025 Virginia Tech Hokies at Florida State Seminoles,Virginia Tech Hokies at Florida State Seminoles,17.018,-14.0,,34,14
+2025,0,11/16/2025 Florida Gators at Ole Miss Rebels,Florida Gators at Ole Miss Rebels,10.568,-9.5,,34,24
+2025,0,11/16/2025 Utah State Aggies at UNLV Rebels,Utah State Aggies at UNLV Rebels,-24.208,-4.5,,29,26
+2025,0,11/16/2025 Purdue Boilermakers at Washington Huskies,Purdue Boilermakers at Washington Huskies,17.517,-14.0,,49,13
+2025,0,11/16/2025 Utah Utes at Baylor Bears,Utah Utes at Baylor Bears,-13.003,9.5,,28,55
+2025,0,11/15/2025 Coastal Carolina Chanticleers at Georgia Southern Eagles,Coastal Carolina Chanticleers at Georgia Southern Eagles,39.801,-3.0,,45,40
+2025,0,11/15/2025 Houston Christian Huskies at Texas A&M Commerce Lions,Houston Christian Huskies at Texas A&M Commerce Lions,21.419,-7.5,,37,32
+2025,0,11/15/2025 Liberty Flames at FIU Panthers,Liberty Flames at FIU Panthers,-2.276,2.5,,34,27
+2025,0,11/15/2025 North Carolina Tar Heels at Wake Forest Demon Deacons,North Carolina Tar Heels at Wake Forest Demon Deacons,7.702,-3.5,,28,12
+2025,0,11/15/2025 New Mexico State Aggies at Tennessee Volunteers,New Mexico State Aggies at Tennessee Volunteers,25.872,-42.0,,42,9
+2025,0,11/15/2025 Florida Atlantic Owls at Tulane Green Wave,Florida Atlantic Owls at Tulane Green Wave,17.995,-17.0,,35,24
+2025,0,11/15/2025 Memphis Tigers at East Carolina Pirates,Memphis Tigers at East Carolina Pirates,2.551,-3.0,,31,27
+2025,0,11/15/2025 San Jose State Spartans at Nevada Wolf Pack,San Jose State Spartans at Nevada Wolf Pack,-8.712,9.5,,55,10
+2025,0,11/15/2025 Iowa Hawkeyes at USC Trojans,Iowa Hawkeyes at USC Trojans,5.539,-6.5,,26,21
+2025,0,11/15/2025 Maryland Terrapins at Illinois Fighting Illini,Maryland Terrapins at Illinois Fighting Illini,16.417,-17.0,,24,6
+2025,0,11/15/2025 South Alabama Jaguars at ULM Warhawks,South Alabama Jaguars at ULM Warhawks,-6.612,4.0,,14,26
+2025,0,11/15/2025 UCF Knights at Texas Tech Red Raiders,UCF Knights at Texas Tech Red Raiders,23.726,-24.0,,48,9
+2025,0,11/15/2025 Texas State Bobcats at Southern Miss Golden Eagles,Texas State Bobcats at Southern Miss Golden Eagles,4.439,-3.0,,14,41
+2025,0,11/15/2025 Oklahoma Sooners at Alabama Crimson Tide,Oklahoma Sooners at Alabama Crimson Tide,9.891,-6.5,,21,23
+2025,0,11/15/2025 Penn State Nittany Lions at Michigan State Spartans,Penn State Nittany Lions at Michigan State Spartans,3.391,7.0,,10,28
+2025,0,11/15/2025 NC State Wolfpack at Miami Hurricanes,NC State Wolfpack at Miami Hurricanes,18.649,-16.0,,41,7
+2025,0,11/15/2025 Virginia Cavaliers at Duke Blue Devils,Virginia Cavaliers at Duke Blue Devils,3.218,-5.0,,17,34
+2025,0,11/15/2025 Georgia Tech Yellow Jackets at Boston College Eagles,Georgia Tech Yellow Jackets at Boston College Eagles,-13.802,16.5,,34,36
+2025,0,11/15/2025 Appalachian State Mountaineers at James Madison Dukes,Appalachian State Mountaineers at James Madison Dukes,21.887,-21.0,,58,10
+2025,0,11/15/2025 Florida A&M Rattlers at Alabama A&M Bulldogs,Florida A&M Rattlers at Alabama A&M Bulldogs,16.825,2.5,,23,26
+2025,0,11/15/2025 UTEP Miners at Missouri State Bears,UTEP Miners at Missouri State Bears,33.246,-6.5,,38,24
+2025,0,11/15/2025 Colorado State Rams at New Mexico Lobos,Colorado State Rams at New Mexico Lobos,-1.806,-16.0,,20,17
+2025,0,11/15/2025 North Texas Mean Green at UAB Blazers,North Texas Mean Green at UAB Blazers,-19.764,17.5,,24,53
+2025,0,11/15/2025 Marshall Thundering Herd at Georgia State Panthers,Marshall Thundering Herd at Georgia State Panthers,-9.975,9.5,,18,30
+2025,0,11/15/2025 West Virginia Mountaineers at Arizona State Sun Devils,West Virginia Mountaineers at Arizona State Sun Devils,12.952,-10.0,,25,23
+2025,0,11/15/2025 Oregon State Beavers at Tulsa Golden Hurricane,Oregon State Beavers at Tulsa Golden Hurricane,-4.245,0.0,,31,14
+2025,0,11/15/2025 Arkansas Razorbacks at LSU Tigers,Arkansas Razorbacks at LSU Tigers,9.808,-4.5,,23,22
+2025,0,11/15/2025 South Carolina Gamecocks at Texas A&M Aggies,South Carolina Gamecocks at Texas A&M Aggies,13.876,-17.0,,31,30
+2025,0,11/15/2025 Michigan Wolverines at Northwestern Wildcats,Michigan Wolverines at Northwestern Wildcats,-10.16,10.0,,22,24
+2025,0,11/15/2025 Kansas State Wildcats at Oklahoma State Cowboys,Kansas State Wildcats at Oklahoma State Cowboys,14.934,19.5,,6,14
+2025,0,11/15/2025 Notre Dame Fighting Irish at Pittsburgh Panthers,Notre Dame Fighting Irish at Pittsburgh Panthers,-11.443,13.0,,15,37
+2025,0,11/15/2025 Arizona Wildcats at Cincinnati Bearcats,Arizona Wildcats at Cincinnati Bearcats,4.566,-5.0,,24,30
+2025,0,11/15/2025 South Florida Bulls at Navy Midshipmen,South Florida Bulls at Navy Midshipmen,-10.487,9.5,,41,38
+2025,0,11/15/2025 Wisconsin Badgers at Indiana Hoosiers,Wisconsin Badgers at Indiana Hoosiers,31.418,-28.5,,31,7
+2025,0,11/15/2025 Eastern Michigan Eagles at Ball State Cardinals,Eastern Michigan Eagles at Ball State Cardinals,-1.066,2.5,,9,24
+2025,0,11/15/2025 UTSA Roadrunners at Charlotte 49ers,UTSA Roadrunners at Charlotte 49ers,-19.612,17.0,,7,28
+2025,0,11/15/2025 Air Force Falcons at Connecticut Huskies,Air Force Falcons at Connecticut Huskies,8.2,-7.5,,26,16
+2025,0,11/15/2025 Minnesota Golden Gophers at Oregon Ducks,Minnesota Golden Gophers at Oregon Ducks,25.108,-26.5,,42,13
+2025,0,11/15/2025 Clemson Tigers at Louisville Cardinals,Clemson Tigers at Louisville Cardinals,0.694,-2.0,,19,20
+2025,0,11/14/2025 South Carolina State Bulldogs at North Carolina Central Eagles,South Carolina State Bulldogs at North Carolina Central Eagles,-10.92,-6.5,,27,34
+2025,0,11/14/2025 Troy Trojans at Old Dominion Monarchs,Troy Trojans at Old Dominion Monarchs,10.263,-9.5,,33,0
+2025,0,11/13/2025 Toledo Rockets at Miami (OH) RedHawks,Toledo Rockets at Miami (OH) RedHawks,20.646,6.0,,3,24
+2025,0,11/13/2025 Buffalo Bulls at Central Michigan Chippewas,Buffalo Bulls at Central Michigan Chippewas,2.054,-2.5,,38,19
+2025,0,11/13/2025 Northern Illinois Huskies at Massachusetts Minutemen,Northern Illinois Huskies at Massachusetts Minutemen,-10.284,9.0,,3,45
+2025,0,11/12/2025 Ohio Bobcats at Western Michigan Broncos,Ohio Bobcats at Western Michigan Broncos,-1.15,-1.0,,17,13
+2025,0,11/12/2025 Kent State Golden Flashes at Akron Zips,Kent State Golden Flashes at Akron Zips,6.442,-7.5,,35,42
+2025,0,11/09/2025 San Diego State Aztecs at Hawaii Rainbow Warriors,San Diego State Aztecs at Hawaii Rainbow Warriors,-6.614,6.5,,38,6
+2025,0,11/09/2025 Sam Houston State Bearkats at Oregon State Beavers,Sam Houston State Bearkats at Oregon State Beavers,20.528,-20.5,,17,21
+2025,0,11/09/2025 UNLV Rebels at Colorado State Rams,UNLV Rebels at Colorado State Rams,7.289,6.0,,10,42
+2025,0,11/09/2025 Nebraska Cornhuskers at UCLA Bruins,Nebraska Cornhuskers at UCLA Bruins,-10.23,-1.0,,21,28
+2025,0,11/09/2025 LSU Tigers at Alabama Crimson Tide,LSU Tigers at Alabama Crimson Tide,12.877,-10.0,,20,9
+2025,0,11/09/2025 Florida Gators at Kentucky Wildcats,Florida Gators at Kentucky Wildcats,-6.35,5.0,,38,7
+2025,0,11/09/2025 Navy Midshipmen at Notre Dame Fighting Irish,Navy Midshipmen at Notre Dame Fighting Irish,30.311,-28.0,,49,10
+2025,0,11/09/2025 Nevada Wolf Pack at Utah State Aggies,Nevada Wolf Pack at Utah State Aggies,45.665,-9.0,,51,14
+2025,0,11/09/2025 Wake Forest Demon Deacons at Virginia Cavaliers,Wake Forest Demon Deacons at Virginia Cavaliers,11.897,-6.5,,9,16
+2025,0,11/09/2025 California Golden Bears at Louisville Cardinals,California Golden Bears at Louisville Cardinals,19.151,-18.0,,26,29
+2025,0,11/09/2025 Florida State Seminoles at Clemson Tigers,Florida State Seminoles at Clemson Tigers,-0.681,-1.5,,24,10
+2025,0,11/08/2025 Air Force Falcons at San Jose State Spartans,Air Force Falcons at San Jose State Spartans,2.908,-6.0,,16,26
+2025,0,11/08/2025 Texas State Bobcats at Louisiana Ragin' Cajuns,Texas State Bobcats at Louisiana Ragin' Cajuns,-1.746,4.0,,42,39
+2025,0,11/08/2025 Washington Huskies at Wisconsin Badgers,Washington Huskies at Wisconsin Badgers,-10.385,10.5,,13,10
+2025,0,11/08/2025 Stanford Cardinal at North Carolina Tar Heels,Stanford Cardinal at North Carolina Tar Heels,3.715,-7.5,,20,15
+2025,0,11/08/2025 Auburn Tigers at Vanderbilt Commodores,Auburn Tigers at Vanderbilt Commodores,6.606,-6.0,,45,38
+2025,0,11/08/2025 Kennesaw State Owls at New Mexico State Aggies,Kennesaw State Owls at New Mexico State Aggies,4.508,11.5,,21,24
+2025,0,11/08/2025 Georgia State Panthers at Coastal Carolina Chanticleers,Georgia State Panthers at Coastal Carolina Chanticleers,10.674,-7.0,,40,27
+2025,0,11/08/2025 Texas A&M Aggies at Missouri Tigers,Texas A&M Aggies at Missouri Tigers,-1.53,7.0,,17,38
+2025,0,11/08/2025 Oregon Ducks at Iowa Hawkeyes,Oregon Ducks at Iowa Hawkeyes,-6.099,5.5,,16,18
+2025,0,11/08/2025 Syracuse Orange at Miami Hurricanes,Syracuse Orange at Miami Hurricanes,25.921,-28.5,,38,10
+2025,0,11/08/2025 Kansas Jayhawks at Arizona Wildcats,Kansas Jayhawks at Arizona Wildcats,5.289,-5.0,,24,20
+2025,0,11/08/2025 Iowa State Cyclones at TCU Horned Frogs,Iowa State Cyclones at TCU Horned Frogs,-5.306,-7.5,,17,20
+2025,0,11/08/2025 Duke Blue Devils at Connecticut Huskies,Duke Blue Devils at Connecticut Huskies,-7.719,8.0,,37,34
+2025,0,11/08/2025 Texas Southern Tigers at Alabama State Hornets,Texas Southern Tigers at Alabama State Hornets,8.603,-17.0,,42,24
+2025,0,11/08/2025 Jacksonville State Gamecocks at UTEP Miners,Jacksonville State Gamecocks at UTEP Miners,-2.683,1.0,,27,30
+2025,0,11/08/2025 Tulsa Golden Hurricane at Florida Atlantic Owls,Tulsa Golden Hurricane at Florida Atlantic Owls,3.99,-4.0,,40,21
+2025,0,11/08/2025 Charlotte 49ers at East Carolina Pirates,Charlotte 49ers at East Carolina Pirates,33.503,-28.0,,48,22
+2025,0,11/08/2025 Maryland Terrapins at Rutgers Scarlet Knights,Maryland Terrapins at Rutgers Scarlet Knights,3.818,-1.5,,35,20
+2025,0,11/08/2025 UAB Blazers at Rice Owls,UAB Blazers at Rice Owls,2.13,0.0,,24,17
+2025,0,11/08/2025 Ohio State Buckeyes at Purdue Boilermakers,Ohio State Buckeyes at Purdue Boilermakers,4.531,29.5,,10,34
+2025,0,11/08/2025 Illinois State Redbirds at Indiana State SycamoresÂ ,Illinois State Redbirds at Indiana State SycamoresÂ ,20.489,10.5,,20,52
+2025,0,11/08/2025 Missouri State Bears at Liberty Flames,Missouri State Bears at Liberty Flames,-21.909,-7.0,,17,21
+2025,0,11/08/2025 Bowling Green Falcons at Eastern Michigan Eagles,Bowling Green Falcons at Eastern Michigan Eagles,-0.598,-2.5,,27,21
+2025,0,11/08/2025 Indiana Hoosiers at Penn State Nittany Lions,Indiana Hoosiers at Penn State Nittany Lions,-13.781,13.5,,24,27
+2025,0,11/08/2025 BYU Cougars at Texas Tech Red Raiders,BYU Cougars at Texas Tech Red Raiders,10.29,-13.0,,29,7
+2025,0,11/08/2025 Southern Miss Golden Eagles at Arkansas State Red Wolves,Southern Miss Golden Eagles at Arkansas State Red Wolves,-2.659,6.5,,21,27
+2025,0,11/08/2025 Georgia Bulldogs at Mississippi State Bulldogs,Georgia Bulldogs at Mississippi State Bulldogs,-9.984,9.5,,21,41
+2025,0,11/08/2025 SMU Mustangs at Boston College Eagles,SMU Mustangs at Boston College Eagles,-11.73,10.5,,13,45
+2025,0,11/08/2025 Colorado Buffaloes at West Virginia Mountaineers,Colorado Buffaloes at West Virginia Mountaineers,2.615,-6.5,,29,22
+2025,0,11/08/2025 James Madison Dukes at Marshall Thundering Herd,James Madison Dukes at Marshall Thundering Herd,-12.796,13.5,,23,35
+2025,0,11/08/2025 Temple Owls at Army Black Knights,Temple Owls at Army Black Knights,6.566,-7.0,,14,13
+2025,0,11/08/2025 Tulane Green Wave at Memphis Tigers,Tulane Green Wave at Memphis Tigers,6.648,-3.0,,32,38
+2025,0,11/08/2025 Northwestern Wildcats at USC Trojans,Northwestern Wildcats at USC Trojans,19.68,-14.0,,38,17
+2025,0,11/08/2025 Houston Cougars at UCF Knights,Houston Cougars at UCF Knights,2.936,0.0,,27,30
+2025,0,11/07/2025 UTSA Roadrunners at South Florida Bulls,UTSA Roadrunners at South Florida Bulls,13.605,-14.0,,55,23
+2025,0,11/07/2025 Georgia Southern Eagles at Appalachian State Mountaineers,Georgia Southern Eagles at Appalachian State Mountaineers,-32.132,-5.0,,23,25
+2025,0,11/06/2025 Northern Illinois Huskies at Toledo Rockets,Northern Illinois Huskies at Toledo Rockets,19.882,-14.5,,42,3
+2025,0,11/06/2025 Kent State Golden Flashes at Ball State Cardinals,Kent State Golden Flashes at Ball State Cardinals,3.932,-3.0,,17,13
+2025,0,11/05/2025 Massachusetts Minutemen at Akron Zips,Massachusetts Minutemen at Akron Zips,11.138,-11.5,,44,10
+2025,0,11/05/2025 Miami (OH) RedHawks at Ohio Bobcats,Miami (OH) RedHawks at Ohio Bobcats,-21.576,-2.5,,24,20
+2025,0,11/02/2025 Hawaii Rainbow Warriors at San Jose State Spartans,Hawaii Rainbow Warriors at San Jose State Spartans,0.997,-1.5,,45,38
+2025,0,11/02/2025 Cincinnati Bearcats at Utah Utes,Cincinnati Bearcats at Utah Utes,12.542,-11.0,,45,14
+2025,0,11/02/2025 Arkansas State Red Wolves at Troy Trojans,Arkansas State Red Wolves at Troy Trojans,10.22,-7.5,,10,23
+2025,0,11/01/2025 Oklahoma Sooners at Tennessee Volunteers,Oklahoma Sooners at Tennessee Volunteers,1.817,-3.0,,27,33
+2025,0,11/01/2025 Washington State Cougars at Oregon State Beavers,Washington State Cougars at Oregon State Beavers,-21.75,3.5,,10,7
+2025,0,11/01/2025 Kentucky Wildcats at Auburn Tigers,Kentucky Wildcats at Auburn Tigers,13.859,-11.5,,3,10
+2025,0,11/01/2025 USC Trojans at Nebraska Cornhuskers,USC Trojans at Nebraska Cornhuskers,-4.552,4.5,,17,21
+2025,0,11/01/2025 Georgia Tech Yellow Jackets at NC State Wolfpack,Georgia Tech Yellow Jackets at NC State Wolfpack,-7.043,4.5,,48,36
+2025,0,11/01/2025 Wake Forest Demon Deacons at Florida State Seminoles,Wake Forest Demon Deacons at Florida State Seminoles,16.455,-12.0,,42,7
+2025,0,11/01/2025 Arizona Wildcats at Colorado Buffaloes,Arizona Wildcats at Colorado Buffaloes,-1.691,4.0,,17,52
+2025,0,11/01/2025 Purdue Boilermakers at Michigan Wolverines,Purdue Boilermakers at Michigan Wolverines,24.892,-21.0,,21,16
+2025,0,11/01/2025 Wyoming Cowboys at San Diego State Aztecs,Wyoming Cowboys at San Diego State Aztecs,11.414,-9.5,,24,7
+2025,0,11/01/2025 South Carolina Gamecocks at Ole Miss Rebels,South Carolina Gamecocks at Ole Miss Rebels,12.721,-12.5,,30,14
+2025,0,11/01/2025 Mississippi State Bulldogs at Arkansas Razorbacks,Mississippi State Bulldogs at Arkansas Razorbacks,3.159,-4.5,,35,38
+2025,0,11/01/2025 Oklahoma State Cowboys at Kansas Jayhawks,Oklahoma State Cowboys at Kansas Jayhawks,-8.541,-25.0,,38,21
+2025,0,11/01/2025 Central Michigan Chippewas at Western Michigan Broncos,Central Michigan Chippewas at Western Michigan Broncos,6.298,-6.0,,24,21
+2025,0,11/01/2025 Virginia Cavaliers at California Golden Bears,Virginia Cavaliers at California Golden Bears,-8.929,6.0,,21,31
+2025,0,11/01/2025 Georgia Bulldogs at Florida Gators,Georgia Bulldogs at Florida Gators,-6.292,7.0,,20,24
+2025,0,11/01/2025 Pittsburgh Panthers at Stanford Cardinal,Pittsburgh Panthers at Stanford Cardinal,-15.099,13.5,,20,35
+2025,0,11/01/2025 Indiana Hoosiers at Maryland Terrapins,Indiana Hoosiers at Maryland Terrapins,-23.546,21.5,,10,55
+2025,0,11/01/2025 Notre Dame Fighting Irish at Boston College Eagles,Notre Dame Fighting Irish at Boston College Eagles,-30.0,31.0,,10,25
+2025,0,11/01/2025 Texas Tech Red Raiders at Kansas State Wildcats,Texas Tech Red Raiders at Kansas State Wildcats,-13.075,7.5,,20,43
+2025,0,11/01/2025 New Mexico State Aggies at Western Kentucky Hilltoppers,New Mexico State Aggies at Western Kentucky Hilltoppers,-0.858,-7.5,,35,16
+2025,0,11/01/2025 Fresno State Bulldogs at Boise State Broncos,Fresno State Bulldogs at Boise State Broncos,18.675,-17.5,,7,30
+2025,0,11/01/2025 Michigan State Spartans at Minnesota Golden Gophers,Michigan State Spartans at Minnesota Golden Gophers,-11.633,-4.0,,23,20
+2025,0,11/01/2025 Old Dominion Monarchs at ULM Warhawks,Old Dominion Monarchs at ULM Warhawks,-16.816,17.0,,6,31
+2025,0,11/01/2025 Louisiana Ragin' Cajuns at South Alabama Jaguars,Louisiana Ragin' Cajuns at South Alabama Jaguars,4.531,-3.5,,22,31
+2025,0,11/01/2025 New Mexico Lobos at UNLV Rebels,New Mexico Lobos at UNLV Rebels,5.612,-3.5,,35,40
+2025,0,11/01/2025 Louisville Cardinals at Virginia Tech Hokies,Louisville Cardinals at Virginia Tech Hokies,-12.023,10.5,,16,28
+2025,0,11/01/2025 East Carolina Pirates at Temple Owls,East Carolina Pirates at Temple Owls,-5.414,5.5,,14,45
+2025,0,11/01/2025 Arizona State Sun Devils at Iowa State Cyclones,Arizona State Sun Devils at Iowa State Cyclones,12.598,-7.5,,19,24
+2025,0,11/01/2025 UCF Knights at Baylor Bears,UCF Knights at Baylor Bears,2.394,-3.0,,30,3
+2025,0,11/01/2025 Miami Hurricanes at SMU Mustangs,Miami Hurricanes at SMU Mustangs,-10.18,9.5,,26,20
+2025,0,11/01/2025 Rutgers Scarlet Knights at Illinois Fighting Illini,Rutgers Scarlet Knights at Illinois Fighting Illini,12.687,-13.0,,35,13
+2025,0,11/01/2025 West Virginia Mountaineers at Houston Cougars,West Virginia Mountaineers at Houston Cougars,11.818,-13.0,,35,45
+2025,0,11/01/2025 Navy Midshipmen at North Texas Mean Green,Navy Midshipmen at North Texas Mean Green,9.742,-6.5,,31,17
+2025,0,11/01/2025 Vanderbilt Commodores at Texas Longhorns,Vanderbilt Commodores at Texas Longhorns,6.589,-3.5,,34,31
+2025,0,11/01/2025 Army Black Knights at Air Force Falcons,Army Black Knights at Air Force Falcons,-0.693,1.5,,17,20
+2025,0,11/01/2025 Buffalo Bulls at Bowling Green Falcons,Buffalo Bulls at Bowling Green Falcons,3.342,-2.0,,3,28
+2025,0,11/01/2025 Penn State Nittany Lions at Ohio State Buckeyes,Penn State Nittany Lions at Ohio State Buckeyes,-16.935,-17.5,,38,14
+2025,0,11/01/2025 Duke Blue Devils at Clemson Tigers,Duke Blue Devils at Clemson Tigers,7.641,-4.0,,45,46
+2025,0,11/01/2025 UAB Blazers at Connecticut Huskies,UAB Blazers at Connecticut Huskies,15.879,-10.0,,38,19
+2025,0,11/01/2025 Sam Houston State Bearkats at Louisiana Tech Bulldogs,Sam Houston State Bearkats at Louisiana Tech Bulldogs,20.132,-16.5,,55,14
+2025,0,10/31/2025 North Carolina Tar Heels at Syracuse Orange,North Carolina Tar Heels at Syracuse Orange,8.942,-1.0,,10,27
+2025,0,10/31/2025 Memphis Tigers at Rice Owls,Memphis Tigers at Rice Owls,-18.695,14.0,,14,38
+2025,0,10/30/2025 Tulane Green Wave at UTSA Roadrunners,Tulane Green Wave at UTSA Roadrunners,-3.671,6.0,,48,26
+2025,0,10/30/2025 Marshall Thundering Herd at Coastal Carolina Chanticleers,Marshall Thundering Herd at Coastal Carolina Chanticleers,-6.249,7.0,,44,27
+2025,0,10/30/2025 FIU Panthers at Missouri State Bears,FIU Panthers at Missouri State Bears,35.726,-3.0,,28,21
+2025,0,10/29/2025 James Madison Dukes at Texas State Bobcats,James Madison Dukes at Texas State Bobcats,-6.13,7.5,,20,52
+2025,0,10/29/2025 UTEP Miners at Kennesaw State Owls,UTEP Miners at Kennesaw State Owls,10.32,-12.5,,33,20
+2025,0,10/26/2025 Colorado Buffaloes at Utah Utes,Colorado Buffaloes at Utah Utes,18.877,-14.0,,53,7
+2025,0,10/26/2025 Houston Cougars at Arizona State Sun Devils,Houston Cougars at Arizona State Sun Devils,7.57,-7.0,,16,24
+2025,0,10/25/2025 Tennessee Volunteers at Kentucky Wildcats,Tennessee Volunteers at Kentucky Wildcats,-8.484,8.0,,34,56
+2025,0,10/25/2025 Texas A&M Aggies at LSU Tigers,Texas A&M Aggies at LSU Tigers,-0.125,1.5,,25,49
+2025,0,10/25/2025 Michigan Wolverines at Michigan State Spartans,Michigan Wolverines at Michigan State Spartans,2.8,13.5,,20,31
+2025,0,10/25/2025 Boston College Eagles at Louisville Cardinals,Boston College Eagles at Louisville Cardinals,22.606,-25.5,,38,24
+2025,0,10/25/2025 Colorado State Rams at Wyoming Cowboys,Colorado State Rams at Wyoming Cowboys,-11.677,-5.5,,28,0
+2025,0,10/25/2025 Georgia Southern Eagles at Arkansas State Red Wolves,Georgia Southern Eagles at Arkansas State Red Wolves,-34.598,1.0,,34,24
+2025,0,10/25/2025 Wisconsin Badgers at Oregon Ducks,Wisconsin Badgers at Oregon Ducks,30.636,-31.0,,21,7
+2025,0,10/25/2025 Louisiana Ragin' Cajuns at Troy Trojans,Louisiana Ragin' Cajuns at Troy Trojans,9.673,-7.0,,35,23
+2025,0,10/25/2025 Stanford Cardinal at Miami Hurricanes,Stanford Cardinal at Miami Hurricanes,29.536,-30.0,,42,7
+2025,0,10/25/2025 TCU Horned Frogs at West Virginia Mountaineers,TCU Horned Frogs at West Virginia Mountaineers,-10.854,16.5,,17,23
+2025,0,10/25/2025 Oklahoma State Cowboys at Texas Tech Red Raiders,Oklahoma State Cowboys at Texas Tech Red Raiders,6.117,-38.0,,42,0
+2025,0,10/25/2025 Texas Longhorns at Mississippi State Bulldogs,Texas Longhorns at Mississippi State Bulldogs,-9.27,7.5,,38,45
+2025,0,10/25/2025 Baylor Bears at Cincinnati Bearcats,Baylor Bears at Cincinnati Bearcats,7.446,-3.5,,41,20
+2025,0,10/25/2025 Alabama Crimson Tide at South Carolina Gamecocks,Alabama Crimson Tide at South Carolina Gamecocks,-14.995,12.5,,22,29
+2025,0,10/25/2025 Toledo Rockets at Washington State Cougars,Toledo Rockets at Washington State Cougars,13.205,2.5,,28,7
+2025,0,10/25/2025 Illinois Fighting Illini at Washington Huskies,Illinois Fighting Illini at Washington Huskies,1.983,-3.0,,42,25
+2025,0,10/25/2025 Missouri Tigers at Vanderbilt Commodores,Missouri Tigers at Vanderbilt Commodores,2.526,-3.0,,17,10
+2025,0,10/25/2025 Florida Atlantic Owls at Navy Midshipmen,Florida Atlantic Owls at Navy Midshipmen,17.281,-14.0,,42,32
+2025,0,10/25/2025 BYU Cougars at Iowa State Cyclones,BYU Cougars at Iowa State Cyclones,3.016,-2.5,,27,41
+2025,0,10/25/2025 Alabama A&M Bulldogs at Alabama State Hornets,Alabama A&M Bulldogs at Alabama State Hornets,2.8,-11.5,,56,13
+2025,0,10/25/2025 San Diego State Aztecs at Fresno State Bulldogs,San Diego State Aztecs at Fresno State Bulldogs,-1.585,3.5,,0,23
+2025,0,10/25/2025 Ball State Cardinals at Northern Illinois Huskies,Ball State Cardinals at Northern Illinois Huskies,6.137,-6.5,,21,7
+2025,0,10/25/2025 Minnesota Golden Gophers at Iowa Hawkeyes,Minnesota Golden Gophers at Iowa Hawkeyes,11.619,-7.5,,41,3
+2025,0,10/25/2025 Temple Owls at Tulsa Golden Hurricane,Temple Owls at Tulsa Golden Hurricane,-8.421,6.0,,37,38
+2025,0,10/25/2025 ULM Warhawks at Southern Miss Golden Eagles,ULM Warhawks at Southern Miss Golden Eagles,14.947,-14.0,,49,21
+2025,0,10/25/2025 Western Michigan Broncos at Miami (OH) RedHawks,Western Michigan Broncos at Miami (OH) RedHawks,31.28,-2.0,,26,17
+2025,0,10/25/2025 Massachusetts Minutemen at Central Michigan Chippewas,Massachusetts Minutemen at Central Michigan Chippewas,19.349,-16.5,,38,13
+2025,0,10/25/2025 NC State Wolfpack at Pittsburgh Panthers,NC State Wolfpack at Pittsburgh Panthers,10.26,-5.0,,53,34
+2025,0,10/25/2025 Utah State Aggies at New Mexico Lobos,Utah State Aggies at New Mexico Lobos,-25.437,-3.0,,33,14
+2025,0,10/25/2025 Connecticut Huskies at Rice Owls,Connecticut Huskies at Rice Owls,-15.043,10.0,,37,34
+2025,0,10/25/2025 Delaware State Hornets at North Carolina Central Eagles,Delaware State Hornets at North Carolina Central Eagles,6.407,-15.5,,26,35
+2025,0,10/25/2025 Akron Zips at Buffalo Bulls,Akron Zips at Buffalo Bulls,15.28,-10.0,,16,24
+2025,0,10/25/2025 Auburn Tigers at Arkansas Razorbacks,Auburn Tigers at Arkansas Razorbacks,-1.771,-2.5,,24,33
+2025,0,10/25/2025 UCLA Bruins at Indiana Hoosiers,UCLA Bruins at Indiana Hoosiers,29.445,-26.5,,56,6
+2025,0,10/25/2025 Northwestern Wildcats at Nebraska Cornhuskers,Northwestern Wildcats at Nebraska Cornhuskers,12.773,-7.0,,28,21
+2025,0,10/25/2025 Kansas State Wildcats at Kansas Jayhawks,Kansas State Wildcats at Kansas Jayhawks,2.8,-3.0,,17,42
+2025,0,10/25/2025 Ole Miss Rebels at Oklahoma Sooners,Ole Miss Rebels at Oklahoma Sooners,4.291,-4.5,,26,34
+2025,0,10/25/2025 South Florida Bulls at Memphis Tigers,South Florida Bulls at Memphis Tigers,-3.413,3.5,,34,31
+2025,0,10/25/2025 Bowling Green Falcons at Kent State Golden Flashes,Bowling Green Falcons at Kent State Golden Flashes,-9.7,8.5,,24,21
+2025,0,10/25/2025 Ohio Bobcats at Eastern Michigan Eagles,Ohio Bobcats at Eastern Michigan Eagles,-12.681,13.0,,21,28
+2025,0,10/25/2025 SMU Mustangs at Wake Forest Demon Deacons,SMU Mustangs at Wake Forest Demon Deacons,-7.431,5.5,,13,12
+2025,0,10/25/2025 Rutgers Scarlet Knights at Purdue Boilermakers,Rutgers Scarlet Knights at Purdue Boilermakers,-3.843,-2.5,,24,27
+2025,0,10/25/2025 Virginia Cavaliers at North Carolina Tar Heels,Virginia Cavaliers at North Carolina Tar Heels,-13.54,12.0,,16,17
+2025,0,10/25/2025 Syracuse Orange at Georgia Tech Yellow Jackets,Syracuse Orange at Georgia Tech Yellow Jackets,14.258,-17.0,,41,16
+2025,0,10/25/2025 Appalachian State Mountaineers at Old Dominion Monarchs,Appalachian State Mountaineers at Old Dominion Monarchs,15.951,-13.5,,24,21
+2025,0,10/25/2025 Boise State Broncos at Nevada Wolf Pack,Boise State Broncos at Nevada Wolf Pack,-24.13,21.0,,3,24
+2025,0,10/24/2025 California Golden Bears at Virginia Tech Hokies,California Golden Bears at Virginia Tech Hokies,4.012,-6.0,,42,34
+2025,0,10/24/2025 North Texas Mean Green at Charlotte 49ers,North Texas Mean Green at Charlotte 49ers,-28.229,25.5,,20,54
+2025,0,10/23/2025 South Alabama Jaguars at Georgia State Panthers,South Alabama Jaguars at Georgia State Panthers,-8.067,6.5,,31,38
+2025,0,10/23/2025 Missouri State Bears at New Mexico State Aggies,Missouri State Bears at New Mexico State Aggies,-22.232,2.5,,17,24
+2025,0,10/21/2025 Western Kentucky Hilltoppers at Louisiana Tech Bulldogs,Western Kentucky Hilltoppers at Louisiana Tech Bulldogs,3.698,-5.5,,27,28
+2025,0,10/21/2025 Kennesaw State Owls at FIU Panthers,Kennesaw State Owls at FIU Panthers,-4.792,3.0,,26,45
+2025,0,10/19/2025 Florida State Seminoles at Stanford Cardinal,Florida State Seminoles at Stanford Cardinal,-21.15,17.0,,20,13
+2025,0,10/19/2025 Nevada Wolf Pack at New Mexico Lobos,Nevada Wolf Pack at New Mexico Lobos,16.137,-13.5,,24,22
+2025,0,10/19/2025 Utah Utes at BYU Cougars,Utah Utes at BYU Cougars,-3.679,4.0,,24,21
+2025,0,10/19/2025 Cincinnati Bearcats at Oklahoma State Cowboys,Cincinnati Bearcats at Oklahoma State Cowboys,9.312,24.0,,17,49
+2025,0,10/18/2025 Missouri Tigers at Auburn Tigers,Missouri Tigers at Auburn Tigers,1.534,1.5,,17,23
+2025,0,10/18/2025 Tennessee Volunteers at Alabama Crimson Tide,Tennessee Volunteers at Alabama Crimson Tide,12.903,-9.5,,37,20
+2025,0,10/18/2025 USC Trojans at Notre Dame Fighting Irish,USC Trojans at Notre Dame Fighting Irish,9.109,-10.5,,34,24
+2025,0,10/18/2025 Pittsburgh Panthers at Syracuse Orange,Pittsburgh Panthers at Syracuse Orange,-5.907,9.5,,13,30
+2025,0,10/18/2025 Florida Atlantic Owls at South Florida Bulls,Florida Atlantic Owls at South Florida Bulls,26.935,-20.5,,48,13
+2025,0,10/18/2025 Maryland Terrapins at UCLA Bruins,Maryland Terrapins at UCLA Bruins,-0.504,-4.0,,20,17
+2025,0,10/18/2025 Hawaii Rainbow Warriors at Colorado State Rams,Hawaii Rainbow Warriors at Colorado State Rams,15.218,-2.5,,19,31
+2025,0,10/18/2025 Penn State Nittany Lions at Iowa Hawkeyes,Penn State Nittany Lions at Iowa Hawkeyes,3.975,-3.0,,25,24
+2025,0,10/18/2025 Georgia State Panthers at Georgia Southern Eagles,Georgia State Panthers at Georgia Southern Eagles,47.392,-6.5,,41,24
+2025,0,10/18/2025 Texas Longhorns at Kentucky Wildcats,Texas Longhorns at Kentucky Wildcats,-15.133,12.5,,13,16
+2025,0,10/18/2025 Washington State Cougars at Virginia Cavaliers,Washington State Cougars at Virginia Cavaliers,-2.229,-16.0,,22,20
+2025,0,10/18/2025 Oregon Ducks at Rutgers Scarlet Knights,Oregon Ducks at Rutgers Scarlet Knights,-15.706,18.5,,10,56
+2025,0,10/18/2025 Texas A&M Aggies at Arkansas Razorbacks,Texas A&M Aggies at Arkansas Razorbacks,-9.634,8.0,,42,45
+2025,0,10/18/2025 Southern Miss Golden Eagles at Louisiana Ragin' Cajuns,Southern Miss Golden Eagles at Louisiana Ragin' Cajuns,0.06,5.0,,10,22
+2025,0,10/18/2025 Mississippi State Bulldogs at Florida Gators,Mississippi State Bulldogs at Florida Gators,10.442,-9.5,,23,21
+2025,0,10/18/2025 UTSA Roadrunners at North Texas Mean Green,UTSA Roadrunners at North Texas Mean Green,4.358,-4.0,,55,17
+2025,0,10/18/2025 Memphis Tigers at UAB Blazers,Memphis Tigers at UAB Blazers,-23.546,23.5,,31,24
+2025,0,10/18/2025 Ohio State Buckeyes at Wisconsin Badgers,Ohio State Buckeyes at Wisconsin Badgers,7.273,24.5,,0,34
+2025,0,10/18/2025 Ole Miss Rebels at Georgia Bulldogs,Ole Miss Rebels at Georgia Bulldogs,7.999,-7.0,,43,35
+2025,0,10/18/2025 Wyoming Cowboys at Air Force Falcons,Wyoming Cowboys at Air Force Falcons,5.088,-3.5,,24,21
+2025,0,10/18/2025 UNLV Rebels at Boise State Broncos,UNLV Rebels at Boise State Broncos,12.03,-13.0,,56,31
+2025,0,10/18/2025 Northern Illinois Huskies at Ohio Bobcats,Northern Illinois Huskies at Ohio Bobcats,15.077,-10.5,,48,21
+2025,0,10/18/2025 Akron Zips at Ball State Cardinals,Akron Zips at Ball State Cardinals,3.199,2.0,,42,28
+2025,0,10/18/2025 Michigan State Spartans at Indiana Hoosiers,Michigan State Spartans at Indiana Hoosiers,14.137,-26.0,,38,13
+2025,0,10/18/2025 SMU Mustangs at Clemson Tigers,SMU Mustangs at Clemson Tigers,9.477,-3.5,,24,35
+2025,0,10/18/2025 Temple Owls at Charlotte 49ers,Temple Owls at Charlotte 49ers,-13.689,10.0,,14,49
+2025,0,10/18/2025 Old Dominion Monarchs at James Madison Dukes,Old Dominion Monarchs at James Madison Dukes,0.479,-2.5,,63,27
+2025,0,10/18/2025 Coastal Carolina Chanticleers at Appalachian State Mountaineers,Coastal Carolina Chanticleers at Appalachian State Mountaineers,6.778,-10.0,,37,45
+2025,0,10/18/2025 Texas State Bobcats at Marshall Thundering Herd,Texas State Bobcats at Marshall Thundering Herd,0.895,3.0,,40,37
+2025,0,10/18/2025 Purdue Boilermakers at Northwestern Wildcats,Purdue Boilermakers at Northwestern Wildcats,7.791,-3.0,,19,0
+2025,0,10/18/2025 Troy Trojans at ULM Warhawks,Troy Trojans at ULM Warhawks,-9.773,4.5,,14,37
+2025,0,10/18/2025 Buffalo Bulls at Massachusetts Minutemen,Buffalo Bulls at Massachusetts Minutemen,-17.232,16.5,,21,28
+2025,0,10/18/2025 Kent State Golden Flashes at Toledo Rockets,Kent State Golden Flashes at Toledo Rockets,28.493,-25.0,,45,10
+2025,0,10/18/2025 West Virginia Mountaineers at UCF Knights,West Virginia Mountaineers at UCF Knights,8.286,-6.5,,45,13
+2025,0,10/18/2025 Oklahoma Sooners at South Carolina Gamecocks,Oklahoma Sooners at South Carolina Gamecocks,-5.288,4.5,,7,26
+2025,0,10/18/2025 LSU Tigers at Vanderbilt Commodores,LSU Tigers at Vanderbilt Commodores,-0.246,-1.5,,31,24
+2025,0,10/18/2025 Eastern Michigan Eagles at Miami (OH) RedHawks,Eastern Michigan Eagles at Miami (OH) RedHawks,45.259,-12.0,,44,30
+2025,0,10/18/2025 Army Black Knights at Tulane Green Wave,Army Black Knights at Tulane Green Wave,12.032,-10.0,,24,17
+2025,0,10/18/2025 Arizona Wildcats at Houston Cougars,Arizona Wildcats at Houston Cougars,1.486,2.0,,31,28
+2025,0,10/18/2025 Baylor Bears at TCU Horned Frogs,Baylor Bears at TCU Horned Frogs,4.752,-3.0,,42,36
+2025,0,10/18/2025 Central Michigan Chippewas at Bowling Green Falcons,Central Michigan Chippewas at Bowling Green Falcons,10.088,-3.5,,6,27
+2025,0,10/18/2025 Washington Huskies at Michigan Wolverines,Washington Huskies at Michigan Wolverines,4.887,-4.0,,24,7
+2025,0,10/18/2025 Georgia Tech Yellow Jackets at Duke Blue Devils,Georgia Tech Yellow Jackets at Duke Blue Devils,0.08,-3.5,,18,27
+2025,0,10/18/2025 Connecticut Huskies at Boston College Eagles,Connecticut Huskies at Boston College Eagles,0.021,2.0,,23,38
+2025,0,10/18/2025 North Carolina Tar Heels at California Golden Bears,North Carolina Tar Heels at California Golden Bears,7.225,-7.5,,21,18
+2025,0,10/18/2025 San Jose State Spartans at Utah State Aggies,San Jose State Spartans at Utah State Aggies,34.08,-3.0,,30,25
+2025,0,10/18/2025 Nebraska Cornhuskers at Minnesota Golden Gophers,Nebraska Cornhuskers at Minnesota Golden Gophers,-9.33,7.0,,24,6
+2025,0,10/17/2025 Louisville Cardinals at Miami Hurricanes,Louisville Cardinals at Miami Hurricanes,14.811,-10.5,,21,24
+2025,0,10/16/2025 Tulsa Golden Hurricane at East Carolina Pirates,Tulsa Golden Hurricane at East Carolina Pirates,22.53,-16.5,,41,27
+2025,0,10/15/2025 UTEP Miners at Sam Houston State Bearkats,UTEP Miners at Sam Houston State Bearkats,-2.817,3.5,,17,35
+2025,0,10/15/2025 FIU Panthers at Western Kentucky Hilltoppers,FIU Panthers at Western Kentucky Hilltoppers,13.99,-10.0,,6,25
+2025,0,10/14/2025 Arkansas State Red Wolves at South Alabama Jaguars,Arkansas State Red Wolves at South Alabama Jaguars,7.353,-8.0,,14,15
+2025,0,10/14/2025 New Mexico State Aggies at Liberty Flames,New Mexico State Aggies at Liberty Flames,0.258,-11.0,,30,27
+2025,0,10/12/2025 Utah State Aggies at Hawaii Rainbow Warriors,Utah State Aggies at Hawaii Rainbow Warriors,-25.261,1.5,,44,26
+2025,0,10/12/2025 San Diego State Aztecs at Nevada Wolf Pack,San Diego State Aztecs at Nevada Wolf Pack,-9.327,7.0,,10,44
+2025,0,10/12/2025 Arizona State Sun Devils at Utah Utes,Arizona State Sun Devils at Utah Utes,10.495,-8.5,,42,10
+2025,0,10/12/2025 New Mexico Lobos at Boise State Broncos,New Mexico Lobos at Boise State Broncos,15.877,-14.5,,41,25
+2025,0,10/12/2025 BYU Cougars at Arizona Wildcats,BYU Cougars at Arizona Wildcats,-5.83,2.5,,27,33
+2025,0,10/12/2025 Troy Trojans at Texas State Bobcats,Troy Trojans at Texas State Bobcats,7.307,-7.0,,41,48
+2025,0,10/11/2025 South Carolina Gamecocks at LSU Tigers,South Carolina Gamecocks at LSU Tigers,13.19,-7.5,,20,10
+2025,0,10/11/2025 Georgia Bulldogs at Auburn Tigers,Georgia Bulldogs at Auburn Tigers,-3.598,5.0,,10,20
+2025,0,10/11/2025 Michigan Wolverines at USC Trojans,Michigan Wolverines at USC Trojans,2.805,-3.0,,31,13
+2025,0,10/11/2025 Kansas Jayhawks at Texas Tech Red Raiders,Kansas Jayhawks at Texas Tech Red Raiders,14.703,-13.5,,42,17
+2025,0,10/11/2025 Clemson Tigers at Boston College Eagles,Clemson Tigers at Boston College Eagles,-12.166,14.0,,10,41
+2025,0,10/11/2025 Purdue Boilermakers at Minnesota Golden Gophers,Purdue Boilermakers at Minnesota Golden Gophers,10.215,-7.5,,27,20
+2025,0,10/11/2025 Rice Owls at UTSA Roadrunners,Rice Owls at UTSA Roadrunners,12.674,-8.0,,61,13
+2025,0,10/11/2025 Northwestern State Demons at Houston Christian Huskies,Northwestern State Demons at Houston Christian Huskies,6.989,-12.5,,20,17
+2025,0,10/11/2025 San Jose State Spartans at Wyoming Cowboys,San Jose State Spartans at Wyoming Cowboys,1.207,2.0,,35,28
+2025,0,10/11/2025 Iowa Hawkeyes at Wisconsin Badgers,Iowa Hawkeyes at Wisconsin Badgers,-5.839,5.5,,0,37
+2025,0,10/11/2025 Florida Gators at Texas A&M Aggies,Florida Gators at Texas A&M Aggies,6.809,-7.0,,34,17
+2025,0,10/11/2025 ULM Warhawks at Coastal Carolina Chanticleers,ULM Warhawks at Coastal Carolina Chanticleers,3.459,3.0,,23,8
+2025,0,10/11/2025 UAB Blazers at Florida Atlantic Owls,UAB Blazers at Florida Atlantic Owls,3.974,-4.5,,53,33
+2025,0,10/11/2025 Arkansas Razorbacks at Tennessee Volunteers,Arkansas Razorbacks at Tennessee Volunteers,11.591,-10.0,,34,31
+2025,0,10/11/2025 Navy Midshipmen at Temple Owls,Navy Midshipmen at Temple Owls,-4.801,10.0,,31,32
+2025,0,10/11/2025 Oklahoma Sooners at Texas Longhorns,Oklahoma Sooners at Texas Longhorns,3.059,-3.0,,23,6
+2025,0,10/11/2025 Indiana Hoosiers at Oregon Ducks,Indiana Hoosiers at Oregon Ducks,2.232,-7.0,,20,30
+2025,0,10/11/2025 TCU Horned Frogs at Kansas State Wildcats,TCU Horned Frogs at Kansas State Wildcats,2.974,3.0,,41,28
+2025,0,10/11/2025 Northwestern Wildcats at Penn State Nittany Lions,Northwestern Wildcats at Penn State Nittany Lions,19.776,-20.5,,21,22
+2025,0,10/11/2025 Virginia Tech Hokies at Georgia Tech Yellow Jackets,Virginia Tech Hokies at Georgia Tech Yellow Jackets,15.714,-14.0,,35,20
+2025,0,10/11/2025 Wake Forest Demon Deacons at Oregon State Beavers,Wake Forest Demon Deacons at Oregon State Beavers,-1.75,2.5,,14,39
+2025,0,10/11/2025 NC State Wolfpack at Notre Dame Fighting Irish,NC State Wolfpack at Notre Dame Fighting Irish,24.641,-24.0,,36,7
+2025,0,10/11/2025 Air Force Falcons at UNLV Rebels,Air Force Falcons at UNLV Rebels,8.771,-7.0,,51,48
+2025,0,10/11/2025 Iowa State Cyclones at Colorado Buffaloes,Iowa State Cyclones at Colorado Buffaloes,-7.565,3.0,,24,17
+2025,0,10/11/2025 Ball State Cardinals at Western Michigan Broncos,Ball State Cardinals at Western Michigan Broncos,11.802,-9.5,,42,0
+2025,0,10/11/2025 Nebraska Cornhuskers at Maryland Terrapins,Nebraska Cornhuskers at Maryland Terrapins,-12.245,7.0,,31,34
+2025,0,10/11/2025 Appalachian State Mountaineers at Georgia State Panthers,Appalachian State Mountaineers at Georgia State Panthers,-1.801,3.0,,20,41
+2025,0,10/11/2025 Old Dominion Monarchs at Marshall Thundering Herd,Old Dominion Monarchs at Marshall Thundering Herd,-15.398,14.5,,48,24
+2025,0,10/11/2025 North Carolina Central Eagles at Florida A&M Rattlers,North Carolina Central Eagles at Florida A&M Rattlers,27.33,12.5,,7,45
+2025,0,10/11/2025 Massachusetts Minutemen at Kent State Golden Flashes,Massachusetts Minutemen at Kent State Golden Flashes,3.98,-1.0,,42,6
+2025,0,10/11/2025 South Carolina State Bulldogs at North Carolina A&T Aggies,South Carolina State Bulldogs at North Carolina A&T Aggies,-15.467,9.5,,16,22
+2025,0,10/11/2025 Northern Illinois Huskies at Eastern Michigan Eagles,Northern Illinois Huskies at Eastern Michigan Eagles,-0.824,1.5,,16,10
+2025,0,10/11/2025 Washington State Cougars at Ole Miss Rebels,Washington State Cougars at Ole Miss Rebels,12.135,-33.0,,24,21
+2025,0,10/11/2025 Ohio State Buckeyes at Illinois Fighting Illini,Ohio State Buckeyes at Illinois Fighting Illini,20.84,15.5,,16,34
+2025,0,10/11/2025 Pittsburgh Panthers at Florida State Seminoles,Pittsburgh Panthers at Florida State Seminoles,10.117,-10.5,,31,34
+2025,0,10/11/2025 Alabama Crimson Tide at Missouri Tigers,Alabama Crimson Tide at Missouri Tigers,-9.482,3.0,,24,27
+2025,0,10/11/2025 Stanford Cardinal at SMU Mustangs,Stanford Cardinal at SMU Mustangs,17.418,-19.5,,34,10
+2025,0,10/11/2025 Houston Cougars at Oklahoma State Cowboys,Houston Cougars at Oklahoma State Cowboys,18.64,15.0,,17,39
+2025,0,10/11/2025 Toledo Rockets at Bowling Green Falcons,Toledo Rockets at Bowling Green Falcons,-12.098,11.5,,28,23
+2025,0,10/11/2025 Miami (OH) RedHawks at Akron Zips,Miami (OH) RedHawks at Akron Zips,-42.42,11.5,,7,20
+2025,0,10/11/2025 UCLA Bruins at Michigan State Spartans,UCLA Bruins at Michigan State Spartans,25.513,-7.0,,13,38
+2025,0,10/11/2025 Louisiana Ragin' Cajuns at James Madison Dukes,Louisiana Ragin' Cajuns at James Madison Dukes,17.494,-18.5,,24,14
+2025,0,10/11/2025 Charlotte 49ers at Army Black Knights,Charlotte 49ers at Army Black Knights,22.523,-17.0,,24,7
+2025,0,10/11/2025 UCF Knights at Cincinnati Bearcats,UCF Knights at Cincinnati Bearcats,11.114,-10.0,,20,11
+2025,0,10/11/2025 Rutgers Scarlet Knights at Washington Huskies,Rutgers Scarlet Knights at Washington Huskies,8.405,-9.5,,38,19
+2025,0,10/11/2025 Fresno State Bulldogs at Colorado State Rams,Fresno State Bulldogs at Colorado State Rams,7.532,5.5,,49,21
+2025,0,10/10/2025 South Florida Bulls at North Texas Mean Green,South Florida Bulls at North Texas Mean Green,-0.076,-2.5,,36,63
+2025,0,10/10/2025 Jacksonville State Gamecocks at Sam Houston State Bearkats,Jacksonville State Gamecocks at Sam Houston State Bearkats,-10.835,7.0,,27,29
+2025,0,10/10/2025 Southern Miss Golden Eagles at Georgia Southern Eagles,Southern Miss Golden Eagles at Georgia Southern Eagles,34.009,3.0,,35,38
+2025,0,10/09/2025 East Carolina Pirates at Tulane Green Wave,East Carolina Pirates at Tulane Green Wave,2.695,-7.0,,26,19
+2025,0,10/09/2025 Louisiana Tech Bulldogs at Kennesaw State Owls,Louisiana Tech Bulldogs at Kennesaw State Owls,-11.181,4.5,,35,7
+2025,0,10/09/2025 Liberty Flames at UTEP Miners,Liberty Flames at UTEP Miners,-2.544,2.0,,8,19
+2025,0,10/05/2025 Duke Blue Devils at California Golden Bears,Duke Blue Devils at California Golden Bears,-3.928,3.5,,21,45
+2025,0,10/05/2025 Nevada Wolf Pack at Fresno State Bulldogs,Nevada Wolf Pack at Fresno State Bulldogs,22.051,-12.0,,20,17
+2025,0,10/05/2025 Tulsa Golden Hurricane at Memphis Tigers,Tulsa Golden Hurricane at Memphis Tigers,22.619,-21.0,,45,7
+2025,0,10/04/2025 Miami Hurricanes at Florida State Seminoles,Miami Hurricanes at Florida State Seminoles,-5.327,3.5,,22,28
+2025,0,10/04/2025 Colorado Buffaloes at TCU Horned Frogs,Colorado Buffaloes at TCU Horned Frogs,10.335,-13.5,,35,21
+2025,0,10/04/2025 Mississippi State Bulldogs at Texas A&M Aggies,Mississippi State Bulldogs at Texas A&M Aggies,15.145,-17.5,,31,9
+2025,0,10/04/2025 Minnesota Golden Gophers at Ohio State Buckeyes,Minnesota Golden Gophers at Ohio State Buckeyes,-5.62,-23.5,,42,3
+2025,0,10/04/2025 Kansas Jayhawks at UCF Knights,Kansas Jayhawks at UCF Knights,-3.933,4.0,,20,27
+2025,0,10/04/2025 Texas A&M Commerce Lions at Northwestern State Demons,Texas A&M Commerce Lions at Northwestern State Demons,-19.098,7.5,,10,40
+2025,0,10/04/2025 UNLV Rebels at Wyoming Cowboys,UNLV Rebels at Wyoming Cowboys,-3.32,4.5,,17,31
+2025,0,10/04/2025 South Alabama Jaguars at Troy Trojans,South Alabama Jaguars at Troy Trojans,4.035,2.5,,31,24
+2025,0,10/04/2025 Texas Tech Red Raiders at Houston Cougars,Texas Tech Red Raiders at Houston Cougars,-13.183,13.0,,11,35
+2025,0,10/04/2025 Florida Atlantic Owls at Rice Owls,Florida Atlantic Owls at Rice Owls,7.333,-4.0,,21,27
+2025,0,10/04/2025 Coastal Carolina Chanticleers at Old Dominion Monarchs,Coastal Carolina Chanticleers at Old Dominion Monarchs,22.519,-18.5,,47,7
+2025,0,10/04/2025 Texas State Bobcats at Arkansas State Red Wolves,Texas State Bobcats at Arkansas State Red Wolves,-11.386,14.0,,31,30
+2025,0,10/04/2025 Kent State Golden Flashes at Oklahoma Sooners,Kent State Golden Flashes at Oklahoma Sooners,50.291,-46.5,,44,0
+2025,0,10/04/2025 Michigan State Spartans at Nebraska Cornhuskers,Michigan State Spartans at Nebraska Cornhuskers,1.347,-12.5,,38,27
+2025,0,10/04/2025 ULM Warhawks at Northwestern Wildcats,ULM Warhawks at Northwestern Wildcats,15.104,-13.0,,42,7
+2025,0,10/04/2025 Washington Huskies at Maryland Terrapins,Washington Huskies at Maryland Terrapins,-7.47,6.0,,20,24
+2025,0,10/04/2025 Penn State Nittany Lions at UCLA Bruins,Penn State Nittany Lions at UCLA Bruins,-25.221,25.0,,42,37
+2025,0,10/04/2025 Virginia Cavaliers at Louisville Cardinals,Virginia Cavaliers at Louisville Cardinals,5.186,-6.5,,27,30
+2025,0,10/04/2025 Boise State Broncos at Notre Dame Fighting Irish,Boise State Broncos at Notre Dame Fighting Irish,23.824,-21.5,,28,7
+2025,0,10/04/2025 FIU Panthers at Connecticut Huskies,FIU Panthers at Connecticut Huskies,12.064,-7.0,,51,10
+2025,0,10/04/2025 Miami (OH) RedHawks at Northern Illinois Huskies,Miami (OH) RedHawks at Northern Illinois Huskies,-34.94,5.0,,14,25
+2025,0,10/04/2025 Syracuse Orange at SMU Mustangs,Syracuse Orange at SMU Mustangs,8.025,-17.5,,31,18
+2025,0,10/04/2025 Vanderbilt Commodores at Alabama Crimson Tide,Vanderbilt Commodores at Alabama Crimson Tide,13.901,-12.5,,30,14
+2025,0,10/04/2025 James Madison Dukes at Georgia State Panthers,James Madison Dukes at Georgia State Panthers,-21.728,21.0,,7,14
+2025,0,10/04/2025 Eastern Michigan Eagles at Buffalo Bulls,Eastern Michigan Eagles at Buffalo Bulls,13.923,-9.0,,31,30
+2025,0,10/04/2025 Central Michigan Chippewas at Akron Zips,Central Michigan Chippewas at Akron Zips,-5.476,7.5,,28,22
+2025,0,10/04/2025 Texas Longhorns at Florida Gators,Texas Longhorns at Florida Gators,-4.517,4.5,,29,21
+2025,0,10/04/2025 Oregon State Beavers at Appalachian State Mountaineers,Oregon State Beavers at Appalachian State Mountaineers,-6.208,-1.5,,27,23
+2025,0,10/04/2025 Oklahoma State Cowboys at Arizona Wildcats,Oklahoma State Cowboys at Arizona Wildcats,-12.997,-21.5,,41,13
+2025,0,10/04/2025 Western Michigan Broncos at Massachusetts Minutemen,Western Michigan Broncos at Massachusetts Minutemen,-14.203,12.5,,3,21
+2025,0,10/04/2025 Wake Forest Demon Deacons at Virginia Tech Hokies,Wake Forest Demon Deacons at Virginia Tech Hokies,7.274,-5.0,,23,30
+2025,0,10/04/2025 UTSA Roadrunners at Temple Owls,UTSA Roadrunners at Temple Owls,-2.622,6.5,,27,21
+2025,0,10/04/2025 Army Black Knights at UAB Blazers,Army Black Knights at UAB Blazers,-6.494,7.0,,13,31
+2025,0,10/04/2025 Kansas State Wildcats at Baylor Bears,Kansas State Wildcats at Baylor Bears,-0.054,-4.5,,35,34
+2025,0,10/04/2025 Ohio Bobcats at Ball State Cardinals,Ohio Bobcats at Ball State Cardinals,-17.706,14.0,,20,14
+2025,0,10/04/2025 Illinois Fighting Illini at Purdue Boilermakers,Illinois Fighting Illini at Purdue Boilermakers,-13.953,7.5,,27,43
+2025,0,10/04/2025 Boston College Eagles at Pittsburgh Panthers,Boston College Eagles at Pittsburgh Panthers,5.604,-7.0,,48,7
+2025,0,10/04/2025 Clemson Tigers at North Carolina Tar Heels,Clemson Tigers at North Carolina Tar Heels,-14.329,15.5,,10,38
+2025,0,10/04/2025 Wisconsin Badgers at Michigan Wolverines,Wisconsin Badgers at Michigan Wolverines,20.253,-17.0,,24,10
+2025,0,10/04/2025 Iowa State Cyclones at Cincinnati Bearcats,Iowa State Cyclones at Cincinnati Bearcats,1.718,-2.0,,38,30
+2025,0,10/04/2025 Kentucky Wildcats at Georgia Bulldogs,Kentucky Wildcats at Georgia Bulldogs,20.84,-19.5,,35,14
+2025,0,10/04/2025 Air Force Falcons at Navy Midshipmen,Air Force Falcons at Navy Midshipmen,14.514,-13.0,,34,31
+2025,0,10/04/2025 Colorado State Rams at San Diego State Aztecs,Colorado State Rams at San Diego State Aztecs,-6.675,-4.5,,45,24
+2025,0,10/04/2025 West Virginia Mountaineers at BYU Cougars,West Virginia Mountaineers at BYU Cougars,21.123,-20.0,,38,24
+2025,0,10/04/2025 New Mexico Lobos at San Jose State Spartans,New Mexico Lobos at San Jose State Spartans,-0.653,-1.5,,35,28
+2025,0,10/03/2025 Charlotte 49ers at South Florida Bulls,Charlotte 49ers at South Florida Bulls,34.988,-28.0,,54,26
+2025,0,10/03/2025 Sam Houston State Bearkats at New Mexico State Aggies,Sam Houston State Bearkats at New Mexico State Aggies,16.565,2.0,,37,10
+2025,0,09/28/2025 BYU Cougars at Colorado Buffaloes,BYU Cougars at Colorado Buffaloes,-10.722,7.0,,21,24
+2025,0,09/28/2025 Louisiana Tech Bulldogs at UTEP Miners,Louisiana Tech Bulldogs at UTEP Miners,-6.841,4.0,,11,30
+2025,0,09/28/2025 Marshall Thundering Herd at Louisiana Ragin' Cajuns,Marshall Thundering Herd at Louisiana Ragin' Cajuns,0.906,2.0,,54,51
+2025,0,09/27/2025 Kentucky Wildcats at South Carolina Gamecocks,Kentucky Wildcats at South Carolina Gamecocks,4.126,-5.5,,35,13
+2025,0,09/27/2025 Oregon Ducks at Penn State Nittany Lions,Oregon Ducks at Penn State Nittany Lions,-1.894,-4.5,,24,30
+2025,0,09/27/2025 Alabama Crimson Tide at Georgia Bulldogs,Alabama Crimson Tide at Georgia Bulldogs,-2.987,-2.0,,21,24
+2025,0,09/27/2025 San Jose State Spartans at Stanford Cardinal,San Jose State Spartans at Stanford Cardinal,8.551,-3.0,,30,29
+2025,0,09/27/2025 Appalachian State Mountaineers at Boise State Broncos,Appalachian State Mountaineers at Boise State Broncos,19.388,-17.0,,47,14
+2025,0,09/27/2025 Washington State Cougars at Colorado State Rams,Washington State Cougars at Colorado State Rams,-8.281,-5.0,,3,20
+2025,0,09/27/2025 Massachusetts Minutemen at Missouri Tigers,Massachusetts Minutemen at Missouri Tigers,49.273,-44.5,,42,6
+2025,0,09/27/2025 North Carolina Central Eagles at Texas A&M Commerce Lions,North Carolina Central Eagles at Texas A&M Commerce Lions,26.947,14.5,,42,50
+2025,0,09/27/2025 Western Kentucky Hilltoppers at Missouri State Bears,Western Kentucky Hilltoppers at Missouri State Bears,27.303,3.5,,22,27
+2025,0,09/27/2025 Jacksonville State Gamecocks at Southern Miss Golden Eagles,Jacksonville State Gamecocks at Southern Miss Golden Eagles,-0.702,-4.5,,42,25
+2025,0,09/27/2025 Arizona Wildcats at Iowa State Cyclones,Arizona Wildcats at Iowa State Cyclones,6.589,-4.0,,39,14
+2025,0,09/27/2025 Virginia Tech Hokies at NC State Wolfpack,Virginia Tech Hokies at NC State Wolfpack,8.541,-9.5,,21,23
+2025,0,09/27/2025 Memphis Tigers at Florida Atlantic Owls,Memphis Tigers at Florida Atlantic Owls,-16.583,14.0,,26,55
+2025,0,09/27/2025 Liberty Flames at Old Dominion Monarchs,Liberty Flames at Old Dominion Monarchs,18.227,-14.5,,21,7
+2025,0,09/27/2025 Tennessee Volunteers at Mississippi State Bulldogs,Tennessee Volunteers at Mississippi State Bulldogs,-6.763,7.5,,34,41
+2025,0,09/27/2025 New Mexico State Aggies at New Mexico Lobos,New Mexico State Aggies at New Mexico Lobos,2.8,-16.5,,38,20
+2025,0,09/27/2025 Hawaii Rainbow Warriors at Air Force Falcons,Hawaii Rainbow Warriors at Air Force Falcons,5.387,-6.5,,35,44
+2025,0,09/27/2025 Tulane Green Wave at Tulsa Golden Hurricane,Tulane Green Wave at Tulsa Golden Hurricane,-13.298,15.0,,14,31
+2025,0,09/27/2025 LSU Tigers at Ole Miss Rebels,LSU Tigers at Ole Miss Rebels,5.044,-2.5,,24,19
+2025,0,09/27/2025 Ohio State Buckeyes at Washington Huskies,Ohio State Buckeyes at Washington Huskies,18.578,9.5,,6,24
+2025,0,09/27/2025 Auburn Tigers at Texas A&M Aggies,Auburn Tigers at Texas A&M Aggies,8.943,-6.5,,16,10
+2025,0,09/27/2025 UCLA Bruins at Northwestern Wildcats,UCLA Bruins at Northwestern Wildcats,8.698,-5.5,,17,14
+2025,0,09/27/2025 Indiana Hoosiers at Iowa Hawkeyes,Indiana Hoosiers at Iowa Hawkeyes,-13.151,9.0,,15,20
+2025,0,09/27/2025 Baylor Bears at Oklahoma State Cowboys,Baylor Bears at Oklahoma State Cowboys,15.097,21.0,,27,45
+2025,0,09/27/2025 San Diego State Aztecs at Northern Illinois Huskies,San Diego State Aztecs at Northern Illinois Huskies,-6.492,2.0,,3,6
+2025,0,09/27/2025 Akron Zips at Toledo Rockets,Akron Zips at Toledo Rockets,26.43,-21.5,,45,3
+2025,0,09/27/2025 Connecticut Huskies at Buffalo Bulls,Connecticut Huskies at Buffalo Bulls,-1.918,3.0,,17,20
+2025,0,09/27/2025 California Golden Bears at Boston College Eagles,California Golden Bears at Boston College Eagles,8.948,-6.0,,24,28
+2025,0,09/27/2025 Utah Utes at West Virginia Mountaineers,Utah Utes at West Virginia Mountaineers,-11.298,13.5,,14,48
+2025,0,09/27/2025 Rice Owls at Navy Midshipmen,Rice Owls at Navy Midshipmen,20.668,-14.0,,21,13
+2025,0,09/27/2025 Alabama State Hornets at Florida A&M Rattlers,Alabama State Hornets at Florida A&M Rattlers,-11.116,7.5,,14,42
+2025,0,09/27/2025 Arkansas State Red Wolves at ULM Warhawks,Arkansas State Red Wolves at ULM Warhawks,0.794,-1.0,,28,16
+2025,0,09/27/2025 Georgia Southern Eagles at James Madison Dukes,Georgia Southern Eagles at James Madison Dukes,-17.384,-14.5,,35,10
+2025,0,09/27/2025 Eastern Michigan Eagles at Central Michigan Chippewas,Eastern Michigan Eagles at Central Michigan Chippewas,7.784,-3.0,,24,13
+2025,0,09/27/2025 Utah State Aggies at Vanderbilt Commodores,Utah State Aggies at Vanderbilt Commodores,5.814,-23.0,,55,35
+2025,0,09/27/2025 USC Trojans at Illinois Fighting Illini,USC Trojans at Illinois Fighting Illini,-6.153,7.0,,34,32
+2025,0,09/27/2025 South Alabama Jaguars at North Texas Mean Green,South Alabama Jaguars at North Texas Mean Green,16.686,-12.5,,36,22
+2025,0,09/27/2025 Rutgers Scarlet Knights at Minnesota Golden Gophers,Rutgers Scarlet Knights at Minnesota Golden Gophers,2.726,-4.0,,31,28
+2025,0,09/27/2025 Notre Dame Fighting Irish at Arkansas Razorbacks,Notre Dame Fighting Irish at Arkansas Razorbacks,-4.845,5.5,,13,56
+2025,0,09/27/2025 Cincinnati Bearcats at Kansas Jayhawks,Cincinnati Bearcats at Kansas Jayhawks,4.347,-5.0,,34,37
+2025,0,09/27/2025 UCF Knights at Kansas State Wildcats,UCF Knights at Kansas State Wildcats,8.284,-5.5,,34,20
+2025,0,09/27/2025 Bowling Green Falcons at Ohio Bobcats,Bowling Green Falcons at Ohio Bobcats,10.157,-7.5,,35,20
+2025,0,09/27/2025 Georgia Tech Yellow Jackets at Wake Forest Demon Deacons,Georgia Tech Yellow Jackets at Wake Forest Demon Deacons,-17.322,13.5,,29,30
+2025,0,09/27/2025 Duke Blue Devils at Syracuse Orange,Duke Blue Devils at Syracuse Orange,9.018,4.5,,3,38
+2025,0,09/27/2025 Louisville Cardinals at Pittsburgh Panthers,Louisville Cardinals at Pittsburgh Panthers,-2.794,3.0,,27,34
+2025,0,09/27/2025 Houston Cougars at Oregon State Beavers,Houston Cougars at Oregon State Beavers,-12.111,13.5,,24,27
+2025,0,09/27/2025 TCU Horned Frogs at Arizona State Sun Devils,TCU Horned Frogs at Arizona State Sun Devils,1.975,-2.5,,27,24
+2025,0,09/26/2025 Florida State Seminoles at Virginia Cavaliers,Florida State Seminoles at Virginia Cavaliers,-4.419,7.0,,46,38
+2025,0,09/25/2025 Army Black Knights at East Carolina Pirates,Army Black Knights at East Carolina Pirates,9.608,-3.5,,28,6
+2025,0,09/21/2025 Fresno State Bulldogs at Hawaii Rainbow Warriors,Fresno State Bulldogs at Hawaii Rainbow Warriors,-9.471,2.5,,21,23
+2025,0,09/21/2025 Michigan State Spartans at USC Trojans,Michigan State Spartans at USC Trojans,4.452,-19.0,,45,31
+2025,0,09/21/2025 California Golden Bears at San Diego State Aztecs,California Golden Bears at San Diego State Aztecs,-16.412,14.0,,34,0
+2025,0,09/21/2025 Wyoming Cowboys at Colorado Buffaloes,Wyoming Cowboys at Colorado Buffaloes,15.683,-12.0,,37,20
+2025,0,09/21/2025 UTSA Roadrunners at Colorado State Rams,UTSA Roadrunners at Colorado State Rams,7.917,5.0,,16,17
+2025,0,09/21/2025 ULM Warhawks at UTEP Miners,ULM Warhawks at UTEP Miners,10.617,-5.5,,25,31
+2025,0,09/21/2025 Sam Houston State Bearkats at Texas Longhorns,Sam Houston State Bearkats at Texas Longhorns,42.967,-39.5,,55,0
+2025,0,09/21/2025 Georgia State Panthers at Vanderbilt Commodores,Georgia State Panthers at Vanderbilt Commodores,36.852,-27.0,,70,21
+2025,0,09/20/2025 Illinois Fighting Illini at Indiana Hoosiers,Illinois Fighting Illini at Indiana Hoosiers,4.843,-7.0,,63,10
+2025,0,09/20/2025 Florida Gators at Miami Hurricanes,Florida Gators at Miami Hurricanes,6.791,-8.5,,26,7
+2025,0,09/20/2025 Washington Huskies at Washington State Cougars,Washington Huskies at Washington State Cougars,2.8,21.0,,24,59
+2025,0,09/20/2025 Southern Miss Golden Eagles at Louisiana Tech Bulldogs,Southern Miss Golden Eagles at Louisiana Tech Bulldogs,9.509,-3.0,,30,20
+2025,0,09/20/2025 Arizona State Sun Devils at Baylor Bears,Arizona State Sun Devils at Baylor Bears,2.505,-2.0,,24,27
+2025,0,09/20/2025 Stanford Cardinal at Virginia Cavaliers,Stanford Cardinal at Virginia Cavaliers,11.459,-16.0,,48,20
+2025,0,09/20/2025 BYU Cougars at East Carolina Pirates,BYU Cougars at East Carolina Pirates,-9.054,6.5,,13,34
+2025,0,09/20/2025 Boise State Broncos at Air Force Falcons,Boise State Broncos at Air Force Falcons,-7.52,11.0,,37,49
+2025,0,09/20/2025 Coastal Carolina Chanticleers at South Alabama Jaguars,Coastal Carolina Chanticleers at South Alabama Jaguars,18.01,-14.5,,20,38
+2025,0,09/20/2025 South Carolina Gamecocks at Missouri Tigers,South Carolina Gamecocks at Missouri Tigers,13.286,-10.0,,29,20
+2025,0,09/20/2025 Nevada Wolf Pack at Western Kentucky Hilltoppers,Nevada Wolf Pack at Western Kentucky Hilltoppers,14.87,-7.5,,31,16
+2025,0,09/20/2025 Arkansas State Red Wolves at Kennesaw State Owls,Arkansas State Red Wolves at Kennesaw State Owls,-2.702,4.5,,28,21
+2025,0,09/20/2025 West Virginia Mountaineers at Kansas Jayhawks,West Virginia Mountaineers at Kansas Jayhawks,9.933,-11.5,,41,10
+2025,0,09/20/2025 Temple Owls at Georgia Tech Yellow Jackets,Temple Owls at Georgia Tech Yellow Jackets,25.015,-24.0,,45,24
+2025,0,09/20/2025 Northern Illinois Huskies at Mississippi State Bulldogs,Northern Illinois Huskies at Mississippi State Bulldogs,28.302,-24.0,,38,10
+2025,0,09/20/2025 North Carolina Central Eagles at North Carolina A&T Aggies,North Carolina Central Eagles at North Carolina A&T Aggies,2.8,13.0,,20,62
+2025,0,09/20/2025 NC State Wolfpack at Duke Blue Devils,NC State Wolfpack at Duke Blue Devils,-1.584,-3.0,,45,33
+2025,0,09/20/2025 Auburn Tigers at Oklahoma Sooners,Auburn Tigers at Oklahoma Sooners,7.078,-7.0,,24,17
+2025,0,09/20/2025 North Carolina Tar Heels at UCF Knights,North Carolina Tar Heels at UCF Knights,11.838,-7.0,,34,9
+2025,0,09/20/2025 Michigan Wolverines at Nebraska Cornhuskers,Michigan Wolverines at Nebraska Cornhuskers,3.098,1.0,,27,30
+2025,0,09/20/2025 Purdue Boilermakers at Notre Dame Fighting Irish,Purdue Boilermakers at Notre Dame Fighting Irish,27.808,-24.0,,56,30
+2025,0,09/20/2025 Tulane Green Wave at Ole Miss Rebels,Tulane Green Wave at Ole Miss Rebels,18.656,-11.0,,45,10
+2025,0,09/20/2025 Toledo Rockets at Western Michigan Broncos,Toledo Rockets at Western Michigan Broncos,-16.561,13.5,,14,13
+2025,0,09/20/2025 Kent State Golden Flashes at Florida State Seminoles,Kent State Golden Flashes at Florida State Seminoles,44.603,-44.5,,66,10
+2025,0,09/20/2025 Ball State Cardinals at Connecticut Huskies,Ball State Cardinals at Connecticut Huskies,24.091,-21.0,,31,25
+2025,0,09/20/2025 James Madison Dukes at Liberty Flames,James Madison Dukes at Liberty Flames,-6.077,7.5,,13,31
+2025,0,09/20/2025 Louisiana Ragin' Cajuns at Eastern Michigan Eagles,Louisiana Ragin' Cajuns at Eastern Michigan Eagles,-7.746,2.5,,34,31
+2025,0,09/20/2025 Troy Trojans at Buffalo Bulls,Troy Trojans at Buffalo Bulls,4.121,-5.0,,17,21
+2025,0,09/20/2025 Oregon State Beavers at Oregon Ducks,Oregon State Beavers at Oregon Ducks,37.974,-33.5,,41,7
+2025,0,09/20/2025 UAB Blazers at Tennessee Volunteers,UAB Blazers at Tennessee Volunteers,38.689,-39.0,,56,24
+2025,0,09/20/2025 Texas Tech Red Raiders at Utah Utes,Texas Tech Red Raiders at Utah Utes,2.671,-3.0,,10,34
+2025,0,09/20/2025 Syracuse Orange at Clemson Tigers,Syracuse Orange at Clemson Tigers,14.973,-18.0,,21,34
+2025,0,09/20/2025 UNLV Rebels at Miami (OH) RedHawks,UNLV Rebels at Miami (OH) RedHawks,27.053,1.5,,38,41
+2025,0,09/20/2025 Maryland Terrapins at Wisconsin Badgers,Maryland Terrapins at Wisconsin Badgers,10.559,-10.5,,10,27
+2025,0,09/20/2025 South Carolina State Bulldogs at South Florida Bulls,South Carolina State Bulldogs at South Florida Bulls,-0.79,-35.5,,63,14
+2025,0,09/20/2025 North Texas Mean Green at Army Black Knights,North Texas Mean Green at Army Black Knights,-4.291,2.5,,38,45
+2025,0,09/20/2025 SMU Mustangs at TCU Horned Frogs,SMU Mustangs at TCU Horned Frogs,6.494,-6.5,,35,24
+2025,0,09/20/2025 Arkansas Razorbacks at Memphis Tigers,Arkansas Razorbacks at Memphis Tigers,-9.114,7.5,,32,31
+2025,0,09/20/2025 Bowling Green Falcons at Louisville Cardinals,Bowling Green Falcons at Louisville Cardinals,22.665,-26.5,,40,17
+2025,0,09/20/2025 Iowa Hawkeyes at Rutgers Scarlet Knights,Iowa Hawkeyes at Rutgers Scarlet Knights,2.077,1.5,,28,38
+2025,0,09/19/2025 Tulsa Golden Hurricane at Oklahoma State Cowboys,Tulsa Golden Hurricane at Oklahoma State Cowboys,40.252,-10.0,,12,19
+2025,0,09/18/2025 Rice Owls at Charlotte 49ers,Rice Owls at Charlotte 49ers,-7.035,2.0,,17,28
+2025,0,09/14/2025 Boston College Eagles at Stanford Cardinal,Boston College Eagles at Stanford Cardinal,-13.446,14.0,,30,20
+2025,0,09/14/2025 Minnesota Golden Gophers at California Golden Bears,Minnesota Golden Gophers at California Golden Bears,-9.046,3.0,,27,14
+2025,0,09/14/2025 Texas State Bobcats at Arizona State Sun Devils,Texas State Bobcats at Arizona State Sun Devils,12.771,-18.5,,34,15
+2025,0,09/14/2025 Air Force Falcons at Utah State Aggies,Air Force Falcons at Utah State Aggies,25.878,4.5,,49,30
+2025,0,09/14/2025 Akron Zips at UAB Blazers,Akron Zips at UAB Blazers,15.554,-11.5,,31,28
+2025,0,09/14/2025 Utah Utes at Wyoming Cowboys,Utah Utes at Wyoming Cowboys,-28.267,24.0,,6,31
+2025,0,09/14/2025 Duke Blue Devils at Tulane Green Wave,Duke Blue Devils at Tulane Green Wave,6.997,-1.0,,34,27
+2025,0,09/14/2025 Navy Midshipmen at Tulsa Golden Hurricane,Navy Midshipmen at Tulsa Golden Hurricane,-17.067,14.0,,23,42
+2025,0,09/13/2025 Vanderbilt Commodores at South Carolina Gamecocks,Vanderbilt Commodores at South Carolina Gamecocks,3.797,-3.0,,7,31
+2025,0,09/13/2025 Massachusetts Minutemen at Iowa Hawkeyes,Massachusetts Minutemen at Iowa Hawkeyes,42.432,-35.0,,47,7
+2025,0,09/13/2025 New Mexico State Aggies at Louisiana Tech Bulldogs,New Mexico State Aggies at Louisiana Tech Bulldogs,10.722,-10.0,,49,14
+2025,0,09/13/2025 Florida Gators at LSU Tigers,Florida Gators at LSU Tigers,5.606,-4.5,,20,10
+2025,0,09/13/2025 East Carolina Pirates at Coastal Carolina Chanticleers,East Carolina Pirates at Coastal Carolina Chanticleers,-12.778,7.5,,0,38
+2025,0,09/13/2025 Texas A&M Aggies at Notre Dame Fighting Irish,Texas A&M Aggies at Notre Dame Fighting Irish,-1.436,-6.5,,40,41
+2025,0,09/13/2025 Eastern Michigan Eagles at Kentucky Wildcats,Eastern Michigan Eagles at Kentucky Wildcats,32.202,-26.5,,48,23
+2025,0,09/13/2025 Western Michigan Broncos at Illinois Fighting Illini,Western Michigan Broncos at Illinois Fighting Illini,33.102,-27.5,,38,0
+2025,0,09/13/2025 Arkansas Razorbacks at Ole Miss Rebels,Arkansas Razorbacks at Ole Miss Rebels,10.31,-3.5,,41,35
+2025,0,09/13/2025 Appalachian State Mountaineers at Southern Miss Golden Eagles,Appalachian State Mountaineers at Southern Miss Golden Eagles,-1.352,3.0,,38,22
+2025,0,09/13/2025 Ohio Bobcats at Ohio State Buckeyes,Ohio Bobcats at Ohio State Buckeyes,2.8,-28.0,,37,9
+2025,0,09/13/2025 Jacksonville State Gamecocks at Georgia Southern Eagles,Jacksonville State Gamecocks at Georgia Southern Eagles,31.258,-3.0,,41,34
+2025,0,09/13/2025 Old Dominion Monarchs at Virginia Tech Hokies,Old Dominion Monarchs at Virginia Tech Hokies,2.077,-5.5,,26,45
+2025,0,09/13/2025 USC Trojans at Purdue Boilermakers,USC Trojans at Purdue Boilermakers,-24.728,20.5,,17,33
+2025,0,09/13/2025 Florida Atlantic Owls at FIU Panthers,Florida Atlantic Owls at FIU Panthers,7.117,-2.5,,38,28
+2025,0,09/13/2025 Liberty Flames at Bowling Green Falcons,Liberty Flames at Bowling Green Falcons,-2.734,6.5,,23,13
+2025,0,09/13/2025 Alabama A&M Bulldogs at Tennessee State Tigers,Alabama A&M Bulldogs at Tennessee State Tigers,-6.346,1.0,,21,23
+2025,0,09/13/2025 South Florida Bulls at Miami Hurricanes,South Florida Bulls at Miami Hurricanes,10.231,-17.0,,49,12
+2025,0,09/13/2025 UTEP Miners at Texas Longhorns,UTEP Miners at Texas Longhorns,44.556,-39.0,,27,10
+2025,0,09/13/2025 Iowa State Cyclones at Arkansas State Red Wolves,Iowa State Cyclones at Arkansas State Red Wolves,-23.64,21.5,,16,24
+2025,0,09/13/2025 Georgia Bulldogs at Tennessee Volunteers,Georgia Bulldogs at Tennessee Volunteers,1.11,3.5,,41,44
+2025,0,09/13/2025 Oregon State Beavers at Texas Tech Red Raiders,Oregon State Beavers at Texas Tech Red Raiders,27.822,-24.0,,45,14
+2025,0,09/13/2025 SMU Mustangs at Missouri State Bears,SMU Mustangs at Missouri State Bears,9.509,28.5,,10,28
+2025,0,09/13/2025 Washington State Cougars at North Texas Mean Green,Washington State Cougars at North Texas Mean Green,-13.01,-7.0,,59,10
+2025,0,09/13/2025 Pittsburgh Panthers at West Virginia Mountaineers,Pittsburgh Panthers at West Virginia Mountaineers,-5.731,7.0,,31,24
+2025,0,09/13/2025 Northwestern State Demons at Cincinnati Bearcats,Northwestern State Demons at Cincinnati Bearcats,12.527,-48.5,,70,0
+2025,0,09/13/2025 Louisiana Ragin' Cajuns at Missouri Tigers,Louisiana Ragin' Cajuns at Missouri Tigers,26.638,-27.0,,52,10
+2025,0,09/13/2025 South Alabama Jaguars at Auburn Tigers,South Alabama Jaguars at Auburn Tigers,26.978,-26.5,,31,15
+2025,0,09/13/2025 Houston Christian Huskies at Nebraska Cornhuskers,Houston Christian Huskies at Nebraska Cornhuskers,15.579,-48.0,,59,7
+2025,0,09/13/2025 Oregon Ducks at Northwestern Wildcats,Oregon Ducks at Northwestern Wildcats,-29.507,24.5,,14,34
+2025,0,09/13/2025 Wisconsin Badgers at Alabama Crimson Tide,Wisconsin Badgers at Alabama Crimson Tide,25.059,-18.0,,38,14
+2025,0,09/13/2025 Memphis Tigers at Troy Trojans,Memphis Tigers at Troy Trojans,-2.967,4.5,,7,28
+2025,0,09/13/2025 Buffalo Bulls at Kent State Golden Flashes,Buffalo Bulls at Kent State Golden Flashes,-22.284,24.0,,28,31
+2025,0,09/13/2025 Central Michigan Chippewas at Michigan Wolverines,Central Michigan Chippewas at Michigan Wolverines,27.765,-28.0,,63,3
+2025,0,09/13/2025 Clemson Tigers at Georgia Tech Yellow Jackets,Clemson Tigers at Georgia Tech Yellow Jackets,-1.509,3.0,,24,21
+2025,0,09/13/2025 Oklahoma Sooners at Temple Owls,Oklahoma Sooners at Temple Owls,-20.181,23.5,,3,42
+2025,0,09/13/2025 New Mexico Lobos at UCLA Bruins,New Mexico Lobos at UCLA Bruins,17.33,-15.5,,10,35
+2025,0,09/13/2025 Kansas State Wildcats at Arizona Wildcats,Kansas State Wildcats at Arizona Wildcats,0.353,1.5,,23,17
+2025,0,09/12/2025 Colorado Buffaloes at Houston Cougars,Colorado Buffaloes at Houston Cougars,4.024,-4.5,,36,20
+2025,0,09/12/2025 Indiana State SycamoresÂ  at Indiana Hoosiers,Indiana State SycamoresÂ  at Indiana Hoosiers,2.8,-47.0,,73,0
+2025,0,09/11/2025 NC State Wolfpack at Wake Forest Demon Deacons,NC State Wolfpack at Wake Forest Demon Deacons,-9.406,7.0,,24,34
+2025,0,09/07/2025 Sam Houston State Bearkats at Hawaii Rainbow Warriors,Sam Houston State Bearkats at Hawaii Rainbow Warriors,7.045,-7.0,,37,20
+2025,0,09/07/2025 San Diego State Aztecs at Washington State Cougars,San Diego State Aztecs at Washington State Cougars,19.762,-2.0,,36,13
+2025,0,09/07/2025 Stanford Cardinal at BYU Cougars,Stanford Cardinal at BYU Cougars,24.987,-20.5,,27,3
+2025,0,09/07/2025 Tulsa Golden Hurricane at New Mexico State Aggies,Tulsa Golden Hurricane at New Mexico State Aggies,2.681,4.0,,21,14
+2025,0,09/07/2025 UCLA Bruins at UNLV Rebels,UCLA Bruins at UNLV Rebels,-2.226,2.5,,30,23
+2025,0,09/06/2025 ULM Warhawks at Alabama Crimson Tide,ULM Warhawks at Alabama Crimson Tide,34.42,-34.0,,73,0
+2025,0,09/06/2025 Michigan Wolverines at Oklahoma Sooners,Michigan Wolverines at Oklahoma Sooners,4.227,-4.0,,24,13
+2025,0,09/06/2025 Georgia Southern Eagles at USC Trojans,Georgia Southern Eagles at USC Trojans,-3.977,-29.0,,59,20
+2025,0,09/06/2025 Akron Zips at Nebraska Cornhuskers,Akron Zips at Nebraska Cornhuskers,36.845,-33.5,,68,0
+2025,0,09/06/2025 Ball State Cardinals at Auburn Tigers,Ball State Cardinals at Auburn Tigers,48.508,-43.0,,42,3
+2025,0,09/06/2025 Arizona State Sun Devils at Mississippi State Bulldogs,Arizona State Sun Devils at Mississippi State Bulldogs,-3.543,6.0,,24,20
+2025,0,09/06/2025 Louisiana Tech Bulldogs at LSU Tigers,Louisiana Tech Bulldogs at LSU Tigers,40.539,-36.0,,23,7
+2025,0,09/06/2025 Boston College Eagles at Michigan State Spartans,Boston College Eagles at Michigan State Spartans,7.358,-3.5,,42,40
+2025,0,09/06/2025 North Carolina Tar Heels at Charlotte 49ers,North Carolina Tar Heels at Charlotte 49ers,-15.339,16.0,,3,20
+2025,0,09/06/2025 Vanderbilt Commodores at Virginia Tech Hokies,Vanderbilt Commodores at Virginia Tech Hokies,-0.751,-2.0,,20,44
+2025,0,09/06/2025 South Carolina State Bulldogs at South Carolina Gamecocks,South Carolina State Bulldogs at South Carolina Gamecocks,2.8,-42.5,,38,10
+2025,0,09/06/2025 North Carolina A&T Aggies at UCF Knights,North Carolina A&T Aggies at UCF Knights,6.433,-37.5,,68,7
+2025,0,09/06/2025 Houston Cougars at Rice Owls,Houston Cougars at Rice Owls,-12.205,14.0,,9,35
+2025,0,09/06/2025 Tulane Green Wave at South Alabama Jaguars,Tulane Green Wave at South Alabama Jaguars,-10.005,13.5,,31,33
+2025,0,09/06/2025 Army Black Knights at Kansas State Wildcats,Army Black Knights at Kansas State Wildcats,21.664,-17.0,,21,24
+2025,0,09/06/2025 Western Kentucky Hilltoppers at Toledo Rockets,Western Kentucky Hilltoppers at Toledo Rockets,3.423,-7.5,,45,21
+2025,0,09/06/2025 Memphis Tigers at Georgia State Panthers,Memphis Tigers at Georgia State Panthers,-14.178,15.0,,16,38
+2025,0,09/06/2025 Texas Southern Tigers at California Golden Bears,Texas Southern Tigers at California Golden Bears,-22.049,-44.5,,35,3
+2025,0,09/06/2025 Florida A&M Rattlers at Florida Atlantic Owls,Florida A&M Rattlers at Florida Atlantic Owls,-37.862,-21.5,,56,14
+2025,0,09/06/2025 North Carolina Central Eagles at Old Dominion Monarchs,North Carolina Central Eagles at Old Dominion Monarchs,2.617,-21.5,,54,6
+2025,0,09/06/2025 Missouri State Bears at Marshall Thundering Herd,Missouri State Bears at Marshall Thundering Herd,-23.192,-7.0,,20,21
+2025,0,09/06/2025 Arkansas State Red Wolves at Arkansas Razorbacks,Arkansas State Red Wolves at Arkansas Razorbacks,25.954,-23.5,,56,14
+2025,0,09/06/2025 Miami (OH) RedHawks at Rutgers Scarlet Knights,Miami (OH) RedHawks at Rutgers Scarlet Knights,-10.792,-15.5,,45,17
+2025,0,09/06/2025 South Florida Bulls at Florida Gators,South Florida Bulls at Florida Gators,19.059,-18.0,,16,18
+2025,0,09/06/2025 West Virginia Mountaineers at Ohio Bobcats,West Virginia Mountaineers at Ohio Bobcats,-3.678,4.0,,17,10
+2025,0,09/06/2025 Ole Miss Rebels at Kentucky Wildcats,Ole Miss Rebels at Kentucky Wildcats,-14.963,8.0,,23,30
+2025,0,09/06/2025 Oklahoma State Cowboys at Oregon Ducks,Oklahoma State Cowboys at Oregon Ducks,9.559,-28.0,,69,3
+2025,0,09/06/2025 Fresno State Bulldogs at Oregon State Beavers,Fresno State Bulldogs at Oregon State Beavers,-0.865,-1.0,,27,36
+2025,0,09/06/2025 Texas State Bobcats at UTSA Roadrunners,Texas State Bobcats at UTSA Roadrunners,6.421,-4.5,,36,43
+2025,0,09/06/2025 Kansas Jayhawks at Missouri Tigers,Kansas Jayhawks at Missouri Tigers,6.901,-4.5,,42,31
+2025,0,09/06/2025 UAB Blazers at Navy Midshipmen,UAB Blazers at Navy Midshipmen,24.448,-20.5,,38,24
+2025,0,09/06/2025 North Texas Mean Green at Western Michigan Broncos,North Texas Mean Green at Western Michigan Broncos,-9.03,12.0,,30,33
+2025,0,09/06/2025 Troy Trojans at Clemson Tigers,Troy Trojans at Clemson Tigers,35.335,-30.5,,27,16
+2025,0,09/06/2025 Bowling Green Falcons at Cincinnati Bearcats,Bowling Green Falcons at Cincinnati Bearcats,23.508,-21.5,,34,20
+2025,0,09/06/2025 Utah State Aggies at Texas A&M Aggies,Utah State Aggies at Texas A&M Aggies,10.129,-34.0,,44,22
+2025,0,09/06/2025 Iowa Hawkeyes at Iowa State Cyclones,Iowa Hawkeyes at Iowa State Cyclones,2.8,-3.0,,16,13
+2025,0,09/06/2025 San Jose State Spartans at Texas Longhorns,San Jose State Spartans at Texas Longhorns,39.352,-35.0,,38,7
+2025,0,09/06/2025 Central Michigan Chippewas at Pittsburgh Panthers,Central Michigan Chippewas at Pittsburgh Panthers,24.697,-21.0,,45,17
+2025,0,09/06/2025 Illinois Fighting Illini at Duke Blue Devils,Illinois Fighting Illini at Duke Blue Devils,-7.559,2.5,,19,45
+2025,0,09/06/2025 Kennesaw State Owls at Indiana Hoosiers,Kennesaw State Owls at Indiana Hoosiers,32.098,-35.5,,56,9
+2025,0,09/06/2025 Texas A&M Commerce Lions at Florida State Seminoles,Texas A&M Commerce Lions at Florida State Seminoles,5.2,-45.5,,77,3
+2025,0,09/06/2025 Northwestern State Demons at Minnesota Golden Gophers,Northwestern State Demons at Minnesota Golden Gophers,15.094,-43.0,,66,0
+2025,0,09/06/2025 Baylor Bears at SMU Mustangs,Baylor Bears at SMU Mustangs,3.951,-3.0,,45,48
+2025,0,09/06/2025 Liberty Flames at Jacksonville State Gamecocks,Liberty Flames at Jacksonville State Gamecocks,-4.954,6.0,,34,24
+2025,0,09/06/2025 Kent State Golden Flashes at Texas Tech Red Raiders,Kent State Golden Flashes at Texas Tech Red Raiders,48.576,-48.5,,62,14
+2025,0,09/06/2025 Connecticut Huskies at Syracuse Orange,Connecticut Huskies at Syracuse Orange,5.365,-7.0,,27,20
+2025,0,09/06/2025 Virginia Cavaliers at NC State Wolfpack,Virginia Cavaliers at NC State Wolfpack,-0.361,-2.5,,35,31
+2025,0,09/06/2025 FIU Panthers at Penn State Nittany Lions,FIU Panthers at Penn State Nittany Lions,39.793,-42.0,,34,0
+2025,0,09/05/2025 Northern Illinois Huskies at Maryland Terrapins,Northern Illinois Huskies at Maryland Terrapins,21.305,-16.5,,20,9
+2025,0,09/05/2025 James Madison Dukes at Louisville Cardinals,James Madison Dukes at Louisville Cardinals,13.382,-15.5,,28,14
+2025,0,09/02/2025 TCU Horned Frogs at North Carolina Tar Heels,TCU Horned Frogs at North Carolina Tar Heels,-5.672,3.5,,14,48
+2025,0,08/31/2025 Notre Dame Fighting Irish at Miami Hurricanes,Notre Dame Fighting Irish at Miami Hurricanes,-4.7,3.0,,27,24
+2025,0,08/31/2025 Virginia Tech Hokies at South Carolina Gamecocks,Virginia Tech Hokies at South Carolina Gamecocks,15.626,-6.5,,24,11
+2025,0,08/31/2025 Utah Utes at UCLA Bruins,Utah Utes at UCLA Bruins,-3.0,6.5,,10,43
+2025,0,08/31/2025 Colorado State Rams at Washington Huskies,Colorado State Rams at Washington Huskies,8.892,-22.5,,38,21
+2025,0,08/31/2025 California Golden Bears at Oregon State Beavers,California Golden Bears at Oregon State Beavers,4.375,2.5,,15,34
+2025,0,08/31/2025 Hawaii Rainbow Warriors at Arizona Wildcats,Hawaii Rainbow Warriors at Arizona Wildcats,12.862,-15.0,,40,6
+2025,0,08/31/2025 Georgia Southern Eagles at Fresno State Bulldogs,Georgia Southern Eagles at Fresno State Bulldogs,-33.157,-1.0,,42,14
+2025,0,08/31/2025 Texas A&M Commerce Lions at SMU Mustangs,Texas A&M Commerce Lions at SMU Mustangs,-1.811,-49.5,,42,13
+2025,0,08/31/2025 Eastern Michigan Eagles at Texas State Bobcats,Eastern Michigan Eagles at Texas State Bobcats,13.414,-13.5,,52,27
+2025,0,08/31/2025 Rice Owls at Louisiana Ragin' Cajuns,Rice Owls at Louisiana Ragin' Cajuns,13.965,-10.0,,12,14
+2025,0,08/30/2025 Georgia State Panthers at Ole Miss Rebels,Georgia State Panthers at Ole Miss Rebels,34.748,-33.5,,63,7
+2025,0,08/30/2025 Missouri State Bears at USC Trojans,Missouri State Bears at USC Trojans,6.254,-36.5,,73,13
+2025,0,08/30/2025 UTEP Miners at Utah State Aggies,UTEP Miners at Utah State Aggies,33.528,-4.5,,28,16
+2025,0,08/30/2025 LSU Tigers at Clemson Tigers,LSU Tigers at Clemson Tigers,3.804,-5.0,,10,17
+2025,0,08/30/2025 New Mexico Lobos at Michigan Wolverines,New Mexico Lobos at Michigan Wolverines,43.139,-34.5,,34,17
+2025,0,08/30/2025 UTSA Roadrunners at Texas A&M Aggies,UTSA Roadrunners at Texas A&M Aggies,31.72,-23.5,,42,24
+2025,0,08/30/2025 Illinois State Redbirds at Oklahoma Sooners,Illinois State Redbirds at Oklahoma Sooners,8.885,-39.5,,35,3
+2025,0,08/30/2025 Coastal Carolina Chanticleers at Virginia Cavaliers,Coastal Carolina Chanticleers at Virginia Cavaliers,11.368,-13.5,,48,7
+2025,0,08/30/2025 North Carolina A&T Aggies at Tennessee State Tigers,North Carolina A&T Aggies at Tennessee State Tigers,18.735,-7.0,,24,21
+2025,0,08/30/2025 Alabama A&M Bulldogs at Arkansas Razorbacks,Alabama A&M Bulldogs at Arkansas Razorbacks,-15.329,-48.0,,52,7
+2025,0,08/30/2025 Alabama Crimson Tide at Florida State Seminoles,Alabama Crimson Tide at Florida State Seminoles,-5.133,13.5,,31,17
+2025,0,08/30/2025 Marshall Thundering Herd at Georgia Bulldogs,Marshall Thundering Herd at Georgia Bulldogs,43.525,-38.5,,45,7
+2025,0,08/30/2025 Nevada Wolf Pack at Penn State Nittany Lions,Nevada Wolf Pack at Penn State Nittany Lions,47.368,-42.5,,46,11
+2025,0,08/30/2025 Temple Owls at Massachusetts Minutemen,Temple Owls at Massachusetts Minutemen,-2.659,2.0,,10,42
+2025,0,08/30/2025 Old Dominion Monarchs at Indiana Hoosiers,Old Dominion Monarchs at Indiana Hoosiers,23.416,-23.5,,27,14
+2025,0,08/30/2025 Toledo Rockets at Kentucky Wildcats,Toledo Rockets at Kentucky Wildcats,12.457,-10.0,,24,16
+2025,0,08/30/2025 Texas Longhorns at Ohio State Buckeyes,Texas Longhorns at Ohio State Buckeyes,-29.86,-1.5,,14,7
+2025,0,08/30/2025 Northwestern Wildcats at Tulane Green Wave,Northwestern Wildcats at Tulane Green Wave,6.886,-5.5,,23,3
+2025,0,08/30/2025 Mississippi State Bulldogs at Southern Miss Golden Eagles,Mississippi State Bulldogs at Southern Miss Golden Eagles,-13.931,14.5,,17,34
+2025,0,08/30/2025 Ball State Cardinals at Purdue Boilermakers,Ball State Cardinals at Purdue Boilermakers,17.822,-16.0,,31,0
+2025,0,08/30/2025 Florida Atlantic Owls at Maryland Terrapins,Florida Atlantic Owls at Maryland Terrapins,16.281,-12.5,,39,7
+2025,0,08/30/2025 Syracuse Orange at Tennessee Volunteers,Syracuse Orange at Tennessee Volunteers,16.994,-13.5,,45,26
+2025,0,08/30/2025 Central Michigan Chippewas at San Jose State Spartans,Central Michigan Chippewas at San Jose State Spartans,10.433,-14.0,,14,16
+2025,0,08/30/2025 UNLV Rebels at Sam Houston State Bearkats,UNLV Rebels at Sam Houston State Bearkats,-7.556,9.5,,21,38
+2025,0,08/30/2025 Georgia Tech Yellow Jackets at Colorado Buffaloes,Georgia Tech Yellow Jackets at Colorado Buffaloes,-4.79,3.5,,20,27
+2025,0,08/30/2025 Auburn Tigers at Baylor Bears,Auburn Tigers at Baylor Bears,-1.704,1.0,,24,38
+2025,0,08/29/2025 Western Michigan Broncos at Michigan State Spartans,Western Michigan Broncos at Michigan State Spartans,38.751,-21.5,,23,6
+2025,0,08/29/2025 Kennesaw State Owls at Wake Forest Demon Deacons,Kennesaw State Owls at Wake Forest Demon Deacons,18.194,-18.5,,10,9
+2025,0,08/29/2025 Appalachian State Mountaineers at Charlotte 49ers,Appalachian State Mountaineers at Charlotte 49ers,-7.067,3.0,,11,34
+2025,0,08/29/2025 Miami (OH) RedHawks at Wisconsin Badgers,Miami (OH) RedHawks at Wisconsin Badgers,-5.505,-18.5,,17,0
+2025,0,08/29/2025 Nebraska Cornhuskers at Cincinnati Bearcats,Nebraska Cornhuskers at Cincinnati Bearcats,-3.942,6.0,,17,20
+2025,0,08/29/2025 Alabama State Hornets at UAB Blazers,Alabama State Hornets at UAB Blazers,-40.207,-21.5,,52,42
+2025,0,08/29/2025 Buffalo Bulls at Minnesota Golden Gophers,Buffalo Bulls at Minnesota Golden Gophers,21.069,-16.5,,23,10
+2025,0,08/28/2025 Wyoming Cowboys at Akron Zips,Wyoming Cowboys at Akron Zips,-6.881,5.0,,0,10
+2025,0,08/28/2025 Jacksonville State Gamecocks at UCF Knights,Jacksonville State Gamecocks at UCF Knights,17.242,-20.5,,17,10
+2025,0,08/28/2025 East Carolina Pirates at NC State Wolfpack,East Carolina Pirates at NC State Wolfpack,14.071,-13.0,,24,17
+2025,0,08/28/2025 Ohio Bobcats at Rutgers Scarlet Knights,Ohio Bobcats at Rutgers Scarlet Knights,14.521,-15.5,,34,31
+2025,0,08/28/2025 Boise State Broncos at South Florida Bulls,Boise State Broncos at South Florida Bulls,-10.821,5.0,,34,7
+2025,0,08/23/2025 Stanford Cardinal at Hawaii Rainbow Warriors,Stanford Cardinal at Hawaii Rainbow Warriors,-1.085,-2.0,,23,20
+2025,0,08/23/2025 Sam Houston State Bearkats at Western Kentucky Hilltoppers,Sam Houston State Bearkats at Western Kentucky Hilltoppers,7.043,-10.0,,41,24
+2025,0,08/23/2025 Fresno State Bulldogs at Kansas Jayhawks,Fresno State Bulldogs at Kansas Jayhawks,16.705,-14.0,,31,7
+2025,0,08/23/2025 Iowa State Cyclones at Kansas State Wildcats,Iowa State Cyclones at Kansas State Wildcats,-3.879,-3.0,,21,24
+2024,0,01/21/2025 Ohio State Buckeyes at Notre Dame Fighting Irish,Ohio State Buckeyes at Notre Dame Fighting Irish,30.891,8.0,,23,34
+2024,0,01/11/2025 Ohio State Buckeyes at Texas Longhorns,Ohio State Buckeyes at Texas Longhorns,30.56,5.5,,14,28
+2024,0,01/10/2025 Notre Dame Fighting Irish at Penn State Nittany Lions,Notre Dame Fighting Irish at Penn State Nittany Lions,-2.137,-1.0,,24,27
+2024,0,01/04/2025 Buffalo Bulls at Liberty Flames,Buffalo Bulls at Liberty Flames,8.173,4.0,,7,26
+2024,0,01/04/2025 Minnesota Golden Gophers at Virginia Tech Hokies,Minnesota Golden Gophers at Virginia Tech Hokies,3.777,9.5,,10,24
+2024,0,01/03/2025 North Texas Mean Green at Texas State Bobcats,North Texas Mean Green at Texas State Bobcats,12.992,-15.5,,30,28
+2024,0,01/03/2025 Duke Blue Devils at Ole Miss Rebels,Duke Blue Devils at Ole Miss Rebels,25.022,-18.0,,52,20
+2024,0,01/02/2025 Notre Dame Fighting Irish at Georgia Bulldogs,Notre Dame Fighting Irish at Georgia Bulldogs,0.461,1.0,,10,23
+2024,0,01/01/2025 Ohio State Buckeyes at Oregon Ducks,Ohio State Buckeyes at Oregon Ducks,25.688,2.5,,21,41
+2024,0,01/01/2025 Texas Longhorns at Arizona State Sun Devils,Texas Longhorns at Arizona State Sun Devils,-11.666,13.5,,31,39
+2024,0,01/01/2025 Penn State Nittany Lions at Boise State Broncos,Penn State Nittany Lions at Boise State Broncos,-9.699,11.5,,14,31
+2024,0,12/31/2024 Baylor Bears at LSU Tigers,Baylor Bears at LSU Tigers,8.435,3.0,,44,31
+2024,0,12/31/2024 South Carolina Gamecocks at Illinois Fighting Illini,South Carolina Gamecocks at Illinois Fighting Illini,-8.701,9.0,,21,17
+2024,0,12/31/2024 Louisville Cardinals at Washington Huskies,Louisville Cardinals at Washington Huskies,-9.281,-1.0,,34,35
+2024,0,12/31/2024 Alabama Crimson Tide at Michigan Wolverines,Alabama Crimson Tide at Michigan Wolverines,-10.699,16.5,,19,13
+2024,0,12/30/2024 Iowa Hawkeyes at Missouri Tigers,Iowa Hawkeyes at Missouri Tigers,2.806,-1.0,,27,24
+2024,0,12/29/2024 Louisiana Tech Bulldogs at Army Black Knights,Louisiana Tech Bulldogs at Army Black Knights,20.394,-14.5,,27,6
+2024,0,12/29/2024 BYU Cougars at Colorado Buffaloes,BYU Cougars at Colorado Buffaloes,5.286,-2.5,,14,36
+2024,0,12/28/2024 East Carolina Pirates at NC State Wolfpack,East Carolina Pirates at NC State Wolfpack,10.284,-7.0,,21,26
+2024,0,12/28/2024 Miami (OH) RedHawks at Colorado State Rams,Miami (OH) RedHawks at Colorado State Rams,-2.991,1.5,,17,43
+2024,0,12/28/2024 Iowa State Cyclones at Miami Hurricanes,Iowa State Cyclones at Miami Hurricanes,9.306,-4.5,,41,42
+2024,0,12/28/2024 Louisiana Ragin' Cajuns at TCU Horned Frogs,Louisiana Ragin' Cajuns at TCU Horned Frogs,12.298,-9.5,,34,3
+2024,0,12/28/2024 Boston College Eagles at Nebraska Cornhuskers,Boston College Eagles at Nebraska Cornhuskers,5.438,-3.5,,20,15
+2024,0,12/28/2024 Connecticut Huskies at North Carolina Tar Heels,Connecticut Huskies at North Carolina Tar Heels,11.12,-1.5,,14,27
+2024,0,12/28/2024 Texas A&M Aggies at USC Trojans,Texas A&M Aggies at USC Trojans,-10.897,3.5,,35,31
+2024,0,12/28/2024 Syracuse Orange at Washington State Cougars,Syracuse Orange at Washington State Cougars,3.278,18.5,,35,52
+2024,0,12/28/2024 Texas Tech Red Raiders at Arkansas Razorbacks,Texas Tech Red Raiders at Arkansas Razorbacks,5.056,3.5,,39,26
+2024,0,12/27/2024 Georgia Tech Yellow Jackets at Vanderbilt Commodores,Georgia Tech Yellow Jackets at Vanderbilt Commodores,0.932,3.0,,35,27
+2024,0,12/27/2024 Oklahoma Sooners at Navy Midshipmen,Oklahoma Sooners at Navy Midshipmen,-7.57,0.0,,21,20
+2024,0,12/27/2024 Arkansas State Red Wolves at Bowling Green Falcons,Arkansas State Red Wolves at Bowling Green Falcons,13.608,-10.0,,31,38
+2024,0,12/26/2024 Rutgers Scarlet Knights at Kansas State Wildcats,Rutgers Scarlet Knights at Kansas State Wildcats,7.77,-7.5,,44,41
+2024,0,12/26/2024 Pittsburgh Panthers at Toledo Rockets,Pittsburgh Panthers at Toledo Rockets,-6.454,6.5,,48,46
+2024,0,12/25/2024 South Florida Bulls at San Jose State Spartans,South Florida Bulls at San Jose State Spartans,-2.445,1.0,,39,41
+2024,0,12/23/2024 Northern Illinois Huskies at Fresno State Bulldogs,Northern Illinois Huskies at Fresno State Bulldogs,1.704,2.5,,20,28
+2024,0,12/23/2024 Coastal Carolina Chanticleers at UTSA Roadrunners,Coastal Carolina Chanticleers at UTSA Roadrunners,4.84,-12.5,,44,15
+2024,0,12/22/2024 Tennessee Volunteers at Ohio State Buckeyes,Tennessee Volunteers at Ohio State Buckeyes,-21.36,-7.0,,42,17
+2024,0,12/21/2024 Clemson Tigers at Texas Longhorns,Clemson Tigers at Texas Longhorns,13.718,-13.5,,38,24
+2024,0,12/21/2024 SMU Mustangs at Penn State Nittany Lions,SMU Mustangs at Penn State Nittany Lions,6.398,-9.0,,38,10
+2024,0,12/21/2024 Indiana Hoosiers at Notre Dame Fighting Irish,Indiana Hoosiers at Notre Dame Fighting Irish,9.121,-7.0,,27,17
+2024,0,12/20/2024 Tulane Green Wave at Florida Gators,Tulane Green Wave at Florida Gators,5.605,-10.0,,33,8
+2024,0,12/20/2024 Ohio Bobcats at Jacksonville State Gamecocks,Ohio Bobcats at Jacksonville State Gamecocks,0.893,6.5,,27,30
+2024,0,12/20/2024 Georgia Southern Eagles at Sam Houston State Bearkats,Georgia Southern Eagles at Sam Houston State Bearkats,-30.885,3.5,,31,26
+2024,0,12/19/2024 California Golden Bears at UNLV Rebels,California Golden Bears at UNLV Rebels,6.419,-3.0,,24,13
+2024,0,12/18/2024 Western Kentucky Hilltoppers at James Madison Dukes,Western Kentucky Hilltoppers at James Madison Dukes,12.903,-7.0,,27,17
+2024,0,12/18/2024 Memphis Tigers at West Virginia Mountaineers,Memphis Tigers at West Virginia Mountaineers,2.08,5.0,,37,42
+2024,0,12/15/2024 South Alabama Jaguars at Western Michigan Broncos,South Alabama Jaguars at Western Michigan Broncos,-7.803,6.5,,23,30
+2024,0,12/14/2024 Navy Midshipmen at Army Black Knights,Navy Midshipmen at Army Black Knights,7.18,-6.0,,13,31
+2024,0,12/08/2024 Clemson Tigers at SMU Mustangs,Clemson Tigers at SMU Mustangs,3.899,-2.5,,31,34
+2024,0,12/08/2024 Penn State Nittany Lions at Oregon Ducks,Penn State Nittany Lions at Oregon Ducks,2.948,-3.0,,45,37
+2024,0,12/08/2024 Marshall Thundering Herd at Louisiana Ragin' Cajuns,Marshall Thundering Herd at Louisiana Ragin' Cajuns,6.302,-5.0,,3,31
+2024,0,12/07/2024 Georgia Bulldogs at Texas Longhorns,Georgia Bulldogs at Texas Longhorns,6.34,-2.5,,19,22
+2024,0,12/07/2024 Ohio Bobcats at Miami (OH) RedHawks,Ohio Bobcats at Miami (OH) RedHawks,25.422,-2.0,,3,38
+2024,0,12/07/2024 Iowa State Cyclones at Arizona State Sun Devils,Iowa State Cyclones at Arizona State Sun Devils,1.353,1.5,,45,19
+2024,0,12/07/2024 UNLV Rebels at Boise State Broncos,UNLV Rebels at Boise State Broncos,4.688,-4.0,,21,7
+2024,0,12/07/2024 Tulane Green Wave at Army Black Knights,Tulane Green Wave at Army Black Knights,-6.647,4.5,,35,14
+2024,0,12/07/2024 Western Kentucky Hilltoppers at Jacksonville State Gamecocks,Western Kentucky Hilltoppers at Jacksonville State Gamecocks,4.612,-4.5,,52,12
+2024,0,12/01/2024 New Mexico Lobos at Hawaii Rainbow Warriors,New Mexico Lobos at Hawaii Rainbow Warriors,5.193,6.5,,38,30
+2024,0,12/01/2024 Air Force Falcons at San Diego State Aztecs,Air Force Falcons at San Diego State Aztecs,0.556,6.5,,20,31
+2024,0,12/01/2024 Houston Cougars at BYU Cougars,Houston Cougars at BYU Cougars,15.588,-12.0,,30,18
+2024,0,12/01/2024 Nevada Wolf Pack at UNLV Rebels,Nevada Wolf Pack at UNLV Rebels,22.127,-17.5,,38,14
+2024,0,12/01/2024 Marshall Thundering Herd at James Madison Dukes,Marshall Thundering Herd at James Madison Dukes,6.385,-4.0,,33,35
+2024,0,12/01/2024 Virginia Cavaliers at Virginia Tech Hokies,Virginia Cavaliers at Virginia Tech Hokies,14.191,-4.5,,37,17
+2024,0,12/01/2024 Washington Huskies at Oregon Ducks,Washington Huskies at Oregon Ducks,18.789,-17.0,,49,21
+2024,0,12/01/2024 Kansas State Wildcats at Iowa State Cyclones,Kansas State Wildcats at Iowa State Cyclones,4.667,-2.0,,29,21
+2024,0,12/01/2024 Texas Longhorns at Texas A&M Aggies,Texas Longhorns at Texas A&M Aggies,2.8,4.5,,7,17
+2024,0,12/01/2024 Purdue Boilermakers at Indiana Hoosiers,Purdue Boilermakers at Indiana Hoosiers,33.073,-29.0,,66,0
+2024,0,12/01/2024 Oklahoma Sooners at LSU Tigers,Oklahoma Sooners at LSU Tigers,3.293,-6.0,,37,17
+2024,0,12/01/2024 Florida Gators at Florida State Seminoles,Florida Gators at Florida State Seminoles,2.8,17.0,,11,31
+2024,0,11/30/2024 Wyoming Cowboys at Washington State Cougars,Wyoming Cowboys at Washington State Cougars,22.182,-18.0,,14,15
+2024,0,11/30/2024 Appalachian State Mountaineers at Georgia Southern Eagles,Appalachian State Mountaineers at Georgia Southern Eagles,36.218,-2.5,,29,20
+2024,0,11/30/2024 TCU Horned Frogs at Cincinnati Bearcats,TCU Horned Frogs at Cincinnati Bearcats,-0.986,3.0,,13,20
+2024,0,11/30/2024 Kennesaw State Owls at Louisiana Tech Bulldogs,Kennesaw State Owls at Louisiana Tech Bulldogs,12.919,-10.0,,33,0
+2024,0,11/30/2024 UTEP Miners at New Mexico State Aggies,UTEP Miners at New Mexico State Aggies,10.758,-3.5,,35,42
+2024,0,11/30/2024 Jacksonville State Gamecocks at Western Kentucky Hilltoppers,Jacksonville State Gamecocks at Western Kentucky Hilltoppers,0.926,1.0,,19,17
+2024,0,11/30/2024 Arkansas Razorbacks at Missouri Tigers,Arkansas Razorbacks at Missouri Tigers,6.183,-2.5,,28,21
+2024,0,11/30/2024 California Golden Bears at SMU Mustangs,California Golden Bears at SMU Mustangs,14.569,-11.5,,38,6
+2024,0,11/30/2024 Rutgers Scarlet Knights at Michigan State Spartans,Rutgers Scarlet Knights at Michigan State Spartans,9.831,-1.0,,14,41
+2024,0,11/30/2024 Notre Dame Fighting Irish at USC Trojans,Notre Dame Fighting Irish at USC Trojans,-10.002,7.0,,35,49
+2024,0,11/30/2024 Maryland Terrapins at Penn State Nittany Lions,Maryland Terrapins at Penn State Nittany Lions,23.581,-26.0,,44,7
+2024,0,11/30/2024 Fresno State Bulldogs at UCLA Bruins,Fresno State Bulldogs at UCLA Bruins,11.367,-7.5,,20,13
+2024,0,11/30/2024 Arizona State Sun Devils at Arizona Wildcats,Arizona State Sun Devils at Arizona Wildcats,-8.129,8.0,,7,49
+2024,0,11/30/2024 Central Michigan Chippewas at Northern Illinois Huskies,Central Michigan Chippewas at Northern Illinois Huskies,15.249,-13.5,,24,16
+2024,0,11/30/2024 Auburn Tigers at Alabama Crimson Tide,Auburn Tigers at Alabama Crimson Tide,18.392,-10.5,,28,14
+2024,0,11/30/2024 Florida Atlantic Owls at Tulsa Golden Hurricane,Florida Atlantic Owls at Tulsa Golden Hurricane,-2.729,-1.0,,16,63
+2024,0,11/30/2024 Miami Hurricanes at Syracuse Orange,Miami Hurricanes at Syracuse Orange,-14.638,12.0,,42,38
+2024,0,11/30/2024 UAB Blazers at Charlotte 49ers,UAB Blazers at Charlotte 49ers,2.365,-1.0,,29,27
+2024,0,11/30/2024 NC State Wolfpack at North Carolina Tar Heels,NC State Wolfpack at North Carolina Tar Heels,6.219,-2.0,,30,35
+2024,0,11/30/2024 Old Dominion Monarchs at Arkansas State Red Wolves,Old Dominion Monarchs at Arkansas State Red Wolves,-6.535,5.5,,32,40
+2024,0,11/30/2024 Pittsburgh Panthers at Boston College Eagles,Pittsburgh Panthers at Boston College Eagles,2.711,-3.5,,34,23
+2024,0,11/30/2024 Southern Miss Golden Eagles at Troy Trojans,Southern Miss Golden Eagles at Troy Trojans,17.209,-17.5,,52,20
+2024,0,11/30/2024 South Florida Bulls at Rice Owls,South Florida Bulls at Rice Owls,-3.66,5.5,,35,28
+2024,0,11/30/2024 Coastal Carolina Chanticleers at Georgia State Panthers,Coastal Carolina Chanticleers at Georgia State Panthers,-0.727,0.0,,27,48
+2024,0,11/30/2024 Eastern Michigan Eagles at Western Michigan Broncos,Eastern Michigan Eagles at Western Michigan Broncos,6.65,-6.5,,26,18
+2024,0,11/30/2024 Michigan Wolverines at Ohio State Buckeyes,Michigan Wolverines at Ohio State Buckeyes,-10.451,-18.5,,10,13
+2024,0,11/30/2024 Connecticut Huskies at Massachusetts Minutemen,Connecticut Huskies at Massachusetts Minutemen,-12.522,8.0,,42,47
+2024,0,11/30/2024 Illinois Fighting Illini at Northwestern Wildcats,Illinois Fighting Illini at Northwestern Wildcats,-7.712,9.0,,28,38
+2024,0,11/30/2024 Louisiana Ragin' Cajuns at ULM Warhawks,Louisiana Ragin' Cajuns at ULM Warhawks,-12.979,9.5,,23,37
+2024,0,11/30/2024 Tennessee Volunteers at Vanderbilt Commodores,Tennessee Volunteers at Vanderbilt Commodores,-13.745,10.0,,23,36
+2024,0,11/30/2024 Kansas Jayhawks at Baylor Bears,Kansas Jayhawks at Baylor Bears,-0.096,2.0,,45,17
+2024,0,11/30/2024 West Virginia Mountaineers at Texas Tech Red Raiders,West Virginia Mountaineers at Texas Tech Red Raiders,1.042,-3.0,,52,15
+2024,0,11/30/2024 UTSA Roadrunners at Army Black Knights,UTSA Roadrunners at Army Black Knights,13.802,-6.0,,29,24
+2024,0,11/30/2024 Louisville Cardinals at Kentucky Wildcats,Louisville Cardinals at Kentucky Wildcats,-3.536,4.5,,14,41
+2024,0,11/30/2024 Duke Blue Devils at Wake Forest Demon Deacons,Duke Blue Devils at Wake Forest Demon Deacons,-4.2,3.5,,17,23
+2024,0,11/30/2024 North Texas Mean Green at Temple Owls,North Texas Mean Green at Temple Owls,-10.534,12.5,,17,24
+2024,0,11/30/2024 South Carolina Gamecocks at Clemson Tigers,South Carolina Gamecocks at Clemson Tigers,1.121,-2.5,,14,17
+2024,0,11/30/2024 Utah Utes at UCF Knights,Utah Utes at UCF Knights,5.176,-10.0,,14,28
+2024,0,11/30/2024 Georgia Tech Yellow Jackets at Georgia Bulldogs,Georgia Tech Yellow Jackets at Georgia Bulldogs,21.352,-17.0,,44,42
+2024,0,11/30/2024 Nebraska Cornhuskers at Iowa Hawkeyes,Nebraska Cornhuskers at Iowa Hawkeyes,9.182,-3.0,,13,10
+2024,0,11/29/2024 Alabama A&M Bulldogs at Florida A&M Rattlers,Alabama A&M Bulldogs at Florida A&M Rattlers,-9.374,-5.5,,28,20
+2024,0,11/29/2024 Stanford Cardinal at San Jose State Spartans,Stanford Cardinal at San Jose State Spartans,-0.868,-2.5,,34,31
+2024,0,11/29/2024 Utah State Aggies at Colorado State Rams,Utah State Aggies at Colorado State Rams,7.575,-5.0,,42,37
+2024,0,11/29/2024 Liberty Flames at Sam Houston State Bearkats,Liberty Flames at Sam Houston State Bearkats,0.174,2.5,,20,18
+2024,0,11/29/2024 Mississippi State Bulldogs at Ole Miss Rebels,Mississippi State Bulldogs at Ole Miss Rebels,30.715,-25.5,,26,14
+2024,0,11/29/2024 Texas State Bobcats at South Alabama Jaguars,Texas State Bobcats at South Alabama Jaguars,0.995,2.5,,38,45
+2024,0,11/29/2024 Oregon State Beavers at Boise State Broncos,Oregon State Beavers at Boise State Broncos,21.325,-17.5,,34,18
+2024,0,11/29/2024 Minnesota Golden Gophers at Wisconsin Badgers,Minnesota Golden Gophers at Wisconsin Badgers,0.63,2.5,,7,24
+2024,0,11/29/2024 Navy Midshipmen at East Carolina Pirates,Navy Midshipmen at East Carolina Pirates,-3.862,-3.0,,20,34
+2024,0,11/29/2024 Oklahoma State Cowboys at Colorado Buffaloes,Oklahoma State Cowboys at Colorado Buffaloes,-0.833,-14.5,,52,0
+2024,0,11/29/2024 Miami (OH) RedHawks at Bowling Green Falcons,Miami (OH) RedHawks at Bowling Green Falcons,-19.673,-3.0,,12,28
+2024,0,11/29/2024 Ball State Cardinals at Ohio Bobcats,Ball State Cardinals at Ohio Bobcats,19.381,-18.0,,42,21
+2024,0,11/29/2024 Memphis Tigers at Tulane Green Wave,Memphis Tigers at Tulane Green Wave,15.274,-12.5,,24,34
+2024,0,11/27/2024 Toledo Rockets at Akron Zips,Toledo Rockets at Akron Zips,-11.299,9.5,,21,14
+2024,0,11/27/2024 Kent State Golden Flashes at Buffalo Bulls,Kent State Golden Flashes at Buffalo Bulls,21.536,-23.5,,43,7
+2024,0,11/24/2024 USC Trojans at UCLA Bruins,USC Trojans at UCLA Bruins,-8.539,5.5,,13,19
+2024,0,11/24/2024 Air Force Falcons at Nevada Wolf Pack,Air Force Falcons at Nevada Wolf Pack,4.219,-2.5,,19,22
+2024,0,11/24/2024 Colorado State Rams at Fresno State Bulldogs,Colorado State Rams at Fresno State Bulldogs,-15.439,-3.5,,28,22
+2024,0,11/24/2024 Cincinnati Bearcats at Kansas State Wildcats,Cincinnati Bearcats at Kansas State Wildcats,6.717,-7.5,,41,15
+2024,0,11/24/2024 Virginia Tech Hokies at Duke Blue Devils,Virginia Tech Hokies at Duke Blue Devils,-5.292,3.0,,31,28
+2024,0,11/24/2024 Vanderbilt Commodores at LSU Tigers,Vanderbilt Commodores at LSU Tigers,11.937,-10.0,,24,17
+2024,0,11/24/2024 Iowa State Cyclones at Utah Utes,Iowa State Cyclones at Utah Utes,-4.469,6.5,,28,31
+2024,0,11/24/2024 Texas A&M Aggies at Auburn Tigers,Texas A&M Aggies at Auburn Tigers,-15.294,2.5,,43,41
+2024,0,11/24/2024 Alabama Crimson Tide at Oklahoma Sooners,Alabama Crimson Tide at Oklahoma Sooners,-13.635,14.0,,24,3
+2024,0,11/24/2024 Marshall Thundering Herd at Old Dominion Monarchs,Marshall Thundering Herd at Old Dominion Monarchs,2.126,-3.0,,35,42
+2024,0,11/24/2024 Army Black Knights at Notre Dame Fighting Irish,Army Black Knights at Notre Dame Fighting Irish,22.842,-14.0,,49,14
+2024,0,11/24/2024 Washington State Cougars at Oregon State Beavers,Washington State Cougars at Oregon State Beavers,-12.501,11.0,,41,38
+2024,0,11/24/2024 Boise State Broncos at Wyoming Cowboys,Boise State Broncos at Wyoming Cowboys,-23.724,22.5,,13,17
+2024,0,11/24/2024 Baylor Bears at Houston Cougars,Baylor Bears at Houston Cougars,-6.913,7.5,,10,20
+2024,0,11/24/2024 Georgia State Panthers at Texas State Bobcats,Georgia State Panthers at Texas State Bobcats,22.31,-22.5,,44,52
+2024,0,11/23/2024 Troy Trojans at Louisiana Ragin' Cajuns,Troy Trojans at Louisiana Ragin' Cajuns,13.776,-7.5,,51,30
+2024,0,11/23/2024 Missouri Tigers at Mississippi State Bulldogs,Missouri Tigers at Mississippi State Bulldogs,-9.629,9.5,,20,39
+2024,0,11/23/2024 Louisiana Tech Bulldogs at Arkansas Razorbacks,Louisiana Tech Bulldogs at Arkansas Razorbacks,27.544,-23.0,,35,14
+2024,0,11/23/2024 Pittsburgh Panthers at Louisville Cardinals,Pittsburgh Panthers at Louisville Cardinals,10.534,-7.0,,37,9
+2024,0,11/23/2024 Stanford Cardinal at California Golden Bears,Stanford Cardinal at California Golden Bears,14.086,-14.5,,24,21
+2024,0,11/23/2024 Northwestern Wildcats at Michigan Wolverines,Northwestern Wildcats at Michigan Wolverines,11.929,-10.5,,50,6
+2024,0,11/23/2024 BYU Cougars at Arizona State Sun Devils,BYU Cougars at Arizona State Sun Devils,0.285,-3.0,,28,23
+2024,0,11/23/2024 Penn State Nittany Lions at Minnesota Golden Gophers,Penn State Nittany Lions at Minnesota Golden Gophers,-10.719,11.5,,25,26
+2024,0,11/23/2024 Wisconsin Badgers at Nebraska Cornhuskers,Wisconsin Badgers at Nebraska Cornhuskers,0.122,-1.0,,44,25
+2024,0,11/23/2024 San Diego State Aztecs at Utah State Aggies,San Diego State Aztecs at Utah State Aggies,22.394,-5.0,,41,20
+2024,0,11/23/2024 Texas Tech Red Raiders at Oklahoma State Cowboys,Texas Tech Red Raiders at Oklahoma State Cowboys,10.707,5.5,,48,56
+2024,0,11/23/2024 East Carolina Pirates at North Texas Mean Green,East Carolina Pirates at North Texas Mean Green,3.298,-2.5,,28,40
+2024,0,11/23/2024 Colorado Buffaloes at Kansas Jayhawks,Colorado Buffaloes at Kansas Jayhawks,0.948,2.0,,37,21
+2024,0,11/23/2024 Kentucky Wildcats at Texas Longhorns,Kentucky Wildcats at Texas Longhorns,22.076,-18.0,,31,14
+2024,0,11/23/2024 Georgia Southern Eagles at Coastal Carolina Chanticleers,Georgia Southern Eagles at Coastal Carolina Chanticleers,-32.376,-1.5,,6,26
+2024,0,11/23/2024 UCF Knights at West Virginia Mountaineers,UCF Knights at West Virginia Mountaineers,-1.068,3.5,,31,21
+2024,0,11/23/2024 Tulsa Golden Hurricane at South Florida Bulls,Tulsa Golden Hurricane at South Florida Bulls,22.617,-17.0,,63,30
+2024,0,11/23/2024 Northwestern State Demons at Houston Christian Huskies,Northwestern State Demons at Houston Christian Huskies,3.004,-16.5,,62,24
+2024,0,11/23/2024 FIU Panthers at Kennesaw State Owls,FIU Panthers at Kennesaw State Owls,-8.34,9.0,,27,26
+2024,0,11/23/2024 ULM Warhawks at Arkansas State Red Wolves,ULM Warhawks at Arkansas State Red Wolves,2.307,-3.0,,28,21
+2024,0,11/23/2024 South Alabama Jaguars at Southern Miss Golden Eagles,South Alabama Jaguars at Southern Miss Golden Eagles,-21.566,24.0,,14,35
+2024,0,11/23/2024 Arizona Wildcats at TCU Horned Frogs,Arizona Wildcats at TCU Horned Frogs,11.642,-10.5,,49,28
+2024,0,11/23/2024 Charlotte 49ers at Florida Atlantic Owls,Charlotte 49ers at Florida Atlantic Owls,-0.317,3.0,,27,39
+2024,0,11/23/2024 James Madison Dukes at Appalachian State Mountaineers,James Madison Dukes at Appalachian State Mountaineers,-10.286,7.5,,34,20
+2024,0,11/23/2024 Rice Owls at UAB Blazers,Rice Owls at UAB Blazers,-6.044,7.0,,40,14
+2024,0,11/23/2024 Bowling Green Falcons at Ball State Cardinals,Bowling Green Falcons at Ball State Cardinals,-13.935,12.5,,13,38
+2024,0,11/23/2024 Western Kentucky Hilltoppers at Liberty Flames,Western Kentucky Hilltoppers at Liberty Flames,0.426,-1.0,,38,21
+2024,0,11/23/2024 UTEP Miners at Tennessee Volunteers,UTEP Miners at Tennessee Volunteers,48.316,-41.5,,56,0
+2024,0,11/23/2024 Massachusetts Minutemen at Georgia Bulldogs,Massachusetts Minutemen at Georgia Bulldogs,51.033,-42.0,,59,21
+2024,0,11/23/2024 Illinois Fighting Illini at Rutgers Scarlet Knights,Illinois Fighting Illini at Rutgers Scarlet Knights,0.364,-2.5,,31,38
+2024,0,11/23/2024 Indiana Hoosiers at Ohio State Buckeyes,Indiana Hoosiers at Ohio State Buckeyes,-21.526,-10.5,,38,15
+2024,0,11/23/2024 Iowa Hawkeyes at Maryland Terrapins,Iowa Hawkeyes at Maryland Terrapins,-9.572,5.0,,13,29
+2024,0,11/23/2024 Sam Houston State Bearkats at Jacksonville State Gamecocks,Sam Houston State Bearkats at Jacksonville State Gamecocks,5.824,-5.5,,21,11
+2024,0,11/23/2024 Ole Miss Rebels at Florida Gators,Ole Miss Rebels at Florida Gators,-12.744,13.0,,24,17
+2024,0,11/23/2024 Connecticut Huskies at Syracuse Orange,Connecticut Huskies at Syracuse Orange,11.703,-10.0,,31,24
+2024,0,11/23/2024 North Carolina Tar Heels at Boston College Eagles,North Carolina Tar Heels at Boston College Eagles,0.917,2.5,,41,21
+2024,0,11/23/2024 Wake Forest Demon Deacons at Miami Hurricanes,Wake Forest Demon Deacons at Miami Hurricanes,26.554,-23.5,,42,14
+2024,0,11/23/2024 SMU Mustangs at Virginia Cavaliers,SMU Mustangs at Virginia Cavaliers,-11.974,12.5,,7,33
+2024,0,11/23/2024 UNLV Rebels at San Jose State Spartans,UNLV Rebels at San Jose State Spartans,-13.535,8.0,,16,27
+2024,0,11/23/2024 Purdue Boilermakers at Michigan State Spartans,Purdue Boilermakers at Michigan State Spartans,22.618,-13.5,,24,17
+2024,0,11/23/2024 Temple Owls at UTSA Roadrunners,Temple Owls at UTSA Roadrunners,16.455,-16.5,,51,27
+2024,0,11/22/2024 NC State Wolfpack at Georgia Tech Yellow Jackets,NC State Wolfpack at Georgia Tech Yellow Jackets,10.927,-7.5,,30,29
+2024,0,11/21/2024 Buffalo Bulls at Eastern Michigan Eagles,Buffalo Bulls at Eastern Michigan Eagles,4.031,-1.0,,20,37
+2024,0,11/21/2024 Ohio Bobcats at Toledo Rockets,Ohio Bobcats at Toledo Rockets,4.859,-1.0,,7,24
+2024,0,11/20/2024 Northern Illinois Huskies at Miami (OH) RedHawks,Northern Illinois Huskies at Miami (OH) RedHawks,26.729,-1.0,,20,9
+2024,0,11/20/2024 Western Michigan Broncos at Central Michigan Chippewas,Western Michigan Broncos at Central Michigan Chippewas,-2.792,5.5,,16,14
+2024,0,11/20/2024 Akron Zips at Kent State Golden Flashes,Akron Zips at Kent State Golden Flashes,-8.957,10.5,,17,38
+2024,0,11/17/2024 San Diego State Aztecs at UNLV Rebels,San Diego State Aztecs at UNLV Rebels,23.633,-21.5,,41,20
+2024,0,11/17/2024 Kansas Jayhawks at BYU Cougars,Kansas Jayhawks at BYU Cougars,5.124,-2.5,,13,17
+2024,0,11/17/2024 Washington State Cougars at New Mexico Lobos,Washington State Cougars at New Mexico Lobos,-19.958,11.0,,38,35
+2024,0,11/17/2024 Cincinnati Bearcats at Iowa State Cyclones,Cincinnati Bearcats at Iowa State Cyclones,9.287,-7.0,,34,17
+2024,0,11/17/2024 UAB Blazers at Memphis Tigers,UAB Blazers at Memphis Tigers,18.023,-15.0,,53,18
+2024,0,11/17/2024 Wake Forest Demon Deacons at North Carolina Tar Heels,Wake Forest Demon Deacons at North Carolina Tar Heels,12.505,-10.5,,31,24
+2024,0,11/17/2024 New Mexico State Aggies at Texas A&M Aggies,New Mexico State Aggies at Texas A&M Aggies,48.734,-38.5,,38,3
+2024,0,11/17/2024 Oregon Ducks at Wisconsin Badgers,Oregon Ducks at Wisconsin Badgers,-11.583,13.5,,13,16
+2024,0,11/17/2024 Tennessee Volunteers at Georgia Bulldogs,Tennessee Volunteers at Georgia Bulldogs,5.424,-8.0,,31,17
+2024,0,11/17/2024 Boise State Broncos at San Jose State Spartans,Boise State Broncos at San Jose State Spartans,-16.985,14.0,,21,42
+2024,0,11/17/2024 Arizona State Sun Devils at Kansas State Wildcats,Arizona State Sun Devils at Kansas State Wildcats,5.137,-7.5,,14,24
+2024,0,11/17/2024 Southern Miss Golden Eagles at Texas State Bobcats,Southern Miss Golden Eagles at Texas State Bobcats,26.645,-27.5,,58,3
+2024,0,11/17/2024 South Alabama Jaguars at Louisiana Ragin' Cajuns,South Alabama Jaguars at Louisiana Ragin' Cajuns,5.264,-6.5,,22,24
+2024,0,11/16/2024 Rutgers Scarlet Knights at Maryland Terrapins,Rutgers Scarlet Knights at Maryland Terrapins,3.245,-4.0,,17,31
+2024,0,11/16/2024 Arkansas State Red Wolves at Georgia State Panthers,Arkansas State Red Wolves at Georgia State Panthers,2.94,-3.0,,20,27
+2024,0,11/16/2024 Missouri Tigers at South Carolina Gamecocks,Missouri Tigers at South Carolina Gamecocks,10.472,-11.0,,34,30
+2024,0,11/16/2024 Nebraska Cornhuskers at USC Trojans,Nebraska Cornhuskers at USC Trojans,11.074,-6.0,,28,20
+2024,0,11/16/2024 Troy Trojans at Georgia Southern Eagles,Troy Trojans at Georgia Southern Eagles,39.81,-7.0,,20,28
+2024,0,11/16/2024 James Madison Dukes at Old Dominion Monarchs,James Madison Dukes at Old Dominion Monarchs,-5.107,1.5,,32,35
+2024,0,11/16/2024 Baylor Bears at West Virginia Mountaineers,Baylor Bears at West Virginia Mountaineers,2.687,2.0,,35,49
+2024,0,11/16/2024 LSU Tigers at Florida Gators,LSU Tigers at Florida Gators,-2.555,3.5,,27,16
+2024,0,11/16/2024 Boston College Eagles at SMU Mustangs,Boston College Eagles at SMU Mustangs,14.96,-18.5,,38,28
+2024,0,11/16/2024 Penn State Nittany Lions at Purdue Boilermakers,Penn State Nittany Lions at Purdue Boilermakers,-29.377,30.0,,10,49
+2024,0,11/16/2024 Louisville Cardinals at Stanford Cardinal,Louisville Cardinals at Stanford Cardinal,-21.347,21.5,,38,35
+2024,0,11/16/2024 Oregon State Beavers at Air Force Falcons,Oregon State Beavers at Air Force Falcons,-6.458,3.0,,28,0
+2024,0,11/16/2024 Virginia Cavaliers at Notre Dame Fighting Irish,Virginia Cavaliers at Notre Dame Fighting Irish,29.33,-20.5,,35,14
+2024,0,11/16/2024 South Florida Bulls at Charlotte 49ers,South Florida Bulls at Charlotte 49ers,-3.655,-1.0,,24,59
+2024,0,11/16/2024 Sam Houston State Bearkats at Kennesaw State Owls,Sam Houston State Bearkats at Kennesaw State Owls,-15.527,21.0,,17,23
+2024,0,11/16/2024 Syracuse Orange at California Golden Bears,Syracuse Orange at California Golden Bears,7.279,-10.0,,25,33
+2024,0,11/16/2024 Hawaii Rainbow Warriors at Utah State Aggies,Hawaii Rainbow Warriors at Utah State Aggies,18.334,2.5,,55,10
+2024,0,11/16/2024 Michigan State Spartans at Illinois Fighting Illini,Michigan State Spartans at Illinois Fighting Illini,-0.087,-1.5,,38,16
+2024,0,11/16/2024 Houston Christian Huskies at Texas A&M Commerce Lions,Houston Christian Huskies at Texas A&M Commerce Lions,18.722,-3.0,,41,40
+2024,0,11/16/2024 FIU Panthers at Jacksonville State Gamecocks,FIU Panthers at Jacksonville State Gamecocks,13.445,-12.5,,34,31
+2024,0,11/16/2024 Florida Atlantic Owls at Temple Owls,Florida Atlantic Owls at Temple Owls,-1.867,-2.0,,18,15
+2024,0,11/16/2024 Illinois State Redbirds at Indiana State SycamoresÂ ,Illinois State Redbirds at Indiana State SycamoresÂ ,17.808,14.5,,19,31
+2024,0,11/16/2024 Coastal Carolina Chanticleers at Marshall Thundering Herd,Coastal Carolina Chanticleers at Marshall Thundering Herd,8.114,-7.5,,31,19
+2024,0,11/16/2024 ULM Warhawks at Auburn Tigers,ULM Warhawks at Auburn Tigers,24.294,-24.5,,48,14
+2024,0,11/16/2024 Ohio State Buckeyes at Northwestern Wildcats,Ohio State Buckeyes at Northwestern Wildcats,7.464,28.0,,7,31
+2024,0,11/16/2024 Utah Utes at Colorado Buffaloes,Utah Utes at Colorado Buffaloes,6.189,-13.5,,49,24
+2024,0,11/16/2024 Louisiana Tech Bulldogs at Western Kentucky Hilltoppers,Louisiana Tech Bulldogs at Western Kentucky Hilltoppers,15.119,-11.5,,7,12
+2024,0,11/16/2024 Texas Longhorns at Arkansas Razorbacks,Texas Longhorns at Arkansas Razorbacks,-15.77,13.0,,10,20
+2024,0,11/16/2024 Tulane Green Wave at Navy Midshipmen,Tulane Green Wave at Navy Midshipmen,-8.041,7.0,,0,35
+2024,0,11/16/2024 Liberty Flames at Massachusetts Minutemen,Liberty Flames at Massachusetts Minutemen,-12.524,16.5,,34,35
+2024,0,11/16/2024 Clemson Tigers at Pittsburgh Panthers,Clemson Tigers at Pittsburgh Panthers,-8.361,12.0,,20,24
+2024,0,11/16/2024 Houston Cougars at Arizona Wildcats,Houston Cougars at Arizona Wildcats,-0.907,-1.0,,27,3
+2024,0,11/16/2024 UCLA Bruins at Washington Huskies,UCLA Bruins at Washington Huskies,4.216,-4.5,,31,19
+2024,0,11/16/2024 Wyoming Cowboys at Colorado State Rams,Wyoming Cowboys at Colorado State Rams,29.007,-7.5,,24,10
+2024,0,11/16/2024 North Texas Mean Green at UTSA Roadrunners,North Texas Mean Green at UTSA Roadrunners,-0.742,-1.0,,48,27
+2024,0,11/15/2024 East Carolina Pirates at Tulsa Golden Hurricane,East Carolina Pirates at Tulsa Golden Hurricane,-14.04,16.5,,31,38
+2024,0,11/14/2024 Akron Zips at Northern Illinois Huskies,Akron Zips at Northern Illinois Huskies,19.488,-14.0,,29,16
+2024,0,11/14/2024 Eastern Michigan Eagles at Ohio Bobcats,Eastern Michigan Eagles at Ohio Bobcats,9.117,-10.5,,35,10
+2024,0,11/14/2024 Kent State Golden Flashes at Miami (OH) RedHawks,Kent State Golden Flashes at Miami (OH) RedHawks,54.75,-30.5,,34,7
+2024,0,11/13/2024 Ball State Cardinals at Buffalo Bulls,Ball State Cardinals at Buffalo Bulls,7.099,-3.5,,51,48
+2024,0,11/13/2024 Western Michigan Broncos at Bowling Green Falcons,Western Michigan Broncos at Bowling Green Falcons,10.129,-9.5,,31,13
+2024,0,11/13/2024 Central Michigan Chippewas at Toledo Rockets,Central Michigan Chippewas at Toledo Rockets,14.828,-14.5,,37,10
+2024,0,11/10/2024 Utah State Aggies at Washington State Cougars,Utah State Aggies at Washington State Cougars,2.214,-19.5,,49,28
+2024,0,11/10/2024 BYU Cougars at Utah Utes,BYU Cougars at Utah Utes,-2.75,3.0,,21,22
+2024,0,11/10/2024 Fresno State Bulldogs at Air Force Falcons,Fresno State Bulldogs at Air Force Falcons,-10.292,9.5,,36,28
+2024,0,11/10/2024 UNLV Rebels at Hawaii Rainbow Warriors,UNLV Rebels at Hawaii Rainbow Warriors,-16.053,12.5,,27,29
+2024,0,11/10/2024 Washington Huskies at Penn State Nittany Lions,Washington Huskies at Penn State Nittany Lions,16.62,-13.5,,35,6
+2024,0,11/10/2024 Nevada Wolf Pack at Boise State Broncos,Nevada Wolf Pack at Boise State Broncos,28.764,-23.5,,28,21
+2024,0,11/10/2024 Virginia Cavaliers at Pittsburgh Panthers,Virginia Cavaliers at Pittsburgh Panthers,12.16,-7.0,,19,24
+2024,0,11/10/2024 Oklahoma Sooners at Missouri Tigers,Oklahoma Sooners at Missouri Tigers,1.144,3.0,,30,23
+2024,0,11/10/2024 Alabama Crimson Tide at LSU Tigers,Alabama Crimson Tide at LSU Tigers,-6.754,3.0,,13,42
+2024,0,11/10/2024 Florida State Seminoles at Notre Dame Fighting Irish,Florida State Seminoles at Notre Dame Fighting Irish,13.868,-25.5,,52,3
+2024,0,11/10/2024 Maryland Terrapins at Oregon Ducks,Maryland Terrapins at Oregon Ducks,22.966,-24.0,,39,18
+2024,0,11/10/2024 UCF Knights at Arizona State Sun Devils,UCF Knights at Arizona State Sun Devils,0.276,-2.5,,35,31
+2024,0,11/10/2024 Oklahoma State Cowboys at TCU Horned Frogs,Oklahoma State Cowboys at TCU Horned Frogs,-3.47,-10.5,,38,13
+2024,0,11/10/2024 Mississippi State Bulldogs at Tennessee Volunteers,Mississippi State Bulldogs at Tennessee Volunteers,28.765,-25.5,,33,14
+2024,0,11/09/2024 Western Kentucky Hilltoppers at New Mexico State Aggies,Western Kentucky Hilltoppers at New Mexico State Aggies,-12.745,18.0,,28,41
+2024,0,11/09/2024 Arkansas State Red Wolves at Louisiana Ragin' Cajuns,Arkansas State Red Wolves at Louisiana Ragin' Cajuns,15.772,-14.0,,55,19
+2024,0,11/09/2024 Jacksonville State Gamecocks at Louisiana Tech Bulldogs,Jacksonville State Gamecocks at Louisiana Tech Bulldogs,-9.672,10.0,,37,44
+2024,0,11/09/2024 South Carolina Gamecocks at Vanderbilt Commodores,South Carolina Gamecocks at Vanderbilt Commodores,-7.777,6.0,,7,28
+2024,0,11/09/2024 Kennesaw State Owls at UTEP Miners,Kennesaw State Owls at UTEP Miners,5.927,-4.5,,43,35
+2024,0,11/09/2024 Colorado Buffaloes at Texas Tech Red Raiders,Colorado Buffaloes at Texas Tech Red Raiders,-1.535,5.5,,27,41
+2024,0,11/09/2024 Temple Owls at Tulane Green Wave,Temple Owls at Tulane Green Wave,36.009,-26.5,,52,6
+2024,0,11/09/2024 Georgia Bulldogs at Ole Miss Rebels,Georgia Bulldogs at Ole Miss Rebels,2.766,2.0,,28,10
+2024,0,11/09/2024 Michigan Wolverines at Indiana Hoosiers,Michigan Wolverines at Indiana Hoosiers,16.194,-14.0,,20,15
+2024,0,11/09/2024 San Jose State Spartans at Oregon State Beavers,San Jose State Spartans at Oregon State Beavers,8.001,-3.0,,13,24
+2024,0,11/09/2024 Army Black Knights at North Texas Mean Green,Army Black Knights at North Texas Mean Green,-6.962,7.0,,3,14
+2024,0,11/09/2024 Clemson Tigers at Virginia Tech Hokies,Clemson Tigers at Virginia Tech Hokies,-3.128,5.5,,14,24
+2024,0,11/09/2024 Iowa State Cyclones at Kansas Jayhawks,Iowa State Cyclones at Kansas Jayhawks,-3.179,2.5,,45,36
+2024,0,11/09/2024 Georgia State Panthers at James Madison Dukes,Georgia State Panthers at James Madison Dukes,20.09,-14.5,,38,7
+2024,0,11/09/2024 Duke Blue Devils at NC State Wolfpack,Duke Blue Devils at NC State Wolfpack,0.407,-3.0,,19,29
+2024,0,11/09/2024 Marshall Thundering Herd at Southern Miss Golden Eagles,Marshall Thundering Herd at Southern Miss Golden Eagles,-13.871,13.5,,3,37
+2024,0,11/09/2024 Connecticut Huskies at UAB Blazers,Connecticut Huskies at UAB Blazers,-5.467,8.0,,23,31
+2024,0,11/09/2024 Minnesota Golden Gophers at Rutgers Scarlet Knights,Minnesota Golden Gophers at Rutgers Scarlet Knights,-5.309,6.0,,26,19
+2024,0,11/09/2024 Purdue Boilermakers at Ohio State Buckeyes,Purdue Boilermakers at Ohio State Buckeyes,5.849,-37.5,,45,0
+2024,0,11/09/2024 Florida Gators at Texas Longhorns,Florida Gators at Texas Longhorns,16.643,-22.5,,49,17
+2024,0,11/09/2024 Texas State Bobcats at ULM Warhawks,Texas State Bobcats at ULM Warhawks,-9.34,10.0,,17,38
+2024,0,11/09/2024 Syracuse Orange at Boston College Eagles,Syracuse Orange at Boston College Eagles,3.545,-3.0,,37,31
+2024,0,11/09/2024 Navy Midshipmen at South Florida Bulls,Navy Midshipmen at South Florida Bulls,-0.185,4.5,,7,28
+2024,0,11/09/2024 Miami Hurricanes at Georgia Tech Yellow Jackets,Miami Hurricanes at Georgia Tech Yellow Jackets,-12.7,9.5,,28,23
+2024,0,11/09/2024 West Virginia Mountaineers at Cincinnati Bearcats,West Virginia Mountaineers at Cincinnati Bearcats,4.834,-5.0,,24,31
+2024,0,11/09/2024 New Mexico Lobos at San Diego State Aztecs,New Mexico Lobos at San Diego State Aztecs,10.411,-1.0,,16,21
+2024,0,11/09/2024 Iowa Hawkeyes at UCLA Bruins,Iowa Hawkeyes at UCLA Bruins,-9.067,7.0,,20,17
+2024,0,11/09/2024 Rice Owls at Memphis Tigers,Rice Owls at Memphis Tigers,11.171,-7.0,,27,20
+2024,0,11/09/2024 California Golden Bears at Wake Forest Demon Deacons,California Golden Bears at Wake Forest Demon Deacons,-8.305,7.0,,36,46
+2024,0,11/08/2024 Appalachian State Mountaineers at Coastal Carolina Chanticleers,Appalachian State Mountaineers at Coastal Carolina Chanticleers,2.511,2.0,,38,24
+2024,0,11/08/2024 Florida Atlantic Owls at East Carolina Pirates,Florida Atlantic Owls at East Carolina Pirates,8.117,-7.5,,49,14
+2024,0,11/07/2024 Northern Illinois Huskies at Western Michigan Broncos,Northern Illinois Huskies at Western Michigan Broncos,-2.427,2.0,,28,42
+2024,0,11/07/2024 Ohio Bobcats at Kent State Golden Flashes,Ohio Bobcats at Kent State Golden Flashes,-18.885,20.5,,0,41
+2024,0,11/06/2024 Miami (OH) RedHawks at Ball State Cardinals,Miami (OH) RedHawks at Ball State Cardinals,-39.065,13.0,,21,27
+2024,0,11/06/2024 Bowling Green Falcons at Central Michigan Chippewas,Bowling Green Falcons at Central Michigan Chippewas,-9.802,16.0,,13,23
+2024,0,11/03/2024 Colorado State Rams at Nevada Wolf Pack,Colorado State Rams at Nevada Wolf Pack,-18.441,2.0,,21,38
+2024,0,11/03/2024 TCU Horned Frogs at Baylor Bears,TCU Horned Frogs at Baylor Bears,3.942,-2.5,,37,34
+2024,0,11/03/2024 Pittsburgh Panthers at SMU Mustangs,Pittsburgh Panthers at SMU Mustangs,8.307,-7.0,,48,25
+2024,0,11/02/2024 Kentucky Wildcats at Tennessee Volunteers,Kentucky Wildcats at Tennessee Volunteers,20.653,-17.5,,28,18
+2024,0,11/02/2024 Wisconsin Badgers at Iowa Hawkeyes,Wisconsin Badgers at Iowa Hawkeyes,4.816,-3.0,,42,10
+2024,0,11/02/2024 USC Trojans at Washington Huskies,USC Trojans at Washington Huskies,-7.714,2.0,,26,21
+2024,0,11/02/2024 Georgia Southern Eagles at South Alabama Jaguars,Georgia Southern Eagles at South Alabama Jaguars,-24.057,-5.5,,30,34
+2024,0,11/02/2024 Texas A&M Aggies at South Carolina Gamecocks,Texas A&M Aggies at South Carolina Gamecocks,-8.18,3.0,,44,20
+2024,0,11/02/2024 Louisville Cardinals at Clemson Tigers,Louisville Cardinals at Clemson Tigers,7.279,-10.5,,21,33
+2024,0,11/02/2024 Hawaii Rainbow Warriors at Fresno State Bulldogs,Hawaii Rainbow Warriors at Fresno State Bulldogs,9.032,-11.5,,20,21
+2024,0,11/02/2024 Navy Midshipmen at Rice Owls,Navy Midshipmen at Rice Owls,-7.989,13.5,,24,10
+2024,0,11/02/2024 Massachusetts Minutemen at Mississippi State Bulldogs,Massachusetts Minutemen at Mississippi State Bulldogs,23.693,-19.5,,45,20
+2024,0,11/02/2024 Wyoming Cowboys at New Mexico Lobos,Wyoming Cowboys at New Mexico Lobos,1.166,-7.5,,45,49
+2024,0,11/02/2024 Texas Southern Tigers at Florida A&M Rattlers,Texas Southern Tigers at Florida A&M Rattlers,-10.671,-14.5,,52,28
+2024,0,11/02/2024 Coastal Carolina Chanticleers at Troy Trojans,Coastal Carolina Chanticleers at Troy Trojans,-1.088,4.5,,38,24
+2024,0,11/02/2024 Oregon Ducks at Michigan Wolverines,Oregon Ducks at Michigan Wolverines,-10.79,14.5,,17,38
+2024,0,11/02/2024 Indiana Hoosiers at Michigan State Spartans,Indiana Hoosiers at Michigan State Spartans,-7.519,7.5,,10,47
+2024,0,11/02/2024 UCLA Bruins at Nebraska Cornhuskers,UCLA Bruins at Nebraska Cornhuskers,8.249,-7.5,,20,27
+2024,0,11/02/2024 Kansas State Wildcats at Houston Cougars,Kansas State Wildcats at Houston Cougars,-6.67,13.0,,24,19
+2024,0,11/02/2024 Texas Tech Red Raiders at Iowa State Cyclones,Texas Tech Red Raiders at Iowa State Cyclones,11.286,-13.5,,22,23
+2024,0,11/02/2024 Arizona State Sun Devils at Oklahoma State Cowboys,Arizona State Sun Devils at Oklahoma State Cowboys,9.659,5.0,,21,42
+2024,0,11/02/2024 North Carolina Tar Heels at Florida State Seminoles,North Carolina Tar Heels at Florida State Seminoles,12.095,2.5,,11,35
+2024,0,11/02/2024 Florida Gators at Georgia Bulldogs,Florida Gators at Georgia Bulldogs,17.085,-14.5,,34,20
+2024,0,11/02/2024 Arizona Wildcats at UCF Knights,Arizona Wildcats at UCF Knights,9.717,-6.0,,56,12
+2024,0,11/02/2024 ULM Warhawks at Marshall Thundering Herd,ULM Warhawks at Marshall Thundering Herd,12.032,-10.5,,28,23
+2024,0,11/02/2024 Tulsa Golden Hurricane at UAB Blazers,Tulsa Golden Hurricane at UAB Blazers,6.606,-2.5,,59,21
+2024,0,11/02/2024 Old Dominion Monarchs at Appalachian State Mountaineers,Old Dominion Monarchs at Appalachian State Mountaineers,-4.259,3.0,,28,20
+2024,0,11/02/2024 Vanderbilt Commodores at Auburn Tigers,Vanderbilt Commodores at Auburn Tigers,7.447,-8.0,,7,17
+2024,0,11/02/2024 Minnesota Golden Gophers at Illinois Fighting Illini,Minnesota Golden Gophers at Illinois Fighting Illini,0.005,3.0,,17,25
+2024,0,11/02/2024 Northwestern Wildcats at Purdue Boilermakers,Northwestern Wildcats at Purdue Boilermakers,-6.364,-2.5,,20,26
+2024,0,11/02/2024 Ohio State Buckeyes at Penn State Nittany Lions,Ohio State Buckeyes at Penn State Nittany Lions,31.448,3.0,,13,20
+2024,0,11/02/2024 Ole Miss Rebels at Arkansas Razorbacks,Ole Miss Rebels at Arkansas Razorbacks,-10.224,8.0,,31,63
+2024,0,11/02/2024 Memphis Tigers at UTSA Roadrunners,Memphis Tigers at UTSA Roadrunners,-11.268,7.0,,44,36
+2024,0,11/02/2024 Virginia Tech Hokies at Syracuse Orange,Virginia Tech Hokies at Syracuse Orange,-8.766,3.5,,38,31
+2024,0,11/02/2024 Buffalo Bulls at Akron Zips,Buffalo Bulls at Akron Zips,-0.9,0.0,,30,41
+2024,0,11/02/2024 Toledo Rockets at Eastern Michigan Eagles,Toledo Rockets at Eastern Michigan Eagles,-6.945,10.0,,28,29
+2024,0,11/02/2024 Duke Blue Devils at Miami Hurricanes,Duke Blue Devils at Miami Hurricanes,22.619,-21.0,,53,31
+2024,0,11/02/2024 Stanford Cardinal at NC State Wolfpack,Stanford Cardinal at NC State Wolfpack,7.204,-9.5,,59,28
+2024,0,11/02/2024 Air Force Falcons at Army Black Knights,Air Force Falcons at Army Black Knights,27.768,-18.0,,20,3
+2024,0,11/02/2024 San Diego State Aztecs at Boise State Broncos,San Diego State Aztecs at Boise State Broncos,26.189,-24.5,,56,24
+2024,0,11/01/2024 South Florida Bulls at Florida Atlantic Owls,South Florida Bulls at Florida Atlantic Owls,-5.165,1.5,,21,44
+2024,0,11/01/2024 Georgia State Panthers at Connecticut Huskies,Georgia State Panthers at Connecticut Huskies,12.184,-7.0,,34,27
+2024,0,10/31/2024 North Carolina Central Eagles at South Carolina State Bulldogs,North Carolina Central Eagles at South Carolina State Bulldogs,14.586,3.5,,24,21
+2024,0,10/31/2024 Tulane Green Wave at Charlotte 49ers,Tulane Green Wave at Charlotte 49ers,-19.058,15.0,,3,34
+2024,0,10/30/2024 Kennesaw State Owls at Western Kentucky Hilltoppers,Kennesaw State Owls at Western Kentucky Hilltoppers,27.499,-23.5,,31,14
+2024,0,10/30/2024 Jacksonville State Gamecocks at Liberty Flames,Jacksonville State Gamecocks at Liberty Flames,1.098,-2.0,,21,31
+2024,0,10/30/2024 Louisiana Tech Bulldogs at Sam Houston State Bearkats,Louisiana Tech Bulldogs at Sam Houston State Bearkats,12.163,-10.0,,9,3
